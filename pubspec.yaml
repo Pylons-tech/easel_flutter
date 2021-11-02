@@ -41,6 +41,11 @@ dependencies:
 
   flutter_svg: ^0.23.0+1
 
+  pylons_flutter:
+    git:
+      url: https://github.com/Pylons-tech/pylons_dart_sdk.git
+      ref: develop
+
 dev_dependencies:
   flutter_test:
     sdk: flutter

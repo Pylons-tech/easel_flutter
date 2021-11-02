@@ -1,7 +1,12 @@
 import 'package:easel_flutter/screens/routing_screen.dart';
 import 'package:flutter/material.dart';
+import 'package:pylons_flutter/pylons_flutter.dart';
 
 void main() {
+  WidgetsFlutterBinding.ensureInitialized();
+
+  PylonsWallet.setup(mode: PylonsMode.prod, host: 'pylons_easel');
+
   runApp(const MyApp());
 }
 
