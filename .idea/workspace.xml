@@ -5,25 +5,17 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="add1a795-e8b8-439a-8058-8c9f7f4c3942" name="Default Changelist" comment="">
-      <change afterPath="$PROJECT_DIR$/.flutter-plugins" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.flutter-plugins-dependencies" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/assets/icons/file.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/assets/icons/file.svg" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/ios/Podfile" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/lib/screens/description_screen.dart" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/lib/screens/home_screen.dart" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/lib/screens/mint_screen.dart" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/lib/screens/routing_screen.dart" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/lib/screens/upload_screen.dart" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/lib/utils/constants.dart" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/lib/utils/screen_size_util.dart" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/lib/utils/space_utils.dart" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/lib/widgets/pylons_button.dart" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/lib/widgets/pylons_round_button.dart" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/assets/images/background.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/assets/svg/background.svg" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/lib/widgets/background_widget.dart" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/lib/widgets/easel_text_field.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.flutter-plugins-dependencies" beforeDir="false" afterPath="$PROJECT_DIR$/.flutter-plugins-dependencies" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/libraries/Dart_Packages.xml" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/ios/Flutter/Debug.xcconfig" beforeDir="false" afterPath="$PROJECT_DIR$/ios/Flutter/Debug.xcconfig" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/ios/Flutter/Release.xcconfig" beforeDir="false" afterPath="$PROJECT_DIR$/ios/Flutter/Release.xcconfig" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/main.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/main.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/assets/icons/file.svg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/screens/description_screen.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/screens/description_screen.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/screens/mint_screen.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/screens/mint_screen.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/widgets/pylons_round_button.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/widgets/pylons_round_button.dart" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/pubspec.yaml" beforeDir="false" afterPath="$PROJECT_DIR$/pubspec.yaml" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
