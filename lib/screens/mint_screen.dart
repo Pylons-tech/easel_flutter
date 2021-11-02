@@ -2,6 +2,7 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:easel_flutter/utils/constants.dart';
 import 'package:easel_flutter/utils/space_utils.dart';
 import 'package:easel_flutter/widgets/background_widget.dart';
+import 'package:easel_flutter/widgets/image_widget.dart';
 import 'package:easel_flutter/widgets/pylons_button.dart';
 import 'package:flutter/material.dart';
 
@@ -24,7 +25,7 @@ class MintScreen extends StatelessWidget {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                const _ImageWidget(imageUrl: kImage),
+                const ImageWidget(imageUrl: kImage),
                 const SizedBox(height: 10),
                 Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 20),
@@ -77,7 +78,12 @@ class MintScreen extends StatelessWidget {
                       const VerticalSpace(20,),
 
                       Align(
-                        child: PylonsButton(onPressed: (){}),
+                        child: PylonsButton(onPressed: (){
+                          final yy = controller.page!;
+                          double xx = yy < 3.0 ? (yy + 1) : 3;
+                          print(xx);
+                          controller.jumpToPage(xx.toInt());
+                        }),
                       )
 
                     ],
@@ -87,34 +93,6 @@ class MintScreen extends StatelessWidget {
             ),
           ),
         ],
-      ),
-    );
-  }
-}
-
-
-
-class _ImageWidget extends StatelessWidget {
-  final String imageUrl;
-  const _ImageWidget({
-    Key? key,
-    required this.imageUrl
-  }) : super(key: key);
-
-
-  @override
-  Widget build(BuildContext context) {
-    final screenSize = MediaQuery.of(context).size;
-    return Padding(
-      padding: const EdgeInsets.only(right: 30),
-      child: ClipRRect(
-        borderRadius: const BorderRadius.only(topRight: Radius.circular(14), bottomRight: Radius.circular(14)),
-        child: CachedNetworkImage(imageUrl: imageUrl,
-          width: screenSize.width,
-          errorWidget: (a, b, c) => Center(child: Text("Unable to load image", style: Theme.of(context).textTheme.bodyText1,)),
-          height: screenSize.height * 0.3,
-          fit: BoxFit.fill,
-        ),
       ),
     );
   }
