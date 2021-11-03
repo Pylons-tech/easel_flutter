@@ -1,5 +1,7 @@
+import 'package:easel_flutter/easel_provider.dart';
 import 'package:easel_flutter/screens/routing_screen.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:pylons_flutter/pylons_flutter.dart';
 
 void main() {
@@ -18,13 +20,18 @@ class MyApp extends StatelessWidget {
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'Easel',
-      navigatorKey: navigatorKey,
-      theme: ThemeData(
-        primarySwatch: Colors.blue,
+    return MultiProvider(
+      providers: [
+        ChangeNotifierProvider(create: (_) => EaselProvider()),
+      ],
+      child: MaterialApp(
+        title: 'Easel',
+        navigatorKey: navigatorKey,
+        theme: ThemeData(
+          primarySwatch: Colors.blue,
+        ),
+        home: const RoutingScreen(),
       ),
-      home: const RoutingScreen(),
     );
   }
 }

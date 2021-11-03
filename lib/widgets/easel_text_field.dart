@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 
 class EaselTextField extends StatelessWidget {
   const EaselTextField({
@@ -7,6 +8,7 @@ class EaselTextField extends StatelessWidget {
     this.hint = "",
     this.controller, this.validator,
     this.noOfLines = 1,
+    this.inputFormatters = const [],
     this.keyboardType = TextInputType.text
   }) : super(key: key);
 
@@ -16,6 +18,7 @@ class EaselTextField extends StatelessWidget {
   final String? Function(String?)? validator;
   final int noOfLines;
   final TextInputType keyboardType;
+  final List<TextInputFormatter> inputFormatters;
 
   @override
   Widget build(BuildContext context) {
@@ -25,6 +28,7 @@ class EaselTextField extends StatelessWidget {
       minLines: noOfLines,
       maxLines: noOfLines,
       keyboardType: keyboardType,
+      inputFormatters: inputFormatters,
       decoration: InputDecoration(
           alignLabelWithHint: true,
           border: OutlineInputBorder(

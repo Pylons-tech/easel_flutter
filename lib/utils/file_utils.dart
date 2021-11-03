@@ -10,7 +10,7 @@ class FileUtils {
   /// returns [PlatformFile] the selected file
   ///
   /// or null if aborted
-  Future<PlatformFile?> pickFile ()async{
+  static Future<PlatformFile?> pickFile ()async{
     FilePickerResult? result = await FilePicker.platform.pickFiles(
       allowedExtensions: ['png','jpg', 'jpeg', 'svg'],
       type: FileType.custom
@@ -30,9 +30,17 @@ class FileUtils {
   ///
   /// returns [true] if the filepath  has svg extension
   /// returns false for otherwise
-  bool isSvgFile(String filePath){
+  static bool isSvgFile(String filePath){
     final extension = p.extension(filePath);
     return extension == ".svg";
+  }
+  
+  static String getExtension(String fileName){
+    return p.extension(fileName).replaceAll(".", "");
+  }
+
+  static double getFileSizeInMB(int fileLength){
+    return fileLength/(1024 * 1024).ceilToDouble();
   }
 
 

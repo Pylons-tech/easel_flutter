@@ -9,18 +9,18 @@
     <option name="autoReloadType" value="NONE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="add1a795-e8b8-439a-8058-8c9f7f4c3942" name="Default Changelist" comment="">
-      <change afterPath="$PROJECT_DIR$/lib/easel_store.dart" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/lib/utils/file_utils.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.flutter-plugins" beforeDir="false" afterPath="$PROJECT_DIR$/.flutter-plugins" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.flutter-plugins-dependencies" beforeDir="false" afterPath="$PROJECT_DIR$/.flutter-plugins-dependencies" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/libraries/Dart_Packages.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/libraries/Dart_Packages.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/libraries/Flutter_Plugins.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/libraries/Flutter_Plugins.xml" afterDir="false" />
+    <list default="true" id="add1a795-e8b8-439a-8058-8c9f7f4c3942" name="Default Changelist" comment="adds file selection feature">
+      <change afterPath="$PROJECT_DIR$/lib/easel_provider.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.gitignore" beforeDir="false" afterPath="$PROJECT_DIR$/.gitignore" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/lib/generated_plugin_registrant.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/generated_plugin_registrant.dart" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/lib/main.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/main.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/screens/description_screen.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/screens/description_screen.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/screens/mint_screen.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/screens/mint_screen.dart" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/lib/screens/upload_screen.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/screens/upload_screen.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/pubspec.yaml" beforeDir="false" afterPath="$PROJECT_DIR$/pubspec.yaml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/utils/constants.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/utils/constants.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/utils/file_utils.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/utils/file_utils.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/widgets/easel_text_field.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/widgets/easel_text_field.dart" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -99,7 +99,14 @@
       <option name="project" value="LOCAL" />
       <updated>1635869200220</updated>
     </task>
-    <option name="localTasksCounter" value="4" />
+    <task id="LOCAL-00004" summary="adds file selection feature">
+      <created>1635953148913</created>
+      <option name="number" value="00004" />
+      <option name="presentableId" value="LOCAL-00004" />
+      <option name="project" value="LOCAL" />
+      <updated>1635953148913</updated>
+    </task>
+    <option name="localTasksCounter" value="5" />
     <servers />
   </component>
   <component name="ToolWindowManager">
@@ -113,6 +120,7 @@
     <MESSAGE value="add pylons_flutter to app" />
     <MESSAGE value="chore: rename android app package path/id and android id" />
     <MESSAGE value="add scheme and host to android manifest and info.plist" />
-    <option name="LAST_COMMIT_MESSAGE" value="add scheme and host to android manifest and info.plist" />
+    <MESSAGE value="adds file selection feature" />
+    <option name="LAST_COMMIT_MESSAGE" value="adds file selection feature" />
   </component>
 </project>
