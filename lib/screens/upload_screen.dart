@@ -1,6 +1,8 @@
+import 'dart:io';
 import 'dart:ui';
 
 import 'package:easel_flutter/utils/constants.dart';
+import 'package:easel_flutter/utils/file_utils.dart';
 import 'package:easel_flutter/utils/screen_size_util.dart';
 import 'package:easel_flutter/utils/space_utils.dart';
 import 'package:easel_flutter/widgets/pylons_round_button.dart';
@@ -58,10 +60,19 @@ class _UploadScreenState extends State<UploadScreen> {
   }
 }
 
-class _UploadWidget extends StatelessWidget {
-  const _UploadWidget({
+class _UploadWidget extends StatefulWidget {
+   _UploadWidget({
     Key? key,
   }) : super(key: key);
+
+  @override
+  State<_UploadWidget> createState() => _UploadWidgetState();
+}
+
+class _UploadWidgetState extends State<_UploadWidget> {
+  File? file;
+  String name = "Filename";
+  int fileSize = 0;
 
   @override
   Widget build(BuildContext context) {
@@ -79,15 +90,29 @@ class _UploadWidget extends StatelessWidget {
           decoration: BoxDecoration(
             color: kBlue.withOpacity(0.05),
             borderRadius: BorderRadius.circular(8),
-            image: const DecorationImage(
-              image: NetworkImage(kImage),
+            image:  file != null ? DecorationImage(
+              image: MemoryImage(file!.readAsBytesSync()),
               fit: BoxFit.fill
-            )
+            ) : null
           ),
-          child: Image.asset("assets/icons/file.png",),
+          child: GestureDetector(
+            onTap: ()async{
+              final result = await FileUtils().pickFile();
+              if(result != null){
+                setState(() {
+                  name = result.name;
+                  file = File(result.path!);
+
+                });
+              }
+
+
+            },
+              child: Image.asset("assets/icons/file.png",),
+          ),
         ),
         const VerticalSpace(5),
-        Text("SVG file", style: Theme.of(context).textTheme.subtitle2!.copyWith(
+        Text(name, style: Theme.of(context).textTheme.subtitle2!.copyWith(
           color: Colors.grey
         ),),
         Text("40MB limit", style: Theme.of(context).textTheme.subtitle2!.copyWith(
