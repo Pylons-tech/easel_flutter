@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 class EaselAppTheme{
   static const Color kWhite = Color(0xFFFFFFFF);
@@ -10,12 +11,15 @@ class EaselAppTheme{
   static const Color kLightText = Color(0xFF464545);
 
 
-  static ThemeData theme = ThemeData(
+  static ThemeData theme(BuildContext context) => ThemeData(
     backgroundColor: kWhite,
     primaryColor: kWhite,
-    fontFamily: 'Inter',
+    textTheme: GoogleFonts.interTextTheme(
+      Theme.of(context).textTheme
+    ),
     scaffoldBackgroundColor: kWhite,
     visualDensity: VisualDensity.standard,
   );
+
 
 }

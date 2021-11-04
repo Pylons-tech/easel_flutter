@@ -54,6 +54,8 @@ dependencies:
       url: https://github.com/Pylons-tech/pylons_dart_sdk.git
       ref: develop
 
+  google_fonts: ^2.1.0
+
 dev_dependencies:
   flutter_test:
     sdk: flutter
@@ -93,17 +95,17 @@ flutter:
   # in this "flutter" section. Each entry in this list should have a
   # "family" key with the font family name, and a "fonts" key with a
   # list giving the asset and other descriptors for the font. For
-  fonts:
-    - family: Inter
-      fonts:
-        - asset: assets/fonts/Inter-Black.ttf
-        - asset: assets/fonts/Inter-Bold.ttf
-        - asset: assets/fonts/Inter-ExtraBold.ttf
-        - asset: assets/fonts/Inter-ExtraLight.ttf
-        - asset: assets/fonts/Inter-Light.ttf
-        - asset: assets/fonts/Inter-Medium.ttf
-        - asset: assets/fonts/Inter-Regular.ttf
-        - asset: assets/fonts/Inter-SemiBold.ttf
-        - asset: assets/fonts/Inter-Thin.ttf
+#  fonts:
+#    - family: Inter
+#      fonts:
+#        - asset: assets/fonts/Inter-Black.ttf
+#        - asset: assets/fonts/Inter-Bold.ttf
+#        - asset: assets/fonts/Inter-ExtraBold.ttf
+#        - asset: assets/fonts/Inter-ExtraLight.ttf
+#        - asset: assets/fonts/Inter-Light.ttf
+#        - asset: assets/fonts/Inter-Medium.ttf
+#        - asset: assets/fonts/Inter-Regular.ttf
+#        - asset: assets/fonts/Inter-SemiBold.ttf
+#        - asset: assets/fonts/Inter-Thin.ttf
   # For details regarding fonts from package dependencies,
   # see https://flutter.dev/custom-fonts/#from-packages

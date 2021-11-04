@@ -82,8 +82,8 @@ class MintScreen extends StatelessWidget {
 
                         Align(
                           child: PylonsButton(onPressed: (){
-                            provider.initStore();
                             controller.jumpToPage(0);
+                            provider.initStore();
                           }),
                         ),
                         const VerticalSpace(20,),
