@@ -9,6 +9,8 @@ import 'package:easel_flutter/widgets/background_widget.dart';
 import 'package:easel_flutter/widgets/pylons_button.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:google_fonts/google_fonts.dart';
+
 
 class MintScreen extends StatelessWidget {
   final PageController controller;
@@ -25,6 +27,7 @@ class MintScreen extends StatelessWidget {
             right: 0,
             child: BackgroundWidget(),
           ),
+
           Consumer<EaselProvider>(
             builder: (_, provider, __) => SingleChildScrollView(
               child: Column(
@@ -43,8 +46,10 @@ class MintScreen extends StatelessWidget {
                         const VerticalSpace(4,),
                         RichText(
                           text: TextSpan(text: "${"Created by "} ",
-                              style: Theme.of(context).textTheme.bodyText2!.copyWith(
-                                  fontSize: 20, color: EaselAppTheme.kDarkText, fontFamily: "Inter"
+                              style: GoogleFonts.inter(
+                                  textStyle: Theme.of(context).textTheme.bodyText2!.copyWith(
+                                    fontSize: 20, color: EaselAppTheme.kDarkText,
+                                  )
                               ),
                               children: [
                                 TextSpan(text: provider.artistNameController.text, style: const TextStyle(color: EaselAppTheme.kBlue))

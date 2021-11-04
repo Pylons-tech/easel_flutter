@@ -31,7 +31,6 @@ class MyApp extends StatelessWidget {
         theme: EaselAppTheme.theme(context),
         home: const RoutingScreen(),
       ),
-
     );
   }
 }
