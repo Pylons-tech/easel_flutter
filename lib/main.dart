@@ -1,11 +1,12 @@
 import 'package:easel_flutter/screens/routing_screen.dart';
+import 'package:easel_flutter/utils/easel_app_theme.dart';
 import 'package:flutter/material.dart';
 import 'package:pylons_flutter/pylons_flutter.dart';
 
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
 
-  PylonsWallet.setup(mode: PylonsMode.prod, host: 'pylons_easel');
+  PylonsWallet.setup(mode: PylonsMode.prod, host: 'easel');
 
   runApp(const MyApp());
 }
@@ -21,9 +22,7 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       title: 'Easel',
       navigatorKey: navigatorKey,
-      theme: ThemeData(
-        primarySwatch: Colors.blue,
-      ),
+      theme: EaselAppTheme.theme,
       home: const RoutingScreen(),
     );
   }
