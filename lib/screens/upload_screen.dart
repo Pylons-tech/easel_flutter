@@ -1,15 +1,21 @@
+import 'dart:io';
 import 'dart:ui';
 
+import 'package:easel_flutter/easel_provider.dart';
 import 'package:easel_flutter/utils/constants.dart';
+import 'package:easel_flutter/utils/file_utils.dart';
 import 'package:easel_flutter/utils/easel_app_theme.dart';
 import 'package:easel_flutter/utils/screen_size_util.dart';
 import 'package:easel_flutter/utils/space_utils.dart';
+import 'package:easel_flutter/widgets/assets.dart';
 import 'package:easel_flutter/widgets/pylons_round_button.dart';
+import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 class UploadScreen extends StatefulWidget {
   final PageController controller;
-  UploadScreen({Key? key, required this.controller}) : super(key: key);
+  const UploadScreen({Key? key, required this.controller}) : super(key: key);
 
   @override
   State<UploadScreen> createState() => _UploadScreenState();
@@ -17,9 +23,12 @@ class UploadScreen extends StatefulWidget {
 
 class _UploadScreenState extends State<UploadScreen> {
 
-  bool showError = true;
+  ValueNotifier<bool> showError = ValueNotifier(false);
+  ValueNotifier<String> errorText = ValueNotifier("Pick a file");
+  late EaselProvider provider;
   @override
   Widget build(BuildContext context) {
+    provider = Provider.of<EaselProvider>(context);
     return Scaffold(
       body: Stack(
         children: [
@@ -29,10 +38,26 @@ class _UploadScreenState extends State<UploadScreen> {
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                   children: [
-                    _UploadWidget(),
+                    _UploadWidget(
+                      onFilePicked: (result){
+                        if(result != null){
+                          if(FileUtils.getFileSizeInMB(File(result.path!).lengthSync()) <= 40){
+                            provider.setFile(result);
+                          }else{
+                            errorText.value = '"${result.name}" could not be uploaded';
+                            showError.value = true;
+                          }
+                        }
+                      },
+                    ),
 
                     PylonsRoundButton(onPressed: (){
-                      widget.controller.jumpToPage(1);
+                      if(provider.file != null) {
+                        widget.controller.jumpToPage(1);
+                      }else{
+                        errorText.value = 'Pick a file';
+                        showError.value = true;
+                      }
                     }),
 
                   ],
@@ -41,15 +66,17 @@ class _UploadScreenState extends State<UploadScreen> {
               const SizedBox(height: 20)
             ]
           ),
-          Positioned(
-            child: Visibility(
-              visible: showError,
-              child: _ErrorMessageWidget(
-                onClose: (){
-                  setState(() {
-                    showError = false;
-                  });
-                },
+          ValueListenableBuilder(
+            valueListenable: showError,
+            builder: (_, bool value, __) => Positioned(
+              child: Visibility(
+                visible: value,
+                child: _ErrorMessageWidget(
+                  errorMessage: errorText.value,
+                  onClose: (){
+                      showError.value = false;
+                  },
+                ),
               ),
             ),
           )
@@ -59,42 +86,58 @@ class _UploadScreenState extends State<UploadScreen> {
   }
 }
 
-class _UploadWidget extends StatelessWidget {
-  const _UploadWidget({
+class _UploadWidget extends StatefulWidget {
+
+  final Function(PlatformFile?) onFilePicked;
+   _UploadWidget({
     Key? key,
+     required this.onFilePicked,
   }) : super(key: key);
 
   @override
+  State<_UploadWidget> createState() => _UploadWidgetState();
+}
+
+class _UploadWidgetState extends State<_UploadWidget> {
+  @override
   Widget build(BuildContext context) {
-    return Column(
-      children: [
-        Text("Upload", style: Theme.of(context).textTheme.headline5!.copyWith(
-          fontWeight: FontWeight.w600
-        ),),
-        const VerticalSpace(5),
-        Container(
-          width: double.infinity,
-          height: MediaQuery.of(context).size.width * 0.5,
-          margin: const EdgeInsets.symmetric(horizontal: 30),
-          padding: const EdgeInsets.all(70),
-          decoration: BoxDecoration(
-            color: EaselAppTheme.kBlue.withOpacity(0.05),
-            borderRadius: BorderRadius.circular(8),
-            image: const DecorationImage(
-              image: NetworkImage(kImage),
-              fit: BoxFit.fill
-            )
+    return Consumer<EaselProvider>(
+      builder: (_, provider, __) => Column(
+        children: [
+          Text("Upload", style: Theme.of(context).textTheme.headline5!.copyWith(
+            fontWeight: FontWeight.w600
+          ),),
+          const VerticalSpace(5),
+          Container(
+            width: double.infinity,
+            height: MediaQuery.of(context).size.width * 0.5,
+            margin: const EdgeInsets.symmetric(horizontal: 30),
+            padding: const EdgeInsets.all(70),
+            decoration: BoxDecoration(
+              color: EaselAppTheme.kBlue.withOpacity(0.05),
+              borderRadius: BorderRadius.circular(8),
+              image:  provider.file != null ? DecorationImage(
+                image: MemoryImage(provider.file!.readAsBytesSync()),
+                fit: BoxFit.cover
+              ) : null
+            ),
+            child: GestureDetector(
+              onTap: ()async{
+                final result = await FileUtils.pickFile();
+                widget.onFilePicked(result);
+              },
+                child: Assets.fileImage,
+            ),
           ),
-          child: Image.asset("assets/icons/file.png",),
-        ),
-        const VerticalSpace(5),
-        Text("SVG file", style: Theme.of(context).textTheme.subtitle2!.copyWith(
-          color: EaselAppTheme.kLightGrey,
-        ),),
-        Text("40MB limit", style: Theme.of(context).textTheme.subtitle2!.copyWith(
+          const VerticalSpace(5),
+          Text(provider.fileName, style: Theme.of(context).textTheme.subtitle2!.copyWith(
             color: EaselAppTheme.kLightGrey,
-        ),),
-      ],
+          ),),
+          Text("${provider.fileSize}MB", style: Theme.of(context).textTheme.subtitle2!.copyWith(
+              color: EaselAppTheme.kLightGrey,
+          ),),
+        ],
+      ),
     );
   }
 }
@@ -102,10 +145,13 @@ class _UploadWidget extends StatelessWidget {
 class _ErrorMessageWidget extends StatelessWidget {
   const _ErrorMessageWidget({
     Key? key,
+    required this.errorMessage,
     required this.onClose
   }) : super(key: key);
 
+  final String errorMessage;
   final VoidCallback onClose;
+
 
   @override
   Widget build(BuildContext context) {
@@ -146,8 +192,8 @@ class _ErrorMessageWidget extends StatelessWidget {
                 children: [
                   IconButton( onPressed: onClose, icon: const Icon(Icons.clear, color: Colors.white, size: 30,)),
                   const HorizontalSpace(20),
-                 const  Expanded(
-                    child: Text('“image_name” could not be uploaded', style: TextStyle(color: Colors.white,
+                  Expanded(
+                    child: Text(errorMessage, style: const TextStyle(color: Colors.white,
                     fontSize: 18, fontWeight: FontWeight.w500
                     ),),
                   )
@@ -160,7 +206,7 @@ class _ErrorMessageWidget extends StatelessWidget {
                     Text("• 40MB Limit", style: Theme.of(context).textTheme.bodyText2!.copyWith(
                       color: Colors.white, fontSize: 16
                     ),),
-                    Text("• SVG file format", style: Theme.of(context).textTheme.bodyText2!.copyWith(
+                    Text("• JPG, PNG or SVG format", style: Theme.of(context).textTheme.bodyText2!.copyWith(
                         color: Colors.white, fontSize: 16
                     ),),
                     Text("• One file per upload", style: Theme.of(context).textTheme.bodyText2!.copyWith(

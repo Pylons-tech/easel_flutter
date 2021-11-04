@@ -41,6 +41,14 @@ dependencies:
 
   flutter_svg: ^0.23.0+1
 
+# file_picker plugin is used so we can pick single/multiple files with extension filtering support.
+#  with this plugin, we can filter the file extension(not just images) we want users to pick.
+  file_picker: ^4.2.0
+
+  path: ^1.8.0
+
+  provider: ^6.0.1
+
   pylons_flutter:
     git:
       url: https://github.com/Pylons-tech/pylons_dart_sdk.git
