@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:easel_flutter/easel_provider.dart';
 import 'package:easel_flutter/utils/constants.dart';
+import 'package:easel_flutter/utils/easel_app_theme.dart';
 import 'package:easel_flutter/utils/space_utils.dart';
 import 'package:easel_flutter/widgets/background_widget.dart';
 import 'package:easel_flutter/widgets/pylons_button.dart';
@@ -37,16 +38,16 @@ class MintScreen extends StatelessWidget {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text(provider.artNameController.text, style: Theme.of(context).textTheme.headline5!.copyWith(
-                          color: Colors.black, fontWeight: FontWeight.w600,
+                           color: EaselAppTheme.kDarkText, fontWeight: FontWeight.w600,
                         ),),
                         const VerticalSpace(4,),
                         RichText(
                           text: TextSpan(text: "${"Created by "} ",
                               style: Theme.of(context).textTheme.bodyText2!.copyWith(
-                                fontSize: 20,
+                                  fontSize: 20, color: EaselAppTheme.kDarkText, fontFamily: "Inter"
                               ),
                               children: [
-                                TextSpan(text: provider.artistNameController.text, style: const TextStyle(color: kBlue))
+                                TextSpan(text: provider.artistNameController.text, style: const TextStyle(color: EaselAppTheme.kBlue))
                               ]),
                         ),
 
@@ -56,7 +57,7 @@ class MintScreen extends StatelessWidget {
                         ),),
                         Text(provider.descriptionController.text,
                         style: Theme.of(context).textTheme.caption!.copyWith(
-                          fontSize: 14,
+                          fontSize: 14, color: EaselAppTheme.kLightText, fontWeight: FontWeight.w300
                         ),),
                         const VerticalSpace(10,),
                         Text("Size: 1920 x 1080px ${provider.fileExtension.toUpperCase()}",

@@ -1,3 +1,4 @@
+import 'package:easel_flutter/utils/easel_app_theme.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
@@ -32,13 +33,13 @@ class EaselTextField extends StatelessWidget {
       decoration: InputDecoration(
           alignLabelWithHint: true,
           border: OutlineInputBorder(
-              borderSide: BorderSide(color: const Color(0xff1212C4).withOpacity(0.2))
+              borderSide: BorderSide(color: EaselAppTheme.kBlue.withOpacity(0.2))
           ),
           enabledBorder: OutlineInputBorder(
-              borderSide: BorderSide(color: const Color(0xff1212C4).withOpacity(0.2))
+              borderSide: BorderSide(color: EaselAppTheme.kBlue.withOpacity(0.2))
           ),
           focusedBorder: OutlineInputBorder(
-              borderSide: BorderSide(color: const Color(0xff1212C4).withOpacity(0.2))
+              borderSide: BorderSide(color: EaselAppTheme.kBlue.withOpacity(0.2))
           ),
           labelText: title,
           floatingLabelBehavior: FloatingLabelBehavior.auto,

@@ -51,7 +51,7 @@
             <string>tech.pylons.easel</string>
             <key>CFBundleURLSchemes</key>
             <array>
-                <string>pylons-pylons_easel</string>
+                <string>pylons-easel</string>
             </array>
         </dict>
     </array>

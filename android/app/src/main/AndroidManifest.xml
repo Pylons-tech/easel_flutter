@@ -43,7 +43,7 @@
                 <!-- Accepts URIs that begin with YOUR_SCHEME://YOUR_HOST -->
                 <data
                     android:scheme="pylons"
-                    android:host="pylons_easel" />
+                    android:host="easel" />
             </intent-filter>
         </activity>
         <!-- Don't delete the meta-data below.

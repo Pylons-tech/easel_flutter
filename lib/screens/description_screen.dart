@@ -1,5 +1,6 @@
 import 'package:easel_flutter/easel_provider.dart';
 import 'package:easel_flutter/utils/constants.dart';
+import 'package:easel_flutter/utils/easel_app_theme.dart';
 import 'package:easel_flutter/utils/space_utils.dart';
 import 'package:easel_flutter/widgets/background_widget.dart';
 import 'package:easel_flutter/widgets/easel_text_field.dart';
@@ -67,15 +68,13 @@ class DescriptionScreen extends StatelessWidget {
                           return null;
                         },
                       ),
-                      const VerticalSpace(
-                        4,
-                      ),
+                      const VerticalSpace(4),
                       Text(
                         "256 character limit",
                         style: Theme.of(context)
                             .textTheme
                             .subtitle2!
-                            .copyWith(color: kGrey, fontWeight: FontWeight.w600),
+                            .copyWith(color: EaselAppTheme.kGrey, fontWeight: FontWeight.w600),
                       ),
                       const VerticalSpace(
                         20,
@@ -117,7 +116,7 @@ class DescriptionScreen extends StatelessWidget {
                         style: Theme.of(context)
                             .textTheme
                             .subtitle2!
-                            .copyWith(color: kGrey, fontWeight: FontWeight.w600),
+                            .copyWith(color: EaselAppTheme.kGrey, fontWeight: FontWeight.w600),
                       ),
                       const VerticalSpace(
                         20,
@@ -126,10 +125,10 @@ class DescriptionScreen extends StatelessWidget {
                         child: PylonsRoundButton(onPressed: () {
                           FocusScope.of(context).unfocus();
                           if(provider.formKey.currentState!.validate()){
-                            print(controller.page!);
+                            // print(controller.page!);
                             final yy = controller.page!;
                             double xx = yy < 3.0 ? (yy + 1) : 3;
-                            print(xx);
+                            // print(xx);
                             controller.jumpToPage(xx.toInt());
                           }
                         }),
