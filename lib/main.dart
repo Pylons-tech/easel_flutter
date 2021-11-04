@@ -22,7 +22,7 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       title: 'Easel',
       navigatorKey: navigatorKey,
-      theme: EaselAppTheme.theme,
+      theme: EaselAppTheme.theme(context),
       home: const RoutingScreen(),
     );
   }

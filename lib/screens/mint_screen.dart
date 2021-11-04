@@ -5,6 +5,7 @@ import 'package:easel_flutter/utils/space_utils.dart';
 import 'package:easel_flutter/widgets/background_widget.dart';
 import 'package:easel_flutter/widgets/pylons_button.dart';
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 class MintScreen extends StatelessWidget {
   final PageController controller;
@@ -38,8 +39,10 @@ class MintScreen extends StatelessWidget {
                       const VerticalSpace(4,),
                       RichText(
                         text: TextSpan(text: "${"Created by "} ",
-                            style: Theme.of(context).textTheme.bodyText2!.copyWith(
-                              fontSize: 20, color: EaselAppTheme.kDarkText, fontFamily: "Inter"
+                            style: GoogleFonts.inter(
+                              textStyle: Theme.of(context).textTheme.bodyText2!.copyWith(
+                                  fontSize: 20, color: EaselAppTheme.kDarkText,
+                              )
                             ),
                             children: const [
                               TextSpan(text: "Flowtys Studio", style: TextStyle(color: EaselAppTheme.kBlue))
