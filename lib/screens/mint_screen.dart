@@ -1,9 +1,11 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:easel_flutter/utils/constants.dart';
+import 'package:easel_flutter/utils/easel_app_theme.dart';
 import 'package:easel_flutter/utils/space_utils.dart';
 import 'package:easel_flutter/widgets/background_widget.dart';
 import 'package:easel_flutter/widgets/pylons_button.dart';
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 class MintScreen extends StatelessWidget {
   final PageController controller;
@@ -32,16 +34,18 @@ class MintScreen extends StatelessWidget {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text("Mona Lisa", style: Theme.of(context).textTheme.headline5!.copyWith(
-                        color: Colors.black, fontWeight: FontWeight.w600,
+                        color: EaselAppTheme.kDarkText, fontWeight: FontWeight.w600,
                       ),),
                       const VerticalSpace(4,),
                       RichText(
                         text: TextSpan(text: "${"Created by "} ",
-                            style: Theme.of(context).textTheme.bodyText2!.copyWith(
-                              fontSize: 20,
+                            style: GoogleFonts.inter(
+                              textStyle: Theme.of(context).textTheme.bodyText2!.copyWith(
+                                  fontSize: 20, color: EaselAppTheme.kDarkText,
+                              )
                             ),
                             children: const [
-                              TextSpan(text: "Flowtys Studio", style: TextStyle(color: kBlue))
+                              TextSpan(text: "Flowtys Studio", style: TextStyle(color: EaselAppTheme.kBlue))
                             ]),
                       ),
 
@@ -53,25 +57,25 @@ class MintScreen extends StatelessWidget {
                           "sed do eiusmod tempor incididunt ut labore et dolore magna "
                           "aliqua. Ut enim ad minim veniam, quis nostrud exercita",
                       style: Theme.of(context).textTheme.caption!.copyWith(
-                        fontSize: 14,
+                        fontSize: 14, color: EaselAppTheme.kLightText, fontWeight: FontWeight.w300
                       ),),
                       const VerticalSpace(10,),
                       Text("Size: 1920 x 1080px SVG",
                         style: Theme.of(context).textTheme.caption!.copyWith(
-                          fontSize: 14,
+                          fontSize: 14,color: EaselAppTheme.kLightText, fontWeight: FontWeight.w300
                         ),),
                       Text("Date: 08/09/2021",
                         style: Theme.of(context).textTheme.caption!.copyWith(
-                          fontSize: 14,
+                          fontSize: 14, color: EaselAppTheme.kLightText, fontWeight: FontWeight.w300
                         ),),
                       const VerticalSpace(10,),
                       Text("No of editions: 50",
                         style: Theme.of(context).textTheme.caption!.copyWith(
-                          fontSize: 14,
+                          fontSize: 14, color: EaselAppTheme.kLightText, fontWeight: FontWeight.w300
                         ),),
                       Text("Royalty: 50%",
                         style: Theme.of(context).textTheme.caption!.copyWith(
-                          fontSize: 14,
+                          fontSize: 14, color: EaselAppTheme.kLightText, fontWeight: FontWeight.w300
                         ),),
 
                       const VerticalSpace(20,),

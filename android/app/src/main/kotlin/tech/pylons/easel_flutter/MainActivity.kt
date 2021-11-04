@@ -1,4 +1,4 @@
-package com.example.easel_flutter
+package tech.pylons.easel_flutter
 
 import io.flutter.embedding.android.FlutterActivity
 

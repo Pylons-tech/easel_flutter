@@ -1,6 +1,7 @@
 import 'dart:ui';
 
 import 'package:easel_flutter/utils/constants.dart';
+import 'package:easel_flutter/utils/easel_app_theme.dart';
 import 'package:easel_flutter/utils/screen_size_util.dart';
 import 'package:easel_flutter/utils/space_utils.dart';
 import 'package:easel_flutter/widgets/pylons_round_button.dart';
@@ -77,7 +78,7 @@ class _UploadWidget extends StatelessWidget {
           margin: const EdgeInsets.symmetric(horizontal: 30),
           padding: const EdgeInsets.all(70),
           decoration: BoxDecoration(
-            color: kBlue.withOpacity(0.05),
+            color: EaselAppTheme.kBlue.withOpacity(0.05),
             borderRadius: BorderRadius.circular(8),
             image: const DecorationImage(
               image: NetworkImage(kImage),
@@ -88,10 +89,10 @@ class _UploadWidget extends StatelessWidget {
         ),
         const VerticalSpace(5),
         Text("SVG file", style: Theme.of(context).textTheme.subtitle2!.copyWith(
-          color: Colors.grey
+          color: EaselAppTheme.kLightGrey,
         ),),
         Text("40MB limit", style: Theme.of(context).textTheme.subtitle2!.copyWith(
-            color: Colors.grey
+            color: EaselAppTheme.kLightGrey,
         ),),
       ],
     );
@@ -123,7 +124,7 @@ class _ErrorMessageWidget extends StatelessWidget {
                 child: Container(
                   height: screenSize.height(percent: 85),
                   // width: screenSize.width(),
-                  decoration: BoxDecoration(color: Colors.white.withOpacity(0.2)),
+                  decoration: BoxDecoration(color: EaselAppTheme.kWhite.withOpacity(0.2)),
                 ),
               ),
             ),
