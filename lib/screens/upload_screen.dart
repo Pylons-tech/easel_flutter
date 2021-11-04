@@ -7,6 +7,7 @@ import 'package:easel_flutter/utils/file_utils.dart';
 import 'package:easel_flutter/utils/easel_app_theme.dart';
 import 'package:easel_flutter/utils/screen_size_util.dart';
 import 'package:easel_flutter/utils/space_utils.dart';
+import 'package:easel_flutter/widgets/assets.dart';
 import 'package:easel_flutter/widgets/pylons_round_button.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
@@ -125,7 +126,7 @@ class _UploadWidgetState extends State<_UploadWidget> {
                 final result = await FileUtils.pickFile();
                 widget.onFilePicked(result);
               },
-                child: Image.asset("assets/icons/file.png",),
+                child: Assets.fileImage,
             ),
           ),
           const VerticalSpace(5),

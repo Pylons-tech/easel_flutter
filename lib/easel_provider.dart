@@ -15,7 +15,7 @@ class EaselProvider extends ChangeNotifier {
   String get fileExtension => _fileExtension;
   String get fileSize => _fileSize;
 
-  GlobalKey<FormState> formKey = GlobalKey<FormState>();
+
   final artistNameController = TextEditingController();
   final artNameController = TextEditingController();
   final descriptionController = TextEditingController();
@@ -32,7 +32,7 @@ class EaselProvider extends ChangeNotifier {
    descriptionController.clear();
    noOfEditionController.clear();
    royaltyController.clear();
-   formKey.currentState?.reset();
+   // formKey.currentState?.reset();
    notifyListeners();
   }
 

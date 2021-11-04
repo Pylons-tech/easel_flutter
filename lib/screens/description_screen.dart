@@ -10,14 +10,29 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 
-class DescriptionScreen extends StatelessWidget {
+class DescriptionScreen extends StatefulWidget {
   final PageController controller;
-  const DescriptionScreen({Key? key, required this.controller})
+  DescriptionScreen({Key? key, required this.controller})
       : super(key: key);
 
   @override
+  State<DescriptionScreen> createState() => _DescriptionScreenState();
+}
+
+class _DescriptionScreenState extends State<DescriptionScreen> {
+  final _formKey = GlobalKey<FormState>();
+
+
+  @override
+  void dispose() {
+    _formKey.currentState?.dispose();
+    super.dispose();
+
+  }
+
+  @override
   Widget build(BuildContext context) {
-    // TODO: implement build
+
     return Scaffold(
       body: Stack(
         children: [
@@ -31,7 +46,7 @@ class DescriptionScreen extends StatelessWidget {
               padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
               child: Consumer<EaselProvider>(
                 builder: (_, provider, __) => Form(
-                  key: provider.formKey,
+                  key: _formKey,
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
@@ -124,12 +139,12 @@ class DescriptionScreen extends StatelessWidget {
                       Align(
                         child: PylonsRoundButton(onPressed: () {
                           FocusScope.of(context).unfocus();
-                          if(provider.formKey.currentState!.validate()){
+                          if(_formKey.currentState!.validate()){
                             // print(controller.page!);
-                            final yy = controller.page!;
+                            final yy = widget.controller.page!;
                             double xx = yy < 3.0 ? (yy + 1) : 3;
                             // print(xx);
-                            controller.jumpToPage(xx.toInt());
+                            widget.controller.jumpToPage(xx.toInt());
                           }
                         }),
                       ),
