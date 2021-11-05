@@ -1,8 +1,12 @@
 import 'dart:io';
+import 'dart:math';
 
+import 'package:easel_flutter/main.dart';
 import 'package:easel_flutter/utils/file_utils.dart';
 import 'package:file_picker/file_picker.dart';
+import 'package:fixnum/fixnum.dart';
 import 'package:flutter/material.dart';
+import 'package:pylons_flutter/pylons_flutter.dart';
 
 class EaselProvider extends ChangeNotifier {
   File? _file;
@@ -39,9 +43,110 @@ class EaselProvider extends ChangeNotifier {
   void setFile(PlatformFile selectedFile){
     _file = File(selectedFile.path!);
     _fileName = selectedFile.name;
+    print(_fileName);
     _fileSize = FileUtils.getFileSizeInMB(_file!.lengthSync()).toStringAsFixed(2);
     _fileExtension = FileUtils.getExtension(_fileName);
     notifyListeners();
+  }
+
+  int randomNo(){
+    var rng = Random();
+
+      return rng.nextInt(1000000000);
+  }
+  String cookBookID = "";
+
+  Future<bool> createCookbook()async{
+
+    cookBookID = "easel_autocookbook_${randomNo()}";
+    print("cookbook: $cookBookID");
+    var cookBook1 = Cookbook(
+        creator: "",
+        iD: cookBookID,
+        name: "Easel Cookbook",
+        nodeVersion: "v0.1.0",
+        description: "Cookbook for Easel NFT",
+        developer: artistNameController.text,
+        version: "v0.0.1",
+        supportEmail: "alex@shmeeload.xyz",
+        costPerBlock: Coin(denom: "upylon", amount: "1"), enabled: true);
+
+
+    var response = await PylonsWallet.instance.txCreateCookbook(cookBook1);
+    if(response.success){
+      return true;
+    }
+
+    ScaffoldMessenger.of(navigatorKey.currentState!.overlay!.context).showSnackBar(SnackBar(content: Text(response.error)));
+    return false;
+  }
+
+  Future<bool> createRecipe()async{
+
+    print(cookBookID);
+    var recipe = Recipe(
+        cookbookID: cookBookID,
+        iD: "easel_autoEasel${randomNo()}",
+        nodeVersion: "v0.1.0",
+        name: artNameController.text.trim(),
+        description: "this recipe is used to buy wooden sword lv1.",
+        version: "v0.1.3",
+        coinInputs: [
+          CoinInput(coins: [Coin(amount: "100", denom: "upylon")])
+
+        ],
+        itemInputs: [],
+        entries: EntriesList(coinOutputs: [], itemOutputs: [
+          ItemOutput(
+            iD: "Easel",
+            doubles: [],
+            longs: [
+              LongParam(key: "Quantity", weightRanges: [
+                IntWeightRange(lower: Int64(34), upper: Int64(43), weight: Int64(1))
+              ]),
+              LongParam(key: "Width", weightRanges: [
+                IntWeightRange(lower: Int64(34), upper: Int64(43), weight: Int64(1))
+              ]),
+              LongParam(key: "Height", weightRanges: [
+                IntWeightRange(lower: Int64(34), upper: Int64(43), weight: Int64(1))
+              ])
+            ],
+            strings: [
+              StringParam(key: "Name", value: artNameController.text.trim()),
+              StringParam(key: "App_Type", value: "Easel"),
+              StringParam(key: "Description", value: descriptionController.text.trim()),
+              StringParam(key: "NFT_URL", value: "https"),
+              StringParam(key: "Currency", value: "upylon"),
+              StringParam(key: "Price", value: "100"),
+              StringParam(key: "Creator", value: "NFT Studio"),
+            ],
+            mutableStrings: [],
+            transferFee: [
+              Coin(denom: "upylon", amount: "10")
+            ],
+            tradePercentage: DecString.decStringFromDouble(0.1),
+            tradeable: true,
+          ),
+        ], itemModifyOutputs: []),
+        outputs: [
+          WeightedOutputs(entryIDs: ["copper_sword_lv1"], weight: Int64(1))
+        ],
+        blockInterval: Int64(0),
+        enabled: true,
+        extraInfo: "extraInfo");
+
+    var response = await PylonsWallet.instance.txCreateRecipe(recipe);
+
+    print('From App $response');
+
+    if (response.success) {
+      ScaffoldMessenger.of(navigatorKey.currentState!.overlay!.context).showSnackBar(const SnackBar(content: Text("Recipe created")));
+      print(response.data);
+     return true;
+    } else {
+      ScaffoldMessenger.of(navigatorKey.currentState!.overlay!.context).showSnackBar(SnackBar(content: Text("Recipe error : ${response.error}")));
+      return false;
+    }
   }
 
   @override

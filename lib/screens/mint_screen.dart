@@ -86,9 +86,14 @@ class MintScreen extends StatelessWidget {
                         const VerticalSpace(20,),
 
                         Align(
-                          child: PylonsButton(onPressed: (){
-                            controller.jumpToPage(0);
-                            provider.initStore();
+                          child: PylonsButton(onPressed: ()async{
+                            bool _isCookBookCreated = await provider.createCookbook();
+                            if(_isCookBookCreated){
+                              bool isRecipeCreated = await provider.createRecipe();
+                              print("Recipe created: $isRecipeCreated");
+                            }
+                            // controller.jumpToPage(0);
+                            // provider.initStore();
                           }),
                         ),
                         const VerticalSpace(20,),
