@@ -41,5 +41,23 @@
 	</array>
 	<key>UIViewControllerBasedStatusBarAppearance</key>
 	<false/>
+
+	<key>CFBundleURLTypes</key>
+    <array>
+        <dict>
+            <key>CFBundleTypeRole</key>
+            <string>Editor</string>
+            <key>CFBundleURLName</key>
+            <string>tech.pylons.easel</string>
+            <key>CFBundleURLSchemes</key>
+            <array>
+                <string>pylons-easel</string>
+            </array>
+        </dict>
+    </array>
+    <key>LSApplicationQueriesSchemes</key>
+    <array>
+        <string>pylons-wallet</string>
+    </array>
 </dict>
 </plist>

@@ -1,4 +1,5 @@
 import 'package:easel_flutter/utils/constants.dart';
+import 'package:easel_flutter/utils/easel_app_theme.dart';
 import 'package:flutter/material.dart';
 
 class PylonsButton extends StatelessWidget {
@@ -14,13 +15,13 @@ class PylonsButton extends StatelessWidget {
       onPressed: onPressed,
       icon: const Padding(
         padding:  EdgeInsets.only(right: 20.0),
-        child:  Text("Mint", style: TextStyle(color: Colors.white, fontSize: 16),),
+        child:  Text("Mint", style: TextStyle(color: EaselAppTheme.kWhite, fontSize: 16),),
       ),
-      label: const Icon(Icons.arrow_forward_ios, color: Colors.white),
+      label: const Icon(Icons.arrow_forward_ios, color: EaselAppTheme.kWhite),
       style: TextButton.styleFrom(
-        backgroundColor: kBlue,
+        backgroundColor: EaselAppTheme.kBlue,
         padding: const EdgeInsets.only(left: 50, right: 10, top: 10, bottom: 10),
-        shadowColor: kBlue,
+        shadowColor: EaselAppTheme.kBlue,
         elevation: 10
       ),
     );

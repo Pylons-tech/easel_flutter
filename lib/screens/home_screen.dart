@@ -5,6 +5,7 @@ import 'package:easel_flutter/screens/mint_screen.dart';
 import 'package:easel_flutter/screens/publish_screen.dart';
 import 'package:easel_flutter/screens/upload_screen.dart';
 import 'package:easel_flutter/utils/constants.dart';
+import 'package:easel_flutter/utils/easel_app_theme.dart';
 import 'package:easel_flutter/utils/screen_size_util.dart';
 import 'package:easel_flutter/utils/space_utils.dart';
 import 'package:flutter/material.dart';
@@ -32,7 +33,7 @@ class _HomeScreenState extends State<HomeScreen> {
 
   final int _numPages = 4;
   final PageController _pageController = PageController(keepPage: true);
-  int _currentPage = 0;
+  final ValueNotifier<int> _currentPage = ValueNotifier(0);
 
   List title = ["Upload", "Description", "Mint", "Publish"];
 
@@ -44,21 +45,24 @@ class _HomeScreenState extends State<HomeScreen> {
         body: Column(
           children: [
             const VerticalSpace(20),
-            StepsIndicator(
-              selectedStep: _currentPage,
-              nbSteps: _numPages,
-              lineLength: screenSize.width(percent: 90) / _numPages,
-              doneLineColor: Colors.grey,
-              undoneLineColor: Colors.grey,
-              doneLineThickness: 1.5,
-              undoneLineThickness: 1.5,
-              unselectedStepColorIn: Colors.grey,
-              unselectedStepColorOut: Colors.grey,
-              doneStepColor: Colors.grey,
-              selectedStepColorIn: kBlue,
-              selectedStepColorOut: kBlue,
-              enableLineAnimation: false,
-              enableStepAnimation: false,
+            ValueListenableBuilder(
+              valueListenable: _currentPage,
+              builder: (_, int value, __) => StepsIndicator(
+                selectedStep: _currentPage.value,
+                nbSteps: _numPages,
+                lineLength: screenSize.width(percent: 90) / _numPages,
+                doneLineColor: EaselAppTheme.kLightGrey,
+                undoneLineColor: EaselAppTheme.kLightGrey,
+                doneLineThickness: 1.5,
+                undoneLineThickness: 1.5,
+                unselectedStepColorIn: EaselAppTheme.kLightGrey,
+                unselectedStepColorOut: EaselAppTheme.kLightGrey,
+                doneStepColor: EaselAppTheme.kLightGrey,
+                selectedStepColorIn: EaselAppTheme.kBlue,
+                selectedStepColorOut: EaselAppTheme.kBlue,
+                enableLineAnimation: false,
+                enableStepAnimation: false,
+              ),
             ),
             const VerticalSpace(5),
             _buildTitles(screenSize),
@@ -70,56 +74,57 @@ class _HomeScreenState extends State<HomeScreen> {
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    _currentPage != 3
-                        ? Padding(
-                            padding: const EdgeInsets.only(left: 10.0),
-                            child: IconButton(
-                                onPressed: () {
-                                  setState(() {
-                                    _currentPage =
-                                        _currentPage > 0 ? _currentPage - 1 : 0;
-                                  });
+                    Padding(
+                      padding: const EdgeInsets.only(left: 10.0),
+                      child: IconButton(
+                          onPressed: () {
+                            _currentPage.value = _currentPage.value > 0
+                                ? _currentPage.value - 1
+                                : 0;
 
-                                  _pageController.jumpToPage(_currentPage);
-                                },
-                                icon: const Icon(
-                                  Icons.arrow_back_ios,
-                                  color: Color(0xFF8D8C8C),
-                                )),
-                          )
-                        : const SizedBox.shrink(),
-                    _currentPage == 2
-                        ? Text(
-                            "Preview NFT",
-                            style: Theme.of(context)
-                                .textTheme
-                                .bodyText1!
-                                .copyWith(fontSize: 16),
-                          )
-                        : const SizedBox.shrink(),
+                            _pageController.jumpToPage(_currentPage.value);
+                          },
+                          icon: const Icon(
+                            Icons.arrow_back_ios,
+                            color: Color(0xFF8D8C8C),
+                          )),
+                    ),
+                    ValueListenableBuilder(
+                      valueListenable: _currentPage,
+                      builder: (_, int currentPage, __) =>
+                          _currentPage.value == 2
+                              ? Text(
+                                  "Preview NFT",
+                                  style: Theme.of(context)
+                                      .textTheme
+                                      .bodyText1!
+                                      .copyWith(fontSize: 16),
+                                )
+                              : const SizedBox.shrink(),
+                    ),
                     _currentPage == 3
                         ? Row(
-                            children: [
-                              Text(
-                                "Mint more",
-                                style: Theme.of(context)
-                                    .textTheme
-                                    .bodyText1!
-                                    .copyWith(
-                                        fontSize: 20,
-                                        color: const Color(0xFF1212C4),
-                                        fontWeight: FontWeight.w400),
-                              ),
-                              IconButton(
-                                padding: EdgeInsets.all(0),
-                                  onPressed: () {},
-                                  icon: const Icon(
-                                    Icons.arrow_forward_ios,
-                                    color: Color(0xFF1212C4),
-                                    size: 18,
-                                  )),
-                            ],
-                          )
+                      children: [
+                        Text(
+                          "Mint more",
+                          style: Theme.of(context)
+                              .textTheme
+                              .bodyText1!
+                              .copyWith(
+                              fontSize: 20,
+                              color: const Color(0xFF1212C4),
+                              fontWeight: FontWeight.w400),
+                        ),
+                        IconButton(
+                            padding: EdgeInsets.all(0),
+                            onPressed: () {},
+                            icon: const Icon(
+                              Icons.arrow_forward_ios,
+                              color: Color(0xFF1212C4),
+                              size: 18,
+                            )),
+                      ],
+                    )
                         : const SizedBox.shrink(),
                   ],
                 ),
@@ -132,9 +137,9 @@ class _HomeScreenState extends State<HomeScreen> {
                 controller: _pageController,
                 physics: const NeverScrollableScrollPhysics(),
                 onPageChanged: (int page) {
-                  setState(() {
-                    _currentPage = page;
-                  });
+
+                    _currentPage.value = page;
+
                 },
                 children: [
                   UploadScreen(
@@ -176,7 +181,7 @@ class _HomeScreenState extends State<HomeScreen> {
         Text(
           title[index],
           style: Theme.of(context).textTheme.bodyText2!.copyWith(
-              color: _currentPage == index ? Colors.black : Colors.grey),
+              color: _currentPage.value == index ? EaselAppTheme.kBlack : EaselAppTheme.kGrey),
         ),
       ],
     );
