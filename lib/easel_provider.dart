@@ -2,6 +2,7 @@ import 'dart:io';
 import 'dart:math';
 
 import 'package:easel_flutter/main.dart';
+import 'package:easel_flutter/utils/constants.dart';
 import 'package:easel_flutter/utils/file_utils.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:fixnum/fixnum.dart';
@@ -24,6 +25,7 @@ class EaselProvider extends ChangeNotifier {
   final artNameController = TextEditingController();
   final descriptionController = TextEditingController();
   final noOfEditionController = TextEditingController();
+  final priceController = TextEditingController();
   final royaltyController = TextEditingController();
 
   initStore(){
@@ -35,6 +37,7 @@ class EaselProvider extends ChangeNotifier {
    artNameController.clear();
    descriptionController.clear();
    noOfEditionController.clear();
+   priceController.clear();
    royaltyController.clear();
    // formKey.currentState?.reset();
    notifyListeners();
@@ -89,20 +92,29 @@ class EaselProvider extends ChangeNotifier {
         iD: "easel_autoEasel${randomNo()}",
         nodeVersion: "v0.1.0",
         name: artNameController.text.trim(),
-        description: "this recipe is used to buy wooden sword lv1.",
-        version: "v0.1.3",
+        description: descriptionController.text.trim(),
+        version: "v0.1.0",
         coinInputs: [
-          CoinInput(coins: [Coin(amount: "100", denom: "upylon")])
+          CoinInput(coins: [Coin(amount: priceController.text.trim(), denom: "upylon")])
 
         ],
         itemInputs: [],
         entries: EntriesList(coinOutputs: [], itemOutputs: [
           ItemOutput(
-            iD: "Easel",
-            doubles: [],
+            iD: "Easel_NFT",
+            doubles: [
+              DoubleParam(key: "Residual", weightRanges: [
+                DoubleWeightRange(
+                    lower: "2000000000000000000",
+                    upper: "2000000000000000000",
+                    weight: Int64(1),)
+              ])
+            ],
             longs: [
               LongParam(key: "Quantity", weightRanges: [
-                IntWeightRange(lower: Int64(34), upper: Int64(43), weight: Int64(1))
+                IntWeightRange(lower: Int64(int.parse(noOfEditionController.text.trim())),
+                    upper: Int64(int.parse(noOfEditionController.text.trim())),
+                    weight: Int64(1))
               ]),
               LongParam(key: "Width", weightRanges: [
                 IntWeightRange(lower: Int64(34), upper: Int64(43), weight: Int64(1))
@@ -115,10 +127,10 @@ class EaselProvider extends ChangeNotifier {
               StringParam(key: "Name", value: artNameController.text.trim()),
               StringParam(key: "App_Type", value: "Easel"),
               StringParam(key: "Description", value: descriptionController.text.trim()),
-              StringParam(key: "NFT_URL", value: "https"),
+              StringParam(key: "NFT_URL", value: kImage),
               StringParam(key: "Currency", value: "upylon"),
-              StringParam(key: "Price", value: "100"),
-              StringParam(key: "Creator", value: "NFT Studio"),
+              StringParam(key: "Price", value: priceController.text.trim()),
+              StringParam(key: "Creator", value: artistNameController.text.trim()),
             ],
             mutableStrings: [],
             transferFee: [
@@ -129,7 +141,7 @@ class EaselProvider extends ChangeNotifier {
           ),
         ], itemModifyOutputs: []),
         outputs: [
-          WeightedOutputs(entryIDs: ["copper_sword_lv1"], weight: Int64(1))
+          WeightedOutputs(entryIDs: ["Easel_NFT"], weight: Int64(1))
         ],
         blockInterval: Int64(0),
         enabled: true,
@@ -144,6 +156,7 @@ class EaselProvider extends ChangeNotifier {
       print(response.data);
      return true;
     } else {
+
       ScaffoldMessenger.of(navigatorKey.currentState!.overlay!.context).showSnackBar(SnackBar(content: Text("Recipe error : ${response.error}")));
       return false;
     }

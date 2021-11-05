@@ -79,7 +79,7 @@ class _DescriptionScreenState extends State<DescriptionScreen> {
                         inputFormatters: [LengthLimitingTextInputFormatter(256)],
                         validator: (value){
                           if(value!.isEmpty) return "Enter NFT description";
-                          if(value.length < 10) return "Enter at least 10 characters";
+                          if(value.length <= 20) return "Enter more than 20 characters";
                           return null;
                         },
                       ),
@@ -95,13 +95,29 @@ class _DescriptionScreenState extends State<DescriptionScreen> {
                         20,
                       ),
                       EaselTextField(
+                        title: "Price (Pylons)",
+                        keyboardType: TextInputType.number,
+                        inputFormatters: [FilteringTextInputFormatter.digitsOnly,
+                          LengthLimitingTextInputFormatter(5)],
+                        controller: provider.priceController,
+                        validator: (value){
+                          if(value!.isEmpty) return "Enter price";
+                          if(int.parse(value) > 10000) return "Maximum is 10,000";
+                          return null;
+                        },
+                      ),
+                      const VerticalSpace(
+                        20,
+                      ),
+                      EaselTextField(
                         title: "Number of Editions (Max: 10,000)",
                         keyboardType: TextInputType.number,
                         inputFormatters: [FilteringTextInputFormatter.digitsOnly,
                           LengthLimitingTextInputFormatter(5)],
                         controller: provider.noOfEditionController,
                         validator: (value){
-                          if(value!.isEmpty) return "Number of Editions";
+                          if(value!.isEmpty) return "Enter number of editions";
+                          if(int.parse(value) == 0) return "Minimum is 1";
                           if(int.parse(value) > 10000) return "Maximum is 10,000";
                           return null;
                         },
