@@ -1,6 +1,7 @@
 import 'dart:io';
 import 'dart:math';
 
+import 'package:easel_flutter/datasources/local_datasource.dart';
 import 'package:easel_flutter/main.dart';
 import 'package:easel_flutter/utils/constants.dart';
 import 'package:easel_flutter/utils/file_utils.dart';
@@ -10,10 +11,17 @@ import 'package:flutter/material.dart';
 import 'package:pylons_flutter/pylons_flutter.dart';
 
 class EaselProvider extends ChangeNotifier {
+  final LocalDataSource dataSource;
+
+
+  EaselProvider(this.dataSource);
+
   File? _file;
   String _fileName = "";
   String _fileExtension = "";
   String _fileSize = "0";
+  String _cookbookId = "";
+  String _recipeId = "";
 
   File? get file => _file;
   String get fileName => _fileName;
@@ -57,15 +65,15 @@ class EaselProvider extends ChangeNotifier {
 
       return rng.nextInt(1000000000);
   }
-  String cookBookID = "";
+  // String cookBookID = "";
 
   Future<bool> createCookbook()async{
 
-    cookBookID = "easel_autocookbook_${randomNo()}";
-    print("cookbook: $cookBookID");
+    _cookbookId = await dataSource.getCookbookId();
+    print("cookbook: $_cookbookId");
     var cookBook1 = Cookbook(
         creator: "",
-        iD: cookBookID,
+        iD: _cookbookId,
         name: "Easel Cookbook",
         nodeVersion: "v0.1.0",
         description: "Cookbook for Easel NFT",
@@ -86,10 +94,13 @@ class EaselProvider extends ChangeNotifier {
 
   Future<bool> createRecipe()async{
 
-    print(cookBookID);
+    _cookbookId = await dataSource.getCookbookId();
+    print(_cookbookId);
+    _recipeId = dataSource.autoGenerateEaselId();
+    print(_recipeId);
     var recipe = Recipe(
-        cookbookID: cookBookID,
-        iD: "easel_autoEasel${randomNo()}",
+        cookbookID: _cookbookId,
+        iD: _recipeId,
         nodeVersion: "v0.1.0",
         name: artNameController.text.trim(),
         description: descriptionController.text.trim(),
@@ -105,8 +116,8 @@ class EaselProvider extends ChangeNotifier {
             doubles: [
               DoubleParam(key: "Residual", weightRanges: [
                 DoubleWeightRange(
-                    lower: "2000000000000000000",
-                    upper: "2000000000000000000",
+                    lower: "${int.parse(royaltyController.text.trim()) * 1000000000000000000}",
+                    upper: "${int.parse(royaltyController.text.trim()) * 1000000000000000000}",
                     weight: Int64(1),)
               ])
             ],
