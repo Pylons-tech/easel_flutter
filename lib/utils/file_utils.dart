@@ -1,5 +1,3 @@
-import 'dart:io';
-
 import 'package:file_picker/file_picker.dart';
 import 'package:path/path.dart' as p;
 
@@ -17,7 +15,7 @@ class FileUtils {
     );
 
     if (result != null) {
-      print(result.files.single.extension);
+      //print(result.files.single.extension);
       return result.files.single;
     }
       return null;

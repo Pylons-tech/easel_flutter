@@ -2,7 +2,6 @@ import 'dart:io';
 import 'dart:ui';
 
 import 'package:easel_flutter/easel_provider.dart';
-import 'package:easel_flutter/utils/constants.dart';
 import 'package:easel_flutter/utils/file_utils.dart';
 import 'package:easel_flutter/utils/easel_app_theme.dart';
 import 'package:easel_flutter/utils/screen_size_util.dart';
@@ -89,7 +88,7 @@ class _UploadScreenState extends State<UploadScreen> {
 class _UploadWidget extends StatefulWidget {
 
   final Function(PlatformFile?) onFilePicked;
-   _UploadWidget({
+   const _UploadWidget({
     Key? key,
      required this.onFilePicked,
   }) : super(key: key);
@@ -183,7 +182,7 @@ class _ErrorMessageWidget extends StatelessWidget {
           margin: const EdgeInsets.only(left: 20,),
           padding: const EdgeInsets.symmetric(horizontal: 30, vertical: 40),
           decoration: BoxDecoration(
-            color: const Color(0xFFFC4403).withOpacity(0.75),
+            color: EaselAppTheme.kRed.withOpacity(0.75),
             borderRadius: const BorderRadius.only(topLeft: Radius.circular(14), bottomLeft: Radius.circular(14))
           ),
           child: Column(

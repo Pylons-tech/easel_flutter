@@ -1,3 +1,4 @@
+import 'package:easel_flutter/utils/easel_app_theme.dart';
 import 'package:flutter/material.dart';
 
 class RoundedPurpleButtonWidget extends StatelessWidget {
@@ -16,7 +17,7 @@ class RoundedPurpleButtonWidget extends StatelessWidget {
       decoration: BoxDecoration(
         boxShadow: [
           BoxShadow(
-              color: const Color(0xFF1212C4).withOpacity(0.6),
+              color: EaselAppTheme.kBlue.withOpacity(0.6),
               offset: const Offset(0, 0),
               blurRadius: 10.0)
         ],
@@ -25,11 +26,10 @@ class RoundedPurpleButtonWidget extends StatelessWidget {
           end: Alignment.bottomRight,
           stops: [0.0, 1.0],
           colors: [
-            Color.fromRGBO(255, 255, 255, 0.2),
-            Color.fromRGBO(18, 18, 196, 0.6),
+            EaselAppTheme.kWhite02,
+            EaselAppTheme.kPurple06,
           ],
         ),
-        // color: Color(0xFF1212C4),
         borderRadius: BorderRadius.circular(40),
       ),
       child: Padding(

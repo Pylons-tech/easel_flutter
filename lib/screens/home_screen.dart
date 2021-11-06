@@ -1,10 +1,7 @@
-import 'dart:async';
-
 import 'package:easel_flutter/screens/description_screen.dart';
 import 'package:easel_flutter/screens/mint_screen.dart';
 import 'package:easel_flutter/screens/publish_screen.dart';
 import 'package:easel_flutter/screens/upload_screen.dart';
-import 'package:easel_flutter/utils/constants.dart';
 import 'package:easel_flutter/utils/easel_app_theme.dart';
 import 'package:easel_flutter/utils/screen_size_util.dart';
 import 'package:easel_flutter/utils/space_utils.dart';
@@ -86,7 +83,7 @@ class _HomeScreenState extends State<HomeScreen> {
                           },
                           icon: const Icon(
                             Icons.arrow_back_ios,
-                            color: Color(0xFF8D8C8C),
+                            color: EaselAppTheme.kGrey,
                           )),
                     ),
                     ValueListenableBuilder(
@@ -102,30 +99,34 @@ class _HomeScreenState extends State<HomeScreen> {
                                 )
                               : const SizedBox.shrink(),
                     ),
-                    _currentPage == 3
-                        ? Row(
-                      children: [
-                        Text(
-                          "Mint more",
-                          style: Theme.of(context)
-                              .textTheme
-                              .bodyText1!
-                              .copyWith(
-                              fontSize: 20,
-                              color: const Color(0xFF1212C4),
-                              fontWeight: FontWeight.w400),
-                        ),
-                        IconButton(
-                            padding: EdgeInsets.all(0),
-                            onPressed: () {},
-                            icon: const Icon(
-                              Icons.arrow_forward_ios,
-                              color: Color(0xFF1212C4),
-                              size: 18,
-                            )),
-                      ],
-                    )
-                        : const SizedBox.shrink(),
+                    ValueListenableBuilder(
+                      valueListenable: _currentPage,
+                      builder: (_, int currentPage, __) =>
+                          _currentPage.value == 3
+                              ? Row(
+                                  children: [
+                                    Text(
+                                      "Mint more",
+                                      style: Theme.of(context)
+                                          .textTheme
+                                          .bodyText1!
+                                          .copyWith(
+                                              fontSize: 20,
+                                              color:  EaselAppTheme.kBlue,
+                                              fontWeight: FontWeight.w400),
+                                    ),
+                                    IconButton(
+                                        padding: const EdgeInsets.all(0),
+                                        onPressed: () {},
+                                        icon: const Icon(
+                                          Icons.arrow_forward_ios,
+                                          color: EaselAppTheme.kBlue,
+                                          size: 18,
+                                        )),
+                                  ],
+                                )
+                              : const SizedBox.shrink(),
+                    ),
                   ],
                 ),
               ),
@@ -137,9 +138,7 @@ class _HomeScreenState extends State<HomeScreen> {
                 controller: _pageController,
                 physics: const NeverScrollableScrollPhysics(),
                 onPageChanged: (int page) {
-
-                    _currentPage.value = page;
-
+                  _currentPage.value = page;
                 },
                 children: [
                   UploadScreen(
@@ -181,7 +180,9 @@ class _HomeScreenState extends State<HomeScreen> {
         Text(
           title[index],
           style: Theme.of(context).textTheme.bodyText2!.copyWith(
-              color: _currentPage.value == index ? EaselAppTheme.kBlack : EaselAppTheme.kGrey),
+              color: _currentPage.value == index
+                  ? EaselAppTheme.kBlack
+                  : EaselAppTheme.kGrey),
         ),
       ],
     );

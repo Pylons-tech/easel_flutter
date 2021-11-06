@@ -1,8 +1,4 @@
-import 'dart:io';
-
-import 'package:cached_network_image/cached_network_image.dart';
 import 'package:easel_flutter/easel_provider.dart';
-import 'package:easel_flutter/utils/constants.dart';
 import 'package:easel_flutter/utils/easel_app_theme.dart';
 import 'package:easel_flutter/utils/space_utils.dart';
 import 'package:easel_flutter/widgets/background_widget.dart';
@@ -15,7 +11,7 @@ import 'package:google_fonts/google_fonts.dart';
 
 class MintScreen extends StatelessWidget {
   final PageController controller;
-  MintScreen({Key? key, required this.controller}) : super(key: key);
+  const MintScreen({Key? key, required this.controller}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -34,7 +30,7 @@ class MintScreen extends StatelessWidget {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  _ImageWidget(file: provider.file!),
+                  ImageWidget(file: provider.file!),
                   const SizedBox(height: 10),
                   Padding(
                     padding: const EdgeInsets.symmetric(horizontal: 20),
@@ -88,8 +84,7 @@ class MintScreen extends StatelessWidget {
 
                         Align(
                           child: PylonsButton(onPressed: (){
-                            controller.jumpToPage(0);
-                            provider.initStore();
+                            controller.jumpToPage(4);
                           }),
                         ),
                         const VerticalSpace(20,),
