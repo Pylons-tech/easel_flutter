@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:easel_flutter/screens/description_screen.dart';
 import 'package:easel_flutter/screens/mint_screen.dart';
+import 'package:easel_flutter/screens/publish_screen.dart';
 import 'package:easel_flutter/screens/upload_screen.dart';
 import 'package:easel_flutter/utils/constants.dart';
 import 'package:easel_flutter/utils/easel_app_theme.dart';
@@ -69,7 +70,7 @@ class _HomeScreenState extends State<HomeScreen> {
             Align(
               alignment: Alignment.centerLeft,
               child: SizedBox(
-                width: screenSize.width(percent: 60),
+                width: screenSize.width(percent: 100),
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
@@ -101,6 +102,35 @@ class _HomeScreenState extends State<HomeScreen> {
                                 )
                               : const SizedBox.shrink(),
                     ),
+                    ValueListenableBuilder(
+                      valueListenable: _currentPage,
+                      builder: (_, int currentPage, __) => _currentPage.value ==
+                              3
+                          ? Row(
+                              children: [
+                                TextButton.icon(
+                                    onPressed: () {
+                                      _pageController.jumpToPage(0);
+                                    },
+                                    label: const Icon(
+                                      Icons.arrow_forward_ios,
+                                      color: Color(0xFF1212C4),
+                                      size: 18,
+                                    ),
+                                    icon: Text(
+                                      "Mint more",
+                                      style: Theme.of(context)
+                                          .textTheme
+                                          .bodyText1!
+                                          .copyWith(
+                                              fontSize: 20,
+                                              color: const Color(0xFF1212C4),
+                                              fontWeight: FontWeight.w400),
+                                    ))
+                              ],
+                            )
+                          : const SizedBox.shrink(),
+                    ),
                   ],
                 ),
               ),
@@ -112,9 +142,7 @@ class _HomeScreenState extends State<HomeScreen> {
                 controller: _pageController,
                 physics: const NeverScrollableScrollPhysics(),
                 onPageChanged: (int page) {
-
-                    _currentPage.value = page;
-
+                  _currentPage.value = page;
                 },
                 children: [
                   UploadScreen(
@@ -126,7 +154,7 @@ class _HomeScreenState extends State<HomeScreen> {
                   MintScreen(
                     controller: _pageController,
                   ),
-                  DescriptionScreen(
+                  PublishScreen(
                     controller: _pageController,
                   )
                 ],
@@ -150,15 +178,20 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 
   Widget _buildStepTitle(int index) {
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.center,
-      children: [
-        Text(
-          title[index],
-          style: Theme.of(context).textTheme.bodyText2!.copyWith(
-              color: _currentPage.value == index ? EaselAppTheme.kBlack : EaselAppTheme.kGrey),
-        ),
-      ],
+    return ValueListenableBuilder(
+      valueListenable: _currentPage,
+      builder: (_, int currentPage, __) => Row(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Text(
+            title[index],
+            style: Theme.of(context).textTheme.bodyText2!.copyWith(
+                color: currentPage == index
+                    ? EaselAppTheme.kBlack
+                    : EaselAppTheme.kGrey),
+          ),
+        ],
+      ),
     );
   }
 }

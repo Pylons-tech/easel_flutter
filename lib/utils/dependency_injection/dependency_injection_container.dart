@@ -12,7 +12,7 @@ void init() {
 }
 
 void _registerExternalDependencies() {
-  sl.registerLazySingletonAsync<SharedPreferences>(
+  sl.registerSingletonAsync<SharedPreferences>(
       () => SharedPreferences.getInstance());
 }
 

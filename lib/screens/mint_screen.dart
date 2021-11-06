@@ -6,6 +6,7 @@ import 'package:easel_flutter/utils/constants.dart';
 import 'package:easel_flutter/utils/easel_app_theme.dart';
 import 'package:easel_flutter/utils/space_utils.dart';
 import 'package:easel_flutter/widgets/background_widget.dart';
+import 'package:easel_flutter/widgets/image_widget.dart';
 import 'package:easel_flutter/widgets/pylons_button.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -85,14 +86,15 @@ class MintScreen extends StatelessWidget {
 
                         const VerticalSpace(20,),
 
+
                         Align(
                           child: PylonsButton(onPressed: ()async{
-                            bool _isCookBookCreated = await provider.createCookbook();
-                            if(_isCookBookCreated){
-                              bool isRecipeCreated = await provider.createRecipe();
-                              print("Recipe created: $isRecipeCreated");
-                            }
-                            // controller.jumpToPage(0);
+                            // bool _isCookBookCreated = await provider.createCookbook();
+                            // if(_isCookBookCreated){
+                            //   bool isRecipeCreated = await provider.createRecipe();
+                            //   print("Recipe created: $isRecipeCreated");
+                            // }
+                            controller.jumpToPage(3);
                             // provider.initStore();
                           }),
                         ),
@@ -109,6 +111,7 @@ class MintScreen extends StatelessWidget {
       ),
     );
   }
+
 }
 
 
@@ -137,3 +140,4 @@ class _ImageWidget extends StatelessWidget {
     );
   }
 }
+
