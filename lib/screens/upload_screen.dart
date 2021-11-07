@@ -157,68 +157,82 @@ class _ErrorMessageWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     final screenSize = ScreenSizeUtil(context);
 
-    return Stack(
-      children: [
-        Positioned(
-          right: 0,
-          child: SizedBox(
-            width: screenSize.width(),
-            child: ClipRRect(
-              borderRadius: const BorderRadius.only(topLeft: Radius.circular(14), bottomLeft: Radius.circular(14)),
-              child: BackdropFilter(
-                filter: ImageFilter.blur(sigmaX: 2.0, sigmaY: 2.0),
-                child: Container(
-                  height: screenSize.height(percent: 85),
-                  // width: screenSize.width(),
-                  decoration: BoxDecoration(color: EaselAppTheme.kWhite.withOpacity(0.2)),
+    return AnimatedSwitcher(
+      transitionBuilder: (Widget child, Animation<double> animation) {
+        final  offsetAnimation =
+        Tween<Offset>(begin: const Offset(1.0, 0.0), end: const Offset(0.0, 0.0)).animate(animation);
+        final  offsetHideAnimation =
+        Tween<Offset>(begin: Offset.zero, end: const Offset(1.0, 0.0)).animate(animation);
+        return SlideTransition(
+          position: offsetAnimation,
+          child: child,
+        );
+        //return ScaleTransition(child: child, scale: animation);
+      },
+      duration: const Duration(milliseconds: 300),
+      child: Stack(
+        children: [
+          Positioned(
+            right: 0,
+            child: SizedBox(
+              width: screenSize.width(),
+              child: ClipRRect(
+                borderRadius: const BorderRadius.only(topLeft: Radius.circular(14), bottomLeft: Radius.circular(14)),
+                child: BackdropFilter(
+                  filter: ImageFilter.blur(sigmaX: 2.0, sigmaY: 2.0),
+                  child: Container(
+                    height: screenSize.height(percent: 85),
+                    // width: screenSize.width(),
+                    decoration: BoxDecoration(color: EaselAppTheme.kWhite.withOpacity(0.2)),
+                  ),
                 ),
               ),
             ),
           ),
-        ),
 
-        Container(
-          width: double.infinity,
-          height: screenSize.width(percent: 85),
-          margin: const EdgeInsets.only(left: 20,),
-          padding: const EdgeInsets.symmetric(horizontal: 30, vertical: 40),
-          decoration: BoxDecoration(
-            color: const Color(0xFFFC4403).withOpacity(0.75),
-            borderRadius: const BorderRadius.only(topLeft: Radius.circular(14), bottomLeft: Radius.circular(14))
-          ),
-          child: Column(
-            children: [
-              Row(
-                children: [
-                  IconButton( onPressed: onClose, icon: const Icon(Icons.clear, color: Colors.white, size: 30,)),
-                  const HorizontalSpace(20),
-                  Expanded(
-                    child: Text(errorMessage, style: const TextStyle(color: Colors.white,
-                    fontSize: 18, fontWeight: FontWeight.w500
-                    ),),
-                  )
-                ],
-              ),
-              Expanded(
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
+          Container(
+            width: double.infinity,
+            height: screenSize.width(percent: 85),
+            margin: const EdgeInsets.only(left: 20,),
+            padding: const EdgeInsets.symmetric(horizontal: 30, vertical: 40),
+            decoration: BoxDecoration(
+              color: const Color(0xFFFC4403).withOpacity(0.75),
+              borderRadius: const BorderRadius.only(topLeft: Radius.circular(14), bottomLeft: Radius.circular(14))
+            ),
+            child: Column(
+              children: [
+                Row(
                   children: [
-                    Text("• 40MB Limit", style: Theme.of(context).textTheme.bodyText2!.copyWith(
-                      color: Colors.white, fontSize: 16
-                    ),),
-                    Text("• JPG, PNG or SVG format", style: Theme.of(context).textTheme.bodyText2!.copyWith(
-                        color: Colors.white, fontSize: 16
-                    ),),
-                    Text("• One file per upload", style: Theme.of(context).textTheme.bodyText2!.copyWith(
-                        color: Colors.white, fontSize: 16
-                    ),),
+                    IconButton( onPressed: onClose, icon: const Icon(Icons.clear, color: Colors.white, size: 30,)),
+                    const HorizontalSpace(20),
+                    Expanded(
+                      child: Text(errorMessage, style: const TextStyle(color: Colors.white,
+                      fontSize: 18, fontWeight: FontWeight.w500
+                      ),),
+                    )
                   ],
                 ),
-              )
-            ],
+                Expanded(
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Text("• 40MB Limit", style: Theme.of(context).textTheme.bodyText2!.copyWith(
+                        color: Colors.white, fontSize: 16
+                      ),),
+                      Text("• JPG, PNG or SVG format", style: Theme.of(context).textTheme.bodyText2!.copyWith(
+                          color: Colors.white, fontSize: 16
+                      ),),
+                      Text("• One file per upload", style: Theme.of(context).textTheme.bodyText2!.copyWith(
+                          color: Colors.white, fontSize: 16
+                      ),),
+                    ],
+                  ),
+                )
+              ],
+            ),
           ),
-        ),
-      ],
+        ],
+      ),
     );
   }
 }

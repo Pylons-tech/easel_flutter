@@ -6,6 +6,7 @@ import 'package:easel_flutter/widgets/background_widget.dart';
 import 'package:easel_flutter/widgets/image_widget.dart';
 import 'package:easel_flutter/widgets/rounded_purple_button_widget.dart';
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 
 class PublishScreen extends StatelessWidget {
@@ -56,7 +57,10 @@ class PublishScreen extends StatelessWidget {
                           top: 48,
                           right: 10,
                           child: RoundedPurpleButtonWidget(
-                            onPressed: () {},
+                            onPressed: () {
+                              print("here");
+                              provider.shareNFT();
+                            },
                             icon: 'assets/icons/share_ic.png',
                           )),
                       Positioned(
@@ -127,7 +131,7 @@ class PublishScreen extends StatelessWidget {
                               ),
                         ),
                         Text(
-                          "Date: 08/09/2021",
+                          "Date: ${DateFormat.yMd('en_US').format(DateTime.now())}",
                           style: Theme.of(context).textTheme.caption!.copyWith(
                                 fontSize: 14,
                               ),

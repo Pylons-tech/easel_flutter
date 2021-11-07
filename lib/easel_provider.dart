@@ -1,5 +1,6 @@
+import 'dart:developer';
 import 'dart:io';
-import 'dart:math';
+import 'dart:math' as math;
 
 import 'package:easel_flutter/datasources/local_datasource.dart';
 import 'package:easel_flutter/main.dart';
@@ -9,6 +10,7 @@ import 'package:file_picker/file_picker.dart';
 import 'package:fixnum/fixnum.dart';
 import 'package:flutter/material.dart';
 import 'package:pylons_flutter/pylons_flutter.dart';
+import 'package:share/share.dart';
 
 class EaselProvider extends ChangeNotifier {
   final LocalDataSource dataSource;
@@ -20,7 +22,7 @@ class EaselProvider extends ChangeNotifier {
   String _fileName = "";
   String _fileExtension = "";
   String _fileSize = "0";
-  String _cookbookId = "";
+  String? _cookbookId;
   String _recipeId = "";
 
   File? get file => _file;
@@ -40,6 +42,7 @@ class EaselProvider extends ChangeNotifier {
     _file = null;
    _fileName = "";
    _fileSize = "0";
+   _recipeId = "";
 
    artistNameController.clear();
    artNameController.clear();
@@ -60,17 +63,12 @@ class EaselProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-  int randomNo(){
-    var rng = Random();
 
-      return rng.nextInt(1000000000);
-  }
-  // String cookBookID = "";
-
+  /// send createCookBook tx message to the wallet app
+  /// return true or false depending on the response from the wallet app
   Future<bool> createCookbook()async{
 
-    _cookbookId = await dataSource.getCookbookId();
-    print("cookbook: $_cookbookId");
+    _cookbookId = await dataSource.autoGenerateCookbookId();
     var cookBook1 = Cookbook(
         creator: "",
         iD: _cookbookId,
@@ -79,7 +77,7 @@ class EaselProvider extends ChangeNotifier {
         description: "Cookbook for Easel NFT",
         developer: artistNameController.text,
         version: "v0.0.1",
-        supportEmail: "alex@shmeeload.xyz",
+        supportEmail: "easel@pylons.tech",
         costPerBlock: Coin(denom: "upylon", amount: "1"), enabled: true);
 
 
@@ -92,12 +90,30 @@ class EaselProvider extends ChangeNotifier {
     return false;
   }
 
+
+  /// sends a createRecipe Tx message to the wallet
+  /// return true or false depending on the response from the wallet app
   Future<bool> createRecipe()async{
 
-    _cookbookId = await dataSource.getCookbookId();
-    print(_cookbookId);
+    _cookbookId = dataSource.getCookbookId();
+    if(_cookbookId == null){
+
+      final isCookBookCreated = await createCookbook();
+
+      if(isCookBookCreated) {
+        _cookbookId = dataSource.getCookbookId();
+      }else{
+        return false;
+      }
+    }
+    log("$_cookbookId");
     _recipeId = dataSource.autoGenerateEaselId();
-    print(_recipeId);
+    log(_recipeId);
+    log("${double.parse(royaltyController.text.trim())}");
+
+    // print((double.parse(royaltyController.text.trim()) * 1000000000000000000.0).toStringAsFixed(0));
+    // print(DecString.decStringFromDouble(double.parse(royaltyController.text.trim())));
+    String residual = (double.parse(royaltyController.text.trim()) * 1000000000000000000).toStringAsFixed(0);
     var recipe = Recipe(
         cookbookID: _cookbookId,
         iD: _recipeId,
@@ -116,8 +132,8 @@ class EaselProvider extends ChangeNotifier {
             doubles: [
               DoubleParam(key: "Residual", weightRanges: [
                 DoubleWeightRange(
-                    lower: "${int.parse(royaltyController.text.trim()) * 1000000000000000000}",
-                    upper: "${int.parse(royaltyController.text.trim()) * 1000000000000000000}",
+                    lower: residual,
+                    upper: residual,
                     weight: Int64(1),)
               ])
             ],
@@ -147,7 +163,7 @@ class EaselProvider extends ChangeNotifier {
             transferFee: [
               Coin(denom: "upylon", amount: "10")
             ],
-            tradePercentage: DecString.decStringFromDouble(0.1),
+            tradePercentage: DecString.decStringFromDouble(double.parse(royaltyController.text.trim())),
             tradeable: true,
           ),
         ], itemModifyOutputs: []),
@@ -158,6 +174,7 @@ class EaselProvider extends ChangeNotifier {
         enabled: true,
         extraInfo: "extraInfo");
 
+    log("${recipe.toProto3Json()}");
     var response = await PylonsWallet.instance.txCreateRecipe(recipe);
 
     print('From App $response');
@@ -171,6 +188,18 @@ class EaselProvider extends ChangeNotifier {
       ScaffoldMessenger.of(navigatorKey.currentState!.overlay!.context).showSnackBar(SnackBar(content: Text("Recipe error : ${response.error}")));
       return false;
     }
+  }
+
+  Future<void> shareNFT()async{
+    String url = generateEaselLink();
+    log(url);
+
+    Share.share(url, subject: 'My Easel NFT');
+
+  }
+
+  String generateEaselLink(){
+    return Uri.parse("http://wallet.pylons.tech/?action=purchase_nft&recipe_id=$_recipeId&cookbook_id=$_cookbookId&nft_amount=1").toString();
   }
 
   @override

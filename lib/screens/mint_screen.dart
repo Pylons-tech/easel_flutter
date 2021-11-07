@@ -9,6 +9,7 @@ import 'package:easel_flutter/widgets/background_widget.dart';
 import 'package:easel_flutter/widgets/image_widget.dart';
 import 'package:easel_flutter/widgets/pylons_button.dart';
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 import 'package:google_fonts/google_fonts.dart';
 
@@ -70,7 +71,7 @@ class MintScreen extends StatelessWidget {
                           style: Theme.of(context).textTheme.caption!.copyWith(
                             fontSize: 14,
                           ),),
-                        Text("Date: ${DateTime.now().toString()}",
+                        Text("Date: ${DateFormat.yMd('en_US').format(DateTime.now())}",
                           style: Theme.of(context).textTheme.caption!.copyWith(
                             fontSize: 14,
                           ),),
@@ -89,11 +90,14 @@ class MintScreen extends StatelessWidget {
 
                         Align(
                           child: PylonsButton(onPressed: ()async{
-                            // bool _isCookBookCreated = await provider.createCookbook();
-                            // if(_isCookBookCreated){
-                            //   bool isRecipeCreated = await provider.createRecipe();
-                            //   print("Recipe created: $isRecipeCreated");
-                            // }
+
+                              bool isRecipeCreated = await provider.createRecipe();
+                              print("Recipe created: $isRecipeCreated");
+
+                              if(!isRecipeCreated){
+                                return;
+                              }
+
                             controller.jumpToPage(3);
                             // provider.initStore();
                           }),

@@ -4,7 +4,8 @@ import 'package:easel_flutter/utils/constants.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 abstract class LocalDataSource {
-  Future<String> getCookbookId();
+  String? getCookbookId();
+  Future<String> autoGenerateCookbookId();
   String autoGenerateEaselId();
 }
 
@@ -13,18 +14,19 @@ class LocalDataSourceImpl implements LocalDataSource {
 
   LocalDataSourceImpl(this.sharedPreferences);
 
+  /// gets cookbookId from local storage
+  ///return String or null
   @override
-  Future<String> getCookbookId() async{
-    String cookBookId = sharedPreferences.getString(kCookbookId) ?? "";
-    if(cookBookId.isEmpty){
-      cookBookId = await _autoGenerateCookbookId();
-    }
-    return cookBookId;
+  String? getCookbookId(){
+    return sharedPreferences.getString(kCookbookId);
   }
 
-  Future<String> _autoGenerateCookbookId() async{
+  /// auto generates cookbookID string and saves into local storage
+  /// returns cookbookId
+  @override
+  Future<String> autoGenerateCookbookId() async{
     final rnd = Random();
-    int randomNo = rnd.nextInt(10000000000);
+    int randomNo = rnd.nextInt(1000000);
     String cookbookId = "Easel_CookBook_autocookbook_$randomNo";
 
     await sharedPreferences.setString(kCookbookId, cookbookId);
@@ -32,12 +34,13 @@ class LocalDataSourceImpl implements LocalDataSource {
     return cookbookId;
   }
 
+  /// auto generates easelID string
+  /// returns easelId
   @override
   String autoGenerateEaselId() {
     final rnd = Random();
-    int randomNo = rnd.nextInt(10000000000);
-    String cookbookId = "Easel_Recipr_autorecipe_$randomNo";
-
+    int randomNo = rnd.nextInt(1000000);
+    String cookbookId = "Easel_Recipe_autorecipe_$randomNo";
 
     return cookbookId;
   }
