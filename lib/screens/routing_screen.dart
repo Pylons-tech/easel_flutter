@@ -16,7 +16,7 @@ class _RoutingScreenState extends State<RoutingScreen> {
   void initState() {
     super.initState();
     Future.delayed(const Duration(seconds: 1), (){
-      navigatorKey.currentState!.push(MaterialPageRoute(builder: (_) => HomeScreen()));
+      navigatorKey.currentState!.push(MaterialPageRoute(builder: (_) => const HomeScreen()));
     });
   }
 
