@@ -68,10 +68,6 @@ class EaselProvider extends ChangeNotifier {
 
   Future<void> setFile(BuildContext context, PlatformFile selectedFile)async{
 
-    // if(FileUtils.isSvgFile(selectedFile.path)){
-    //   selectedFile = await FileUtils.convertSvgToPngFile(context, selectedFile);
-    // }
-
     _file = File(selectedFile.path!);
     _fileName = selectedFile.name;
     _fileSize = FileUtils.getFileSizeInMB(_file!.lengthSync()).toStringAsFixed(2);
@@ -79,7 +75,6 @@ class EaselProvider extends ChangeNotifier {
     await _calculateDimension(_file!);
     notifyListeners();
 
-    // /data/user/0/tech.pylons.easel/app_flutter/Easel_11082021_135126507.png
   }
 
 
@@ -152,9 +147,7 @@ class EaselProvider extends ChangeNotifier {
       return false;
     }
 
-    // print((double.parse(royaltyController.text.trim()) * 1000000000000000000.0).toStringAsFixed(0));
-    // print(DecString.decStringFromDouble(double.parse(royaltyController.text.trim())));
-    String residual = (double.parse(royaltyController.text.trim()) * 1000000000000000000).toStringAsFixed(0);
+   String residual = (double.parse(royaltyController.text.trim()) * 1000000000000000000).toStringAsFixed(0);
     var recipe = Recipe(
         cookbookID: _cookbookId,
         iD: _recipeId,

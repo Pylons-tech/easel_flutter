@@ -26,8 +26,7 @@ class LocalDataSourceImpl implements LocalDataSource {
   /// returns cookbookId
   @override
   Future<String> autoGenerateCookbookId() async{
-    // final rnd = Random();
-    // int randomNo = rnd.nextInt(1000000);
+
     final format = DateFormat('yyyy_MM_dd_HHmmss_SSS');
     String cookbookId = "Easel_CookBook_autocookbook_${format.format(DateTime.now())}";
 
@@ -40,8 +39,7 @@ class LocalDataSourceImpl implements LocalDataSource {
   /// returns easelId
   @override
   String autoGenerateEaselId() {
-    // final rnd = Random();
-    // int randomNo = rnd.nextInt(1000000);
+
     final format = DateFormat('yyyy_MM_dd_HHmmss_SSS');
     String cookbookId = "Easel_Recipe_autorecipe_${format.format(DateTime.now())}";
 
