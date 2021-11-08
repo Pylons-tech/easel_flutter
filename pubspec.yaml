@@ -56,6 +56,23 @@ dependencies:
 
   google_fonts: ^2.1.0
 
+  fixnum: ^1.0.0
+
+  get_it: ^7.2.0
+
+  shared_preferences: ^2.0.8
+
+  intl: ^0.17.0
+
+  share: ^2.0.4
+
+# used for bitmap manipulation, needed for svg to png conversion
+#  bitmap: ^0.1.2
+
+  path_provider: ^2.0.6
+
+  dio: ^4.0.1
+
 dev_dependencies:
   flutter_test:
     sdk: flutter

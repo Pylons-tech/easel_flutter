@@ -1,3 +1,4 @@
+import 'package:easel_flutter/easel_provider.dart';
 import 'package:easel_flutter/screens/description_screen.dart';
 import 'package:easel_flutter/screens/mint_screen.dart';
 import 'package:easel_flutter/screens/publish_screen.dart';
@@ -7,6 +8,7 @@ import 'package:easel_flutter/utils/easel_app_theme.dart';
 import 'package:easel_flutter/utils/screen_size_util.dart';
 import 'package:easel_flutter/utils/space_utils.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:steps_indicator/steps_indicator.dart';
 
 class HomeScreen extends StatefulWidget {
@@ -102,31 +104,31 @@ class _HomeScreenState extends State<HomeScreen> {
                     ),
                     ValueListenableBuilder(
                       valueListenable: _currentPage,
-                      builder: (_, int currentPage, __) =>
-                          _currentPage.value == 3
-                              ? Row(
-                                  children: [
-                                    Text(
-                                      "Mint more",
-                                      style: Theme.of(context)
-                                          .textTheme
-                                          .bodyText1!
-                                          .copyWith(
-                                              fontSize: 20,
-                                              color: EaselAppTheme.kBlue,
-                                              fontWeight: FontWeight.w400),
-                                    ),
-                                    IconButton(
-                                        padding: const EdgeInsets.all(0),
-                                        onPressed: () {},
-                                        icon: const Icon(
-                                          Icons.arrow_forward_ios,
-                                          color: EaselAppTheme.kBlue,
-                                          size: 18,
-                                        )),
-                                  ],
-                                )
-                              : const SizedBox.shrink(),
+
+                      builder: (_, int currentPage, __) => _currentPage.value == 3
+                          ? Consumer<EaselProvider>(
+                            builder: (_, provider, __) => TextButton.icon(
+                                onPressed: () {
+                                  provider.initStore();
+                                  _pageController.jumpToPage(0);
+                                },
+                                label: const Icon(
+                                  Icons.arrow_forward_ios,
+                                  color: Color(0xFF1212C4),
+                                  size: 18,
+                                ),
+                                icon: Text(
+                                  "Mint more",
+                                  style: Theme.of(context)
+                                      .textTheme
+                                      .bodyText1!
+                                      .copyWith(
+                                          fontSize: 20,
+                                          color: const Color(0xFF1212C4),
+                                          fontWeight: FontWeight.w400),
+                                )),
+                          )
+                          : const SizedBox.shrink(),
                     ),
                   ],
                 ),
@@ -175,17 +177,23 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 
   Widget _buildStepTitle(int index) {
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.center,
-      children: [
-        Text(
-          title[index],
-          style: Theme.of(context).textTheme.bodyText2!.copyWith(
-              color: _currentPage.value == index
-                  ? EaselAppTheme.kBlack
-                  : EaselAppTheme.kGrey),
-        ),
-      ],
+
+    return ValueListenableBuilder(
+      valueListenable: _currentPage,
+      builder: (_, int currentPage, __) => Row(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Text(
+            title[index],
+            style: Theme.of(context).textTheme.bodyText2!.copyWith(
+                color: currentPage == index
+                    ? EaselAppTheme.kBlack
+                    : EaselAppTheme.kGrey),
+          ),
+        ],
+      ),
     );
+
+
   }
 }

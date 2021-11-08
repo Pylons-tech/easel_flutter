@@ -6,12 +6,15 @@ import 'package:easel_flutter/widgets/background_widget.dart';
 import 'package:easel_flutter/widgets/image_widget.dart';
 import 'package:easel_flutter/widgets/rounded_purple_button_widget.dart';
 import 'package:flutter/material.dart';
+
+import 'package:intl/intl.dart';
+
 import 'package:provider/provider.dart';
 
 class PublishScreen extends StatelessWidget {
   final PageController controller;
 
-  const PublishScreen({Key? key, required this.controller}) : super(key: key);
+  PublishScreen({Key? key, required this.controller}) : super(key: key);
 
   final List<String> detailInfo = const [
     'Contract Address',
@@ -30,8 +33,11 @@ class PublishScreen extends StatelessWidget {
     'Exclusive'
   ];
 
+  late EaselProvider provider;
+
   @override
   Widget build(BuildContext context) {
+    provider = Provider.of<EaselProvider>(context);
     return Scaffold(
       body: Stack(
         children: [
@@ -40,6 +46,8 @@ class PublishScreen extends StatelessWidget {
             right: 0,
             child: BackgroundWidget(),
           ),
+
+
           Consumer<EaselProvider>(
             builder: (_, provider, __) => SingleChildScrollView(
               child: Padding(
@@ -54,7 +62,9 @@ class PublishScreen extends StatelessWidget {
                             top: 48,
                             right: 10,
                             child: RoundedPurpleButtonWidget(
-                              onPressed: () {},
+                              onPressed: () {
+                                provider.shareNFT();
+                              },
                               icon: kShareIcon,
                             )),
                         Positioned(
@@ -121,7 +131,7 @@ class PublishScreen extends StatelessWidget {
                             10,
                           ),
                           Text(
-                            "Size: 1920 x 1080px ${provider.fileExtension.toUpperCase()}",
+                            "Size: ${provider.fileWidth} x ${provider.fileHeight}px ${provider.fileExtension.toUpperCase()}",
                             style:
                                 Theme.of(context).textTheme.caption!.copyWith(
                                       fontSize: 14,
@@ -151,26 +161,26 @@ class PublishScreen extends StatelessWidget {
                                       fontSize: 14,
                                     ),
                           ),
-                          const Divider(
-                            height: 40,
-                            thickness: 1.2,
-                          ),
-                          Text(
-                            "Details",
-                            style:
-                                Theme.of(context).textTheme.bodyText2!.copyWith(
-                                      fontSize: 18,
-                                    ),
-                          ),
-                          Column(
-                            children: List.generate(detailInfo.length, (i) {
-                              return _buildDetailInfo(
-                                context: context,
-                                text: sampleData[i],
-                                title: detailInfo[i],
-                              );
-                            }),
-                          ),
+                          // const Divider(
+                          //   height: 40,
+                          //   thickness: 1.2,
+                          // ),
+                          // Text(
+                          //   "Details",
+                          //   style:
+                          //       Theme.of(context).textTheme.bodyText2!.copyWith(
+                          //             fontSize: 18,
+                          //           ),
+                          // ),
+                          // Column(
+                          //   children: List.generate(detailInfo.length, (i) {
+                          //     return _buildDetailInfo(
+                          //       context: context,
+                          //       text: sampleData[i],
+                          //       title: detailInfo[i],
+                          //     );
+                          //   }),
+                          // ),
                         ],
                       ),
                     ),

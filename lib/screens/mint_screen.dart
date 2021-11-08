@@ -1,3 +1,5 @@
+
+import 'dart:developer';
 import 'dart:io';
 
 import 'package:cached_network_image/cached_network_image.dart';
@@ -9,6 +11,7 @@ import 'package:easel_flutter/widgets/background_widget.dart';
 import 'package:easel_flutter/widgets/image_widget.dart';
 import 'package:easel_flutter/widgets/pylons_button.dart';
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 import 'package:google_fonts/google_fonts.dart';
 
@@ -68,29 +71,21 @@ class MintScreen extends StatelessWidget {
                                         color: EaselAppTheme.kBlue))
                               ]),
                         ),
-                        const Divider(
-                          height: 40,
-                          thickness: 1.2,
-                        ),
-                        Text(
-                          "Description",
-                          style:
-                              Theme.of(context).textTheme.bodyText2!.copyWith(
-                                    fontSize: 18,
-                                  ),
-                        ),
-                        Text(
-                          provider.descriptionController.text,
+
+                        const Divider(height: 40, thickness: 1.2,),
+                        Text("Description", style: Theme.of(context).textTheme.bodyText2!.copyWith(
+                          fontSize: 18,
+                        ),),
+                        Text(provider.descriptionController.text,
+                        style: Theme.of(context).textTheme.caption!.copyWith(
+                          fontSize: 14, color: EaselAppTheme.kLightText, fontWeight: FontWeight.w300
+                        ),),
+                        const VerticalSpace(10,),
+                        Text("Size: ${provider.fileWidth} x ${provider.fileHeight}px ${provider.fileExtension.toUpperCase()}",
                           style: Theme.of(context).textTheme.caption!.copyWith(
-                              fontSize: 14,
-                              color: EaselAppTheme.kLightText,
-                              fontWeight: FontWeight.w300),
-                        ),
-                        const VerticalSpace(
-                          10,
-                        ),
-                        Text(
-                          "Size: 1920 x 1080px ${provider.fileExtension.toUpperCase()}",
+                            fontSize: 14,
+                          ),),
+                        Text("Date: ${DateFormat.yMd('en_US').format(DateTime.now())}",
                           style: Theme.of(context).textTheme.caption!.copyWith(
                                 fontSize: 14,
                               ),
@@ -120,8 +115,18 @@ class MintScreen extends StatelessWidget {
                           20,
                         ),
                         Align(
-                          child: PylonsButton(onPressed: () {
-                            controller.jumpToPage(4);
+                          child: PylonsButton(onPressed: ()async{
+                            // final response =
+
+                              bool isRecipeCreated = await provider.createRecipe();
+                              log("Recipe created: $isRecipeCreated");
+
+                              if(!isRecipeCreated){
+                                return;
+                              }
+
+                            controller.jumpToPage(3);
+
                           }),
                         ),
                         const VerticalSpace(
@@ -138,27 +143,6 @@ class MintScreen extends StatelessWidget {
       ),
     );
   }
+
 }
 
-class _ImageWidget extends StatelessWidget {
-  final File file;
-  const _ImageWidget({Key? key, required this.file}) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    final screenSize = MediaQuery.of(context).size;
-    return Padding(
-      padding: const EdgeInsets.only(right: 30),
-      child: ClipRRect(
-        borderRadius: const BorderRadius.only(
-            topRight: Radius.circular(14), bottomRight: Radius.circular(14)),
-        child: Image.memory(
-          file.readAsBytesSync(),
-          width: screenSize.width,
-          height: screenSize.height * 0.3,
-          fit: BoxFit.cover,
-        ),
-      ),
-    );
-  }
-}
