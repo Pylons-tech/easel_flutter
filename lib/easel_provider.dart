@@ -62,13 +62,20 @@ class EaselProvider extends ChangeNotifier {
    notifyListeners();
   }
 
-  Future<void> setFile(PlatformFile selectedFile)async{
+  Future<void> setFile(BuildContext context, PlatformFile selectedFile)async{
+
+    // if(FileUtils.isSvgFile(selectedFile.path)){
+    //   selectedFile = await FileUtils.convertSvgToPngFile(context, selectedFile);
+    // }
+
     _file = File(selectedFile.path!);
     _fileName = selectedFile.name;
     _fileSize = FileUtils.getFileSizeInMB(_file!.lengthSync()).toStringAsFixed(2);
     _fileExtension = FileUtils.getExtension(_fileName);
     await _calculateDimension(_file!);
     notifyListeners();
+
+    // /data/user/0/tech.pylons.easel/app_flutter/Easel_11082021_135126507.png
   }
 
 

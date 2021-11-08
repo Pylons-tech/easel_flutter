@@ -41,7 +41,7 @@ class _UploadScreenState extends State<UploadScreen> {
                       onFilePicked: (result)async{
                         if(result != null){
                           if(FileUtils.getFileSizeInMB(File(result.path!).lengthSync()) <= 40){
-                            await provider.setFile(result);
+                            await provider.setFile(context, result);
                           }else{
                             errorText.value = '"${result.name}" could not be uploaded';
                             showError.value = true;
@@ -127,7 +127,7 @@ class _UploadWidgetState extends State<_UploadWidget> {
               color: EaselAppTheme.kBlue.withOpacity(0.05),
               borderRadius: BorderRadius.circular(8),
               image:  provider.file != null ? DecorationImage(
-                image: MemoryImage(provider.file!.readAsBytesSync()),
+                image: FileImage(provider.file!),
                 fit: BoxFit.cover
               ) : null
             ),

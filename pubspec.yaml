@@ -66,6 +66,11 @@ dependencies:
 
   share: ^2.0.4
 
+# used for bitmap manipulation, needed for svg to png conversion
+  bitmap: ^0.1.2
+
+  path_provider: ^2.0.6
+
 dev_dependencies:
   flutter_test:
     sdk: flutter
