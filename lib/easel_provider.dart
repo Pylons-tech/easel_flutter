@@ -185,10 +185,10 @@ class EaselProvider extends ChangeNotifier {
                     weight: Int64(1))
               ]),
               LongParam(key: "Width", weightRanges: [
-                IntWeightRange(lower: Int64(34), upper: Int64(43), weight: Int64(1))
+                IntWeightRange(lower: Int64(_fileWidth), upper: Int64(_fileWidth), weight: Int64(1))
               ]),
               LongParam(key: "Height", weightRanges: [
-                IntWeightRange(lower: Int64(34), upper: Int64(43), weight: Int64(1))
+                IntWeightRange(lower: Int64(_fileHeight), upper: Int64(_fileHeight), weight: Int64(1))
               ])
             ],
             strings: [

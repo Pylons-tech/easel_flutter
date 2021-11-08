@@ -1,8 +1,10 @@
 import 'dart:io';
+
 import 'dart:typed_data';
 import 'dart:ui' as ui;
 
 // import 'package:bitmap/bitmap.dart';
+
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
@@ -11,14 +13,14 @@ import 'package:path/path.dart' as p;
 import 'package:path_provider/path_provider.dart';
 
 class FileUtils {
-
   /// This methods picks a file (png, jpg, jpeg, svg) from device storage
   ///
   /// returns [PlatformFile] the selected file
   ///
   /// or null if aborted
-  static Future<PlatformFile?> pickFile ()async{
+  static Future<PlatformFile?> pickFile() async {
     FilePickerResult? result = await FilePicker.platform.pickFiles(
+
       allowedExtensions: ['png','jpg', 'jpeg'],
       type: FileType.custom
     );
@@ -27,10 +29,8 @@ class FileUtils {
       //print(result.files.single.extension);
       return result.files.single;
     }
-      return null;
-
+    return null;
   }
-
 
   /// This methods cheks if a file path extension svg or not
   /// input [filePath] the file path
@@ -41,23 +41,25 @@ class FileUtils {
     if(filePath == null){
       return false;
     }
+
     final extension = p.extension(filePath);
     return extension == ".svg";
   }
-  
-  static String getExtension(String fileName){
+
+  static String getExtension(String fileName) {
     return p.extension(fileName).replaceAll(".", "");
   }
+
 
   static double getFileSizeInMB(int fileLength){
     return (fileLength/(1024 * 1024)).ceilToDouble();
   }
 
-
-  static Future<PlatformFile> convertSvgToPngFile(BuildContext context, PlatformFile svgFile)async{
+  static Future<PlatformFile> convertSvgToPngFile(BuildContext context, PlatformFile svgFile)async {
     // String svgString = await DefaultAssetBundle.of(context).loadString(svgFile.path!);
     String svgString = await File(svgFile.path!).readAsString();
-    DrawableRoot svgDrawableRoot = await svg.fromSvgString(svgString, svgFile.name);
+    DrawableRoot svgDrawableRoot = await svg.fromSvgString(
+        svgString, svgFile.name);
 
     // to have a nice rendering it is important to have the exact original height and width,
     // the easier way to retrieve it is directly from the svg string
@@ -69,11 +71,14 @@ class FileUtils {
     // int originalWidth = int.parse(temp.substring(0, temp.indexOf('p')));
 
     // toPicture() and toImage() don't seem to be pixel ratio aware, so we calculate the actual sizes here
-    double devicePixelRatio = MediaQuery.of(context).devicePixelRatio;
+    double devicePixelRatio = MediaQuery
+        .of(context)
+        .devicePixelRatio;
 
     // double width = originalHeight * devicePixelRatio; // where 32 is your SVG's original width
     // double height = originalWidth * devicePixelRatio;
-    double width = 1080 * devicePixelRatio; // where 32 is your SVG's original width
+    double width = 1080 *
+        devicePixelRatio; // where 32 is your SVG's original width
     double height = 1920 * devicePixelRatio; // same thing
 
     // Convert to ui.Picture
@@ -90,17 +95,18 @@ class FileUtils {
     // );
 
 
-
     // if you need to save it:
     final String appDir = (await getApplicationDocumentsDirectory()).path;
-    String name = "Easel_${DateFormat("MMddyyyy_HHmmssSSS").format(DateTime.now())}.png";
+    String name = "Easel_${DateFormat("MMddyyyy_HHmmssSSS").format(
+        DateTime.now())}.png";
     File newFile = File('$appDir/$name');
 
     newFile.writeAsBytesSync(bytes!.buffer.asUint8List());
 
 
-   return PlatformFile(name: name, path: newFile.path, size: newFile.lengthSync(), bytes: bytes.buffer.asUint8List());
+    return PlatformFile(name: name,
+        path: newFile.path,
+        size: newFile.lengthSync(),
+        bytes: bytes.buffer.asUint8List());
   }
-
-
 }

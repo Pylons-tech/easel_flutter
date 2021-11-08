@@ -1,7 +1,10 @@
+
 import 'dart:developer';
 import 'dart:io';
 
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:easel_flutter/easel_provider.dart';
+import 'package:easel_flutter/utils/constants.dart';
 import 'package:easel_flutter/utils/easel_app_theme.dart';
 import 'package:easel_flutter/utils/space_utils.dart';
 import 'package:easel_flutter/widgets/background_widget.dart';
@@ -11,7 +14,6 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 import 'package:google_fonts/google_fonts.dart';
-
 
 class MintScreen extends StatelessWidget {
   final PageController controller;
@@ -28,7 +30,6 @@ class MintScreen extends StatelessWidget {
             right: 0,
             child: BackgroundWidget(),
           ),
-
           Consumer<EaselProvider>(
             builder: (_, provider, __) => SingleChildScrollView(
               child: Column(
@@ -41,19 +42,33 @@ class MintScreen extends StatelessWidget {
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Text(provider.artNameController.text, style: Theme.of(context).textTheme.headline5!.copyWith(
-                           color: EaselAppTheme.kDarkText, fontWeight: FontWeight.w600,
-                        ),),
-                        const VerticalSpace(4,),
+                        Text(
+                          provider.artNameController.text,
+                          style:
+                              Theme.of(context).textTheme.headline5!.copyWith(
+                                    color: EaselAppTheme.kDarkText,
+                                    fontWeight: FontWeight.w600,
+                                  ),
+                        ),
+                        const VerticalSpace(
+                          4,
+                        ),
                         RichText(
-                          text: TextSpan(text: "${"Created by "} ",
+                          text: TextSpan(
+                              text: "${"Created by "} ",
                               style: GoogleFonts.inter(
-                                  textStyle: Theme.of(context).textTheme.bodyText2!.copyWith(
-                                    fontSize: 20, color: EaselAppTheme.kDarkText,
-                                  )
-                              ),
+                                  textStyle: Theme.of(context)
+                                      .textTheme
+                                      .bodyText2!
+                                      .copyWith(
+                                        fontSize: 20,
+                                        color: EaselAppTheme.kDarkText,
+                                      )),
                               children: [
-                                TextSpan(text: provider.artistNameController.text, style: const TextStyle(color: EaselAppTheme.kBlue))
+                                TextSpan(
+                                    text: provider.artistNameController.text,
+                                    style: const TextStyle(
+                                        color: EaselAppTheme.kBlue))
                               ]),
                         ),
 
@@ -72,23 +87,35 @@ class MintScreen extends StatelessWidget {
                           ),),
                         Text("Date: ${DateFormat.yMd('en_US').format(DateTime.now())}",
                           style: Theme.of(context).textTheme.caption!.copyWith(
-                            fontSize: 14,
-                          ),),
-                        const VerticalSpace(10,),
-                        Text("No of editions: ${provider.noOfEditionController.text}",
+                                fontSize: 14,
+                              ),
+                        ),
+                        Text(
+                          "Date: ${DateTime.now().toString()}",
                           style: Theme.of(context).textTheme.caption!.copyWith(
-                            fontSize: 14,
-                          ),),
-                        Text("Royalty: ${provider.royaltyController.text}%",
+                                fontSize: 14,
+                              ),
+                        ),
+                        const VerticalSpace(
+                          10,
+                        ),
+                        Text(
+                          "No of editions: ${provider.noOfEditionController.text}",
                           style: Theme.of(context).textTheme.caption!.copyWith(
-                            fontSize: 14,
-                          ),),
-
-                        const VerticalSpace(20,),
-
+                                fontSize: 14,
+                              ),
+                        ),
+                        Text(
+                          "Royalty: ${provider.royaltyController.text}%",
+                          style: Theme.of(context).textTheme.caption!.copyWith(
+                                fontSize: 14,
+                              ),
+                        ),
+                        const VerticalSpace(
+                          20,
+                        ),
                         Align(
                           child: PylonsButton(onPressed: ()async{
-
                             // final response =
 
                               bool isRecipeCreated = await provider.createRecipe();
@@ -99,11 +126,12 @@ class MintScreen extends StatelessWidget {
                               }
 
                             controller.jumpToPage(3);
-                            // provider.initStore();
+
                           }),
                         ),
-                        const VerticalSpace(20,),
-
+                        const VerticalSpace(
+                          20,
+                        ),
                       ],
                     ),
                   ),
@@ -117,5 +145,4 @@ class MintScreen extends StatelessWidget {
   }
 
 }
-
 

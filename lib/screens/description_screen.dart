@@ -1,4 +1,5 @@
 import 'package:easel_flutter/easel_provider.dart';
+import 'package:easel_flutter/utils/constants.dart';
 import 'package:easel_flutter/utils/easel_app_theme.dart';
 import 'package:easel_flutter/utils/space_utils.dart';
 import 'package:easel_flutter/widgets/background_widget.dart';
@@ -21,17 +22,14 @@ class DescriptionScreen extends StatefulWidget {
 class _DescriptionScreenState extends State<DescriptionScreen> {
   final _formKey = GlobalKey<FormState>();
 
-
   @override
   void dispose() {
     _formKey.currentState?.dispose();
     super.dispose();
-
   }
 
   @override
   Widget build(BuildContext context) {
-
     return Scaffold(
       body: Stack(
         children: [
@@ -52,8 +50,8 @@ class _DescriptionScreenState extends State<DescriptionScreen> {
                       EaselTextField(
                         title: "Your name as the artist",
                         controller: provider.artistNameController,
-                        validator: (value){
-                          if(value!.isEmpty) return "Enter artist name";
+                        validator: (value) {
+                          if (value!.isEmpty) return "Enter artist name";
                           return null;
                         },
                       ),
@@ -63,8 +61,8 @@ class _DescriptionScreenState extends State<DescriptionScreen> {
                       EaselTextField(
                         title: "Give your NFT a name",
                         controller: provider.artNameController,
-                        validator: (value){
-                          if(value!.isEmpty) return "Enter NFT name";
+                        validator: (value) {
+                          if (value!.isEmpty) return "Enter NFT name";
                           return null;
                         },
                       ),
@@ -75,6 +73,7 @@ class _DescriptionScreenState extends State<DescriptionScreen> {
                         title: "Describe your NFT",
                         noOfLines: 4,
                         controller: provider.descriptionController,
+
                         inputFormatters: [LengthLimitingTextInputFormatter(256)],
                         validator: (value){
                           if(value!.isEmpty) return "Enter NFT description";
@@ -85,10 +84,9 @@ class _DescriptionScreenState extends State<DescriptionScreen> {
                       const VerticalSpace(4),
                       Text(
                         "256 character limit",
-                        style: Theme.of(context)
-                            .textTheme
-                            .subtitle2!
-                            .copyWith(color: EaselAppTheme.kGrey, fontWeight: FontWeight.w600),
+                        style: Theme.of(context).textTheme.subtitle2!.copyWith(
+                            color: EaselAppTheme.kGrey,
+                            fontWeight: FontWeight.w600),
                       ),
                       const VerticalSpace(
                         20,
@@ -111,13 +109,16 @@ class _DescriptionScreenState extends State<DescriptionScreen> {
                       EaselTextField(
                         title: "Number of Editions (Max: 10,000)",
                         keyboardType: TextInputType.number,
-                        inputFormatters: [FilteringTextInputFormatter.digitsOnly,
-                          LengthLimitingTextInputFormatter(5)],
+                        inputFormatters: [
+                          FilteringTextInputFormatter.digitsOnly,
+                          LengthLimitingTextInputFormatter(5)
+                        ],
                         controller: provider.noOfEditionController,
                         validator: (value){
                           if(value!.isEmpty) return "Enter number of editions";
                           if(int.parse(value) == 0) return "Minimum is 1";
                           if(int.parse(value) > 10000) return "Maximum is 10,000";
+
                           return null;
                         },
                       ),
@@ -128,12 +129,16 @@ class _DescriptionScreenState extends State<DescriptionScreen> {
                         title: "Royalties (%)",
                         hint: "10%",
                         keyboardType: TextInputType.number,
-                        inputFormatters: [FilteringTextInputFormatter.digitsOnly,
-                          LengthLimitingTextInputFormatter(2)],
+                        inputFormatters: [
+                          FilteringTextInputFormatter.digitsOnly,
+                          LengthLimitingTextInputFormatter(2)
+                        ],
                         controller: provider.royaltyController,
-                        validator: (value){
-                          if(value!.isEmpty) return "Enter royalty in percentage";
-                          if(int.parse(value) >= 100) return "Allowed royalty is between 0-99 %";
+                        validator: (value) {
+                          if (value!.isEmpty)
+                            return "Enter royalty in percentage";
+                          if (int.parse(value) >= 100)
+                            return "Allowed royalty is between 0-99 %";
                           return null;
                         },
                       ),
@@ -143,10 +148,9 @@ class _DescriptionScreenState extends State<DescriptionScreen> {
                       Text(
                         "Pecentage of all secondary market sales automatically distributed to the creator.\n"
                         "To opt out set value to “0”",
-                        style: Theme.of(context)
-                            .textTheme
-                            .subtitle2!
-                            .copyWith(color: EaselAppTheme.kGrey, fontWeight: FontWeight.w600),
+                        style: Theme.of(context).textTheme.subtitle2!.copyWith(
+                            color: EaselAppTheme.kGrey,
+                            fontWeight: FontWeight.w600),
                       ),
                       const VerticalSpace(
                         20,
@@ -154,7 +158,7 @@ class _DescriptionScreenState extends State<DescriptionScreen> {
                       Align(
                         child: PylonsRoundButton(onPressed: () {
                           FocusScope.of(context).unfocus();
-                          if(_formKey.currentState!.validate()){
+                          if (_formKey.currentState!.validate()) {
                             // print(controller.page!);
                             final yy = widget.controller.page!;
                             double xx = yy < 3.0 ? (yy + 1) : 3;
