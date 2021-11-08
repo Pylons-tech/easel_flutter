@@ -1,5 +1,4 @@
 import 'package:easel_flutter/easel_provider.dart';
-import 'package:easel_flutter/utils/constants.dart';
 import 'package:easel_flutter/utils/easel_app_theme.dart';
 import 'package:easel_flutter/utils/space_utils.dart';
 import 'package:easel_flutter/widgets/background_widget.dart';
@@ -12,7 +11,7 @@ import 'package:provider/provider.dart';
 
 class DescriptionScreen extends StatefulWidget {
   final PageController controller;
-  DescriptionScreen({Key? key, required this.controller})
+  const DescriptionScreen({Key? key, required this.controller})
       : super(key: key);
 
   @override

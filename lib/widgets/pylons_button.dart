@@ -1,4 +1,3 @@
-import 'package:easel_flutter/utils/constants.dart';
 import 'package:easel_flutter/utils/easel_app_theme.dart';
 import 'package:flutter/material.dart';
 

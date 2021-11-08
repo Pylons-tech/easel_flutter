@@ -1,6 +1,8 @@
+import 'dart:async';
 import 'dart:developer';
 import 'dart:io';
 import 'dart:math' as math;
+import 'dart:ui' as ui;
 
 import 'package:easel_flutter/datasources/local_datasource.dart';
 import 'package:easel_flutter/main.dart';
@@ -22,6 +24,8 @@ class EaselProvider extends ChangeNotifier {
   String _fileName = "";
   String _fileExtension = "";
   String _fileSize = "0";
+  int _fileHeight = 0;
+  int _fileWidth = 0;
   String? _cookbookId;
   String _recipeId = "";
 
@@ -29,6 +33,8 @@ class EaselProvider extends ChangeNotifier {
   String get fileName => _fileName;
   String get fileExtension => _fileExtension;
   String get fileSize => _fileSize;
+  int get fileHeight => _fileHeight;
+  int get fileWidth => _fileWidth;
 
 
   final artistNameController = TextEditingController();
@@ -42,6 +48,8 @@ class EaselProvider extends ChangeNotifier {
     _file = null;
    _fileName = "";
    _fileSize = "0";
+   _fileHeight = 0;
+    _fileWidth = 0;
    _recipeId = "";
 
    artistNameController.clear();
@@ -54,13 +62,29 @@ class EaselProvider extends ChangeNotifier {
    notifyListeners();
   }
 
-  void setFile(PlatformFile selectedFile){
+  Future<void> setFile(PlatformFile selectedFile)async{
     _file = File(selectedFile.path!);
     _fileName = selectedFile.name;
-    print(_fileName);
     _fileSize = FileUtils.getFileSizeInMB(_file!.lengthSync()).toStringAsFixed(2);
     _fileExtension = FileUtils.getExtension(_fileName);
+    await _calculateDimension(_file!);
     notifyListeners();
+  }
+
+
+  /// calculates the width and height of a file
+  /// input [file] and sets [_fileHeight] and [_fileWidth]
+  Future<void> _calculateDimension(File file)async{
+    final image = Image.file(file);
+    Completer<ui.Image> completer = Completer<ui.Image>();
+    image.image
+        .resolve(const ImageConfiguration())
+        .addListener(ImageStreamListener((ImageInfo image, bool _) {
+      completer.complete(image.image);
+    }));
+    ui.Image info = await completer.future;
+    _fileWidth = info.width;
+    _fileHeight = info.height;
   }
 
 

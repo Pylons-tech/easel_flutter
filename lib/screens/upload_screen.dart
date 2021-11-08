@@ -38,10 +38,10 @@ class _UploadScreenState extends State<UploadScreen> {
                   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                   children: [
                     _UploadWidget(
-                      onFilePicked: (result){
+                      onFilePicked: (result)async{
                         if(result != null){
                           if(FileUtils.getFileSizeInMB(File(result.path!).lengthSync()) <= 40){
-                            provider.setFile(result);
+                            await provider.setFile(result);
                           }else{
                             errorText.value = '"${result.name}" could not be uploaded';
                             showError.value = true;
@@ -99,7 +99,7 @@ class _UploadScreenState extends State<UploadScreen> {
 class _UploadWidget extends StatefulWidget {
 
   final Function(PlatformFile?) onFilePicked;
-   _UploadWidget({
+   const _UploadWidget({
     Key? key,
      required this.onFilePicked,
   }) : super(key: key);
@@ -193,7 +193,7 @@ class _ErrorMessageWidget extends StatelessWidget {
           margin: const EdgeInsets.only(left: 20,),
           padding: const EdgeInsets.symmetric(horizontal: 30, vertical: 40),
           decoration: BoxDecoration(
-            color: const Color(0xFFFC4403).withOpacity(0.75),
+            color: EaselAppTheme.kRed.withOpacity(0.75),
             borderRadius: const BorderRadius.only(topLeft: Radius.circular(14), bottomLeft: Radius.circular(14))
           ),
           child: Column(

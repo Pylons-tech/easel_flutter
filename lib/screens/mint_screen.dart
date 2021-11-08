@@ -1,8 +1,7 @@
+import 'dart:developer';
 import 'dart:io';
 
-import 'package:cached_network_image/cached_network_image.dart';
 import 'package:easel_flutter/easel_provider.dart';
-import 'package:easel_flutter/utils/constants.dart';
 import 'package:easel_flutter/utils/easel_app_theme.dart';
 import 'package:easel_flutter/utils/space_utils.dart';
 import 'package:easel_flutter/widgets/background_widget.dart';
@@ -16,7 +15,7 @@ import 'package:google_fonts/google_fonts.dart';
 
 class MintScreen extends StatelessWidget {
   final PageController controller;
-  MintScreen({Key? key, required this.controller}) : super(key: key);
+  const MintScreen({Key? key, required this.controller}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -35,7 +34,7 @@ class MintScreen extends StatelessWidget {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  _ImageWidget(file: provider.file!),
+                  ImageWidget(file: provider.file!),
                   const SizedBox(height: 10),
                   Padding(
                     padding: const EdgeInsets.symmetric(horizontal: 20),
@@ -67,7 +66,7 @@ class MintScreen extends StatelessWidget {
                           fontSize: 14, color: EaselAppTheme.kLightText, fontWeight: FontWeight.w300
                         ),),
                         const VerticalSpace(10,),
-                        Text("Size: 1920 x 1080px ${provider.fileExtension.toUpperCase()}",
+                        Text("Size: ${provider.fileWidth} x ${provider.fileHeight}px ${provider.fileExtension.toUpperCase()}",
                           style: Theme.of(context).textTheme.caption!.copyWith(
                             fontSize: 14,
                           ),),
@@ -87,12 +86,11 @@ class MintScreen extends StatelessWidget {
 
                         const VerticalSpace(20,),
 
-
                         Align(
                           child: PylonsButton(onPressed: ()async{
 
                               bool isRecipeCreated = await provider.createRecipe();
-                              print("Recipe created: $isRecipeCreated");
+                              log("Recipe created: $isRecipeCreated");
 
                               if(!isRecipeCreated){
                                 return;
@@ -118,30 +116,4 @@ class MintScreen extends StatelessWidget {
 
 }
 
-
-
-class _ImageWidget extends StatelessWidget {
-  final File file;
-  const _ImageWidget({
-    Key? key,
-    required this.file
-  }) : super(key: key);
-
-
-  @override
-  Widget build(BuildContext context) {
-    final screenSize = MediaQuery.of(context).size;
-    return Padding(
-      padding: const EdgeInsets.only(right: 30),
-      child: ClipRRect(
-        borderRadius: const BorderRadius.only(topRight: Radius.circular(14), bottomRight: Radius.circular(14)),
-        child: Image.memory(file.readAsBytesSync(),
-          width: screenSize.width,
-          height: screenSize.height * 0.3,
-          fit: BoxFit.cover,
-        ),
-      ),
-    );
-  }
-}
 
