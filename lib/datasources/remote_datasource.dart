@@ -25,7 +25,7 @@ class RemoteDataSourceImpl implements RemoteDataSource{
 
       return ApiResponse<StorageResponseModel>.error(errorMessage: response.data["error"]["message"] ?? "Upload Failed");
 
-    }).catchError((e) => ApiResponse<StorageResponseModel>.error(errorMessage: e.toString()));
+    }).catchError((error) => ApiResponse<StorageResponseModel>.error(errorMessage: error.toString()));
   }
 
 

@@ -78,11 +78,14 @@ class _HomeScreenState extends State<HomeScreen> {
                       padding: const EdgeInsets.only(left: 10.0),
                       child: IconButton(
                           onPressed: () {
-                            _currentPage.value = _currentPage.value > 0
-                                ? _currentPage.value - 1
-                                : 0;
+                            if(_currentPage.value < 3){
+                              _currentPage.value = _currentPage.value > 0
+                                  ? _currentPage.value - 1
+                                  : 0;
 
-                            _pageController.jumpToPage(_currentPage.value);
+                              _pageController.jumpToPage(_currentPage.value);
+                            }
+
                           },
                           icon: const Icon(
                             Icons.arrow_back_ios,
@@ -114,7 +117,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                 },
                                 label: const Icon(
                                   Icons.arrow_forward_ios,
-                                  color: Color(0xFF1212C4),
+                                  color: EaselAppTheme.kBlue,
                                   size: 18,
                                 ),
                                 icon: Text(
@@ -124,7 +127,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                       .bodyText1!
                                       .copyWith(
                                           fontSize: 20,
-                                          color: const Color(0xFF1212C4),
+                                          color: EaselAppTheme.kBlue,
                                           fontWeight: FontWeight.w400),
                                 )),
                           )
