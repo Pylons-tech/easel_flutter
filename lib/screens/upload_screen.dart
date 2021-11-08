@@ -40,7 +40,7 @@ class _UploadScreenState extends State<UploadScreen> {
                     _UploadWidget(
                       onFilePicked: (result)async{
                         if(result != null){
-                          if(FileUtils.getFileSizeInMB(File(result.path!).lengthSync()) <= 40){
+                          if(FileUtils.getFileSizeInMB(File(result.path!).lengthSync()) <= kFileSizeLimitInMB){
                             await provider.setFile(context, result);
                           }else{
                             errorText.value = '"${result.name}" could not be uploaded';
@@ -222,14 +222,14 @@ class _ErrorMessageWidget extends StatelessWidget {
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     Text(
-                      "• 40MB Limit",
+                      "• ${kFileSizeLimitInMB}MB Limit",
                       style: Theme.of(context)
                           .textTheme
                           .bodyText2!
                           .copyWith(color: Colors.white, fontSize: 16),
                     ),
                     Text(
-                      "• JPG, PNG or SVG format",
+                      "• JPG, JPEG or PNG format",
                       style: Theme.of(context)
                           .textTheme
                           .bodyText2!
