@@ -3,7 +3,6 @@ import 'dart:typed_data';
 import 'dart:ui' as ui;
 
 // import 'package:bitmap/bitmap.dart';
-import 'package:bitmap/bitmap.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
@@ -20,7 +19,7 @@ class FileUtils {
   /// or null if aborted
   static Future<PlatformFile?> pickFile ()async{
     FilePickerResult? result = await FilePicker.platform.pickFiles(
-      allowedExtensions: ['png','jpg', 'jpeg', 'svg'],
+      allowedExtensions: ['png','jpg', 'jpeg'],
       type: FileType.custom
     );
 

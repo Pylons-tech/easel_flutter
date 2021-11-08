@@ -4,3 +4,4 @@ const kImage = "https://images.unsplash.com/photo-1635488640163"
 const kCookbookId = "cookbook_id";
 const kShareIcon = 'assets/icons/share_ic.png';
 const kSaveIcon = 'assets/icons/save_ic.png';
+const ipfsDomain = "https://ipfs.io/ipfs";

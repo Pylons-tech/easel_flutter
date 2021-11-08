@@ -5,7 +5,10 @@ import 'dart:math' as math;
 import 'dart:ui' as ui;
 
 import 'package:easel_flutter/datasources/local_datasource.dart';
+import 'package:easel_flutter/datasources/remote_datasource.dart';
 import 'package:easel_flutter/main.dart';
+import 'package:easel_flutter/models/api_response.dart';
+import 'package:easel_flutter/models/storage_response_model.dart';
 import 'package:easel_flutter/utils/constants.dart';
 import 'package:easel_flutter/utils/file_utils.dart';
 import 'package:file_picker/file_picker.dart';
@@ -15,10 +18,11 @@ import 'package:pylons_flutter/pylons_flutter.dart';
 import 'package:share/share.dart';
 
 class EaselProvider extends ChangeNotifier {
-  final LocalDataSource dataSource;
+  final LocalDataSource localDataSource;
+  final RemoteDataSource remoteDataSource;
 
 
-  EaselProvider(this.dataSource);
+  EaselProvider(this.localDataSource, this.remoteDataSource);
 
   File? _file;
   String _fileName = "";
@@ -99,7 +103,7 @@ class EaselProvider extends ChangeNotifier {
   /// return true or false depending on the response from the wallet app
   Future<bool> createCookbook()async{
 
-    _cookbookId = await dataSource.autoGenerateCookbookId();
+    _cookbookId = await localDataSource.autoGenerateCookbookId();
     var cookBook1 = Cookbook(
         creator: "",
         iD: _cookbookId,
@@ -126,21 +130,27 @@ class EaselProvider extends ChangeNotifier {
   /// return true or false depending on the response from the wallet app
   Future<bool> createRecipe()async{
 
-    _cookbookId = dataSource.getCookbookId();
+    _cookbookId = localDataSource.getCookbookId();
     if(_cookbookId == null){
 
       final isCookBookCreated = await createCookbook();
 
       if(isCookBookCreated) {
-        _cookbookId = dataSource.getCookbookId();
+        _cookbookId = localDataSource.getCookbookId();
       }else{
         return false;
       }
     }
     log("$_cookbookId");
-    _recipeId = dataSource.autoGenerateEaselId();
+    _recipeId = localDataSource.autoGenerateEaselId();
     log(_recipeId);
     log("${double.parse(royaltyController.text.trim())}");
+
+    final uploadResponse = await remoteDataSource.uploadFile(_file!);
+    if(uploadResponse.status == Status.error){
+      ScaffoldMessenger.of(navigatorKey.currentState!.overlay!.context).showSnackBar(SnackBar(content: Text(uploadResponse.errorMessage ?? "Upload error occurred")));
+      return false;
+    }
 
     // print((double.parse(royaltyController.text.trim()) * 1000000000000000000.0).toStringAsFixed(0));
     // print(DecString.decStringFromDouble(double.parse(royaltyController.text.trim())));
@@ -185,7 +195,7 @@ class EaselProvider extends ChangeNotifier {
               StringParam(key: "Name", value: artNameController.text.trim()),
               StringParam(key: "App_Type", value: "Easel"),
               StringParam(key: "Description", value: descriptionController.text.trim()),
-              StringParam(key: "NFT_URL", value: kImage),
+              StringParam(key: "NFT_URL", value: "$ipfsDomain/${uploadResponse.data?.value?.cid ?? ""}"),
               StringParam(key: "Currency", value: "upylon"),
               StringParam(key: "Price", value: priceController.text.trim()),
               StringParam(key: "Creator", value: artistNameController.text.trim()),
@@ -220,6 +230,9 @@ class EaselProvider extends ChangeNotifier {
       return false;
     }
   }
+
+
+
 
   Future<void> shareNFT()async{
     String url = generateEaselLink();
