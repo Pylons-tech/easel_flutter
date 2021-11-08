@@ -31,25 +31,25 @@ class _UploadScreenState extends State<UploadScreen> {
     return Scaffold(
       body: Stack(
         children: [
-          Column(
-            children: [
-              Expanded(
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                  children: [
-                    _UploadWidget(
-                      onFilePicked: (result)async{
-                        if(result != null){
-                          if(FileUtils.getFileSizeInMB(File(result.path!).lengthSync()) <= 40){
-                            await provider.setFile(context, result);
-                          }else{
-                            errorText.value = '"${result.name}" could not be uploaded';
-                            showError.value = true;
-                          }
-
+          Column(children: [
+            Expanded(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                children: [
+                  _UploadWidget(
+                    onFilePicked: (result) {
+                      if (result != null) {
+                        if (FileUtils.getFileSizeInMB(
+                                File(result.path!).lengthSync()) <=
+                            40) {
+                          provider.setFile(result);
+                        } else {
+                          errorText.value =
+                              '"${result.name}" could not be uploaded';
+                          showError.value = true;
                         }
                       }
-
+                    },
                   ),
                   PylonsRoundButton(onPressed: () {
                     if (provider.file != null) {
@@ -60,20 +60,22 @@ class _UploadScreenState extends State<UploadScreen> {
                     }
                   }),
                 ],
-              ),),
-              const SizedBox(height: 20)
-
-            ]
-          ),
-          Positioned(
-            child: ValueListenableBuilder(
-              valueListenable: showError,
-              builder: (_, bool value, __) => value ? _ErrorMessageWidget(
-                errorMessage: errorText.value,
-                onClose: () {
-                  showError.value = false;
-                },
-              ) : const SizedBox.shrink(),
+              ),
+            ),
+            const SizedBox(height: 20)
+          ]),
+          ValueListenableBuilder(
+            valueListenable: showError,
+            builder: (_, bool value, __) => Positioned(
+              child: Visibility(
+                visible: value,
+                child: _ErrorMessageWidget(
+                  errorMessage: errorText.value,
+                  onClose: () {
+                    showError.value = false;
+                  },
+                ),
+              ),
             ),
           )
         ],
@@ -113,14 +115,13 @@ class _UploadWidgetState extends State<_UploadWidget> {
             margin: const EdgeInsets.symmetric(horizontal: 30),
             padding: const EdgeInsets.all(70),
             decoration: BoxDecoration(
-              color: EaselAppTheme.kBlue.withOpacity(0.05),
-              borderRadius: BorderRadius.circular(8),
-              image:  provider.file != null ? DecorationImage(
-                image: FileImage(provider.file!),
-                fit: BoxFit.cover
-              ) : null
-            ),
-
+                color: EaselAppTheme.kBlue.withOpacity(0.05),
+                borderRadius: BorderRadius.circular(8),
+                image: provider.file != null
+                    ? DecorationImage(
+                        image: MemoryImage(provider.file!.readAsBytesSync()),
+                        fit: BoxFit.cover)
+                    : null),
             child: GestureDetector(
               onTap: () async {
                 final result = await FileUtils.pickFile();
