@@ -28,6 +28,7 @@ void _registerExternalDependencies() {
   );
 }
 
+
 void _registerRemoteDataSources() {
   sl.registerLazySingleton<RemoteDataSource>(
       () => RemoteDataSourceImpl(sl<Dio>()));
