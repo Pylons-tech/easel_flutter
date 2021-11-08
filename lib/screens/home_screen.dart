@@ -2,6 +2,7 @@ import 'package:easel_flutter/screens/description_screen.dart';
 import 'package:easel_flutter/screens/mint_screen.dart';
 import 'package:easel_flutter/screens/publish_screen.dart';
 import 'package:easel_flutter/screens/upload_screen.dart';
+import 'package:easel_flutter/utils/constants.dart';
 import 'package:easel_flutter/utils/easel_app_theme.dart';
 import 'package:easel_flutter/utils/screen_size_util.dart';
 import 'package:easel_flutter/utils/space_utils.dart';
@@ -112,7 +113,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                           .bodyText1!
                                           .copyWith(
                                               fontSize: 20,
-                                              color:  EaselAppTheme.kBlue,
+                                              color: EaselAppTheme.kBlue,
                                               fontWeight: FontWeight.w400),
                                     ),
                                     IconButton(
