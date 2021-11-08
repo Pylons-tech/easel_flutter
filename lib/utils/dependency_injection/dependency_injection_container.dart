@@ -22,7 +22,7 @@ void _registerExternalDependencies() {
     () => Dio(
       BaseOptions(baseUrl: "https://api.nft.storage", headers: {
         "Authorization":
-            "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJkaWQ6ZXRocjoweGQ1QmMxZjZDODZEYzFEMmQ2OGI4NDU3YzUyMzM1NTIzM0M5MGYxQjgiLCJpc3MiOiJuZnQtc3RvcmFnZSIsImlhdCI6MTYzNjM3ODEzNDE5MywibmFtZSI6IkVhc2VsX3Rlc3QifQ.J40jE3szRBsuENob-ZNBunQ6ITIcYspzOne6A8MyN7c"
+            "Bearer {nft.storage API KEY HERE}"
       }),
     ),
   );
