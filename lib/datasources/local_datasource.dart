@@ -1,6 +1,6 @@
 
 import 'package:easel_flutter/utils/constants.dart';
-import 'package:intl/intl.dart';
+import 'package:easel_flutter/utils/date_utils.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 abstract class LocalDataSource {
@@ -26,8 +26,8 @@ class LocalDataSourceImpl implements LocalDataSource {
   @override
   Future<String> autoGenerateCookbookId() async{
 
-    final format = DateFormat('yyyy_MM_dd_HHmmss_SSS');
-    String cookbookId = "Easel_CookBook_autocookbook_${format.format(DateTime.now())}";
+
+    String cookbookId = "Easel_CookBook_auto_cookbook_${getFullDateTime()}";
 
     await sharedPreferences.setString(kCookbookId, cookbookId);
 
@@ -39,8 +39,7 @@ class LocalDataSourceImpl implements LocalDataSource {
   @override
   String autoGenerateEaselId() {
 
-    final format = DateFormat('yyyy_MM_dd_HHmmss_SSS');
-    String cookbookId = "Easel_Recipe_autorecipe_${format.format(DateTime.now())}";
+    String cookbookId = "Easel_Recipe_auto_recipe_${getFullDateTime()}";
 
     return cookbookId;
   }
