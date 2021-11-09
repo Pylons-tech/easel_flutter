@@ -73,19 +73,17 @@ class _DescriptionScreenState extends State<DescriptionScreen> {
                         title: "Describe your NFT",
                         noOfLines: 4,
                         controller: provider.descriptionController,
-                        inputFormatters: [
-                          LengthLimitingTextInputFormatter(256)
-                        ],
-                        validator: (value) {
-                          if (value!.isEmpty) return "Enter NFT description";
-                          if (value.length < 10)
-                            return "Enter at least 10 characters";
+
+                        inputFormatters: [LengthLimitingTextInputFormatter(kMaxDescription)],
+                        validator: (value){
+                          if(value!.isEmpty) return "Enter NFT description";
+                          if(value.length <= kMinDescription) return "Enter more than $kMinDescription characters";
                           return null;
                         },
                       ),
                       const VerticalSpace(4),
                       Text(
-                        "256 character limit",
+                        "$kMaxDescription character limit",
                         style: Theme.of(context).textTheme.subtitle2!.copyWith(
                             color: EaselAppTheme.kGrey,
                             fontWeight: FontWeight.w600),
@@ -94,17 +92,33 @@ class _DescriptionScreenState extends State<DescriptionScreen> {
                         20,
                       ),
                       EaselTextField(
-                        title: "Number of Editions (Max: 10,000)",
+                        title: "Price (Pylons)",
+                        keyboardType: TextInputType.number,
+                        inputFormatters: [FilteringTextInputFormatter.digitsOnly,
+                          LengthLimitingTextInputFormatter(5)],
+                        controller: provider.priceController,
+                        validator: (value){
+                          if(value!.isEmpty) return "Enter price";
+                          if(int.parse(value) < kMinValue) return "Minimum amount is $kMinValue";
+                          return null;
+                        },
+                      ),
+                      const VerticalSpace(
+                        20,
+                      ),
+                      EaselTextField(
+                        title: "Number of Editions (Max: $kMaxEdition)",
                         keyboardType: TextInputType.number,
                         inputFormatters: [
                           FilteringTextInputFormatter.digitsOnly,
                           LengthLimitingTextInputFormatter(5)
                         ],
                         controller: provider.noOfEditionController,
-                        validator: (value) {
-                          if (value!.isEmpty) return "Number of Editions";
-                          if (int.parse(value) > 10000)
-                            return "Maximum is 10,000";
+                        validator: (value){
+                          if(value!.isEmpty) return "Enter number of editions";
+                          if(int.parse(value) < kMinValue) return "Minimum is $kMinValue";
+                          if(int.parse(value) > kMaxEdition) return "Maximum is $kMaxEdition";
+
                           return null;
                         },
                       ),
@@ -121,10 +135,8 @@ class _DescriptionScreenState extends State<DescriptionScreen> {
                         ],
                         controller: provider.royaltyController,
                         validator: (value) {
-                          if (value!.isEmpty)
-                            return "Enter royalty in percentage";
-                          if (int.parse(value) >= 100)
-                            return "Allowed royalty is between 0-99 %";
+                          if (value!.isEmpty)return "Enter royalty in percentage";
+                          if (int.parse(value) > kMaxRoyalty) return "Allowed royalty is between $kMinRoyalty-$kMaxRoyalty %";
                           return null;
                         },
                       ),
@@ -133,7 +145,7 @@ class _DescriptionScreenState extends State<DescriptionScreen> {
                       ),
                       Text(
                         "Pecentage of all secondary market sales automatically distributed to the creator.\n"
-                        "To opt out set value to “0”",
+                        "To opt out set value to “$kMinRoyalty”",
                         style: Theme.of(context).textTheme.subtitle2!.copyWith(
                             color: EaselAppTheme.kGrey,
                             fontWeight: FontWeight.w600),
@@ -146,10 +158,10 @@ class _DescriptionScreenState extends State<DescriptionScreen> {
                           FocusScope.of(context).unfocus();
                           if (_formKey.currentState!.validate()) {
                             // print(controller.page!);
-                            final yy = widget.controller.page!;
-                            double xx = yy < 3.0 ? (yy + 1) : 3;
+                            final currentPage = widget.controller.page!;
+                            double nextPage = currentPage < 3.0 ? (currentPage + 1) : 3;
                             // print(xx);
-                            widget.controller.jumpToPage(xx.toInt());
+                            widget.controller.jumpToPage(nextPage.toInt());
                           }
                         }),
                       ),

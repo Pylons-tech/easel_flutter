@@ -1,14 +1,16 @@
 import 'package:easel_flutter/easel_provider.dart';
 import 'package:easel_flutter/screens/routing_screen.dart';
+import 'package:easel_flutter/utils/dependency_injection/dependency_injection_container.dart' as di;
 import 'package:easel_flutter/utils/easel_app_theme.dart';
 import 'package:flutter/material.dart';
+import 'package:get_it/get_it.dart';
 import 'package:provider/provider.dart';
 import 'package:pylons_flutter/pylons_flutter.dart';
 
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
-
   PylonsWallet.setup(mode: PylonsMode.prod, host: 'easel');
+  di.init();
 
   runApp(const MyApp());
 }
@@ -23,7 +25,7 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MultiProvider(
       providers: [
-        ChangeNotifierProvider(create: (_) => EaselProvider()),
+        ChangeNotifierProvider(create: (_) => GetIt.I.get<EaselProvider>()),
       ],
       child: MaterialApp(
         title: 'Easel',
