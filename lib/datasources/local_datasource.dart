@@ -1,4 +1,3 @@
-import 'dart:math';
 
 import 'package:easel_flutter/utils/constants.dart';
 import 'package:intl/intl.dart';

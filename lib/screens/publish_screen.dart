@@ -7,15 +7,18 @@ import 'package:easel_flutter/widgets/image_widget.dart';
 import 'package:easel_flutter/widgets/rounded_purple_button_widget.dart';
 import 'package:flutter/material.dart';
 
-import 'package:intl/intl.dart';
-
 import 'package:provider/provider.dart';
 
-class PublishScreen extends StatelessWidget {
+class PublishScreen extends StatefulWidget {
   final PageController controller;
 
-  PublishScreen({Key? key, required this.controller}) : super(key: key);
+  const PublishScreen({Key? key, required this.controller}) : super(key: key);
 
+  @override
+  State<PublishScreen> createState() => _PublishScreenState();
+}
+
+class _PublishScreenState extends State<PublishScreen> {
   final List<String> detailInfo = const [
     'Contract Address',
     'Token ID',
@@ -24,6 +27,7 @@ class PublishScreen extends StatelessWidget {
     'Metadata',
     'Permission'
   ];
+
   final List<String> sampleData = const [
     '0x495f...7b5e',
     '8416676683197945...',

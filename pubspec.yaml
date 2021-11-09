@@ -52,7 +52,7 @@ dependencies:
   pylons_flutter:
     git:
       url: https://github.com/Pylons-tech/pylons_dart_sdk.git
-      ref: develop
+      ref: 9ff7427ff7a229ab2dbeee146035990b98e2322a
 
   google_fonts: ^2.1.0
 

@@ -1,16 +1,5 @@
-import 'dart:io';
-
-import 'dart:typed_data';
-import 'dart:ui' as ui;
-
-// import 'package:bitmap/bitmap.dart';
-
 import 'package:file_picker/file_picker.dart';
-import 'package:flutter/material.dart';
-import 'package:flutter_svg/flutter_svg.dart';
-import 'package:intl/intl.dart';
 import 'package:path/path.dart' as p;
-import 'package:path_provider/path_provider.dart';
 
 class FileUtils {
   /// This function picks a file (png, jpg, jpeg, svg) from device storage
