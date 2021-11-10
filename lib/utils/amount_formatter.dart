@@ -6,7 +6,7 @@ class AmountFormatter extends TextInputFormatter {
   AmountFormatter({required this.maxDigits});
 
   int maxDigits;
-  double? _uMaskValue;
+
 
 
   @override
@@ -22,16 +22,10 @@ class AmountFormatter extends TextInputFormatter {
     double value = double.parse(newValue.text);
     final formatter =  NumberFormat("#,###", "en_US");
     String newText = formatter.format(value);
-    //setting the unmasked value
-    // _uMaskValue = value / 100;
-    // _uMaskValue = value;
+
     return newValue.copyWith(
         text: newText,
         selection:  TextSelection.collapsed(offset: newText.length));
   }
 
-  // //here the method
-  // double getUnmaskedDouble() {
-  //   return _uMaskValue;
-  // }
 }
