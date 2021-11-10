@@ -14,29 +14,34 @@ class Loading {
       context: navigatorKey.currentState!.overlay!.context,
       barrierDismissible: true,
       builder: (ctx) =>
-          AlertDialog(
-            content: Wrap(
-              children: [
-                Row(
-                  children: [
-                    const SizedBox(
-                      width: 30,
-                      height: 30,
-                      child: CircularProgressIndicator(),
-                    ),
-                    const HorizontalSpace(10),
-                    Text(
-                      message,
-                      style:
-                      Theme
-                          .of(ctx)
-                          .textTheme
-                          .subtitle2!
-                          .copyWith(fontSize: 12),
-                    ),
-                  ],
-                )
-              ],
+          WillPopScope(
+            onWillPop: ()async{
+              return Future.value(false);
+            },
+            child: AlertDialog(
+              content: Wrap(
+                children: [
+                  Row(
+                    children: [
+                      const SizedBox(
+                        width: 30,
+                        height: 30,
+                        child: CircularProgressIndicator(),
+                      ),
+                      const HorizontalSpace(10),
+                      Text(
+                        message,
+                        style:
+                        Theme
+                            .of(ctx)
+                            .textTheme
+                            .subtitle2!
+                            .copyWith(fontSize: 12),
+                      ),
+                    ],
+                  )
+                ],
+              ),
             ),
           ),
     );

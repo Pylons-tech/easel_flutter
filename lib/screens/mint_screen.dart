@@ -77,17 +77,17 @@ class MintScreen extends StatelessWidget {
                           fontSize: 14, color: EaselAppTheme.kLightText, fontWeight: FontWeight.w300
                         ),),
                         const VerticalSpace(10,),
+                        Text("Price: ${provider.priceController.text.trim()} Pylons",
+                          style: Theme.of(context).textTheme.caption!.copyWith(
+                            fontSize: 14,
+                          ),),
                         Text("Size: ${provider.fileWidth} x ${provider.fileHeight}px ${provider.fileExtension.toUpperCase()}",
                           style: Theme.of(context).textTheme.caption!.copyWith(
                             fontSize: 14,
                           ),),
-                        Text("Date: ${getDate()}",
-                          style: Theme.of(context).textTheme.caption!.copyWith(
-                                fontSize: 14,
-                              ),
-                        ),
+
                         Text(
-                          "Date: ${DateTime.now().toString()}",
+                          "Date: ${getDate()}",
                           style: Theme.of(context).textTheme.caption!.copyWith(
                                 fontSize: 14,
                               ),

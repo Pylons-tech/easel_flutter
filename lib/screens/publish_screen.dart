@@ -135,6 +135,10 @@ class _PublishScreenState extends State<PublishScreen> {
                           const VerticalSpace(
                             10,
                           ),
+                          Text("Price: ${provider.priceController.text.trim()} Pylons",
+                            style: Theme.of(context).textTheme.caption!.copyWith(
+                              fontSize: 14,
+                            ),),
                           Text(
                             "Size: ${provider.fileWidth} x ${provider.fileHeight}px ${provider.fileExtension.toUpperCase()}",
                             style:
