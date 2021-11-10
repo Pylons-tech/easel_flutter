@@ -52,6 +52,7 @@ class _DescriptionScreenState extends State<DescriptionScreen> {
                       EaselTextField(
                         title: "Your name as the artist",
                         controller: provider.artistNameController,
+                        textCapitalization: TextCapitalization.sentences,
                         validator: (value) {
                           if (value!.isEmpty) return "Enter artist name";
                           return null;
@@ -63,6 +64,7 @@ class _DescriptionScreenState extends State<DescriptionScreen> {
                       EaselTextField(
                         title: "Give your NFT a name",
                         controller: provider.artNameController,
+                        textCapitalization: TextCapitalization.sentences,
                         validator: (value) {
                           if (value!.isEmpty) return "Enter NFT name";
                           return null;
@@ -75,7 +77,7 @@ class _DescriptionScreenState extends State<DescriptionScreen> {
                         title: "Describe your NFT",
                         noOfLines: 4,
                         controller: provider.descriptionController,
-
+                        textCapitalization: TextCapitalization.sentences,
                         inputFormatters: [LengthLimitingTextInputFormatter(kMaxDescription)],
                         validator: (value){
                           if(value!.isEmpty) return "Enter NFT description";
