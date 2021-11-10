@@ -21,13 +21,18 @@ void _registerExternalDependencies() {
       () => SharedPreferences.getInstance());
 
   const apiKey = String.fromEnvironment("nft_storage_key");
+
   log(apiKey);
   sl.registerLazySingleton<Dio>(
     () => Dio(
       BaseOptions(baseUrl: "https://api.nft.storage", headers: {
         "Authorization":
             "Bearer $apiKey"
-      }),
+      },
+        validateStatus: (statusCode){
+          return statusCode! <= 510;
+        }
+      ),
     ),
   );
 }

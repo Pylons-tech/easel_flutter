@@ -64,7 +64,7 @@ class _PublishScreenState extends State<PublishScreen> {
                       children: [
                         provider.file != null ? ImageWidget(file: provider.file!):Container(),
                         Positioned(
-                            top: 48,
+                            top: 60,
                             right: 10,
                             child: RoundedPurpleButtonWidget(
                               onPressed: () {
@@ -72,13 +72,13 @@ class _PublishScreenState extends State<PublishScreen> {
                               },
                               icon: kShareIcon,
                             )),
-                        Positioned(
-                            top: 114,
-                            right: 10,
-                            child: RoundedPurpleButtonWidget(
-                              onPressed: () {},
-                              icon: kSaveIcon,
-                            )),
+                        // Positioned(
+                        //     top: 114,
+                        //     right: 10,
+                        //     child: RoundedPurpleButtonWidget(
+                        //       onPressed: () {},
+                        //       icon: kSaveIcon,
+                        //     )),
                       ],
                     ),
                     const SizedBox(height: 10),

@@ -7,7 +7,7 @@
     <uses-permission android:name="android.permission.MANAGE_EXTERNAL_STORAGE" />
 
    <application
-        android:label="easel_flutter"
+        android:label="Easel"
         android:icon="@mipmap/ic_launcher">
         <activity
             android:name="tech.pylons.easel_flutter.MainActivity"
