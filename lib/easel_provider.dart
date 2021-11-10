@@ -1,16 +1,15 @@
 import 'dart:async';
 import 'dart:developer';
 import 'dart:io';
-import 'dart:math' as math;
 import 'dart:ui' as ui;
 
 import 'package:easel_flutter/datasources/local_datasource.dart';
 import 'package:easel_flutter/datasources/remote_datasource.dart';
 import 'package:easel_flutter/main.dart';
 import 'package:easel_flutter/models/api_response.dart';
-import 'package:easel_flutter/models/storage_response_model.dart';
 import 'package:easel_flutter/utils/constants.dart';
 import 'package:easel_flutter/utils/file_utils.dart';
+import 'package:easel_flutter/widgets/loading.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:fixnum/fixnum.dart';
 import 'package:flutter/material.dart';
@@ -125,29 +124,38 @@ class EaselProvider extends ChangeNotifier {
   /// return true or false depending on the response from the wallet app
   Future<bool> createRecipe()async{
 
+    // get device cookbook id
     _cookbookId = localDataSource.getCookbookId();
-    if(_cookbookId == null){
 
+    if(_cookbookId == null){
+      // create cookbook
       final isCookBookCreated = await createCookbook();
 
       if(isCookBookCreated) {
+        // get device cookbook id
         _cookbookId = localDataSource.getCookbookId();
       }else{
         return false;
       }
     }
-    log("$_cookbookId");
+
+    // log("$_cookbookId");
+
     _recipeId = localDataSource.autoGenerateEaselId();
-    log(_recipeId);
+
+    // log(_recipeId);
     log("${double.parse(royaltyController.text.trim())}");
 
+    final loading = Loading().showLoading(message: "Uploading image...");
     final uploadResponse = await remoteDataSource.uploadFile(_file!);
+    loading.dismiss();
     if(uploadResponse.status == Status.error){
       ScaffoldMessenger.of(navigatorKey.currentState!.overlay!.context).showSnackBar(SnackBar(content: Text(uploadResponse.errorMessage ?? "Upload error occurred")));
       return false;
     }
 
    String residual = (double.parse(royaltyController.text.trim()) * 1000000000000000000).toStringAsFixed(0);
+    String price = (double.parse(priceController.text.replaceAll(",", "").trim()) * 1000000).toStringAsFixed(0);
     var recipe = Recipe(
         cookbookID: _cookbookId,
         iD: _recipeId,
@@ -156,7 +164,7 @@ class EaselProvider extends ChangeNotifier {
         description: descriptionController.text.trim(),
         version: "v0.1.0",
         coinInputs: [
-          CoinInput(coins: [Coin(amount: priceController.text.trim(), denom: "upylon")])
+          CoinInput(coins: [Coin(amount: price, denom: "upylon")])
 
         ],
         itemInputs: [],
@@ -173,8 +181,9 @@ class EaselProvider extends ChangeNotifier {
             ],
             longs: [
               LongParam(key: "Quantity", weightRanges: [
-                IntWeightRange(lower: Int64(int.parse(noOfEditionController.text.trim())),
-                    upper: Int64(int.parse(noOfEditionController.text.trim())),
+                IntWeightRange(
+                    lower: Int64(int.parse(noOfEditionController.text.replaceAll(",", "").trim())),
+                    upper: Int64(int.parse(noOfEditionController.text.replaceAll(",", "").trim())),
                     weight: Int64(1))
               ]),
               LongParam(key: "Width", weightRanges: [
@@ -190,7 +199,7 @@ class EaselProvider extends ChangeNotifier {
               StringParam(key: "Description", value: descriptionController.text.trim()),
               StringParam(key: "NFT_URL", value: "$ipfsDomain/${uploadResponse.data?.value?.cid ?? ""}"),
               StringParam(key: "Currency", value: "upylon"),
-              StringParam(key: "Price", value: priceController.text.trim()),
+              StringParam(key: "Price", value: priceController.text.replaceAll(",", "").trim()),
               StringParam(key: "Creator", value: artistNameController.text.trim()),
             ],
             mutableStrings: [],
@@ -211,11 +220,11 @@ class EaselProvider extends ChangeNotifier {
     log("${recipe.toProto3Json()}");
     var response = await PylonsWallet.instance.txCreateRecipe(recipe);
 
-    print('From App $response');
+    log('From App $response');
 
     if (response.success) {
       ScaffoldMessenger.of(navigatorKey.currentState!.overlay!.context).showSnackBar(const SnackBar(content: Text("Recipe created")));
-      print(response.data);
+      log("${response.data}");
      return true;
     } else {
 

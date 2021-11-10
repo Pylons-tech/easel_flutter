@@ -1,17 +1,14 @@
 
 import 'dart:developer';
-import 'dart:io';
-
-import 'package:cached_network_image/cached_network_image.dart';
 import 'package:easel_flutter/easel_provider.dart';
-import 'package:easel_flutter/utils/constants.dart';
 import 'package:easel_flutter/utils/easel_app_theme.dart';
 import 'package:easel_flutter/utils/space_utils.dart';
+import 'package:easel_flutter/utils/date_utils.dart';
+import 'package:easel_flutter/utils/utils.dart';
 import 'package:easel_flutter/widgets/background_widget.dart';
 import 'package:easel_flutter/widgets/image_widget.dart';
 import 'package:easel_flutter/widgets/pylons_button.dart';
 import 'package:flutter/material.dart';
-import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 import 'package:google_fonts/google_fonts.dart';
 
@@ -81,17 +78,17 @@ class MintScreen extends StatelessWidget {
                           fontSize: 14, color: EaselAppTheme.kLightText, fontWeight: FontWeight.w300
                         ),),
                         const VerticalSpace(10,),
+                        Text("Price: ${provider.priceController.text.trim()} Pylons",
+                          style: Theme.of(context).textTheme.caption!.copyWith(
+                            fontSize: 14,
+                          ),),
                         Text("Size: ${provider.fileWidth} x ${provider.fileHeight}px ${provider.fileExtension.toUpperCase()}",
                           style: Theme.of(context).textTheme.caption!.copyWith(
                             fontSize: 14,
                           ),),
-                        Text("Date: ${DateFormat.yMd('en_US').format(DateTime.now())}",
-                          style: Theme.of(context).textTheme.caption!.copyWith(
-                                fontSize: 14,
-                              ),
-                        ),
+
                         Text(
-                          "Date: ${DateTime.now().toString()}",
+                          "Date: ${getDate()}",
                           style: Theme.of(context).textTheme.caption!.copyWith(
                                 fontSize: 14,
                               ),

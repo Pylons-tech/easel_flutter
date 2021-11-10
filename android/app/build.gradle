@@ -50,6 +50,15 @@ android {
         versionName flutterVersionName
     }
 
+    signingConfigs {
+        debug {
+            storeFile file('keystore.jks')
+            storePassword 'tech.pylons'
+            keyAlias 'key_tech_pylon'
+            keyPassword 'tech.pylons'
+        }
+    }
+
     buildTypes {
         release {
             // TODO: Add your own signing config for the release build.

@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:dio/dio.dart';
 import 'package:easel_flutter/datasources/local_datasource.dart';
 import 'package:easel_flutter/datasources/remote_datasource.dart';
@@ -18,11 +20,13 @@ void _registerExternalDependencies() {
   sl.registerSingletonAsync<SharedPreferences>(
       () => SharedPreferences.getInstance());
 
+  const apiKey = String.fromEnvironment("nft_storage_key");
+  log(apiKey);
   sl.registerLazySingleton<Dio>(
     () => Dio(
       BaseOptions(baseUrl: "https://api.nft.storage", headers: {
         "Authorization":
-            "Bearer {nft.storage API KEY HERE}"
+            "Bearer $apiKey"
       }),
     ),
   );

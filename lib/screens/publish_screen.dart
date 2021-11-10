@@ -2,20 +2,25 @@ import 'package:easel_flutter/easel_provider.dart';
 import 'package:easel_flutter/utils/constants.dart';
 import 'package:easel_flutter/utils/easel_app_theme.dart';
 import 'package:easel_flutter/utils/space_utils.dart';
+import 'package:easel_flutter/utils/date_utils.dart';
+import 'package:easel_flutter/utils/utils.dart';
 import 'package:easel_flutter/widgets/background_widget.dart';
 import 'package:easel_flutter/widgets/image_widget.dart';
 import 'package:easel_flutter/widgets/rounded_purple_button_widget.dart';
 import 'package:flutter/material.dart';
 
-import 'package:intl/intl.dart';
-
 import 'package:provider/provider.dart';
 
-class PublishScreen extends StatelessWidget {
+class PublishScreen extends StatefulWidget {
   final PageController controller;
 
-  PublishScreen({Key? key, required this.controller}) : super(key: key);
+  const PublishScreen({Key? key, required this.controller}) : super(key: key);
 
+  @override
+  State<PublishScreen> createState() => _PublishScreenState();
+}
+
+class _PublishScreenState extends State<PublishScreen> {
   final List<String> detailInfo = const [
     'Contract Address',
     'Token ID',
@@ -24,6 +29,7 @@ class PublishScreen extends StatelessWidget {
     'Metadata',
     'Permission'
   ];
+
   final List<String> sampleData = const [
     '0x495f...7b5e',
     '8416676683197945...',
@@ -130,6 +136,10 @@ class PublishScreen extends StatelessWidget {
                           const VerticalSpace(
                             10,
                           ),
+                          Text("Price: ${provider.priceController.text.trim()} Pylons",
+                            style: Theme.of(context).textTheme.caption!.copyWith(
+                              fontSize: 14,
+                            ),),
                           Text(
                             "Size: ${provider.fileWidth} x ${provider.fileHeight}px ${provider.fileExtension.toUpperCase()}",
                             style:
@@ -138,7 +148,7 @@ class PublishScreen extends StatelessWidget {
                                     ),
                           ),
                           Text(
-                            "Date: 08/09/2021",
+                            "Date: ${getDate()}",
                             style:
                                 Theme.of(context).textTheme.caption!.copyWith(
                                       fontSize: 14,

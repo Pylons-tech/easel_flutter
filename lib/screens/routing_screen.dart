@@ -1,4 +1,3 @@
-import 'dart:developer';
 
 import 'package:easel_flutter/main.dart';
 import 'package:easel_flutter/screens/home_screen.dart';
@@ -15,15 +14,20 @@ class RoutingScreen extends StatefulWidget {
 }
 
 class _RoutingScreenState extends State<RoutingScreen> {
+
+  ValueNotifier<String> username = ValueNotifier("");
+
   @override
   void initState() {
     super.initState();
     Future.delayed(const Duration(seconds: 1), (){
-      PylonsWallet.instance.exists().then((walletExists) {
+      PylonsWallet.instance.exists().then((walletExists) async {
 
         if(walletExists){
+          navigatorKey.currentState!.push(MaterialPageRoute(builder: (_) => const HomeScreen()));
 
-          navigatorKey.currentState!.push(MaterialPageRoute(builder: (_) => HomeScreen()));
+          // final response = await PylonsWallet.instance.getProfile();
+          // log(response.data);
 
         }else{
           showBottomSheet(
