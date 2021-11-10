@@ -10,7 +10,9 @@ class EaselTextField extends StatelessWidget {
     this.controller, this.validator,
     this.noOfLines = 1,
     this.inputFormatters = const [],
-    this.keyboardType = TextInputType.text
+    this.keyboardType = TextInputType.text,
+    this.suffix,
+    this.textCapitalization = TextCapitalization.none
   }) : super(key: key);
 
   final String title;
@@ -20,6 +22,8 @@ class EaselTextField extends StatelessWidget {
   final int noOfLines;
   final TextInputType keyboardType;
   final List<TextInputFormatter> inputFormatters;
+  final Widget? suffix;
+  final TextCapitalization textCapitalization;
 
   @override
   Widget build(BuildContext context) {
@@ -29,6 +33,7 @@ class EaselTextField extends StatelessWidget {
       minLines: noOfLines,
       maxLines: noOfLines,
       keyboardType: keyboardType,
+      textCapitalization: textCapitalization,
       inputFormatters: inputFormatters,
       decoration: InputDecoration(
           alignLabelWithHint: true,
@@ -49,7 +54,9 @@ class EaselTextField extends StatelessWidget {
           ),
           floatingLabelStyle: Theme.of(context).textTheme.bodyText1!.copyWith(
               fontSize: 20
-          )
+          ),
+        suffix: suffix,
+        contentPadding: noOfLines == 1 ? const EdgeInsets.fromLTRB(10, 0, 10, 0) : null,
       ),
     );
   }
