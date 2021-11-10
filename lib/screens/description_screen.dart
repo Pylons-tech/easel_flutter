@@ -1,4 +1,5 @@
 import 'package:easel_flutter/easel_provider.dart';
+import 'package:easel_flutter/utils/amount_formatter.dart';
 import 'package:easel_flutter/utils/constants.dart';
 import 'package:easel_flutter/utils/easel_app_theme.dart';
 import 'package:easel_flutter/utils/space_utils.dart';
@@ -95,11 +96,13 @@ class _DescriptionScreenState extends State<DescriptionScreen> {
                         title: "Price (Pylons)",
                         keyboardType: TextInputType.number,
                         inputFormatters: [FilteringTextInputFormatter.digitsOnly,
-                          LengthLimitingTextInputFormatter(5)],
+                          LengthLimitingTextInputFormatter(kMaxPriceLength),
+                          AmountFormatter(maxDigits: kMaxPriceLength)
+                        ],
                         controller: provider.priceController,
                         validator: (value){
                           if(value!.isEmpty) return "Enter price";
-                          if(int.parse(value) < kMinValue) return "Minimum amount is $kMinValue";
+                          if(int.parse(value.replaceAll(",", "")) < kMinValue) return "Minimum amount is $kMinValue";
                           return null;
                         },
                       ),
@@ -111,13 +114,14 @@ class _DescriptionScreenState extends State<DescriptionScreen> {
                         keyboardType: TextInputType.number,
                         inputFormatters: [
                           FilteringTextInputFormatter.digitsOnly,
-                          LengthLimitingTextInputFormatter(5)
+                          LengthLimitingTextInputFormatter(5),
+                          AmountFormatter(maxDigits: 5)
                         ],
                         controller: provider.noOfEditionController,
                         validator: (value){
                           if(value!.isEmpty) return "Enter number of editions";
-                          if(int.parse(value) < kMinValue) return "Minimum is $kMinValue";
-                          if(int.parse(value) > kMaxEdition) return "Maximum is $kMaxEdition";
+                          if(int.parse(value.replaceAll(",", "")) < kMinValue) return "Minimum is $kMinValue";
+                          if(int.parse(value.replaceAll(",", "")) > kMaxEdition) return "Maximum is $kMaxEdition";
 
                           return null;
                         },

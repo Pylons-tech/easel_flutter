@@ -155,6 +155,7 @@ class EaselProvider extends ChangeNotifier {
     }
 
    String residual = (double.parse(royaltyController.text.trim()) * 1000000000000000000).toStringAsFixed(0);
+    String price = (double.parse(priceController.text.replaceAll(",", "").trim()) * 1000000).toStringAsFixed(0);
     var recipe = Recipe(
         cookbookID: _cookbookId,
         iD: _recipeId,
@@ -163,7 +164,7 @@ class EaselProvider extends ChangeNotifier {
         description: descriptionController.text.trim(),
         version: "v0.1.0",
         coinInputs: [
-          CoinInput(coins: [Coin(amount: priceController.text.trim(), denom: "upylon")])
+          CoinInput(coins: [Coin(amount: price, denom: "upylon")])
 
         ],
         itemInputs: [],
@@ -180,8 +181,9 @@ class EaselProvider extends ChangeNotifier {
             ],
             longs: [
               LongParam(key: "Quantity", weightRanges: [
-                IntWeightRange(lower: Int64(int.parse(noOfEditionController.text.trim())),
-                    upper: Int64(int.parse(noOfEditionController.text.trim())),
+                IntWeightRange(
+                    lower: Int64(int.parse(noOfEditionController.text.replaceAll(",", "").trim())),
+                    upper: Int64(int.parse(noOfEditionController.text.replaceAll(",", "").trim())),
                     weight: Int64(1))
               ]),
               LongParam(key: "Width", weightRanges: [
@@ -197,7 +199,7 @@ class EaselProvider extends ChangeNotifier {
               StringParam(key: "Description", value: descriptionController.text.trim()),
               StringParam(key: "NFT_URL", value: "$ipfsDomain/${uploadResponse.data?.value?.cid ?? ""}"),
               StringParam(key: "Currency", value: "upylon"),
-              StringParam(key: "Price", value: priceController.text.trim()),
+              StringParam(key: "Price", value: priceController.text.replaceAll(",", "").trim()),
               StringParam(key: "Creator", value: artistNameController.text.trim()),
             ],
             mutableStrings: [],

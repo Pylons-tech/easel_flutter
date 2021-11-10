@@ -12,3 +12,4 @@ const kMaxEdition = 10000;
 const kMinRoyalty = 0;
 const kMaxRoyalty = 99;
 const kFileSizeLimitInMB = 40;
+const kMaxPriceLength = 7;
