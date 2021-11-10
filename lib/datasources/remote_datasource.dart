@@ -10,20 +10,20 @@ abstract class RemoteDataSource {
 }
 
 class RemoteDataSourceImpl implements RemoteDataSource {
-  final Dio _dio;
+  final Dio httpClient;
 
-  RemoteDataSourceImpl(this._dio);
+  RemoteDataSourceImpl(this.httpClient);
 
   @override
   Future<ApiResponse<StorageResponseModel>> uploadFile(File file) {
-    return _dio
+    return httpClient
         .post("/upload",
             data: Stream.fromIterable(file.readAsBytesSync().map((e) => [e])),
     options: Options(
         headers: {
           'Content-Length': file.lengthSync().toString(),
         }),).then((response) {
-      if (response.statusCode == 200) {
+      if (response.statusCode == HttpStatus.ok) {
         final data = StorageResponseModel.fromJson(response.data);
         return ApiResponse<StorageResponseModel>.success(data: data);
       }
