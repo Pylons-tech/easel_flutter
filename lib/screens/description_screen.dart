@@ -1,4 +1,5 @@
 import 'package:easel_flutter/easel_provider.dart';
+import 'package:easel_flutter/models/denom.dart';
 import 'package:easel_flutter/utils/amount_formatter.dart';
 import 'package:easel_flutter/utils/constants.dart';
 import 'package:easel_flutter/utils/easel_app_theme.dart';
@@ -93,18 +94,20 @@ class _DescriptionScreenState extends State<DescriptionScreen> {
                         20,
                       ),
                       EaselTextField(
-                        title: "Price (Pylons)",
+                        title: "Price",
                         keyboardType: TextInputType.number,
                         inputFormatters: [FilteringTextInputFormatter.digitsOnly,
                           LengthLimitingTextInputFormatter(kMaxPriceLength),
                           AmountFormatter(maxDigits: kMaxPriceLength)
                         ],
                         controller: provider.priceController,
+                        suffix: const _CurrencyDropDown(),
                         validator: (value){
                           if(value!.isEmpty) return "Enter price";
                           if(int.parse(value.replaceAll(",", "")) < kMinValue) return "Minimum amount is $kMinValue";
                           return null;
                         },
+
                       ),
                       const VerticalSpace(
                         20,
@@ -148,7 +151,7 @@ class _DescriptionScreenState extends State<DescriptionScreen> {
                         4,
                       ),
                       Text(
-                        "Pecentage of all secondary market sales automatically distributed to the creator.\n"
+                        "Percentage of all secondary market sales automatically distributed to the creator.\n"
                         "To opt out set value to “$kMinRoyalty”",
                         style: Theme.of(context).textTheme.subtitle2!.copyWith(
                             color: EaselAppTheme.kGrey,
@@ -183,3 +186,39 @@ class _DescriptionScreenState extends State<DescriptionScreen> {
     );
   }
 }
+
+
+class _CurrencyDropDown extends StatelessWidget {
+
+  const _CurrencyDropDown({Key? key}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    // TODO: implement build
+    return Consumer<EaselProvider>(
+      builder: (_, provider, __) => DropdownButton<String>(
+        value: provider.selectedDenom.symbol,
+        icon: const Icon(Icons.keyboard_arrow_down, size: 16, color: EaselAppTheme.kBlue),
+        iconSize: 30,
+        elevation: 16,
+        underline: const SizedBox(),
+        focusColor: EaselAppTheme.kBlue,
+        dropdownColor: EaselAppTheme.kWhite,
+        style: const TextStyle(color: EaselAppTheme.kBlack, fontSize: 16, fontWeight: FontWeight.w500),
+        onChanged: (String? data) {
+          if(data != null){
+            final value = Denom.availableDenoms.firstWhere((denom) => denom.symbol == data);
+            provider.setSelectedDenom(value);
+          }
+        },
+        items: Denom.availableDenoms.map((Denom value) {
+          return DropdownMenuItem<String>(
+            value: value.symbol,
+            child: Text(value.name),
+          );
+        }).toList(),
+      ),
+    );
+  }
+}
+

@@ -13,3 +13,6 @@ const kMinRoyalty = 0;
 const kMaxRoyalty = 99;
 const kFileSizeLimitInMB = 40;
 const kMaxPriceLength = 7;
+
+const kPylonSymbol = "upylon";
+const kUsdSymbol = "ustripeusd";

@@ -7,6 +7,7 @@ import 'package:easel_flutter/datasources/local_datasource.dart';
 import 'package:easel_flutter/datasources/remote_datasource.dart';
 import 'package:easel_flutter/main.dart';
 import 'package:easel_flutter/models/api_response.dart';
+import 'package:easel_flutter/models/denom.dart';
 import 'package:easel_flutter/utils/constants.dart';
 import 'package:easel_flutter/utils/file_utils.dart';
 import 'package:easel_flutter/widgets/loading.dart';
@@ -31,6 +32,7 @@ class EaselProvider extends ChangeNotifier {
   int _fileWidth = 0;
   String? _cookbookId;
   String _recipeId = "";
+  Denom _selectedDenom = Denom(name: "Pylon", symbol: kPylonSymbol);
 
   File? get file => _file;
   String get fileName => _fileName;
@@ -38,6 +40,7 @@ class EaselProvider extends ChangeNotifier {
   String get fileSize => _fileSize;
   int get fileHeight => _fileHeight;
   int get fileWidth => _fileWidth;
+  Denom get selectedDenom => _selectedDenom;
 
 
   final artistNameController = TextEditingController();
@@ -54,6 +57,7 @@ class EaselProvider extends ChangeNotifier {
    _fileHeight = 0;
     _fileWidth = 0;
    _recipeId = "";
+   _selectedDenom =  Denom(name: "Pylon", symbol: kPylonSymbol);
 
    artistNameController.clear();
    artNameController.clear();
@@ -90,6 +94,12 @@ class EaselProvider extends ChangeNotifier {
     ui.Image info = await completer.future;
     _fileWidth = info.width;
     _fileHeight = info.height;
+  }
+
+
+  void setSelectedDenom(Denom value){
+    _selectedDenom = value;
+    notifyListeners();
   }
 
 
@@ -155,6 +165,7 @@ class EaselProvider extends ChangeNotifier {
     }
 
    String residual = (double.parse(royaltyController.text.trim()) * 1000000000000000000).toStringAsFixed(0);
+
     String price = (double.parse(priceController.text.replaceAll(",", "").trim()) * 1000000).toStringAsFixed(0);
     var recipe = Recipe(
         cookbookID: _cookbookId,
@@ -164,7 +175,7 @@ class EaselProvider extends ChangeNotifier {
         description: descriptionController.text.trim(),
         version: "v0.1.0",
         coinInputs: [
-          CoinInput(coins: [Coin(amount: price, denom: "upylon")])
+          CoinInput(coins: [Coin(amount: price, denom: _selectedDenom.symbol)])
 
         ],
         itemInputs: [],
@@ -198,13 +209,13 @@ class EaselProvider extends ChangeNotifier {
               StringParam(key: "App_Type", value: "Easel"),
               StringParam(key: "Description", value: descriptionController.text.trim()),
               StringParam(key: "NFT_URL", value: "$ipfsDomain/${uploadResponse.data?.value?.cid ?? ""}"),
-              StringParam(key: "Currency", value: "upylon"),
+              StringParam(key: "Currency", value: _selectedDenom.symbol),
               StringParam(key: "Price", value: priceController.text.replaceAll(",", "").trim()),
               StringParam(key: "Creator", value: artistNameController.text.trim()),
             ],
             mutableStrings: [],
             transferFee: [
-              Coin(denom: "upylon", amount: "10")
+              Coin(denom: kPylonSymbol, amount: "10")
             ],
             tradePercentage: DecString.decStringFromDouble(double.parse(royaltyController.text.trim())),
             tradeable: true,
