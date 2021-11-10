@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:file_picker/file_picker.dart';
 import 'package:path/path.dart' as p;
 
@@ -41,9 +43,16 @@ class FileUtils {
   }
 
 
-  /// converts file size from bytes to megabytes
-  static double getFileSizeInMB(int fileLength){
-    return (fileLength/(1024 * 1024)).ceilToDouble();
+  /// converts file size from bytes to gigabytes
+  static double getFileSizeInGB(int fileLength){
+    return (fileLength/(1024 * 1024 * 1024)).ceilToDouble();
+  }
+
+  // formats file size to different byte units
+  static String getFileSizeString({required int fileLength, int precision = 2}) {
+    const suffixes = ["b", "kb", "MB", "GB", "TB"];
+    var i = (log(fileLength) / log(1024)).floor();
+    return ((fileLength / pow(1024, i)).toStringAsFixed(precision)) + suffixes[i];
   }
 
 }

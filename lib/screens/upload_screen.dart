@@ -40,7 +40,7 @@ class _UploadScreenState extends State<UploadScreen> {
                     _UploadWidget(
                       onFilePicked: (result)async{
                         if(result != null){
-                          if(FileUtils.getFileSizeInMB(File(result.path!).lengthSync()) <= kFileSizeLimitInMB){
+                          if(FileUtils.getFileSizeInGB(File(result.path!).lengthSync()) <= kFileSizeLimitInGB){
                             await provider.setFile(context, result);
                           }else{
                             errorText.value = '"${result.name}" could not be uploaded';
@@ -137,7 +137,7 @@ class _UploadWidgetState extends State<_UploadWidget> {
                 ),
           ),
           Text(
-            "${provider.fileSize}MB",
+            provider.fileSize,
             style: Theme.of(context).textTheme.subtitle2!.copyWith(
                   color: EaselAppTheme.kLightGrey,
                 ),
@@ -222,7 +222,7 @@ class _ErrorMessageWidget extends StatelessWidget {
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     Text(
-                      "• ${kFileSizeLimitInMB}MB Limit",
+                      "• ${kFileSizeLimitInGB}GB Limit",
                       style: Theme.of(context)
                           .textTheme
                           .bodyText2!

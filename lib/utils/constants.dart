@@ -11,7 +11,7 @@ const kMaxDescription = 256;
 const kMaxEdition = 10000;
 const kMinRoyalty = 0;
 const kMaxRoyalty = 99;
-const kFileSizeLimitInMB = 40;
+const kFileSizeLimitInGB = 32;
 const kMaxPriceLength = 7;
 
 const kPylonSymbol = "upylon";

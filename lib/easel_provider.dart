@@ -73,7 +73,7 @@ class EaselProvider extends ChangeNotifier {
 
     _file = File(selectedFile.path!);
     _fileName = selectedFile.name;
-    _fileSize = FileUtils.getFileSizeInMB(_file!.lengthSync()).toStringAsFixed(2);
+    _fileSize = FileUtils.getFileSizeString(fileLength: _file!.lengthSync());
     _fileExtension = FileUtils.getExtension(_fileName);
     await _calculateDimension(_file!);
     notifyListeners();
