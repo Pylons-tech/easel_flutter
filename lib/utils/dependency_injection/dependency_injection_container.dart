@@ -1,4 +1,5 @@
 import 'dart:developer';
+import 'dart:io';
 
 import 'package:dio/dio.dart';
 import 'package:easel_flutter/datasources/local_datasource.dart';
@@ -30,7 +31,7 @@ void _registerExternalDependencies() {
             "Bearer $apiKey"
       },
         validateStatus: (statusCode){
-          return statusCode! <= 510;
+          return statusCode! <= HttpStatus.internalServerError;
         }
       ),
     ),

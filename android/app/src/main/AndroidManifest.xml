@@ -1,10 +1,13 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="tech.pylons.easel_flutter">
 
+    <queries>
+        <package android:name="tech.pylons.wallet" />
+    </queries>
+
     <uses-permission android:name="android.permission.INTERNET"/>
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
-<!--    for MANAGE_EXTERNAL_STORAGE for android 11 and above-->
-    <uses-permission android:name="android.permission.MANAGE_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"/>
 
    <application
         android:label="Easel"
