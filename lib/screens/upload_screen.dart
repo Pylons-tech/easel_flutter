@@ -25,6 +25,10 @@ class _UploadScreenState extends State<UploadScreen> {
   ValueNotifier<bool> showError = ValueNotifier(false);
   ValueNotifier<String> errorText = ValueNotifier("Pick a file");
   late EaselProvider provider;
+
+
+
+
   @override
   Widget build(BuildContext context) {
     provider = Provider.of<EaselProvider>(context);
@@ -61,7 +65,8 @@ class _UploadScreenState extends State<UploadScreen> {
                   }),
                 ],
               ),),
-              const SizedBox(height: 20)
+              const SizedBox(height: 20),
+
 
             ]
           ),
