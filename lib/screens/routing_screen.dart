@@ -27,11 +27,25 @@ class _RoutingScreenState extends State<RoutingScreen> {
       final isExist = await PylonsWallet.instance.exists();
       if(isExist){
 
-        // final response = await PylonsWallet.instance.getProfile();
-        // username.value = response.data["username"] ?? "";
-        Future.delayed(const Duration(seconds: 5), (){
-          navigatorKey.currentState!.push(MaterialPageRoute(builder: (_) => const HomeScreen()));
-        });
+        final response = await PylonsWallet.instance.getProfile();
+        username.value = response.data["username"] ?? "";
+        showDialog(
+            context: navigatorKey.currentState!.overlay!.context,
+            barrierDismissible: false,
+            builder: (ctx) => WillPopScope(
+              onWillPop: () => Future.value(false),
+              child: AlertDialog(
+                content: Text("Welcome ${response.data["username"]}"),
+                actions: [
+                  TextButton(onPressed: (){
+                    navigatorKey.currentState!.push(MaterialPageRoute(builder: (_) => const HomeScreen()));
+                  }, child: Text("Ok"))
+                ],
+              ),
+            ));
+        // Future.delayed(const Duration(seconds: 5), (){
+        //   navigatorKey.currentState!.push(MaterialPageRoute(builder: (_) => const HomeScreen()));
+        // });
       }else{
         showDialog(
           context: navigatorKey.currentState!.overlay!.context,
