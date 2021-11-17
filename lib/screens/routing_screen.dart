@@ -18,7 +18,6 @@ class RoutingScreen extends StatefulWidget {
 class _RoutingScreenState extends State<RoutingScreen> {
 
   ValueNotifier<String> username = ValueNotifier("");
-  final scaffoldState = GlobalKey<ScaffoldState>();
 
   @override
   void initState() {
@@ -57,7 +56,6 @@ class _RoutingScreenState extends State<RoutingScreen> {
   Widget build(BuildContext context) {
     // TODO: implement build
     return Scaffold(
-      key: scaffoldState,
       body: Stack(
         children: [
           const Positioned(
