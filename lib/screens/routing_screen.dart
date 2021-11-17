@@ -48,27 +48,13 @@ class _RoutingScreenState extends State<RoutingScreen> {
                     ),
                   ));
         }else{
-          showDialog(
-              context: navigatorKey.currentState!.overlay!.context,
-              barrierDismissible: false,
-              builder: (ctx) => WillPopScope(
-                onWillPop: () => Future.value(false),
-                child:  AlertDialog(
-                  content: Text("Error occurred while fetching wallet profile: ${response.error}"),
-                ),
-              ));
+          _showDialog("Error occurred while fetching wallet profile: ${response.error}");
         }
 
       }else{
-        showDialog(
-          context: navigatorKey.currentState!.overlay!.context,
-            barrierDismissible: false,
-            builder: (ctx) => WillPopScope(
-              onWillPop: () => Future.value(false),
-              child: const AlertDialog(
-                content: Text("Pylons app does not exist. Please download Pylons app to continue"),
-              ),
-            ));
+
+        _showDialog("Pylons app does not exist. Please download Pylons app to continue");
+
       }
     });
 
@@ -106,5 +92,18 @@ class _RoutingScreenState extends State<RoutingScreen> {
         ],
       ),
     );
+  }
+
+
+  void _showDialog(String message){
+    showDialog(
+        context: navigatorKey.currentState!.overlay!.context,
+        barrierDismissible: false,
+        builder: (ctx) => WillPopScope(
+          onWillPop: () => Future.value(false),
+          child:  AlertDialog(
+            content: Text(message),
+          ),
+        ));
   }
 }
