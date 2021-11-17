@@ -22,7 +22,7 @@ void _registerExternalDependencies() {
   sl.registerSingletonAsync<SharedPreferences>(
       () => SharedPreferences.getInstance());
 
-  log(apiKey);
+  log(apiKey); //your nft.storage api key
   sl.registerLazySingleton<Dio>(
     () => Dio(
       BaseOptions(baseUrl: "https://api.nft.storage", headers: {

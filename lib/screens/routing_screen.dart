@@ -18,6 +18,7 @@ class RoutingScreen extends StatefulWidget {
 class _RoutingScreenState extends State<RoutingScreen> {
 
   ValueNotifier<String> username = ValueNotifier("");
+  final scaffoldState = GlobalKey<ScaffoldState>();
 
   @override
   void initState() {
@@ -26,17 +27,21 @@ class _RoutingScreenState extends State<RoutingScreen> {
     WidgetsBinding.instance!.addPostFrameCallback((timeStamp) async{
       final isExist = await PylonsWallet.instance.exists();
       if(isExist){
-        final response = await PylonsWallet.instance.getProfile();
 
-        username.value = response.data["username"] ?? "";
+        // final response = await PylonsWallet.instance.getProfile();
+        // username.value = response.data["username"] ?? "";
         Future.delayed(const Duration(seconds: 5), (){
           navigatorKey.currentState!.push(MaterialPageRoute(builder: (_) => const HomeScreen()));
         });
       }else{
-        showBottomSheet(
-            context: navigatorKey.currentState!.overlay!.context,
-            builder: (ctx) => const AlertDialog(
-              content: Text("Wallet does not exist. Please download Pylons wallet app to continue"),
+        showDialog(
+          context: navigatorKey.currentState!.overlay!.context,
+            barrierDismissible: false,
+            builder: (ctx) => WillPopScope(
+              onWillPop: () => Future.value(false),
+              child: const AlertDialog(
+                content: Text("Pylons app does not exist. Please download Pylons app to continue"),
+              ),
             ));
       }
     });
@@ -52,6 +57,7 @@ class _RoutingScreenState extends State<RoutingScreen> {
   Widget build(BuildContext context) {
     // TODO: implement build
     return Scaffold(
+      key: scaffoldState,
       body: Stack(
         children: [
           const Positioned(
@@ -63,7 +69,6 @@ class _RoutingScreenState extends State<RoutingScreen> {
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                FlutterLogo(),
                 ValueListenableBuilder<String>(
                   valueListenable: username,
                   builder: (_, String name, __) {
