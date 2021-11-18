@@ -67,6 +67,8 @@ class _DescriptionScreenState extends State<DescriptionScreen> {
                         textCapitalization: TextCapitalization.sentences,
                         validator: (value) {
                           if (value!.isEmpty) return "Enter NFT name";
+                          if(value.length <= kMinNFTName) return "NFT name should have $kMinNFTName characters or more";
+
                           return null;
                         },
                       ),

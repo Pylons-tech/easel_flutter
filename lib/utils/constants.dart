@@ -5,6 +5,8 @@ const kCookbookId = "cookbook_id";
 const kShareIcon = 'assets/icons/share_ic.png';
 const kSaveIcon = 'assets/icons/save_ic.png';
 const ipfsDomain = "https://ipfs.io/ipfs";
+
+const kMinNFTName = 9;
 const kMinDescription = 20;
 const kMinValue = 1;
 const kMaxDescription = 256;
