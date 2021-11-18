@@ -12,9 +12,9 @@ const kMinValue = 1;
 const kMaxDescription = 256;
 const kMaxEdition = 10000;
 const kMinRoyalty = 0;
-const kMaxRoyalty = 99;
+const kMaxRoyalty = 99.99;
 const kFileSizeLimitInGB = 32;
-const kMaxPriceLength = 7;
+const kMaxPriceLength = 14;
 
 const kPylonSymbol = "upylon";
 const kUsdSymbol = "ustripeusd";

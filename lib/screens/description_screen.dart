@@ -102,13 +102,13 @@ class _DescriptionScreenState extends State<DescriptionScreen> {
                         keyboardType: TextInputType.number,
                         inputFormatters: [FilteringTextInputFormatter.digitsOnly,
                           LengthLimitingTextInputFormatter(kMaxPriceLength),
-                          AmountFormatter(maxDigits: kMaxPriceLength)
+                          AmountFormatter(maxDigits: kMaxPriceLength, isDecimal: true)
                         ],
                         controller: provider.priceController,
                         suffix: const _CurrencyDropDown(),
                         validator: (value){
                           if(value!.isEmpty) return "Enter price";
-                          if(int.parse(value.replaceAll(",", "")) < kMinValue) return "Minimum amount is $kMinValue";
+                          if(double.parse(value.replaceAll(",", "")) < kMinValue) return "Minimum amount is $kMinValue";
                           return null;
                         },
 
@@ -122,7 +122,7 @@ class _DescriptionScreenState extends State<DescriptionScreen> {
                         inputFormatters: [
                           FilteringTextInputFormatter.digitsOnly,
                           LengthLimitingTextInputFormatter(5),
-                          AmountFormatter(maxDigits: 5)
+                          AmountFormatter(maxDigits: 5,)
                         ],
                         controller: provider.noOfEditionController,
                         validator: (value){
@@ -142,12 +142,13 @@ class _DescriptionScreenState extends State<DescriptionScreen> {
                         keyboardType: TextInputType.number,
                         inputFormatters: [
                           FilteringTextInputFormatter.digitsOnly,
-                          LengthLimitingTextInputFormatter(2)
+                          LengthLimitingTextInputFormatter(2),
+                          AmountFormatter(maxDigits: 2,)
                         ],
                         controller: provider.royaltyController,
                         validator: (value) {
                           if (value!.isEmpty)return "Enter royalty in percentage";
-                          if (int.parse(value) > kMaxRoyalty) return "Allowed royalty is between $kMinRoyalty-$kMaxRoyalty %";
+                          if (double.parse(value) > kMaxRoyalty) return "Allowed royalty is between $kMinRoyalty-$kMaxRoyalty %";
                           return null;
                         },
                       ),

@@ -3,16 +3,16 @@ import 'package:intl/intl.dart';
 
 class AmountFormatter extends TextInputFormatter {
 
-  AmountFormatter({required this.maxDigits});
+  AmountFormatter({required this.maxDigits, this.isDecimal = false});
 
   int maxDigits;
-
+  bool isDecimal;
 
 
   @override
   TextEditingValue formatEditUpdate(
       TextEditingValue oldValue, TextEditingValue newValue) {
-    maxDigits = 7;
+    maxDigits = 20;
     if (newValue.selection.baseOffset == 0) {
       return newValue;
     }
@@ -20,8 +20,12 @@ class AmountFormatter extends TextInputFormatter {
       return oldValue;
     }
     double value = double.parse(newValue.text);
-    final formatter =  NumberFormat("#,###", "en_US");
-    String newText = formatter.format(value);
+    final formatter =  NumberFormat(isDecimal ? "#,##0.00" : "#,###", "en_US");
+    // formatter = NumberFormat("#,##0.00", "en_US");
+    // String newText = formatter.format(value);
+    String newText = formatter.format(isDecimal ? value/100 : value);
+
+
 
     return newValue.copyWith(
         text: newText,

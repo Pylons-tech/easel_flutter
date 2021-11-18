@@ -154,7 +154,7 @@ class EaselProvider extends ChangeNotifier {
     _recipeId = localDataSource.autoGenerateEaselId();
 
     // log(_recipeId);
-    log("${double.parse(royaltyController.text.trim())}");
+    // log("${double.parse(royaltyController.text.trim())}");
 
     final loading = Loading().showLoading(message: "Uploading image...");
     final uploadResponse = await remoteDataSource.uploadFile(_file!);
@@ -215,7 +215,7 @@ class EaselProvider extends ChangeNotifier {
             ],
             mutableStrings: [],
             transferFee: [
-              Coin(denom: kPylonSymbol, amount: "10")
+              Coin(denom: kPylonSymbol, amount: "0")
             ],
             tradePercentage: DecString.decStringFromDouble(double.parse(royaltyController.text.trim())),
             tradeable: true,
