@@ -51,8 +51,6 @@ class _PublishScreenState extends State<PublishScreen> {
             right: 0,
             child: BackgroundWidget(),
           ),
-
-
           Consumer<EaselProvider>(
             builder: (_, provider, __) => SingleChildScrollView(
               child: Padding(
@@ -62,7 +60,9 @@ class _PublishScreenState extends State<PublishScreen> {
                   children: [
                     Stack(
                       children: [
-                        provider.file != null ? ImageWidget(file: provider.file!):Container(),
+                        provider.file != null
+                            ? ImageWidget(file: provider.file!)
+                            : Container(),
                         Positioned(
                             top: 60,
                             right: 10,
@@ -72,13 +72,6 @@ class _PublishScreenState extends State<PublishScreen> {
                               },
                               icon: kShareIcon,
                             )),
-                        // Positioned(
-                        //     top: 114,
-                        //     right: 10,
-                        //     child: RoundedPurpleButtonWidget(
-                        //       onPressed: () {},
-                        //       icon: kSaveIcon,
-                        //     )),
                       ],
                     ),
                     const SizedBox(height: 10),
@@ -110,8 +103,8 @@ class _PublishScreenState extends State<PublishScreen> {
                                 children: [
                                   TextSpan(
                                       text: provider.artistNameController.text,
-                                      style:
-                                         const TextStyle(color: EaselAppTheme.kBlue))
+                                      style: const TextStyle(
+                                          color: EaselAppTheme.kBlue))
                                 ]),
                           ),
                           const Divider(
@@ -126,7 +119,7 @@ class _PublishScreenState extends State<PublishScreen> {
                                     ),
                           ),
                           Text(
-                              provider.descriptionController.text,
+                            provider.descriptionController.text,
                             style:
                                 Theme.of(context).textTheme.caption!.copyWith(
                                       fontSize: 14,
@@ -135,10 +128,13 @@ class _PublishScreenState extends State<PublishScreen> {
                           const VerticalSpace(
                             10,
                           ),
-                          Text("Price: ${provider.priceController.text.trim()} ${provider.selectedDenom.name}",
-                            style: Theme.of(context).textTheme.caption!.copyWith(
-                              fontSize: 14,
-                            ),),
+                          Text(
+                            "Price: ${provider.priceController.text.trim()} ${provider.selectedDenom.name}",
+                            style:
+                                Theme.of(context).textTheme.caption!.copyWith(
+                                      fontSize: 14,
+                                    ),
+                          ),
                           Text(
                             "Size: ${provider.fileWidth} x ${provider.fileHeight}px ${provider.fileExtension.toUpperCase()}",
                             style:
@@ -170,26 +166,6 @@ class _PublishScreenState extends State<PublishScreen> {
                                       fontSize: 14,
                                     ),
                           ),
-                          // const Divider(
-                          //   height: 40,
-                          //   thickness: 1.2,
-                          // ),
-                          // Text(
-                          //   "Details",
-                          //   style:
-                          //       Theme.of(context).textTheme.bodyText2!.copyWith(
-                          //             fontSize: 18,
-                          //           ),
-                          // ),
-                          // Column(
-                          //   children: List.generate(detailInfo.length, (i) {
-                          //     return _buildDetailInfo(
-                          //       context: context,
-                          //       text: sampleData[i],
-                          //       title: detailInfo[i],
-                          //     );
-                          //   }),
-                          // ),
                         ],
                       ),
                     ),

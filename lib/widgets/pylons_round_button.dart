@@ -8,7 +8,6 @@ class PylonsRoundButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // TODO: implement build
     return ElevatedButton(
       onPressed: onPressed,
       child: const Icon(Icons.arrow_forward_ios, color: EaselAppTheme.kWhite),

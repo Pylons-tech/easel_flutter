@@ -77,14 +77,13 @@ class _HomeScreenState extends State<HomeScreen> {
                       padding: const EdgeInsets.only(left: 10.0),
                       child: IconButton(
                           onPressed: () {
-                            if(_currentPage.value < 3){
+                            if (_currentPage.value < 3) {
                               _currentPage.value = _currentPage.value > 0
                                   ? _currentPage.value - 1
                                   : 0;
 
                               _pageController.jumpToPage(_currentPage.value);
                             }
-
                           },
                           icon: const Icon(
                             Icons.arrow_back_ios,
@@ -106,31 +105,31 @@ class _HomeScreenState extends State<HomeScreen> {
                     ),
                     ValueListenableBuilder(
                       valueListenable: _currentPage,
-
-                      builder: (_, int currentPage, __) => _currentPage.value == 3
-                          ? Consumer<EaselProvider>(
-                            builder: (_, provider, __) => TextButton.icon(
-                                onPressed: () {
-                                  provider.initStore();
-                                  _pageController.jumpToPage(0);
-                                },
-                                label: const Icon(
-                                  Icons.arrow_forward_ios,
-                                  color: EaselAppTheme.kBlue,
-                                  size: 18,
-                                ),
-                                icon: Text(
-                                  "Mint more",
-                                  style: Theme.of(context)
-                                      .textTheme
-                                      .bodyText1!
-                                      .copyWith(
-                                          fontSize: 20,
-                                          color: EaselAppTheme.kBlue,
-                                          fontWeight: FontWeight.w400),
-                                )),
-                          )
-                          : const SizedBox.shrink(),
+                      builder: (_, int currentPage, __) =>
+                          _currentPage.value == 3
+                              ? Consumer<EaselProvider>(
+                                  builder: (_, provider, __) => TextButton.icon(
+                                      onPressed: () {
+                                        provider.initStore();
+                                        _pageController.jumpToPage(0);
+                                      },
+                                      label: const Icon(
+                                        Icons.arrow_forward_ios,
+                                        color: EaselAppTheme.kBlue,
+                                        size: 18,
+                                      ),
+                                      icon: Text(
+                                        "Mint more",
+                                        style: Theme.of(context)
+                                            .textTheme
+                                            .bodyText1!
+                                            .copyWith(
+                                                fontSize: 20,
+                                                color: EaselAppTheme.kBlue,
+                                                fontWeight: FontWeight.w400),
+                                      )),
+                                )
+                              : const SizedBox.shrink(),
                     ),
                   ],
                 ),
@@ -179,7 +178,6 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 
   Widget _buildStepTitle(int index) {
-
     return ValueListenableBuilder(
       valueListenable: _currentPage,
       builder: (_, int currentPage, __) => Row(
@@ -195,7 +193,5 @@ class _HomeScreenState extends State<HomeScreen> {
         ],
       ),
     );
-
-
   }
 }

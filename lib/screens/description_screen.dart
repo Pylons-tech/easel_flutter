@@ -80,10 +80,13 @@ class _DescriptionScreenState extends State<DescriptionScreen> {
                         noOfLines: 4,
                         controller: provider.descriptionController,
                         textCapitalization: TextCapitalization.sentences,
-                        inputFormatters: [LengthLimitingTextInputFormatter(kMaxDescription)],
-                        validator: (value){
-                          if(value!.isEmpty) return "Enter NFT description";
-                          if(value.length <= kMinDescription) return "Enter more than $kMinDescription characters";
+                        inputFormatters: [
+                          LengthLimitingTextInputFormatter(kMaxDescription)
+                        ],
+                        validator: (value) {
+                          if (value!.isEmpty) return "Enter NFT description";
+                          if (value.length <= kMinDescription)
+                            return "Enter more than $kMinDescription characters";
                           return null;
                         },
                       ),
@@ -100,18 +103,21 @@ class _DescriptionScreenState extends State<DescriptionScreen> {
                       EaselTextField(
                         title: "Price",
                         keyboardType: TextInputType.number,
-                        inputFormatters: [FilteringTextInputFormatter.digitsOnly,
+                        inputFormatters: [
+                          FilteringTextInputFormatter.digitsOnly,
                           LengthLimitingTextInputFormatter(kMaxPriceLength),
                           AmountFormatter(maxDigits: kMaxPriceLength, isDecimal: true)
                         ],
                         controller: provider.priceController,
                         suffix: const _CurrencyDropDown(),
-                        validator: (value){
-                          if(value!.isEmpty) return "Enter price";
-                          if(double.parse(value.replaceAll(",", "")) < kMinValue) return "Minimum amount is $kMinValue";
+                        validator: (value) {
+                          if (value!.isEmpty) return "Enter price";
+                          if (int.parse(value.replaceAll(",", "")) < kMinValue) {
+                            return "Minimum amount is $kMinValue";
+                          }
+
                           return null;
                         },
-
                       ),
                       const VerticalSpace(
                         20,
@@ -125,10 +131,12 @@ class _DescriptionScreenState extends State<DescriptionScreen> {
                           AmountFormatter(maxDigits: 5,)
                         ],
                         controller: provider.noOfEditionController,
-                        validator: (value){
-                          if(value!.isEmpty) return "Enter number of editions";
-                          if(int.parse(value.replaceAll(",", "")) < kMinValue) return "Minimum is $kMinValue";
-                          if(int.parse(value.replaceAll(",", "")) > kMaxEdition) return "Maximum is $kMaxEdition";
+                        validator: (value) {
+                          if (value!.isEmpty) return "Enter number of editions";
+                          if (int.parse(value.replaceAll(",", "")) < kMinValue)
+                            return "Minimum is $kMinValue";
+                          if (int.parse(value.replaceAll(",", "")) >
+                              kMaxEdition) return "Maximum is $kMaxEdition";
 
                           return null;
                         },
@@ -147,8 +155,11 @@ class _DescriptionScreenState extends State<DescriptionScreen> {
                         ],
                         controller: provider.royaltyController,
                         validator: (value) {
-                          if (value!.isEmpty)return "Enter royalty in percentage";
-                          if (double.parse(value) > kMaxRoyalty) return "Allowed royalty is between $kMinRoyalty-$kMaxRoyalty %";
+                          if (value!.isEmpty) {
+                            return "Enter royalty in percentage";
+                          }else if (int.parse(value) > kMaxRoyalty) {
+                            return "Allowed royalty is between $kMinRoyalty-$kMaxRoyalty %";
+                          }
                           return null;
                         },
                       ),
@@ -171,7 +182,8 @@ class _DescriptionScreenState extends State<DescriptionScreen> {
                           if (_formKey.currentState!.validate()) {
                             // print(controller.page!);
                             final currentPage = widget.controller.page!;
-                            double nextPage = currentPage < 3.0 ? (currentPage + 1) : 3;
+                            double nextPage =
+                                currentPage < 3.0 ? (currentPage + 1) : 3;
                             // print(xx);
                             widget.controller.jumpToPage(nextPage.toInt());
                           }
@@ -192,9 +204,7 @@ class _DescriptionScreenState extends State<DescriptionScreen> {
   }
 }
 
-
 class _CurrencyDropDown extends StatelessWidget {
-
   const _CurrencyDropDown({Key? key}) : super(key: key);
 
   @override
@@ -203,16 +213,21 @@ class _CurrencyDropDown extends StatelessWidget {
     return Consumer<EaselProvider>(
       builder: (_, provider, __) => DropdownButton<String>(
         value: provider.selectedDenom.symbol,
-        icon: const Icon(Icons.keyboard_arrow_down, size: 16, color: EaselAppTheme.kBlue),
+        icon: const Icon(Icons.keyboard_arrow_down,
+            size: 16, color: EaselAppTheme.kBlue),
         iconSize: 30,
         elevation: 16,
         underline: const SizedBox(),
         focusColor: EaselAppTheme.kBlue,
         dropdownColor: EaselAppTheme.kWhite,
-        style: const TextStyle(color: EaselAppTheme.kBlack, fontSize: 16, fontWeight: FontWeight.w500),
+        style: const TextStyle(
+            color: EaselAppTheme.kBlack,
+            fontSize: 16,
+            fontWeight: FontWeight.w500),
         onChanged: (String? data) {
-          if(data != null){
-            final value = Denom.availableDenoms.firstWhere((denom) => denom.symbol == data);
+          if (data != null) {
+            final value = Denom.availableDenoms
+                .firstWhere((denom) => denom.symbol == data);
             provider.setSelectedDenom(value);
           }
         },
@@ -226,4 +241,3 @@ class _CurrencyDropDown extends StatelessWidget {
     );
   }
 }
-
