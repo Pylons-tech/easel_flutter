@@ -1,4 +1,3 @@
-
 import 'package:easel_flutter/main.dart';
 import 'package:easel_flutter/screens/home_screen.dart';
 import 'package:easel_flutter/widgets/background_widget.dart';
@@ -16,48 +15,44 @@ class RoutingScreen extends StatefulWidget {
 }
 
 class _RoutingScreenState extends State<RoutingScreen> {
-
   ValueNotifier<String> username = ValueNotifier("");
 
   @override
   void initState() {
     super.initState();
 
-    WidgetsBinding.instance!.addPostFrameCallback((timeStamp) async{
+    WidgetsBinding.instance!.addPostFrameCallback((timeStamp) async {
       final isExist = await PylonsWallet.instance.exists();
-      if(isExist){
-
+      if (isExist) {
         final response = await PylonsWallet.instance.getProfile();
-        if(response.success) {
+        if (response.success) {
           username.value = response.data["username"] ?? "";
           showDialog(
               context: navigatorKey.currentState!.overlay!.context,
               barrierDismissible: false,
-              builder: (ctx) =>
-                  WillPopScope(
+              builder: (ctx) => WillPopScope(
                     onWillPop: () => Future.value(false),
                     child: AlertDialog(
                       content: Text("Welcome ${response.data["username"]}"),
                       actions: [
-                        TextButton(onPressed: () {
-                          navigatorKey.currentState!.push(
-                              MaterialPageRoute(builder: (
-                                  _) => const HomeScreen()));
-                        }, child: Text("Ok"))
+                        TextButton(
+                            onPressed: () {
+                              navigatorKey.currentState!.push(MaterialPageRoute(
+                                  builder: (_) => const HomeScreen()));
+                            },
+                            child: const Text("Ok"))
                       ],
                     ),
                   ));
-        }else{
-          _showDialog("Error occurred while fetching wallet profile: ${response.error}");
+        } else {
+          _showDialog(
+              "Error occurred while fetching wallet profile: ${response.error}");
         }
-
-      }else{
-
-        _showDialog("Pylons app does not exist. Please download Pylons app to continue");
-
+      } else {
+        _showDialog(
+            "Pylons app does not exist. Please download Pylons app to continue");
       }
     });
-
   }
 
   @override
@@ -67,7 +62,6 @@ class _RoutingScreenState extends State<RoutingScreen> {
 
   @override
   Widget build(BuildContext context) {
-    // TODO: implement build
     return Scaffold(
       body: Stack(
         children: [
@@ -81,11 +75,10 @@ class _RoutingScreenState extends State<RoutingScreen> {
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 ValueListenableBuilder<String>(
-                  valueListenable: username,
-                  builder: (_, String name, __) {
-                    return Text("Welcome to Easel, $name");
-                  }
-                ),
+                    valueListenable: username,
+                    builder: (_, String name, __) {
+                      return Text("Welcome to Easel, $name");
+                    }),
               ],
             ),
           ),
@@ -94,16 +87,15 @@ class _RoutingScreenState extends State<RoutingScreen> {
     );
   }
 
-
-  void _showDialog(String message){
+  void _showDialog(String message) {
     showDialog(
         context: navigatorKey.currentState!.overlay!.context,
         barrierDismissible: false,
         builder: (ctx) => WillPopScope(
-          onWillPop: () => Future.value(false),
-          child:  AlertDialog(
-            content: Text(message),
-          ),
-        ));
+              onWillPop: () => Future.value(false),
+              child: AlertDialog(
+                content: Text(message),
+              ),
+            ));
   }
 }

@@ -1,4 +1,3 @@
-
 import 'dart:developer';
 import 'package:easel_flutter/easel_provider.dart';
 import 'package:easel_flutter/utils/easel_app_theme.dart';
@@ -17,7 +16,7 @@ class MintScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // TODO: implement build
+
     return Scaffold(
       body: Stack(
         children: [
@@ -67,25 +66,39 @@ class MintScreen extends StatelessWidget {
                                         color: EaselAppTheme.kBlue))
                               ]),
                         ),
-
-                        const Divider(height: 40, thickness: 1.2,),
-                        Text("Description", style: Theme.of(context).textTheme.bodyText2!.copyWith(
-                          fontSize: 18,
-                        ),),
-                        Text(provider.descriptionController.text,
-                        style: Theme.of(context).textTheme.caption!.copyWith(
-                          fontSize: 14, color: EaselAppTheme.kLightText, fontWeight: FontWeight.w300
-                        ),),
-                        const VerticalSpace(10,),
-                        Text("Price: ${provider.priceController.text.trim()} ${provider.selectedDenom.name}",
+                        const Divider(
+                          height: 40,
+                          thickness: 1.2,
+                        ),
+                        Text(
+                          "Description",
+                          style:
+                              Theme.of(context).textTheme.bodyText2!.copyWith(
+                                    fontSize: 18,
+                                  ),
+                        ),
+                        Text(
+                          provider.descriptionController.text,
                           style: Theme.of(context).textTheme.caption!.copyWith(
-                            fontSize: 14,
-                          ),),
-                        Text("Size: ${provider.fileWidth} x ${provider.fileHeight}px ${provider.fileExtension.toUpperCase()}",
+                              fontSize: 14,
+                              color: EaselAppTheme.kLightText,
+                              fontWeight: FontWeight.w300),
+                        ),
+                        const VerticalSpace(
+                          10,
+                        ),
+                        Text(
+                          "Price: ${provider.priceController.text.trim()} ${provider.selectedDenom.name}",
                           style: Theme.of(context).textTheme.caption!.copyWith(
-                            fontSize: 14,
-                          ),),
-
+                                fontSize: 14,
+                              ),
+                        ),
+                        Text(
+                          "Size: ${provider.fileWidth} x ${provider.fileHeight}px ${provider.fileExtension.toUpperCase()}",
+                          style: Theme.of(context).textTheme.caption!.copyWith(
+                                fontSize: 14,
+                              ),
+                        ),
                         Text(
                           "Date: ${getDate()}",
                           style: Theme.of(context).textTheme.caption!.copyWith(
@@ -111,18 +124,18 @@ class MintScreen extends StatelessWidget {
                           20,
                         ),
                         Align(
-                          child: PylonsButton(onPressed: ()async{
+                          child: PylonsButton(onPressed: () async {
                             // final response =
 
-                              bool isRecipeCreated = await provider.createRecipe();
-                              log("Recipe created: $isRecipeCreated");
+                            bool isRecipeCreated =
+                                await provider.createRecipe();
+                            log("Recipe created: $isRecipeCreated");
 
-                              if(!isRecipeCreated){
-                                return;
-                              }
+                            if (!isRecipeCreated) {
+                              return;
+                            }
 
                             controller.jumpToPage(3);
-
                           }),
                         ),
                         const VerticalSpace(
@@ -139,6 +152,4 @@ class MintScreen extends StatelessWidget {
       ),
     );
   }
-
 }
-

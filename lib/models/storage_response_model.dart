@@ -5,9 +5,7 @@ class StorageResponseModel {
   bool? ok;
   Value? value;
 
-  StorageResponseModel({
-      this.ok, 
-      this.value});
+  StorageResponseModel({this.ok, this.value});
 
   StorageResponseModel.fromJson(dynamic json) {
     ok = json['ok'];
@@ -22,7 +20,6 @@ class StorageResponseModel {
     }
     return map;
   }
-
 }
 
 /// cid : "bafkreihlusofe353lfwntp7xcwvpzjvqzsohb7iykni3z7525gidsg3wqa"
@@ -39,20 +36,16 @@ class Value {
   String? created;
   String? type;
   String? scope;
-  // List<dynamic>? files;
   int? size;
   Pin? pin;
-  // List<dynamic>? deals;
 
   Value({
-      this.cid, 
-      this.created, 
-      this.type, 
-      this.scope, 
-      // this.files,
-      this.size, 
-      this.pin, 
-      // this.deals
+    this.cid,
+    this.created,
+    this.type,
+    this.scope,
+    this.size,
+    this.pin,
   });
 
   Value.fromJson(dynamic json) {
@@ -60,20 +53,8 @@ class Value {
     created = json['created'];
     type = json['type'];
     scope = json['scope'];
-    // if (json['files'] != null) {
-    //   files = [];
-    //   json['files'].forEach((v) {
-    //     files?.add(dynamic.fromJson(v));
-    //   });
-    // }
     size = json['size'];
     pin = json['pin'] != null ? Pin.fromJson(json['pin']) : null;
-    // if (json['deals'] != null) {
-    //   deals = [];
-    //   json['deals'].forEach((v) {
-    //     deals?.add(dynamic.fromJson(v));
-    //   });
-    // }
   }
 
   Map<String, dynamic> toJson() {
@@ -82,19 +63,12 @@ class Value {
     map['created'] = created;
     map['type'] = type;
     map['scope'] = scope;
-    // if (files != null) {
-    //   map['files'] = files?.map((v) => v.toJson()).toList();
-    // }
     map['size'] = size;
     if (pin != null) {
       map['pin'] = pin?.toJson();
     }
-    // if (deals != null) {
-    //   map['deals'] = deals?.map((v) => v.toJson()).toList();
-    // }
     return map;
   }
-
 }
 
 /// cid : "bafkreihlusofe353lfwntp7xcwvpzjvqzsohb7iykni3z7525gidsg3wqa"
@@ -108,11 +82,7 @@ class Pin {
   int? size;
   String? status;
 
-  Pin({
-      this.cid, 
-      this.created, 
-      this.size, 
-      this.status});
+  Pin({this.cid, this.created, this.size, this.status});
 
   Pin.fromJson(dynamic json) {
     cid = json['cid'];
@@ -129,5 +99,4 @@ class Pin {
     map['status'] = status;
     return map;
   }
-
 }

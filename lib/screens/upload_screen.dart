@@ -26,35 +26,30 @@ class _UploadScreenState extends State<UploadScreen> {
   ValueNotifier<String> errorText = ValueNotifier("Pick a file");
   late EaselProvider provider;
 
-
-
-
   @override
   Widget build(BuildContext context) {
     provider = Provider.of<EaselProvider>(context);
     return Scaffold(
       body: Stack(
         children: [
-          Column(
-            children: [
-              Expanded(
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                  children: [
-                    _UploadWidget(
-                      onFilePicked: (result)async{
-                        if(result != null){
-                          if(FileUtils.getFileSizeInGB(File(result.path!).lengthSync()) <= kFileSizeLimitInGB){
-                            await provider.setFile(context, result);
-                          }else{
-                            errorText.value = '"${result.name}" could not be uploaded';
-                            showError.value = true;
-                          }
-
-                        }
+          Column(children: [
+            Expanded(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                children: [
+                  _UploadWidget(onFilePicked: (result) async {
+                    if (result != null) {
+                      if (FileUtils.getFileSizeInGB(
+                              File(result.path!).lengthSync()) <=
+                          kFileSizeLimitInGB) {
+                        await provider.setFile(context, result);
+                      } else {
+                        errorText.value =
+                            '"${result.name}" could not be uploaded';
+                        showError.value = true;
                       }
-
-                  ),
+                    }
+                  }),
                   PylonsRoundButton(onPressed: () {
                     if (provider.file != null) {
                       widget.controller.jumpToPage(1);
@@ -64,21 +59,21 @@ class _UploadScreenState extends State<UploadScreen> {
                     }
                   }),
                 ],
-              ),),
-              const SizedBox(height: 20),
-
-
-            ]
-          ),
+              ),
+            ),
+            const SizedBox(height: 20),
+          ]),
           Positioned(
             child: ValueListenableBuilder(
               valueListenable: showError,
-              builder: (_, bool value, __) => value ? _ErrorMessageWidget(
-                errorMessage: errorText.value,
-                onClose: () {
-                  showError.value = false;
-                },
-              ) : const SizedBox.shrink(),
+              builder: (_, bool value, __) => value
+                  ? _ErrorMessageWidget(
+                      errorMessage: errorText.value,
+                      onClose: () {
+                        showError.value = false;
+                      },
+                    )
+                  : const SizedBox.shrink(),
             ),
           )
         ],
@@ -118,14 +113,12 @@ class _UploadWidgetState extends State<_UploadWidget> {
             margin: const EdgeInsets.symmetric(horizontal: 30),
             padding: const EdgeInsets.all(70),
             decoration: BoxDecoration(
-              color: EaselAppTheme.kBlue.withOpacity(0.05),
-              borderRadius: BorderRadius.circular(8),
-              image:  provider.file != null ? DecorationImage(
-                image: FileImage(provider.file!),
-                fit: BoxFit.cover
-              ) : null
-            ),
-
+                color: EaselAppTheme.kBlue.withOpacity(0.05),
+                borderRadius: BorderRadius.circular(8),
+                image: provider.file != null
+                    ? DecorationImage(
+                        image: FileImage(provider.file!), fit: BoxFit.cover)
+                    : null),
             child: GestureDetector(
               onTap: () async {
                 final result = await FileUtils.pickFile();
