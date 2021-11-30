@@ -21,7 +21,6 @@ class EaselProvider extends ChangeNotifier {
   final LocalDataSource localDataSource;
   final RemoteDataSource remoteDataSource;
 
-
   EaselProvider(this.localDataSource, this.remoteDataSource);
 
   File? _file;
@@ -42,7 +41,6 @@ class EaselProvider extends ChangeNotifier {
   int get fileWidth => _fileWidth;
   Denom get selectedDenom => _selectedDenom;
 
-
   final artistNameController = TextEditingController();
   final artNameController = TextEditingController();
   final descriptionController = TextEditingController();
@@ -50,40 +48,36 @@ class EaselProvider extends ChangeNotifier {
   final priceController = TextEditingController();
   final royaltyController = TextEditingController();
 
-  initStore(){
+  initStore() {
     _file = null;
-   _fileName = "";
-   _fileSize = "0";
-   _fileHeight = 0;
+    _fileName = "";
+    _fileSize = "0";
+    _fileHeight = 0;
     _fileWidth = 0;
-   _recipeId = "";
-   _selectedDenom =  Denom(name: "Pylon", symbol: kPylonSymbol);
+    _recipeId = "";
+    _selectedDenom = Denom(name: "Pylon", symbol: kPylonSymbol);
 
-   artistNameController.clear();
-   artNameController.clear();
-   descriptionController.clear();
-   noOfEditionController.clear();
-   priceController.clear();
-   royaltyController.clear();
-   // formKey.currentState?.reset();
-   notifyListeners();
+    artistNameController.clear();
+    artNameController.clear();
+    descriptionController.clear();
+    noOfEditionController.clear();
+    priceController.clear();
+    royaltyController.clear();
+    notifyListeners();
   }
 
-  Future<void> setFile(BuildContext context, PlatformFile selectedFile)async{
-
+  Future<void> setFile(BuildContext context, PlatformFile selectedFile) async {
     _file = File(selectedFile.path!);
     _fileName = selectedFile.name;
     _fileSize = FileUtils.getFileSizeString(fileLength: _file!.lengthSync());
     _fileExtension = FileUtils.getExtension(_fileName);
     await _calculateDimension(_file!);
     notifyListeners();
-
   }
-
 
   /// calculates the width and height of a file
   /// input [file] and sets [_fileHeight] and [_fileWidth]
-  Future<void> _calculateDimension(File file)async{
+  Future<void> _calculateDimension(File file) async {
     final image = Image.file(file);
     Completer<ui.Image> completer = Completer<ui.Image>();
     image.image
@@ -96,17 +90,14 @@ class EaselProvider extends ChangeNotifier {
     _fileHeight = info.height;
   }
 
-
-  void setSelectedDenom(Denom value){
+  void setSelectedDenom(Denom value) {
     _selectedDenom = value;
     notifyListeners();
   }
 
-
   /// send createCookBook tx message to the wallet app
   /// return true or false depending on the response from the wallet app
-  Future<bool> createCookbook()async{
-
+  Future<bool> createCookbook() async {
     _cookbookId = await localDataSource.autoGenerateCookbookId();
     var cookBook1 = Cookbook(
         creator: "",
@@ -117,34 +108,33 @@ class EaselProvider extends ChangeNotifier {
         developer: artistNameController.text,
         version: "v0.0.1",
         supportEmail: "easel@pylons.tech",
-        costPerBlock: Coin(denom: "upylon", amount: "1"), enabled: true);
-
+        costPerBlock: Coin(denom: "upylon", amount: "1"),
+        enabled: true);
 
     var response = await PylonsWallet.instance.txCreateCookbook(cookBook1);
-    if(response.success){
+    if (response.success) {
       return true;
     }
 
-    ScaffoldMessenger.of(navigatorKey.currentState!.overlay!.context).showSnackBar(SnackBar(content: Text(response.error)));
+    ScaffoldMessenger.of(navigatorKey.currentState!.overlay!.context)
+        .showSnackBar(SnackBar(content: Text(response.error)));
     return false;
   }
 
-
   /// sends a createRecipe Tx message to the wallet
   /// return true or false depending on the response from the wallet app
-  Future<bool> createRecipe()async{
-
+  Future<bool> createRecipe() async {
     // get device cookbook id
     _cookbookId = localDataSource.getCookbookId();
 
-    if(_cookbookId == null){
+    if (_cookbookId == null) {
       // create cookbook
       final isCookBookCreated = await createCookbook();
 
-      if(isCookBookCreated) {
+      if (isCookBookCreated) {
         // get device cookbook id
         _cookbookId = localDataSource.getCookbookId();
-      }else{
+      } else {
         return false;
       }
     }
@@ -159,14 +149,22 @@ class EaselProvider extends ChangeNotifier {
     final loading = Loading().showLoading(message: "Uploading image...");
     final uploadResponse = await remoteDataSource.uploadFile(_file!);
     loading.dismiss();
-    if(uploadResponse.status == Status.error){
-      ScaffoldMessenger.of(navigatorKey.currentState!.overlay!.context).showSnackBar(SnackBar(content: Text(uploadResponse.errorMessage ?? "Upload error occurred")));
+    if (uploadResponse.status == Status.error) {
+      ScaffoldMessenger.of(navigatorKey.currentState!.overlay!.context)
+          .showSnackBar(SnackBar(
+              content: Text(
+                  uploadResponse.errorMessage ?? "Upload error occurred")));
       return false;
     }
 
-   String residual = (double.parse(royaltyController.text.trim()) * 1000000000000000000).toStringAsFixed(0);
+    String residual =
+        (double.parse(royaltyController.text.trim()) * 1000000000000000000)
+            .toStringAsFixed(0);
 
-    String price = (double.parse(priceController.text.replaceAll(",", "").trim()) * 1000000).toStringAsFixed(0);
+    String price =
+        (double.parse(priceController.text.replaceAll(",", "").trim()) *
+                1000000)
+            .toStringAsFixed(0);
     var recipe = Recipe(
         cookbookID: _cookbookId,
         iD: _recipeId,
@@ -176,7 +174,6 @@ class EaselProvider extends ChangeNotifier {
         version: "v0.1.0",
         coinInputs: [
           CoinInput(coins: [Coin(amount: price, denom: _selectedDenom.symbol)])
-
         ],
         itemInputs: [],
         entries: EntriesList(coinOutputs: [], itemOutputs: [
@@ -185,39 +182,54 @@ class EaselProvider extends ChangeNotifier {
             doubles: [
               DoubleParam(key: "Residual", weightRanges: [
                 DoubleWeightRange(
-                    lower: residual,
-                    upper: residual,
-                    weight: Int64(1),)
+                  lower: residual,
+                  upper: residual,
+                  weight: Int64(1),
+                )
               ])
             ],
             longs: [
               LongParam(key: "Quantity", weightRanges: [
                 IntWeightRange(
-                    lower: Int64(int.parse(noOfEditionController.text.replaceAll(",", "").trim())),
-                    upper: Int64(int.parse(noOfEditionController.text.replaceAll(",", "").trim())),
+                    lower: Int64(int.parse(
+                        noOfEditionController.text.replaceAll(",", "").trim())),
+                    upper: Int64(int.parse(
+                        noOfEditionController.text.replaceAll(",", "").trim())),
                     weight: Int64(1))
               ]),
               LongParam(key: "Width", weightRanges: [
-                IntWeightRange(lower: Int64(_fileWidth), upper: Int64(_fileWidth), weight: Int64(1))
+                IntWeightRange(
+                    lower: Int64(_fileWidth),
+                    upper: Int64(_fileWidth),
+                    weight: Int64(1))
               ]),
               LongParam(key: "Height", weightRanges: [
-                IntWeightRange(lower: Int64(_fileHeight), upper: Int64(_fileHeight), weight: Int64(1))
+                IntWeightRange(
+                    lower: Int64(_fileHeight),
+                    upper: Int64(_fileHeight),
+                    weight: Int64(1))
               ])
             ],
             strings: [
               StringParam(key: "Name", value: artNameController.text.trim()),
               StringParam(key: "App_Type", value: "Easel"),
-              StringParam(key: "Description", value: descriptionController.text.trim()),
-              StringParam(key: "NFT_URL", value: "$ipfsDomain/${uploadResponse.data?.value?.cid ?? ""}"),
+              StringParam(
+                  key: "Description", value: descriptionController.text.trim()),
+              StringParam(
+                  key: "NFT_URL",
+                  value:
+                      "$ipfsDomain/${uploadResponse.data?.value?.cid ?? ""}"),
               StringParam(key: "Currency", value: _selectedDenom.symbol),
-              StringParam(key: "Price", value: priceController.text.replaceAll(",", "").trim()),
-              StringParam(key: "Creator", value: artistNameController.text.trim()),
+              StringParam(
+                  key: "Price",
+                  value: priceController.text.replaceAll(",", "").trim()),
+              StringParam(
+                  key: "Creator", value: artistNameController.text.trim()),
             ],
             mutableStrings: [],
-            transferFee: [
-              Coin(denom: kPylonSymbol, amount: "0")
-            ],
-            tradePercentage: DecString.decStringFromDouble(double.parse(royaltyController.text.trim())),
+            transferFee: [Coin(denom: kPylonSymbol, amount: "0")],
+            tradePercentage: DecString.decStringFromDouble(
+                double.parse(royaltyController.text.trim())),
             tradeable: true,
           ),
         ], itemModifyOutputs: []),
@@ -234,33 +246,33 @@ class EaselProvider extends ChangeNotifier {
     log('From App $response');
 
     if (response.success) {
-      ScaffoldMessenger.of(navigatorKey.currentState!.overlay!.context).showSnackBar(const SnackBar(content: Text("Recipe created")));
+      ScaffoldMessenger.of(navigatorKey.currentState!.overlay!.context)
+          .showSnackBar(const SnackBar(content: Text("Recipe created")));
       log("${response.data}");
-     return true;
+      return true;
     } else {
-
-      ScaffoldMessenger.of(navigatorKey.currentState!.overlay!.context).showSnackBar(SnackBar(content: Text("Recipe error : ${response.error}")));
+      ScaffoldMessenger.of(navigatorKey.currentState!.overlay!.context)
+          .showSnackBar(
+              SnackBar(content: Text("Recipe error : ${response.error}")));
       return false;
     }
   }
 
-
-
-
-  Future<void> shareNFT()async{
+  Future<void> shareNFT() async {
     String url = generateEaselLink();
     log(url);
 
     Share.share(url, subject: 'My Easel NFT');
-
   }
 
-  String generateEaselLink(){
-    return Uri.parse("http://wallet.pylons.tech/?action=purchase_nft&recipe_id=$_recipeId&cookbook_id=$_cookbookId&nft_amount=1").toString();
+  String generateEaselLink() {
+    return Uri.parse(
+            "http://wallet.pylons.tech/?action=purchase_nft&recipe_id=$_recipeId&cookbook_id=$_cookbookId&nft_amount=1")
+        .toString();
   }
 
   @override
-  void dispose(){
+  void dispose() {
     artistNameController.dispose();
     artNameController.dispose();
     descriptionController.dispose();
@@ -268,6 +280,4 @@ class EaselProvider extends ChangeNotifier {
     royaltyController.dispose();
     super.dispose();
   }
-
-
 }

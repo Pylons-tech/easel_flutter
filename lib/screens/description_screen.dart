@@ -66,9 +66,12 @@ class _DescriptionScreenState extends State<DescriptionScreen> {
                         controller: provider.artNameController,
                         textCapitalization: TextCapitalization.sentences,
                         validator: (value) {
-                          if (value!.isEmpty) return "Enter NFT name";
-                          if(value.length <= kMinNFTName) return "NFT name should have $kMinNFTName characters or more";
-
+                          if (value!.isEmpty) {
+                            return "Enter NFT name";
+                          }
+                          if (value.length <= kMinNFTName) {
+                            return "NFT name should have $kMinNFTName characters or more";
+                          }
                           return null;
                         },
                       ),
@@ -84,9 +87,12 @@ class _DescriptionScreenState extends State<DescriptionScreen> {
                           LengthLimitingTextInputFormatter(kMaxDescription)
                         ],
                         validator: (value) {
-                          if (value!.isEmpty) return "Enter NFT description";
-                          if (value.length <= kMinDescription)
+                          if (value!.isEmpty) {
+                            return "Enter NFT description";
+                          }
+                          if (value.length <= kMinDescription) {
                             return "Enter more than $kMinDescription characters";
+                          }
                           return null;
                         },
                       ),
@@ -106,15 +112,16 @@ class _DescriptionScreenState extends State<DescriptionScreen> {
                         inputFormatters: [
                           FilteringTextInputFormatter.digitsOnly,
                           LengthLimitingTextInputFormatter(kMaxPriceLength),
-                          AmountFormatter(maxDigits: kMaxPriceLength, isDecimal: true)
+                          AmountFormatter(
+                              maxDigits: kMaxPriceLength, isDecimal: true)
                         ],
                         controller: provider.priceController,
                         suffix: const _CurrencyDropDown(),
                         validator: (value) {
                           if (value!.isEmpty) return "Enter price";
-                          if (int.parse(value.replaceAll(",", "")) < kMinValue) {
-                            return "Minimum amount is $kMinValue";
-                          }
+
+                          if (double.parse(value.replaceAll(",", "")) <
+                              kMinValue) return "Minimum amount is $kMinValue";
 
                           return null;
                         },
@@ -128,15 +135,23 @@ class _DescriptionScreenState extends State<DescriptionScreen> {
                         inputFormatters: [
                           FilteringTextInputFormatter.digitsOnly,
                           LengthLimitingTextInputFormatter(5),
-                          AmountFormatter(maxDigits: 5,)
+                          AmountFormatter(
+                            maxDigits: 5,
+                          )
                         ],
                         controller: provider.noOfEditionController,
                         validator: (value) {
-                          if (value!.isEmpty) return "Enter number of editions";
-                          if (int.parse(value.replaceAll(",", "")) < kMinValue)
+                          if (value!.isEmpty) {
+                            return "Enter number of editions";
+                          }
+                          if (int.parse(value.replaceAll(",", "")) <
+                              kMinValue) {
                             return "Minimum is $kMinValue";
+                          }
                           if (int.parse(value.replaceAll(",", "")) >
-                              kMaxEdition) return "Maximum is $kMaxEdition";
+                              kMaxEdition) {
+                            return "Maximum is $kMaxEdition";
+                          }
 
                           return null;
                         },
@@ -151,13 +166,16 @@ class _DescriptionScreenState extends State<DescriptionScreen> {
                         inputFormatters: [
                           FilteringTextInputFormatter.digitsOnly,
                           LengthLimitingTextInputFormatter(2),
-                          AmountFormatter(maxDigits: 2,)
+                          AmountFormatter(
+                            maxDigits: 2,
+                          )
                         ],
                         controller: provider.royaltyController,
                         validator: (value) {
                           if (value!.isEmpty) {
                             return "Enter royalty in percentage";
-                          }else if (int.parse(value) > kMaxRoyalty) {
+                          }
+                          if (int.parse(value) > kMaxRoyalty) {
                             return "Allowed royalty is between $kMinRoyalty-$kMaxRoyalty %";
                           }
                           return null;
