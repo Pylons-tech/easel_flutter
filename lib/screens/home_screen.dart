@@ -3,6 +3,7 @@ import 'package:easel_flutter/screens/description_screen.dart';
 import 'package:easel_flutter/screens/mint_screen.dart';
 import 'package:easel_flutter/screens/publish_screen.dart';
 import 'package:easel_flutter/screens/upload_screen.dart';
+import 'package:easel_flutter/utils/constants.dart';
 import 'package:easel_flutter/utils/easel_app_theme.dart';
 import 'package:easel_flutter/utils/screen_size_util.dart';
 import 'package:easel_flutter/utils/space_utils.dart';
@@ -95,7 +96,7 @@ class _HomeScreenState extends State<HomeScreen> {
                       builder: (_, int currentPage, __) =>
                           _currentPage.value == 2
                               ? Text(
-                                  "Preview NFT",
+                                  kPreviewNFTText,
                                   style: Theme.of(context)
                                       .textTheme
                                       .bodyText1!
@@ -109,25 +110,26 @@ class _HomeScreenState extends State<HomeScreen> {
                           _currentPage.value == 3
                               ? Consumer<EaselProvider>(
                                   builder: (_, provider, __) => TextButton.icon(
-                                      onPressed: () {
-                                        provider.initStore();
-                                        _pageController.jumpToPage(0);
-                                      },
-                                      label: const Icon(
-                                        Icons.arrow_forward_ios,
-                                        color: EaselAppTheme.kBlue,
-                                        size: 18,
-                                      ),
-                                      icon: Text(
-                                        "Mint more",
-                                        style: Theme.of(context)
-                                            .textTheme
-                                            .bodyText1!
-                                            .copyWith(
-                                                fontSize: 20,
-                                                color: EaselAppTheme.kBlue,
-                                                fontWeight: FontWeight.w400),
-                                      )),
+                                    onPressed: () {
+                                      provider.initStore();
+                                      _pageController.jumpToPage(0);
+                                    },
+                                    label: const Icon(
+                                      Icons.arrow_forward_ios,
+                                      color: EaselAppTheme.kBlue,
+                                      size: 18,
+                                    ),
+                                    icon: Text(
+                                      kMintMoreText,
+                                      style: Theme.of(context)
+                                          .textTheme
+                                          .bodyText1!
+                                          .copyWith(
+                                              fontSize: 20,
+                                              color: EaselAppTheme.kBlue,
+                                              fontWeight: FontWeight.w400),
+                                    ),
+                                  ),
                                 )
                               : const SizedBox.shrink(),
                     ),
@@ -138,7 +140,6 @@ class _HomeScreenState extends State<HomeScreen> {
             const VerticalSpace(6),
             Expanded(
               child: PageView(
-                // allowImplicitScrolling: false,
                 controller: _pageController,
                 physics: const NeverScrollableScrollPhysics(),
                 onPageChanged: (int page) {

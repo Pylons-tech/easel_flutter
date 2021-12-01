@@ -24,5 +24,6 @@ doc/api/
 
 lib/env.dart
 .flutter-plugins-dependencies
+
 .flutter-plugins
 

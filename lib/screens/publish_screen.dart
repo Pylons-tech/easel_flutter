@@ -1,13 +1,12 @@
 import 'package:easel_flutter/easel_provider.dart';
 import 'package:easel_flutter/utils/constants.dart';
+import 'package:easel_flutter/utils/date_utils.dart';
 import 'package:easel_flutter/utils/easel_app_theme.dart';
 import 'package:easel_flutter/utils/space_utils.dart';
-import 'package:easel_flutter/utils/date_utils.dart';
 import 'package:easel_flutter/widgets/background_widget.dart';
 import 'package:easel_flutter/widgets/image_widget.dart';
 import 'package:easel_flutter/widgets/rounded_purple_button_widget.dart';
 import 'package:flutter/material.dart';
-
 import 'package:provider/provider.dart';
 
 class PublishScreen extends StatefulWidget {
@@ -93,7 +92,7 @@ class _PublishScreenState extends State<PublishScreen> {
                           ),
                           RichText(
                             text: TextSpan(
-                                text: "${"Created by "} ",
+                                text: "$kCreatedByText ",
                                 style: Theme.of(context)
                                     .textTheme
                                     .bodyText2!
@@ -112,7 +111,7 @@ class _PublishScreenState extends State<PublishScreen> {
                             thickness: 1.2,
                           ),
                           Text(
-                            "Description",
+                            kDescriptionText,
                             style:
                                 Theme.of(context).textTheme.bodyText2!.copyWith(
                                       fontSize: 18,
@@ -129,21 +128,21 @@ class _PublishScreenState extends State<PublishScreen> {
                             10,
                           ),
                           Text(
-                            "Price: ${provider.priceController.text.trim()} ${provider.selectedDenom.name}",
+                            "$kPriceText: ${provider.priceController.text.trim()} ${provider.selectedDenom.name}",
                             style:
                                 Theme.of(context).textTheme.caption!.copyWith(
                                       fontSize: 14,
                                     ),
                           ),
                           Text(
-                            "Size: ${provider.fileWidth} x ${provider.fileHeight}px ${provider.fileExtension.toUpperCase()}",
+                            "$kSizeText: ${provider.fileWidth} x ${provider.fileHeight}px ${provider.fileExtension.toUpperCase()}",
                             style:
                                 Theme.of(context).textTheme.caption!.copyWith(
                                       fontSize: 14,
                                     ),
                           ),
                           Text(
-                            "Date: ${getDate()}",
+                            "$kDateText: ${getDate()}",
                             style:
                                 Theme.of(context).textTheme.caption!.copyWith(
                                       fontSize: 14,
@@ -153,14 +152,14 @@ class _PublishScreenState extends State<PublishScreen> {
                             10,
                           ),
                           Text(
-                            "No of editions: ${provider.noOfEditionController.text}",
+                            "$kNoOfEditionText: ${provider.noOfEditionController.text}",
                             style:
                                 Theme.of(context).textTheme.caption!.copyWith(
                                       fontSize: 14,
                                     ),
                           ),
                           Text(
-                            "Royalty: ${provider.royaltyController.text}%",
+                            "$kRoyaltyText: ${provider.royaltyController.text}%",
                             style:
                                 Theme.of(context).textTheme.caption!.copyWith(
                                       fontSize: 14,

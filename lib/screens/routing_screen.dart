@@ -1,8 +1,10 @@
 import 'package:easel_flutter/main.dart';
 import 'package:easel_flutter/screens/home_screen.dart';
+import 'package:easel_flutter/utils/constants.dart';
 import 'package:easel_flutter/utils/easel_app_theme.dart';
 import 'package:easel_flutter/utils/utils.dart';
 import 'package:easel_flutter/widgets/background_widget.dart';
+import 'package:easel_flutter/widgets/message_dialog.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:pylons_sdk/pylons_sdk.dart';
@@ -30,29 +32,28 @@ class _RoutingScreenState extends State<RoutingScreen> {
         if (response.success) {
           username.value = response.data["username"] ?? "";
 
-          showAlertDialog("Welcome ${response.data["username"]}",
-              button: TextButton(
-                  onPressed: () {
-                    navigatorKey.currentState!.push(
-                      MaterialPageRoute(
-                        builder: (_) => const HomeScreen(),
-                      ),
-                    );
-                  },
-                  child: const Text("Ok")));
+          MessageDialog()
+              .show("$kWelcomeToEaselText, ${response.data["username"]}",
+                  button: TextButton(
+                      onPressed: () {
+                        navigatorKey.currentState!.push(
+                          MaterialPageRoute(
+                            builder: (_) => const HomeScreen(),
+                          ),
+                        );
+                      },
+                      child: const Text(kOkText)));
         } else {
-          showAlertDialog(
-              "Error occurred while fetching wallet profile: ${response.error}");
+          MessageDialog().show("$kProfileErrorOccurredText: ${response.error}");
         }
       } else {
-        showAlertDialog(
-            "Pylons app is not installed on this device. Please install Pylons app to continue",
+        MessageDialog().show(kPylonsAppNotInstalledText,
             button: TextButton(
                 onPressed: () {
                   launchAppStore();
                 },
                 child: const Text(
-                  "Click here to install",
+                  kClickToInstallText,
                   style: TextStyle(color: EaselAppTheme.kBlue),
                 )));
       }
@@ -81,7 +82,7 @@ class _RoutingScreenState extends State<RoutingScreen> {
                 ValueListenableBuilder<String>(
                     valueListenable: username,
                     builder: (_, String name, __) {
-                      return Text("Welcome to Easel, $name");
+                      return Text("$kWelcomeToEaselText, $name");
                     }),
               ],
             ),
@@ -90,5 +91,4 @@ class _RoutingScreenState extends State<RoutingScreen> {
       ),
     );
   }
-
 }

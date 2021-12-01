@@ -1,14 +1,14 @@
-import 'dart:developer';
 import 'package:easel_flutter/easel_provider.dart';
+import 'package:easel_flutter/utils/constants.dart';
+import 'package:easel_flutter/utils/date_utils.dart';
 import 'package:easel_flutter/utils/easel_app_theme.dart';
 import 'package:easel_flutter/utils/space_utils.dart';
-import 'package:easel_flutter/utils/date_utils.dart';
 import 'package:easel_flutter/widgets/background_widget.dart';
 import 'package:easel_flutter/widgets/image_widget.dart';
 import 'package:easel_flutter/widgets/pylons_button.dart';
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:provider/provider.dart';
 
 class MintScreen extends StatelessWidget {
   final PageController controller;
@@ -16,7 +16,6 @@ class MintScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-
     return Scaffold(
       body: Stack(
         children: [
@@ -50,7 +49,7 @@ class MintScreen extends StatelessWidget {
                         ),
                         RichText(
                           text: TextSpan(
-                              text: "${"Created by "} ",
+                              text: "$kCreatedByText ",
                               style: GoogleFonts.inter(
                                   textStyle: Theme.of(context)
                                       .textTheme
@@ -71,7 +70,7 @@ class MintScreen extends StatelessWidget {
                           thickness: 1.2,
                         ),
                         Text(
-                          "Description",
+                          kDescriptionText,
                           style:
                               Theme.of(context).textTheme.bodyText2!.copyWith(
                                     fontSize: 18,
@@ -88,19 +87,19 @@ class MintScreen extends StatelessWidget {
                           10,
                         ),
                         Text(
-                          "Price: ${provider.priceController.text.trim()} ${provider.selectedDenom.name}",
+                          "$kPriceText: ${provider.priceController.text.trim()} ${provider.selectedDenom.name}",
                           style: Theme.of(context).textTheme.caption!.copyWith(
                                 fontSize: 14,
                               ),
                         ),
                         Text(
-                          "Size: ${provider.fileWidth} x ${provider.fileHeight}px ${provider.fileExtension.toUpperCase()}",
+                          "$kSizeText: ${provider.fileWidth} x ${provider.fileHeight}px ${provider.fileExtension.toUpperCase()}",
                           style: Theme.of(context).textTheme.caption!.copyWith(
                                 fontSize: 14,
                               ),
                         ),
                         Text(
-                          "Date: ${getDate()}",
+                          "$kDateText: ${getDate()}",
                           style: Theme.of(context).textTheme.caption!.copyWith(
                                 fontSize: 14,
                               ),
@@ -109,13 +108,13 @@ class MintScreen extends StatelessWidget {
                           10,
                         ),
                         Text(
-                          "No of editions: ${provider.noOfEditionController.text}",
+                          "$kNoOfEditionText: ${provider.noOfEditionController.text}",
                           style: Theme.of(context).textTheme.caption!.copyWith(
                                 fontSize: 14,
                               ),
                         ),
                         Text(
-                          "Royalty: ${provider.royaltyController.text}%",
+                          "$kRoyaltyText: ${provider.royaltyController.text}%",
                           style: Theme.of(context).textTheme.caption!.copyWith(
                                 fontSize: 14,
                               ),
@@ -125,11 +124,9 @@ class MintScreen extends StatelessWidget {
                         ),
                         Align(
                           child: PylonsButton(onPressed: () async {
-                            // final response =
-
                             bool isRecipeCreated =
                                 await provider.createRecipe();
-                            log("Recipe created: $isRecipeCreated");
+                            // log("Recipe created: $isRecipeCreated");
 
                             if (!isRecipeCreated) {
                               return;
