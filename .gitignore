@@ -23,3 +23,7 @@ doc/api/
 .idea/
 
 lib/env.dart
+.flutter-plugins-dependencies
+
+.flutter-plugins
+

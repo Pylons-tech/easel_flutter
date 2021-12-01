@@ -1,6 +1,10 @@
 import 'package:easel_flutter/main.dart';
 import 'package:easel_flutter/screens/home_screen.dart';
+import 'package:easel_flutter/utils/constants.dart';
+import 'package:easel_flutter/utils/easel_app_theme.dart';
+import 'package:easel_flutter/utils/utils.dart';
 import 'package:easel_flutter/widgets/background_widget.dart';
+import 'package:easel_flutter/widgets/message_dialog.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:pylons_sdk/pylons_sdk.dart';
@@ -27,30 +31,31 @@ class _RoutingScreenState extends State<RoutingScreen> {
         final response = await PylonsWallet.instance.getProfile();
         if (response.success) {
           username.value = response.data["username"] ?? "";
-          showDialog(
-              context: navigatorKey.currentState!.overlay!.context,
-              barrierDismissible: false,
-              builder: (ctx) => WillPopScope(
-                    onWillPop: () => Future.value(false),
-                    child: AlertDialog(
-                      content: Text("Welcome ${response.data["username"]}"),
-                      actions: [
-                        TextButton(
-                            onPressed: () {
-                              navigatorKey.currentState!.push(MaterialPageRoute(
-                                  builder: (_) => const HomeScreen()));
-                            },
-                            child: const Text("Ok"))
-                      ],
-                    ),
-                  ));
+
+          MessageDialog()
+              .show("$kWelcomeToEaselText, ${response.data["username"]}",
+                  button: TextButton(
+                      onPressed: () {
+                        navigatorKey.currentState!.push(
+                          MaterialPageRoute(
+                            builder: (_) => const HomeScreen(),
+                          ),
+                        );
+                      },
+                      child: const Text(kOkText)));
         } else {
-          _showDialog(
-              "Error occurred while fetching wallet profile: ${response.error}");
+          MessageDialog().show("$kProfileErrorOccurredText: ${response.error}");
         }
       } else {
-        _showDialog(
-            "Pylons app does not exist. Please download Pylons app to continue");
+        MessageDialog().show(kPylonsAppNotInstalledText,
+            button: TextButton(
+                onPressed: () {
+                  launchAppStore();
+                },
+                child: const Text(
+                  kClickToInstallText,
+                  style: TextStyle(color: EaselAppTheme.kBlue),
+                )));
       }
     });
   }
@@ -77,7 +82,7 @@ class _RoutingScreenState extends State<RoutingScreen> {
                 ValueListenableBuilder<String>(
                     valueListenable: username,
                     builder: (_, String name, __) {
-                      return Text("Welcome to Easel, $name");
+                      return Text("$kWelcomeToEaselText, $name");
                     }),
               ],
             ),
@@ -85,17 +90,5 @@ class _RoutingScreenState extends State<RoutingScreen> {
         ],
       ),
     );
-  }
-
-  void _showDialog(String message) {
-    showDialog(
-        context: navigatorKey.currentState!.overlay!.context,
-        barrierDismissible: false,
-        builder: (ctx) => WillPopScope(
-              onWillPop: () => Future.value(false),
-              child: AlertDialog(
-                content: Text(message),
-              ),
-            ));
   }
 }

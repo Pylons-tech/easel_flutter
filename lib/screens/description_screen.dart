@@ -50,11 +50,11 @@ class _DescriptionScreenState extends State<DescriptionScreen> {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       EaselTextField(
-                        title: "Your name as the artist",
+                        title: kNameAsArtistText,
                         controller: provider.artistNameController,
                         textCapitalization: TextCapitalization.sentences,
                         validator: (value) {
-                          if (value!.isEmpty) return "Enter artist name";
+                          if (value!.isEmpty) return kEnterArtistNameText;
                           return null;
                         },
                       ),
@@ -62,11 +62,16 @@ class _DescriptionScreenState extends State<DescriptionScreen> {
                         20,
                       ),
                       EaselTextField(
-                        title: "Give your NFT a name",
+                        title: kGiveNFTNameText,
                         controller: provider.artNameController,
                         textCapitalization: TextCapitalization.sentences,
                         validator: (value) {
-                          if (value!.isEmpty) return "Enter NFT name";
+                          if (value!.isEmpty) {
+                            return kEnterNFTNameText;
+                          }
+                          if (value.length <= kMinNFTName) {
+                            return "$kNameShouldHaveText $kMinNFTName $kCharactersOrMoreText";
+                          }
                           return null;
                         },
                       ),
@@ -74,7 +79,7 @@ class _DescriptionScreenState extends State<DescriptionScreen> {
                         20,
                       ),
                       EaselTextField(
-                        title: "Describe your NFT",
+                        title: kDescribeNFTText,
                         noOfLines: 4,
                         controller: provider.descriptionController,
                         textCapitalization: TextCapitalization.sentences,
@@ -83,17 +88,17 @@ class _DescriptionScreenState extends State<DescriptionScreen> {
                         ],
                         validator: (value) {
                           if (value!.isEmpty) {
-                            return "Enter NFT description";
+                            return kEnterNFTDescriptionText;
                           }
                           if (value.length <= kMinDescription) {
-                            return "Enter more than $kMinDescription characters";
+                            return "$kEnterMoreThanText $kMinDescription $kCharactersText";
                           }
                           return null;
                         },
                       ),
                       const VerticalSpace(4),
                       Text(
-                        "$kMaxDescription character limit",
+                        "$kMaxDescription $kCharacterLimitText",
                         style: Theme.of(context).textTheme.subtitle2!.copyWith(
                             color: EaselAppTheme.kGrey,
                             fontWeight: FontWeight.w600),
@@ -102,19 +107,24 @@ class _DescriptionScreenState extends State<DescriptionScreen> {
                         20,
                       ),
                       EaselTextField(
-                        title: "Price",
+                        title: kPriceText,
                         keyboardType: TextInputType.number,
                         inputFormatters: [
                           FilteringTextInputFormatter.digitsOnly,
                           LengthLimitingTextInputFormatter(kMaxPriceLength),
-                          AmountFormatter(maxDigits: kMaxPriceLength)
+                          AmountFormatter(
+                              maxDigits: kMaxPriceLength, isDecimal: true)
                         ],
                         controller: provider.priceController,
                         suffix: const _CurrencyDropDown(),
                         validator: (value) {
-                          if (value!.isEmpty) return "Enter price";
+                          if (value!.isEmpty) {
+                            return kEnterPriceText;
+                          }
+
                           if (double.parse(value.replaceAll(",", "")) <
-                              kMinValue) return "Minimum amount is $kMinValue";
+                              kMinValue) return "$kMinIsText $kMinValue";
+
                           return null;
                         },
                       ),
@@ -122,25 +132,27 @@ class _DescriptionScreenState extends State<DescriptionScreen> {
                         20,
                       ),
                       EaselTextField(
-                        title: "Number of Editions (Max: $kMaxEdition)",
+                        title: "$kNoOfEditionText ($kMaxText: $kMaxEdition)",
                         keyboardType: TextInputType.number,
                         inputFormatters: [
                           FilteringTextInputFormatter.digitsOnly,
                           LengthLimitingTextInputFormatter(5),
-                          AmountFormatter(maxDigits: 5)
+                          AmountFormatter(
+                            maxDigits: 5,
+                          )
                         ],
                         controller: provider.noOfEditionController,
                         validator: (value) {
                           if (value!.isEmpty) {
-                            return "Enter number of editions";
+                            return kEnterEditionText;
                           }
                           if (int.parse(value.replaceAll(",", "")) <
                               kMinValue) {
-                            return "Minimum is $kMinValue";
+                            return "$kMinIsText $kMinValue";
                           }
                           if (int.parse(value.replaceAll(",", "")) >
                               kMaxEdition) {
-                            return "Maximum is $kMaxEdition";
+                            return "$kMaxIsTextText $kMaxEdition";
                           }
 
                           return null;
@@ -150,20 +162,23 @@ class _DescriptionScreenState extends State<DescriptionScreen> {
                         20,
                       ),
                       EaselTextField(
-                        title: "Royalties (%)",
-                        hint: "10%",
+                        title: kRoyaltiesText,
+                        hint: kRoyaltyHintText,
                         keyboardType: TextInputType.number,
                         inputFormatters: [
                           FilteringTextInputFormatter.digitsOnly,
-                          LengthLimitingTextInputFormatter(2)
+                          LengthLimitingTextInputFormatter(2),
+                          AmountFormatter(
+                            maxDigits: 2,
+                          )
                         ],
                         controller: provider.royaltyController,
                         validator: (value) {
                           if (value!.isEmpty) {
-                            return "Enter royalty in percentage";
+                            return kEnterRoyaltyText;
                           }
                           if (int.parse(value) > kMaxRoyalty) {
-                            return "Allowed royalty is between $kMinRoyalty-$kMaxRoyalty %";
+                            return "$kRoyaltyRangeText $kMinRoyalty-$kMaxRoyalty %";
                           }
                           return null;
                         },
@@ -172,8 +187,7 @@ class _DescriptionScreenState extends State<DescriptionScreen> {
                         4,
                       ),
                       Text(
-                        "Percentage of all secondary market sales automatically distributed to the creator.\n"
-                        "To opt out set value to “$kMinRoyalty”",
+                        "$kRoyaltyNoteText “$kMinRoyalty”",
                         style: Theme.of(context).textTheme.subtitle2!.copyWith(
                             color: EaselAppTheme.kGrey,
                             fontWeight: FontWeight.w600),

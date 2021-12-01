@@ -144,7 +144,7 @@ class EaselProvider extends ChangeNotifier {
     _recipeId = localDataSource.autoGenerateEaselId();
 
     // log(_recipeId);
-    log("${double.parse(royaltyController.text.trim())}");
+    // log("${double.parse(royaltyController.text.trim())}");
 
     final loading = Loading().showLoading(message: "Uploading image...");
     final uploadResponse = await remoteDataSource.uploadFile(_file!);
@@ -157,9 +157,8 @@ class EaselProvider extends ChangeNotifier {
       return false;
     }
 
-    String residual =
-        (double.parse(royaltyController.text.trim()) * 1000000000000000000)
-            .toStringAsFixed(0);
+    String residual = DecString.decStringFromDouble(
+        double.parse(royaltyController.text.trim()));
 
     String price =
         (double.parse(priceController.text.replaceAll(",", "").trim()) *
@@ -227,7 +226,7 @@ class EaselProvider extends ChangeNotifier {
                   key: "Creator", value: artistNameController.text.trim()),
             ],
             mutableStrings: [],
-            transferFee: [Coin(denom: kPylonSymbol, amount: "10")],
+            transferFee: [Coin(denom: kPylonSymbol, amount: "0")],
             tradePercentage: DecString.decStringFromDouble(
                 double.parse(royaltyController.text.trim())),
             tradeable: true,
