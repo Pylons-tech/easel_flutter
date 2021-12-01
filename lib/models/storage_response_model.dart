@@ -1,6 +1,3 @@
-/// ok : true
-/// value : {"cid":"bafkreihlusofe353lfwntp7xcwvpzjvqzsohb7iykni3z7525gidsg3wqa","created":"2021-11-08T13:34:51.769+00:00","type":"image/jpeg","scope":"Easel_test","files":[],"size":101453,"pin":{"cid":"bafkreihlusofe353lfwntp7xcwvpzjvqzsohb7iykni3z7525gidsg3wqa","created":"2021-11-08T13:34:51.769+00:00","size":101453,"status":"queued"},"deals":[]}
-
 class StorageResponseModel {
   bool? ok;
   Value? value;
@@ -21,15 +18,6 @@ class StorageResponseModel {
     return map;
   }
 }
-
-/// cid : "bafkreihlusofe353lfwntp7xcwvpzjvqzsohb7iykni3z7525gidsg3wqa"
-/// created : "2021-11-08T13:34:51.769+00:00"
-/// type : "image/jpeg"
-/// scope : "Easel_test"
-/// files : []
-/// size : 101453
-/// pin : {"cid":"bafkreihlusofe353lfwntp7xcwvpzjvqzsohb7iykni3z7525gidsg3wqa","created":"2021-11-08T13:34:51.769+00:00","size":101453,"status":"queued"}
-/// deals : []
 
 class Value {
   String? cid;
@@ -70,11 +58,6 @@ class Value {
     return map;
   }
 }
-
-/// cid : "bafkreihlusofe353lfwntp7xcwvpzjvqzsohb7iykni3z7525gidsg3wqa"
-/// created : "2021-11-08T13:34:51.769+00:00"
-/// size : 101453
-/// status : "queued"
 
 class Pin {
   String? cid;
