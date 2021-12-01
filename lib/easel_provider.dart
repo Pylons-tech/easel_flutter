@@ -157,9 +157,8 @@ class EaselProvider extends ChangeNotifier {
       return false;
     }
 
-    String residual =
-        (double.parse(royaltyController.text.trim()) * 1000000000000000000)
-            .toStringAsFixed(0);
+    String residual = DecString.decStringFromDouble(
+        double.parse(royaltyController.text.trim()));
 
     String price =
         (double.parse(priceController.text.replaceAll(",", "").trim()) *
