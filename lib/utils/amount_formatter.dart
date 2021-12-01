@@ -2,12 +2,10 @@ import 'package:flutter/services.dart';
 import 'package:intl/intl.dart';
 
 class AmountFormatter extends TextInputFormatter {
-
   AmountFormatter({required this.maxDigits, this.isDecimal = false});
 
   int maxDigits;
   bool isDecimal;
-
 
   @override
   TextEditingValue formatEditUpdate(
@@ -20,16 +18,11 @@ class AmountFormatter extends TextInputFormatter {
       return oldValue;
     }
     double value = double.parse(newValue.text);
-    final formatter =  NumberFormat(isDecimal ? "#,##0.00" : "#,###", "en_US");
-    // formatter = NumberFormat("#,##0.00", "en_US");
-    // String newText = formatter.format(value);
-    String newText = formatter.format(isDecimal ? value/100 : value);
-
-
+    final formatter = NumberFormat(isDecimal ? "#,##0.00" : "#,###", "en_US");
+    String newText = formatter.format(isDecimal ? value / 100 : value);
 
     return newValue.copyWith(
         text: newText,
-        selection:  TextSelection.collapsed(offset: newText.length));
+        selection: TextSelection.collapsed(offset: newText.length));
   }
-
 }
