@@ -269,12 +269,4 @@ class EaselProvider extends ChangeNotifier {
     royaltyController.dispose();
     super.dispose();
   }
-
-  // static String decStringFromDouble(double f) {
-  //   const ONE = 100000000000000000.0;
-  //   const PRECISION = 18;
-  //   final x = (f * ONE).toStringAsPrecision(PRECISION).split('.');
-  //   final s = x.first;
-  //   return s;
-  // }
 }
