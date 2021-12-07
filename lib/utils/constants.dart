@@ -46,6 +46,10 @@ const kRoyaltyText = "Royalty";
 const kPreviewNFTText = "Preview NFT";
 const kMintMoreText = "Mint More";
 
+const kUploadText = "Upload";
+const kMintText = "Mint";
+const kPublishText = "Publish";
+
 const kMinNFTName = 9;
 const kMinDescription = 20;
 const kMinValue = 1;

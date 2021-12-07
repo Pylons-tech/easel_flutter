@@ -35,133 +35,137 @@ class _HomeScreenState extends State<HomeScreen> {
   final PageController _pageController = PageController(keepPage: true);
   final ValueNotifier<int> _currentPage = ValueNotifier(0);
 
-  List title = ["Upload", "Description", "Mint", "Publish"];
+  List title = [kUploadText, kDescriptionText, kMintText, kPublishText];
 
   @override
   Widget build(BuildContext context) {
     final screenSize = ScreenSizeUtil(context);
-    return SafeArea(
-      child: Scaffold(
-        body: Column(
-          children: [
-            const VerticalSpace(20),
-            ValueListenableBuilder(
-              valueListenable: _currentPage,
-              builder: (_, int value, __) => StepsIndicator(
-                selectedStep: _currentPage.value,
-                nbSteps: _numPages,
-                lineLength: screenSize.width(percent: 90) / _numPages,
-                doneLineColor: EaselAppTheme.kLightGrey,
-                undoneLineColor: EaselAppTheme.kLightGrey,
-                doneLineThickness: 1.5,
-                undoneLineThickness: 1.5,
-                unselectedStepColorIn: EaselAppTheme.kLightGrey,
-                unselectedStepColorOut: EaselAppTheme.kLightGrey,
-                doneStepColor: EaselAppTheme.kLightGrey,
-                selectedStepColorIn: EaselAppTheme.kBlue,
-                selectedStepColorOut: EaselAppTheme.kBlue,
-                enableLineAnimation: false,
-                enableStepAnimation: false,
+    return Container(
+      color: EaselAppTheme.kWhite,
+      child: SafeArea(
+        child: Scaffold(
+          body: Column(
+            children: [
+              const VerticalSpace(20),
+              ValueListenableBuilder(
+                valueListenable: _currentPage,
+                builder: (_, int value, __) => StepsIndicator(
+                  selectedStep: _currentPage.value,
+                  nbSteps: _numPages,
+                  lineLength: screenSize.width(percent: 90) / _numPages,
+                  doneLineColor: EaselAppTheme.kLightGrey,
+                  undoneLineColor: EaselAppTheme.kLightGrey,
+                  doneLineThickness: 1.5,
+                  undoneLineThickness: 1.5,
+                  unselectedStepColorIn: EaselAppTheme.kLightGrey,
+                  unselectedStepColorOut: EaselAppTheme.kLightGrey,
+                  doneStepColor: EaselAppTheme.kLightGrey,
+                  selectedStepColorIn: EaselAppTheme.kBlue,
+                  selectedStepColorOut: EaselAppTheme.kBlue,
+                  enableLineAnimation: false,
+                  enableStepAnimation: false,
+                ),
               ),
-            ),
-            const VerticalSpace(5),
-            _buildTitles(screenSize),
-            const VerticalSpace(10),
-            Align(
-              alignment: Alignment.centerLeft,
-              child: SizedBox(
-                width: screenSize.width(percent: 100),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Padding(
-                      padding: const EdgeInsets.only(left: 10.0),
-                      child: IconButton(
-                          onPressed: () {
-                            if (_currentPage.value < 3) {
-                              _currentPage.value = _currentPage.value > 0
-                                  ? _currentPage.value - 1
-                                  : 0;
+              const VerticalSpace(5),
+              _buildTitles(screenSize),
+              const VerticalSpace(10),
+              Align(
+                alignment: Alignment.centerLeft,
+                child: SizedBox(
+                  width: screenSize.width(percent: 100),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Padding(
+                        padding: const EdgeInsets.only(left: 10.0),
+                        child: IconButton(
+                            onPressed: () {
+                              if (_currentPage.value < 3) {
+                                _currentPage.value = _currentPage.value > 0
+                                    ? _currentPage.value - 1
+                                    : 0;
 
-                              _pageController.jumpToPage(_currentPage.value);
-                            }
-                          },
-                          icon: const Icon(
-                            Icons.arrow_back_ios,
-                            color: EaselAppTheme.kGrey,
-                          )),
-                    ),
-                    ValueListenableBuilder(
-                      valueListenable: _currentPage,
-                      builder: (_, int currentPage, __) =>
-                          _currentPage.value == 2
-                              ? Text(
-                                  kPreviewNFTText,
-                                  style: Theme.of(context)
-                                      .textTheme
-                                      .bodyText1!
-                                      .copyWith(fontSize: 16),
-                                )
-                              : const SizedBox.shrink(),
-                    ),
-                    ValueListenableBuilder(
-                      valueListenable: _currentPage,
-                      builder: (_, int currentPage, __) =>
-                          _currentPage.value == 3
-                              ? Consumer<EaselProvider>(
-                                  builder: (_, provider, __) => TextButton.icon(
-                                    onPressed: () {
-                                      provider.initStore();
-                                      _pageController.jumpToPage(0);
-                                    },
-                                    label: const Icon(
-                                      Icons.arrow_forward_ios,
-                                      color: EaselAppTheme.kBlue,
-                                      size: 18,
+                                _pageController.jumpToPage(_currentPage.value);
+                              }
+                            },
+                            icon: const Icon(
+                              Icons.arrow_back_ios,
+                              color: EaselAppTheme.kGrey,
+                            )),
+                      ),
+                      ValueListenableBuilder(
+                        valueListenable: _currentPage,
+                        builder: (_, int currentPage, __) =>
+                            _currentPage.value == 2
+                                ? Text(
+                                    kPreviewNFTText,
+                                    style: Theme.of(context)
+                                        .textTheme
+                                        .bodyText1!
+                                        .copyWith(fontSize: 16),
+                                  )
+                                : const SizedBox.shrink(),
+                      ),
+                      ValueListenableBuilder(
+                        valueListenable: _currentPage,
+                        builder: (_, int currentPage, __) =>
+                            _currentPage.value == 3
+                                ? Consumer<EaselProvider>(
+                                    builder: (_, provider, __) =>
+                                        TextButton.icon(
+                                      onPressed: () {
+                                        provider.initStore();
+                                        _pageController.jumpToPage(0);
+                                      },
+                                      label: const Icon(
+                                        Icons.arrow_forward_ios,
+                                        color: EaselAppTheme.kBlue,
+                                        size: 18,
+                                      ),
+                                      icon: Text(
+                                        kMintMoreText,
+                                        style: Theme.of(context)
+                                            .textTheme
+                                            .bodyText1!
+                                            .copyWith(
+                                                fontSize: 20,
+                                                color: EaselAppTheme.kBlue,
+                                                fontWeight: FontWeight.w400),
+                                      ),
                                     ),
-                                    icon: Text(
-                                      kMintMoreText,
-                                      style: Theme.of(context)
-                                          .textTheme
-                                          .bodyText1!
-                                          .copyWith(
-                                              fontSize: 20,
-                                              color: EaselAppTheme.kBlue,
-                                              fontWeight: FontWeight.w400),
-                                    ),
-                                  ),
-                                )
-                              : const SizedBox.shrink(),
+                                  )
+                                : const SizedBox.shrink(),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+              const VerticalSpace(6),
+              Expanded(
+                child: PageView(
+                  controller: _pageController,
+                  physics: const NeverScrollableScrollPhysics(),
+                  onPageChanged: (int page) {
+                    _currentPage.value = page;
+                  },
+                  children: [
+                    UploadScreen(
+                      controller: _pageController,
                     ),
+                    DescriptionScreen(
+                      controller: _pageController,
+                    ),
+                    MintScreen(
+                      controller: _pageController,
+                    ),
+                    PublishScreen(
+                      controller: _pageController,
+                    )
                   ],
                 ),
               ),
-            ),
-            const VerticalSpace(6),
-            Expanded(
-              child: PageView(
-                controller: _pageController,
-                physics: const NeverScrollableScrollPhysics(),
-                onPageChanged: (int page) {
-                  _currentPage.value = page;
-                },
-                children: [
-                  UploadScreen(
-                    controller: _pageController,
-                  ),
-                  DescriptionScreen(
-                    controller: _pageController,
-                  ),
-                  MintScreen(
-                    controller: _pageController,
-                  ),
-                  PublishScreen(
-                    controller: _pageController,
-                  )
-                ],
-              ),
-            ),
-          ],
+            ],
+          ),
         ),
       ),
     );
