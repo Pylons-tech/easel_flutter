@@ -2,7 +2,6 @@ import 'dart:io';
 import 'dart:ui';
 
 import 'package:easel_flutter/easel_provider.dart';
-import 'package:easel_flutter/models/media_type.dart';
 import 'package:easel_flutter/utils/constants.dart';
 import 'package:easel_flutter/utils/file_utils.dart';
 import 'package:easel_flutter/utils/easel_app_theme.dart';
@@ -13,60 +12,54 @@ import 'package:easel_flutter/widgets/pylons_round_button.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:easel_flutter/models/media_type.dart';
 
-class UploadScreen extends StatefulWidget {
+class StartScreen extends StatefulWidget {
   final PageController controller;
-  final int mediaType;
-  const UploadScreen(
-      {Key? key, required this.controller, required this.mediaType})
+  final Function(int?) setMediaType;
+  const StartScreen(
+      {Key? key, required this.controller, required this.setMediaType})
       : super(key: key);
 
   @override
-  State<UploadScreen> createState() => _UploadScreenState();
+  State<StartScreen> createState() => _StartScreenState();
 }
 
-class _UploadScreenState extends State<UploadScreen> {
+class _StartScreenState extends State<StartScreen> {
   ValueNotifier<bool> showError = ValueNotifier(false);
   ValueNotifier<String> errorText = ValueNotifier("Pick a file");
   late EaselProvider provider;
-
   @override
   Widget build(BuildContext context) {
     provider = Provider.of<EaselProvider>(context);
     return Scaffold(
       body: Stack(
         children: [
-          Column(children: [
-            Expanded(
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                children: [
-                  _UploadWidget(onFilePicked: (result) async {
-                    if (result != null) {
-                      if (FileUtils.getFileSizeInGB(
-                              File(result.path!).lengthSync()) <=
-                          kFileSizeLimitInGB) {
-                        await provider.setFile(context, result);
+          SingleChildScrollView(
+            child: Column(children: [
+              Padding(
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  children: [
+                    _UploadWidget(
+                        controller: widget.controller,
+                        setMediaType: widget.setMediaType),
+                    PylonsRoundButton(onPressed: () {
+                      if (provider.file != null) {
+                        widget.controller.jumpToPage(1);
                       } else {
-                        errorText.value =
-                            '"${result.name}" could not be uploaded';
+                        errorText.value = 'Pick a file';
                         showError.value = true;
                       }
-                    }
-                  }),
-                  PylonsRoundButton(onPressed: () {
-                    if (provider.file != null) {
-                      widget.controller.jumpToPage(1);
-                    } else {
-                      errorText.value = 'Pick a file';
-                      showError.value = true;
-                    }
-                  }),
-                ],
+                    }),
+                  ],
+                ),
               ),
-            ),
-            const SizedBox(height: 20),
-          ]),
+              const SizedBox(height: 20)
+            ]),
+          ),
           Positioned(
             child: ValueListenableBuilder(
               valueListenable: showError,
@@ -87,12 +80,12 @@ class _UploadScreenState extends State<UploadScreen> {
 }
 
 class _UploadWidget extends StatefulWidget {
-  final Function(PlatformFile?) onFilePicked;
-  final int mediaType;
+  final PageController controller;
+  final Function(int?) setMediaType;
   const _UploadWidget({
     Key? key,
-    required this.onFilePicked,
-    required this.mediaType,
+    required this.controller,
+    required this.setMediaType,
   }) : super(key: key);
 
   @override
@@ -102,67 +95,122 @@ class _UploadWidget extends StatefulWidget {
 class _UploadWidgetState extends State<_UploadWidget> {
   @override
   Widget build(BuildContext context) {
+    final sizeWidth = MediaQuery.of(context).size.width;
     return Consumer<EaselProvider>(
       builder: (_, provider, __) => Column(
         children: [
           Text(
-            "Upload",
+            "Choose your NFT format",
             style: Theme.of(context)
                 .textTheme
-                .headline5!
+                .subtitle2!
                 .copyWith(fontWeight: FontWeight.w600),
           ),
           const VerticalSpace(5),
           Container(
-            width: double.infinity,
-            height: MediaQuery.of(context).size.width * 0.5,
-            margin: const EdgeInsets.symmetric(horizontal: 30),
-            padding: const EdgeInsets.all(70),
-            decoration: BoxDecoration(
-                color: EaselAppTheme.kBlue.withOpacity(0.05),
-                borderRadius: BorderRadius.circular(8),
-                image: provider.file != null
-                    ? DecorationImage(
-                        image: FileImage(provider.file!), fit: BoxFit.cover)
-                    : null),
-            child: GestureDetector(
-              onTap: () async {
-                final result = await FileUtils.pickFile();
-                widget.onFilePicked(result);
-              },
-              child: Assets.fileImage,
-            ),
-          ),
-          const VerticalSpace(5),
-          provider.fileName != ""
-              ? Text(
-                  provider.fileName,
-                  style: Theme.of(context).textTheme.subtitle2!.copyWith(
-                        color: EaselAppTheme.kLightGrey,
-                      ),
-                )
-              : Text(
-                  MediaType.listTypes[widget.mediaType].subTitle,
-                  style: Theme.of(context).textTheme.subtitle2!.copyWith(
-                        color: EaselAppTheme.kLightGrey,
-                      ),
-                ),
-          provider.fileSize != "0"
-              ? Text(
-                  provider.fileSize,
-                  style: Theme.of(context).textTheme.subtitle2!.copyWith(
-                        color: EaselAppTheme.kLightGrey,
-                      ),
-                )
-              : Text(
-                  "${kFileSizeLimitInGB}GB Limit",
-                  style: Theme.of(context).textTheme.subtitle2!.copyWith(
-                        color: EaselAppTheme.kLightGrey,
-                      ),
-                ),
+              width: sizeWidth,
+              height: sizeWidth + 50,
+              child: GridView.count(
+                  crossAxisCount: 2,
+                  physics: const NeverScrollableScrollPhysics(),
+                  controller: ScrollController(keepScrollOffset: false),
+                  shrinkWrap: true,
+                  childAspectRatio: 0.8,
+                  scrollDirection: Axis.vertical,
+                  children: List.generate(kinds.length, (index) {
+                    return Center(
+                      child: SelectKind(
+                          kind: kinds[index],
+                          provider: provider,
+                          widget: widget),
+                    );
+                  }))),
         ],
       ),
     );
+  }
+}
+
+class NftKind {
+  const NftKind(
+      {required this.index,
+      required this.title,
+      required this.subTitle,
+      required this.iconName});
+  final int index;
+  final String title;
+  final String subTitle;
+  final String iconName;
+}
+
+const List<NftKind> kinds = <NftKind>[
+  NftKind(
+      index: 0,
+      title: 'Image',
+      subTitle: "JPG, PNG or SVG",
+      iconName: "assets/icons/file.png"),
+  NftKind(
+      index: 1,
+      title: 'Video',
+      subTitle: "MP4",
+      iconName: "assets/icons/file.png"),
+  NftKind(
+      index: 2,
+      title: '3D',
+      subTitle: "GLTF or GLB",
+      iconName: "assets/icons/file.png"),
+  NftKind(
+      index: 3,
+      title: 'Audio',
+      subTitle: "MP3, FLAC or WAV",
+      iconName: "assets/icons/file.png"),
+];
+
+class SelectKind extends StatelessWidget {
+  const SelectKind(
+      {Key? key,
+      required this.kind,
+      required this.provider,
+      required this.widget})
+      : super(key: key);
+  final NftKind kind;
+  final EaselProvider provider;
+  final _UploadWidget widget;
+
+  @override
+  Widget build(BuildContext context) {
+    final TextStyle? textStyle = Theme.of(context).textTheme.subtitle1;
+    final paddingSize = MediaQuery.of(context).size.width / 2;
+
+    return Column(children: <Widget>[
+      Container(
+          width: paddingSize,
+          height: paddingSize - 40,
+          margin: const EdgeInsets.all(8),
+          decoration:
+              BoxDecoration(color: EaselAppTheme.kBlue.withOpacity(0.1)),
+          child: SizedBox(
+              child: IconButton(
+            icon: Image.asset(kind.iconName),
+            padding: const EdgeInsets.all(33),
+            onPressed: () {
+              widget.setMediaType(kind.index);
+              widget.controller.jumpToPage(1);
+            },
+          ))),
+      Text(
+        kind.title,
+        style: Theme.of(context).textTheme.bodyText2!.copyWith(
+            color: Colors.blue, fontSize: 16, fontWeight: FontWeight.w600),
+      ),
+      Text(
+        kind.subTitle,
+        style: Theme.of(context)
+            .textTheme
+            .bodyText2!
+            .copyWith(color: Colors.lightGreen, fontSize: 12),
+      ),
+    ]);
   }
 }
 

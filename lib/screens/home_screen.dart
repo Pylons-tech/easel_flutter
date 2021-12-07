@@ -2,6 +2,7 @@ import 'package:easel_flutter/easel_provider.dart';
 import 'package:easel_flutter/screens/description_screen.dart';
 import 'package:easel_flutter/screens/mint_screen.dart';
 import 'package:easel_flutter/screens/publish_screen.dart';
+import 'package:easel_flutter/screens/start_screen.dart';
 import 'package:easel_flutter/screens/upload_screen.dart';
 import 'package:easel_flutter/utils/constants.dart';
 import 'package:easel_flutter/utils/easel_app_theme.dart';
@@ -10,9 +11,14 @@ import 'package:easel_flutter/utils/space_utils.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:steps_indicator/steps_indicator.dart';
+import 'package:flutter/foundation.dart';
 
+// ignore: must_be_immutable
 class HomeScreen extends StatefulWidget {
-  const HomeScreen({Key? key}) : super(key: key);
+  int currentPag;
+  int mediaType;
+  HomeScreen({Key? key, required this.currentPag, this.mediaType = 0})
+      : super(key: key);
 
   @override
   _HomeScreenState createState() {
@@ -24,6 +30,7 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   void initState() {
     super.initState();
+    _currentPage.value = widget.currentPag;
   }
 
   @override
@@ -32,10 +39,24 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 
   final int _numPages = 4;
+  int _mediaType = 0;
+  int _page = 0;
   final PageController _pageController = PageController(keepPage: true);
   final ValueNotifier<int> _currentPage = ValueNotifier(0);
 
-  List title = ["Upload", "Description", "Mint", "Publish"];
+  void setCurrentPage(page) {
+    setState(() {
+      _page = page;
+    });
+  }
+
+  void setMediaType(_type) {
+    setState(() {
+      _mediaType = _type;
+    });
+  }
+
+  List title = ["Start", "Upload", "Mint", "Publish"];
 
   @override
   Widget build(BuildContext context) {
@@ -67,76 +88,81 @@ class _HomeScreenState extends State<HomeScreen> {
             const VerticalSpace(5),
             _buildTitles(screenSize),
             const VerticalSpace(10),
-            Align(
-              alignment: Alignment.centerLeft,
-              child: SizedBox(
-                width: screenSize.width(percent: 100),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Padding(
-                      padding: const EdgeInsets.only(left: 10.0),
-                      child: IconButton(
-                          onPressed: () {
-                            if (_currentPage.value < 3) {
-                              _currentPage.value = _currentPage.value > 0
-                                  ? _currentPage.value - 1
-                                  : 0;
-
-                              _pageController.jumpToPage(_currentPage.value);
-                            }
-                          },
-                          icon: const Icon(
-                            Icons.arrow_back_ios,
-                            color: EaselAppTheme.kGrey,
-                          )),
+            _page > 0
+                ? Align(
+                    alignment: Alignment.centerLeft,
+                    child: SizedBox(
+                      width: screenSize.width(percent: 100),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Padding(
+                            padding: const EdgeInsets.only(left: 10.0),
+                            child: IconButton(
+                                onPressed: () {
+                                  if (_currentPage.value < 3) {
+                                    _currentPage.value = _currentPage.value > 0
+                                        ? _currentPage.value - 1
+                                        : 0;
+                                    setCurrentPage(_currentPage.value);
+                                    _pageController
+                                        .jumpToPage(_currentPage.value);
+                                  }
+                                },
+                                icon: const Icon(
+                                  Icons.arrow_back_ios,
+                                  color: EaselAppTheme.kGrey,
+                                )),
+                          ),
+                          ValueListenableBuilder(
+                            valueListenable: _currentPage,
+                            builder: (_, int currentPage, __) =>
+                                _currentPage.value == 2
+                                    ? Text(
+                                        "Preview NFT",
+                                        style: Theme.of(context)
+                                            .textTheme
+                                            .bodyText1!
+                                            .copyWith(fontSize: 16),
+                                      )
+                                    : const SizedBox.shrink(),
+                          ),
+                          ValueListenableBuilder(
+                            valueListenable: _currentPage,
+                            builder: (_, int currentPage, __) =>
+                                _currentPage.value == 3
+                                    ? Consumer<EaselProvider>(
+                                        builder: (_, provider, __) =>
+                                            TextButton.icon(
+                                                onPressed: () {
+                                                  provider.initStore();
+                                                  _pageController.jumpToPage(0);
+                                                },
+                                                label: const Icon(
+                                                  Icons.arrow_forward_ios,
+                                                  color: EaselAppTheme.kBlue,
+                                                  size: 18,
+                                                ),
+                                                icon: Text(
+                                                  "Mint more",
+                                                  style: Theme.of(context)
+                                                      .textTheme
+                                                      .bodyText1!
+                                                      .copyWith(
+                                                          fontSize: 20,
+                                                          color: EaselAppTheme
+                                                              .kBlue,
+                                                          fontWeight:
+                                                              FontWeight.w400),
+                                                )),
+                                      )
+                                    : const SizedBox.shrink(),
+                          ),
+                        ],
+                      ),
                     ),
-                    ValueListenableBuilder(
-                      valueListenable: _currentPage,
-                      builder: (_, int currentPage, __) =>
-                          _currentPage.value == 2
-                              ? Text(
-                                  kPreviewNFTText,
-                                  style: Theme.of(context)
-                                      .textTheme
-                                      .bodyText1!
-                                      .copyWith(fontSize: 16),
-                                )
-                              : const SizedBox.shrink(),
-                    ),
-                    ValueListenableBuilder(
-                      valueListenable: _currentPage,
-                      builder: (_, int currentPage, __) =>
-                          _currentPage.value == 3
-                              ? Consumer<EaselProvider>(
-                                  builder: (_, provider, __) => TextButton.icon(
-                                    onPressed: () {
-                                      provider.initStore();
-                                      _pageController.jumpToPage(0);
-                                    },
-                                    label: const Icon(
-                                      Icons.arrow_forward_ios,
-                                      color: EaselAppTheme.kBlue,
-                                      size: 18,
-                                    ),
-                                    icon: Text(
-                                      kMintMoreText,
-                                      style: Theme.of(context)
-                                          .textTheme
-                                          .bodyText1!
-                                          .copyWith(
-                                              fontSize: 20,
-                                              color: EaselAppTheme.kBlue,
-                                              fontWeight: FontWeight.w400),
-                                    ),
-                                  ),
-                                )
-                              : const SizedBox.shrink(),
-                    ),
-                  ],
-                ),
-              ),
-            ),
+                  )
+                : Container(),
             const VerticalSpace(6),
             Expanded(
               child: PageView(
@@ -144,14 +170,13 @@ class _HomeScreenState extends State<HomeScreen> {
                 physics: const NeverScrollableScrollPhysics(),
                 onPageChanged: (int page) {
                   _currentPage.value = page;
+                  setCurrentPage(page);
                 },
                 children: [
+                  StartScreen(
+                      controller: _pageController, setMediaType: setMediaType),
                   UploadScreen(
-                    controller: _pageController,
-                  ),
-                  DescriptionScreen(
-                    controller: _pageController,
-                  ),
+                      controller: _pageController, mediaType: _mediaType),
                   MintScreen(
                     controller: _pageController,
                   ),

@@ -23,7 +23,12 @@ class _RoutingScreenState extends State<RoutingScreen> {
 
   @override
   void initState() {
-    super.initState();
+    super.initState(); 
+    Future.delayed(const Duration(seconds: 1), () {
+      PylonsWallet.instance.exists().then((walletExists) async {
+        if (walletExists) {
+          navigatorKey.currentState!.push(
+              MaterialPageRoute(builder: (_) => HomeScreen(currentPag: 0))); 
 
     WidgetsBinding.instance!.addPostFrameCallback((timeStamp) async {
       final isExist = await PylonsWallet.instance.exists();
@@ -31,7 +36,7 @@ class _RoutingScreenState extends State<RoutingScreen> {
         final response = await PylonsWallet.instance.getProfile();
         if (response.success) {
           username.value = response.data["username"] ?? "";
-
+ 
           MessageDialog()
               .show("$kWelcomeToEaselText, ${response.data["username"]}",
                   button: TextButton(
@@ -56,7 +61,7 @@ class _RoutingScreenState extends State<RoutingScreen> {
                   kClickToInstallText,
                   style: TextStyle(color: EaselAppTheme.kBlue),
                 )));
-      }
+      } 
     });
   }
 
