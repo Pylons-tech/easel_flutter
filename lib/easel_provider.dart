@@ -103,7 +103,6 @@ class EaselProvider extends ChangeNotifier {
         creator: "",
         iD: _cookbookId,
         name: "Easel Cookbook",
-        // nodeVersion: "v0.1.0",
         description: "Cookbook for Easel NFT",
         developer: artistNameController.text,
         version: "v0.0.1",
