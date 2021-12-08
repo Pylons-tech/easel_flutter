@@ -1,3 +1,5 @@
+import 'package:easel_flutter/utils/constants.dart';
+
 class MediaType {
   final int index;
   final String title;
@@ -13,23 +15,19 @@ class MediaType {
   static List<MediaType> listTypes = <MediaType>[
     MediaType(
         index: 0,
-        title: 'Image',
-        subTitle: "JPG, PNG or SVG",
-        iconName: "assets/icons/file.png"),
+        title: kImages,
+        subTitle: kImageType,
+        iconName: kImageIconPath),
     MediaType(
         index: 1,
-        title: 'Video',
-        subTitle: "MP4",
-        iconName: "assets/icons/file.png"),
+        title: kVideos,
+        subTitle: kVideoType,
+        iconName: kVideoIconPath),
+    MediaType(index: 1, title: k3Ds, subTitle: k3DType, iconName: k3DIconPath),
     MediaType(
         index: 1,
-        title: '3D',
-        subTitle: "GLTF or GLB",
-        iconName: "assets/icons/file.png"),
-    MediaType(
-        index: 1,
-        title: 'Audio',
-        subTitle: "MP3, FLAC or WAV",
-        iconName: "assets/icons/file.png"),
+        title: kAudios,
+        subTitle: kAudioType,
+        iconName: kAudioIconPath),
   ];
 }

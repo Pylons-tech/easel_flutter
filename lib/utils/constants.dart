@@ -58,3 +58,19 @@ const kMaxPriceLength = 14;
 
 const kPylonSymbol = "upylon";
 const kUsdSymbol = "ustripeusd";
+
+const kImages = "Image";
+const kImageType = "JPG, PNG or SVG";
+const kImageIconPath = "assets/icons/file.png";
+const kVideos = "Video";
+const kVideoType = "MP4";
+const kVideoIconPath = "assets/icons/file.png";
+const k3Ds = "3D";
+const k3DType = "GLTF or GLB";
+const k3DIconPath = "assets/icons/file.png";
+const kAudios = "Audio";
+const kAudioType = "MP3, FLAC or WAV";
+const kAudioIconPath = "assets/icons/file.png";
+
+const kChooseNft = "Choose your NFT format";
+const kPickFile = "Pick a file";

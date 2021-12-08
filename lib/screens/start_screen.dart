@@ -27,7 +27,7 @@ class StartScreen extends StatefulWidget {
 
 class _StartScreenState extends State<StartScreen> {
   ValueNotifier<bool> showError = ValueNotifier(false);
-  ValueNotifier<String> errorText = ValueNotifier("Pick a file");
+  ValueNotifier<String> errorText = ValueNotifier(kPickFile);
   late EaselProvider provider;
   @override
   Widget build(BuildContext context) {
@@ -50,7 +50,7 @@ class _StartScreenState extends State<StartScreen> {
                       if (provider.file != null) {
                         widget.controller.jumpToPage(1);
                       } else {
-                        errorText.value = 'Pick a file';
+                        errorText.value = kPickFile;
                         showError.value = true;
                       }
                     }),
@@ -100,7 +100,7 @@ class _UploadWidgetState extends State<_UploadWidget> {
       builder: (_, provider, __) => Column(
         children: [
           Text(
-            "Choose your NFT format",
+            kChooseNft,
             style: Theme.of(context)
                 .textTheme
                 .subtitle2!
@@ -145,25 +145,12 @@ class NftKind {
 
 const List<NftKind> kinds = <NftKind>[
   NftKind(
-      index: 0,
-      title: 'Image',
-      subTitle: "JPG, PNG or SVG",
-      iconName: "assets/icons/file.png"),
+      index: 0, title: kImages, subTitle: kImageType, iconName: kImageIconPath),
   NftKind(
-      index: 1,
-      title: 'Video',
-      subTitle: "MP4",
-      iconName: "assets/icons/file.png"),
+      index: 1, title: kVideos, subTitle: kVideoType, iconName: kVideoIconPath),
+  NftKind(index: 2, title: k3Ds, subTitle: k3DType, iconName: k3DIconPath),
   NftKind(
-      index: 2,
-      title: '3D',
-      subTitle: "GLTF or GLB",
-      iconName: "assets/icons/file.png"),
-  NftKind(
-      index: 3,
-      title: 'Audio',
-      subTitle: "MP3, FLAC or WAV",
-      iconName: "assets/icons/file.png"),
+      index: 3, title: kAudios, subTitle: kAudioType, iconName: kAudioIconPath),
 ];
 
 class SelectKind extends StatelessWidget {
@@ -240,7 +227,6 @@ class _ErrorMessageWidget extends StatelessWidget {
                 filter: ImageFilter.blur(sigmaX: 2.0, sigmaY: 2.0),
                 child: Container(
                   height: screenSize.height(percent: 85),
-                  // width: screenSize.width(),
                   decoration: BoxDecoration(
                       color: EaselAppTheme.kWhite.withOpacity(0.2)),
                 ),

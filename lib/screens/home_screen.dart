@@ -39,21 +39,13 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 
   final int _numPages = 4;
-  int _mediaType = 0;
-  int _page = 0;
   final PageController _pageController = PageController(keepPage: true);
   final ValueNotifier<int> _currentPage = ValueNotifier(0);
-
-  void setCurrentPage(page) {
-    setState(() {
-      _page = page;
-    });
-  }
+  final ValueNotifier<int> _mediaType = ValueNotifier(0);
+  final ValueNotifier<int> _page = ValueNotifier(0);
 
   void setMediaType(_type) {
-    setState(() {
-      _mediaType = _type;
-    });
+    _mediaType.value = _type;
   }
 
   List title = ["Start", "Upload", "Mint", "Publish"];
@@ -88,7 +80,7 @@ class _HomeScreenState extends State<HomeScreen> {
             const VerticalSpace(5),
             _buildTitles(screenSize),
             const VerticalSpace(10),
-            _page > 0
+            _page.value >= 0
                 ? Align(
                     alignment: Alignment.centerLeft,
                     child: SizedBox(
@@ -104,7 +96,8 @@ class _HomeScreenState extends State<HomeScreen> {
                                     _currentPage.value = _currentPage.value > 0
                                         ? _currentPage.value - 1
                                         : 0;
-                                    setCurrentPage(_currentPage.value);
+                                    _page.value = _currentPage.value;
+
                                     _pageController
                                         .jumpToPage(_currentPage.value);
                                   }
@@ -162,7 +155,7 @@ class _HomeScreenState extends State<HomeScreen> {
                       ),
                     ),
                   )
-                : Container(),
+                : const SizedBox.shrink(),
             const VerticalSpace(6),
             Expanded(
               child: PageView(
@@ -170,13 +163,13 @@ class _HomeScreenState extends State<HomeScreen> {
                 physics: const NeverScrollableScrollPhysics(),
                 onPageChanged: (int page) {
                   _currentPage.value = page;
-                  setCurrentPage(page);
+                  _page.value = page;
                 },
                 children: [
                   StartScreen(
                       controller: _pageController, setMediaType: setMediaType),
                   UploadScreen(
-                      controller: _pageController, mediaType: _mediaType),
+                      controller: _pageController, mediaType: _mediaType.value),
                   MintScreen(
                     controller: _pageController,
                   ),

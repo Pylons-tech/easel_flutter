@@ -41,19 +41,21 @@ class _UploadScreenState extends State<UploadScreen> {
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 children: [
-                  _UploadWidget(onFilePicked: (result) async {
-                    if (result != null) {
-                      if (FileUtils.getFileSizeInGB(
-                              File(result.path!).lengthSync()) <=
-                          kFileSizeLimitInGB) {
-                        await provider.setFile(context, result);
-                      } else {
-                        errorText.value =
-                            '"${result.name}" could not be uploaded';
-                        showError.value = true;
-                      }
-                    }
-                  }),
+                  _UploadWidget(
+                      mediaType: 0,
+                      onFilePicked: (result) async {
+                        if (result != null) {
+                          if (FileUtils.getFileSizeInGB(
+                                  File(result.path!).lengthSync()) <=
+                              kFileSizeLimitInGB) {
+                            await provider.setFile(context, result);
+                          } else {
+                            errorText.value =
+                                '"${result.name}" could not be uploaded';
+                            showError.value = true;
+                          }
+                        }
+                      }),
                   PylonsRoundButton(onPressed: () {
                     if (provider.file != null) {
                       widget.controller.jumpToPage(1);
