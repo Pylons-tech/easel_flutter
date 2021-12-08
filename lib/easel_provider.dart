@@ -103,12 +103,10 @@ class EaselProvider extends ChangeNotifier {
         creator: "",
         iD: _cookbookId,
         name: "Easel Cookbook",
-        nodeVersion: "v0.1.0",
         description: "Cookbook for Easel NFT",
         developer: artistNameController.text,
         version: "v0.0.1",
         supportEmail: "easel@pylons.tech",
-        costPerBlock: Coin(denom: "upylon", amount: "1"),
         enabled: true);
 
     var response = await PylonsWallet.instance.txCreateCookbook(cookBook1);
@@ -139,12 +137,7 @@ class EaselProvider extends ChangeNotifier {
       }
     }
 
-    // log("$_cookbookId");
-
     _recipeId = localDataSource.autoGenerateEaselId();
-
-    // log(_recipeId);
-    // log("${double.parse(royaltyController.text.trim())}");
 
     final loading = Loading().showLoading(message: "Uploading image...");
     final uploadResponse = await remoteDataSource.uploadFile(_file!);
@@ -175,6 +168,7 @@ class EaselProvider extends ChangeNotifier {
           CoinInput(coins: [Coin(amount: price, denom: _selectedDenom.symbol)])
         ],
         itemInputs: [],
+        costPerBlock: Coin(denom: "upylon", amount: "0"),
         entries: EntriesList(coinOutputs: [], itemOutputs: [
           ItemOutput(
             iD: "Easel_NFT",
@@ -218,15 +212,11 @@ class EaselProvider extends ChangeNotifier {
                   key: "NFT_URL",
                   value:
                       "$ipfsDomain/${uploadResponse.data?.value?.cid ?? ""}"),
-              StringParam(key: "Currency", value: _selectedDenom.symbol),
-              StringParam(
-                  key: "Price",
-                  value: priceController.text.replaceAll(",", "").trim()),
               StringParam(
                   key: "Creator", value: artistNameController.text.trim()),
             ],
             mutableStrings: [],
-            transferFee: [Coin(denom: kPylonSymbol, amount: "0")],
+            transferFee: [Coin(denom: kPylonSymbol, amount: "1")],
             tradePercentage: DecString.decStringFromDouble(
                 double.parse(royaltyController.text.trim())),
             tradeable: true,

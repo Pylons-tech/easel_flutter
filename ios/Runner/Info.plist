@@ -59,5 +59,9 @@
     <array>
         <string>pylons-wallet</string>
     </array>
+
+    <key>NSPhotoLibraryUsageDescription</key>
+    <string>Easel needs to access your photos to mint NFTs</string>
+
 </dict>
 </plist>

@@ -49,12 +49,12 @@ dependencies:
 
   provider: ^6.0.1
 
-#  pylons_flutter:
-#    git:
-#      url: https://github.com/Pylons-tech/pylons_dart_sdk.git
-#      ref: 9ff7427ff7a229ab2dbeee146035990b98e2322a
+  pylons_sdk:
+    git:
+      url: https://github.com/Pylons-tech/pylons_dart_sdk.git
+      ref: d10bf483f9ad5641c17fb530c03b172b575d5ff1
 
-  pylons_sdk: ^0.0.2
+#  pylons_sdk: ^0.0.2
 
   google_fonts: ^2.1.0
 
