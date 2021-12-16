@@ -1,5 +1,5 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="tech.pylons.easel_flutter">
+    package="tech.pylons.easel">
 
     <queries>
         <package android:name="tech.pylons.wallet" />
@@ -19,7 +19,7 @@
         android:label="Easel"
         android:icon="@mipmap/ic_launcher">
         <activity
-            android:name="tech.pylons.easel_flutter.MainActivity"
+            android:name="tech.pylons.easel.MainActivity"
             android:launchMode="singleTask"
             android:theme="@style/LaunchTheme"
             android:configChanges="orientation|keyboardHidden|keyboard|screenSize|smallestScreenSize|locale|layoutDirection|fontScale|screenLayout|density|uiMode"
