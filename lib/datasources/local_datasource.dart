@@ -5,8 +5,10 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 abstract class LocalDataSource {
   String? getCookbookId();
+  String? getUsername();
   Future<String> autoGenerateCookbookId();
   String autoGenerateEaselId();
+  Future<void> setUsername(String name);
 }
 
 class LocalDataSourceImpl implements LocalDataSource {
@@ -19,6 +21,16 @@ class LocalDataSourceImpl implements LocalDataSource {
   @override
   String? getCookbookId(){
     return sharedPreferences.getString(kCookbookId);
+  }
+  
+  @override
+  String? getUsername(){
+    return sharedPreferences.getString(kUsername);
+  }
+  
+  @override
+  Future<void> setUsername(String name) async {
+    return sharedPreferences.setString(kUsername, name);
   }
 
   /// auto generates cookbookID string and saves into local storage
