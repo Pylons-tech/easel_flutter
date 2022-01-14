@@ -121,14 +121,15 @@ class EaselProvider extends ChangeNotifier {
   Future<bool> createRecipe() async {
     // get device cookbook id
     _cookbookId = localDataSource.getCookbookId();
-	final username = localDataSource.getUsername();
-	final prf = await PylonsWallet.instance.getProfile();
-	late final realName;
-	if (prf.success) {
-		realName = prf.data["username"] ?? "";
-	}
+    // everything to do w/ username here is for a hack to invalidate cookbook ids the current wallet doesn't own
+    final username = localDataSource.getUsername();
+    final prf = await PylonsWallet.instance.getProfile();
+    late final String realName;
+    if (prf.success) {
+      realName = prf.data["username"] ?? "";
+    }
     if (_cookbookId == null || realName != username) {
-	  await localDataSource.setUserName(realName);
+      await localDataSource.setUsername(realName);
       // create cookbook
       final isCookBookCreated = await createCookbook();
 

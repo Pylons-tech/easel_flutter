@@ -8,7 +8,7 @@ abstract class LocalDataSource {
   String? getUsername();
   Future<String> autoGenerateCookbookId();
   String autoGenerateEaselId();
-  Future<void> setUsername(String name);
+  Future<bool> setUsername(String name);
 }
 
 class LocalDataSourceImpl implements LocalDataSource {
@@ -29,7 +29,7 @@ class LocalDataSourceImpl implements LocalDataSource {
   }
   
   @override
-  Future<void> setUsername(String name) async {
+  Future<bool> setUsername(String name) async {
     return sharedPreferences.setString(kUsername, name);
   }
 
