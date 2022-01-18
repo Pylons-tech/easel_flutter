@@ -37,6 +37,7 @@ const kProfileErrorOccurredText =
 const kPylonsAppNotInstalledText =
     "Pylons app is not installed on this device. Please install Pylons app to continue";
 const kClickToInstallText = "Click here to install";
+const kClickToLogInText = "Click here to log into Pylons";
 const kWelcomeToEaselText = "Welcome to Easel";
 const kCreatedByText = "Created by";
 const kDescriptionText = "Description";
@@ -62,3 +63,5 @@ const kMaxPriceLength = 14;
 
 const kPylonSymbol = "upylon";
 const kUsdSymbol = "ustripeusd";
+
+const kErrProfileNotExist = 'profileDoesNotExist';

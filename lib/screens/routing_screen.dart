@@ -2,10 +2,8 @@ import 'package:easel_flutter/main.dart';
 import 'package:easel_flutter/screens/home_screen.dart';
 import 'package:easel_flutter/utils/constants.dart';
 import 'package:easel_flutter/utils/easel_app_theme.dart';
-import 'package:easel_flutter/utils/utils.dart';
 import 'package:easel_flutter/widgets/background_widget.dart';
 import 'package:easel_flutter/widgets/message_dialog.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:pylons_sdk/pylons_sdk.dart';
 
@@ -43,6 +41,16 @@ class _RoutingScreenState extends State<RoutingScreen> {
                         );
                       },
                       child: const Text(kOkText)));
+        } else if (response.errorCode == kErrProfileNotExist) {
+          MessageDialog().show(response.error,
+              button: TextButton(
+                  onPressed: () {
+                    PylonsWallet.instance.goToPylons();
+                  },
+                  child: const Text(
+                    kClickToLogInText,
+                    style: TextStyle(color: EaselAppTheme.kBlue),
+                  )));
         } else {
           MessageDialog().show("$kProfileErrorOccurredText: ${response.error}");
         }
@@ -50,7 +58,7 @@ class _RoutingScreenState extends State<RoutingScreen> {
         MessageDialog().show(kPylonsAppNotInstalledText,
             button: TextButton(
                 onPressed: () {
-                  launchAppStore();
+                  PylonsWallet.instance.goToInstall();
                 },
                 child: const Text(
                   kClickToInstallText,
