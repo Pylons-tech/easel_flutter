@@ -62,15 +62,6 @@ class _PublishScreenState extends State<PublishScreen> {
                         provider.file != null
                             ? ImageWidget(file: provider.file!)
                             : Container(),
-                        Positioned(
-                            top: 60,
-                            right: 10,
-                            child: RoundedPurpleButtonWidget(
-                              onPressed: () {
-                                provider.shareNFT();
-                              },
-                              icon: kShareIcon,
-                            )),
                       ],
                     ),
                     const SizedBox(height: 10),
