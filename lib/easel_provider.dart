@@ -223,7 +223,13 @@ class EaselProvider extends ChangeNotifier {
   }
 
   String generateEaselLink() {
-    return Uri.parse("http://wallet.pylons.tech/?action=purchase_nft&recipe_id=$_recipeId&cookbook_id=$_cookbookId&nft_amount=1").toString();
+    return Uri.https('pylons.page.link', "", {
+      "amv": "1",
+      "apn": "tech.pylons.wallet",
+      "ibi": "xyz.pylons.wallet",
+      "imv": "1",
+      "link": "https://wallet.pylons.tech/?action=purchase_nft&recipe_id=$_recipeId&cookbook_id=$_cookbookId&nft_amount=1"
+    }).toString();
   }
 
   @override

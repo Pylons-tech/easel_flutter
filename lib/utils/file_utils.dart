@@ -51,4 +51,17 @@ class FileUtils {
     return ((fileLength / pow(1024, i)).toStringAsFixed(precision)) +
         suffixes[i];
   }
+
+  static String generateEaselLink({required String recipeId, required String cookbookId}) {
+    return Uri.https('pylons.page.link', "/", {
+      "amv": "1",
+      "apn": "tech.pylons.wallet",
+      "ibi": "xyz.pylons.wallet",
+      "imv": "1",
+      "link": "https://wallet.pylons.tech/?action=purchase_nft&recipe_id=$recipeId&cookbook_id=$cookbookId&nft_amount=1"
+    }).toString();
+  }
+
+
+
 }
