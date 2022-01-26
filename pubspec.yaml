@@ -71,6 +71,7 @@ dependencies:
   dio: ^4.0.1
 
   url_launcher: 6.0.13
+  sanitize_html: ^2.0.0
 
 dev_dependencies:
   flutter_test:

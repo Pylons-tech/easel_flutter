@@ -15,6 +15,7 @@ import 'package:file_picker/file_picker.dart';
 import 'package:fixnum/fixnum.dart';
 import 'package:flutter/material.dart';
 import 'package:pylons_sdk/pylons_sdk.dart';
+import 'package:sanitize_html/sanitize_html.dart';
 import 'package:share/share.dart';
 
 class EaselProvider extends ChangeNotifier {
@@ -216,21 +217,11 @@ class EaselProvider extends ChangeNotifier {
   }
 
   Future<void> shareNFT() async {
-    String url = generateEaselLink();
-    log(url);
-
-    Share.share(url, subject: 'My Easel NFT');
+    String url = FileUtils.generateEaselLink(cookbookId: _cookbookId ?? '', recipeId: _recipeId, );
+    Share.share(sanitizeHtml(url), subject: 'My Easel NFT');
   }
 
-  String generateEaselLink() {
-    return Uri.https('pylons.page.link', "", {
-      "amv": "1",
-      "apn": "tech.pylons.wallet",
-      "ibi": "xyz.pylons.wallet",
-      "imv": "1",
-      "link": "https://wallet.pylons.tech/?action=purchase_nft&recipe_id=$_recipeId&cookbook_id=$_cookbookId&nft_amount=1"
-    }).toString();
-  }
+
 
   @override
   void dispose() {

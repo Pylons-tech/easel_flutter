@@ -65,3 +65,9 @@ const kPylonSymbol = "upylon";
 const kUsdSymbol = "ustripeusd";
 
 const kErrProfileNotExist = 'profileDoesNotExist';
+
+
+const kWalletIOSId = 'xyz.pylons.wallet';
+const kWalletAndroidId = 'tech.pylons.wallet';
+const kWalletWebLink = 'https://wallet.pylons.tech';
+const kWalletDynamicLink = 'pylons.page.link';
