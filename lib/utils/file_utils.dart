@@ -3,6 +3,8 @@ import 'dart:math';
 import 'package:file_picker/file_picker.dart';
 import 'package:path/path.dart' as p;
 
+import 'constants.dart';
+
 class FileUtils {
   /// This function picks a file (png, jpg, jpeg, svg) from device storage
   ///
@@ -51,4 +53,17 @@ class FileUtils {
     return ((fileLength / pow(1024, i)).toStringAsFixed(precision)) +
         suffixes[i];
   }
+
+  static String generateEaselLink({required String recipeId, required String cookbookId}) {
+    return Uri.https(kWalletDynamicLink, "/", {
+      "amv": "1",
+      "apn": kWalletAndroidId,
+      "ibi": kWalletIOSId,
+      "imv": "1",
+      "link": "$kWalletWebLink/?action=purchase_nft&recipe_id=$recipeId&cookbook_id=$cookbookId&nft_amount=1"
+    }).toString();
+  }
+
+
+
 }
