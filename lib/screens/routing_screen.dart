@@ -1,3 +1,4 @@
+import 'package:easel_flutter/easel_provider.dart';
 import 'package:easel_flutter/main.dart';
 import 'package:easel_flutter/screens/home_screen.dart';
 import 'package:easel_flutter/utils/constants.dart';
@@ -5,6 +6,7 @@ import 'package:easel_flutter/utils/easel_app_theme.dart';
 import 'package:easel_flutter/widgets/background_widget.dart';
 import 'package:easel_flutter/widgets/message_dialog.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/src/provider.dart';
 import 'package:pylons_sdk/pylons_sdk.dart';
 
 class RoutingScreen extends StatefulWidget {
@@ -23,10 +25,11 @@ class _RoutingScreenState extends State<RoutingScreen> {
   void initState() {
     super.initState();
 
+
     WidgetsBinding.instance!.addPostFrameCallback((timeStamp) async {
       final isExist = await PylonsWallet.instance.exists();
       if (isExist) {
-        final response = await PylonsWallet.instance.getProfile();
+        final response = await context.read<EaselProvider>().getProfile();
         if (response.success) {
           username.value = response.data["username"] ?? "";
 
