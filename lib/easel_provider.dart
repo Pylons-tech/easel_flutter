@@ -15,6 +15,7 @@ import 'package:file_picker/file_picker.dart';
 import 'package:fixnum/fixnum.dart';
 import 'package:flutter/material.dart';
 import 'package:pylons_sdk/pylons_sdk.dart';
+import 'package:pylons_sdk/src/features/models/sdk_ipc_response.dart';
 import 'package:sanitize_html/sanitize_html.dart';
 import 'package:share/share.dart';
 
@@ -48,6 +49,8 @@ class EaselProvider extends ChangeNotifier {
   final noOfEditionController = TextEditingController();
   final priceController = TextEditingController();
   final royaltyController = TextEditingController();
+
+  String currentUsername = '';
 
   initStore() {
     _file = null;
@@ -110,6 +113,7 @@ class EaselProvider extends ChangeNotifier {
 
     var response = await PylonsWallet.instance.txCreateCookbook(cookBook1);
     if (response.success) {
+      localDataSource.saveCookBookGeneratorUsername(currentUsername);
       return true;
     }
 
@@ -122,12 +126,16 @@ class EaselProvider extends ChangeNotifier {
   Future<bool> createRecipe() async {
     // get device cookbook id
     _cookbookId = localDataSource.getCookbookId();
+    String savedUserName = localDataSource.getCookBookGeneratorUsername();
 
-    if (_cookbookId == null) {
+
+
+    if (_cookbookId == null  || isDifferentUserName(savedUserName)) {
       // create cookbook
       final isCookBookCreated = await createCookbook();
 
-      if (isCookBookCreated) {
+      if (isCookBookCreated ) {
+
         // get device cookbook id
         _cookbookId = localDataSource.getCookbookId();
       } else {
@@ -216,12 +224,15 @@ class EaselProvider extends ChangeNotifier {
     }
   }
 
+  bool isDifferentUserName(String savedUserName) => (currentUsername.isNotEmpty && savedUserName != currentUsername);
+
   Future<void> shareNFT() async {
-    String url = FileUtils.generateEaselLink(cookbookId: _cookbookId ?? '', recipeId: _recipeId, );
+    String url = FileUtils.generateEaselLink(
+      cookbookId: _cookbookId ?? '',
+      recipeId: _recipeId,
+    );
     Share.share(sanitizeHtml(url), subject: 'My Easel NFT');
   }
-
-
 
   @override
   void dispose() {
@@ -231,5 +242,15 @@ class EaselProvider extends ChangeNotifier {
     noOfEditionController.dispose();
     royaltyController.dispose();
     super.dispose();
+  }
+
+  Future<SDKIPCResponse> getProfile() async {
+    var sdkResponse = await PylonsWallet.instance.getProfile();
+
+    if (sdkResponse.success) {
+      currentUsername = sdkResponse.data["username"] ?? "";
+    }
+
+    return sdkResponse;
   }
 }
