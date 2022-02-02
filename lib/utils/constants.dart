@@ -1,8 +1,8 @@
 const kImage = "https://images.unsplash.com/photo-1635488640163"
     "-e5f6782cda6e?ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=2576&q=80";
 const kCookbookId = "cookbook_id";
-const kShareIcon = 'assets/icons/share_ic.png';
-const kSaveIcon = 'assets/icons/save_ic.png';
+const kShareIcon = 'assets/images/share_ic.png';
+const kSaveIcon = 'assets/images/save_ic.png';
 const ipfsDomain = "https://ipfs.io/ipfs";
 const kPlayStoreUrl =
     "https://play.google.com/store/apps/details?id=tech.pylons.wallet";
@@ -46,7 +46,11 @@ const kDateText = "Date";
 const kRoyaltyText = "Royalty";
 const kPreviewNFTText = "Preview NFT";
 const kMintMoreText = "Mint More";
+const kChooseNFTFormatText = "Choose your NFT format";
+const kUploadNFTText = "Upload your NFT file";
+const kEditNFTText = "Edit your NFT Details";
 
+const kStart = "Start";
 const kUploadText = "Upload";
 const kMintText = "Mint";
 const kPublishText = "Publish";
