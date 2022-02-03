@@ -1,4 +1,5 @@
 import 'package:easel_flutter/easel_provider.dart';
+import 'package:easel_flutter/models/nft_format.dart';
 import 'package:easel_flutter/utils/easel_app_theme.dart';
 import 'package:easel_flutter/utils/screen_size_util.dart';
 import 'package:easel_flutter/utils/space_utils.dart';
@@ -17,15 +18,13 @@ class ChooseFormatScreen extends StatefulWidget {
 }
 
 class _ChooseFormatScreenState extends State<ChooseFormatScreen> {
-  ValueNotifier<bool> showError = ValueNotifier(false);
-  ValueNotifier<String> errorText = ValueNotifier("Pick a file");
   late EaselProvider provider;
-
-  String nftFormat = 'Image';
+  NftFormat? _tempFormat;
 
   @override
   Widget build(BuildContext context) {
     provider = Provider.of<EaselProvider>(context);
+    _tempFormat ??= provider.nftFormat;
     return Scaffold(
       body: Column(
         children: [
@@ -36,11 +35,11 @@ class _ChooseFormatScreenState extends State<ChooseFormatScreen> {
               _CardWidget(
                 text: 'Image',
                 secondaryText: 'JPG, PNG, SVG, HEIF',
-                selected: nftFormat == 'Image',
+                selected: _tempFormat?.format == 'image',
                 icon: 'nft_format_image',
                 onTap: () {
                   setState(() {
-                    nftFormat = 'Image';
+                    _tempFormat = NftFormat.supportedFormats[0];
                   });
                 },
               ),
@@ -48,11 +47,11 @@ class _ChooseFormatScreenState extends State<ChooseFormatScreen> {
               _CardWidget(
                 text: 'Video',
                 secondaryText: 'MP4',
-                selected: nftFormat == 'Video',
+                selected: _tempFormat?.format == 'video',
                 icon: 'nft_format_video',
                 onTap: () {
                   setState(() {
-                    nftFormat = 'Video';
+                    _tempFormat = NftFormat.supportedFormats[1];
                   });
                 },
               ),
@@ -67,11 +66,11 @@ class _ChooseFormatScreenState extends State<ChooseFormatScreen> {
               _CardWidget(
                 text: '3D',
                 secondaryText: 'GLTF or GLB',
-                selected: nftFormat == '3D',
+                selected: _tempFormat?.format == '3d',
                 icon: 'nft_format_3d',
                 onTap: () {
                   setState(() {
-                    nftFormat = '3D';
+                    _tempFormat = NftFormat.supportedFormats[2];
                   });
                 },
               ),
@@ -79,11 +78,11 @@ class _ChooseFormatScreenState extends State<ChooseFormatScreen> {
               _CardWidget(
                 text: 'Audio',
                 secondaryText: 'MP3, FLAC or WAV',
-                selected: nftFormat == 'Audio',
+                selected: _tempFormat?.format == 'audio',
                 icon: 'nft_format_audio',
                 onTap: () {
                   setState(() {
-                    nftFormat = 'Audio';
+                    _tempFormat = NftFormat.supportedFormats[3];
                   });
                 },
               ),
@@ -93,6 +92,10 @@ class _ChooseFormatScreenState extends State<ChooseFormatScreen> {
           const SizedBox(height: 20),
           Align(
             child: PylonsRoundButton(onPressed: () {
+              if (_tempFormat?.format != provider.nftFormat.format) {
+                provider.initStore();
+              }
+              provider.setFormat(context, _tempFormat!);
               widget.controller.jumpToPage(1);
             }),
           ),

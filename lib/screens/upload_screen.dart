@@ -7,7 +7,6 @@ import 'package:easel_flutter/utils/file_utils.dart';
 import 'package:easel_flutter/utils/easel_app_theme.dart';
 import 'package:easel_flutter/utils/screen_size_util.dart';
 import 'package:easel_flutter/utils/space_utils.dart';
-import 'package:easel_flutter/widgets/assets.dart';
 import 'package:easel_flutter/widgets/pylons_round_button.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
@@ -108,10 +107,12 @@ class _UploadWidgetState extends State<_UploadWidget> {
             padding: const EdgeInsets.all(60),
             child: GestureDetector(
               onTap: () async {
-                final result = await FileUtils.pickFile();
+                final result = await FileUtils.pickFile(provider.nftFormat);
                 widget.onFilePicked(result);
               },
-              child: Assets.fileImage,
+              child: Image.asset(
+                "assets/images/file.png",
+              ),
             ),
           ),
           const VerticalSpace(5),

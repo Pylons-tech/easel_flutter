@@ -1,5 +1,6 @@
 import 'dart:math';
 
+import 'package:easel_flutter/models/nft_format.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:path/path.dart' as p;
 
@@ -11,9 +12,17 @@ class FileUtils {
   /// returns [PlatformFile] the selected file
   ///
   /// or null if aborted
-  static Future<PlatformFile?> pickFile() async {
+  static Future<PlatformFile?> pickFile(NftFormat format) async {
+    FileType _type = FileType.any;
+    if (format.format == 'image') {
+      _type = FileType.image;
+    } else if (format.format == 'video') {
+      _type = FileType.video;
+    } else if (format.format == 'audio') {
+      _type = FileType.audio;
+    }
     FilePickerResult? result =
-        await FilePicker.platform.pickFiles(type: FileType.image);
+        await FilePicker.platform.pickFiles(type: _type);
 
     if (result != null) {
       return result.files.single;

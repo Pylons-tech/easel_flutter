@@ -81,7 +81,7 @@ class _HomeScreenState extends State<HomeScreen> {
                         padding: const EdgeInsets.only(left: 10.0),
                         child: IconButton(
                             onPressed: () {
-                              if (_currentPage.value < 3) {
+                              if (_currentPage.value < 4) {
                                 _currentPage.value = _currentPage.value > 0
                                     ? _currentPage.value - 1
                                     : 0;

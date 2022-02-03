@@ -132,7 +132,7 @@ class MintScreen extends StatelessWidget {
                               return;
                             }
 
-                            controller.jumpToPage(3);
+                            controller.jumpToPage(4);
                           }),
                         ),
                         const VerticalSpace(
