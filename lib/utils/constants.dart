@@ -64,6 +64,11 @@ const kMaxPriceLength = 14;
 
 const kPylonSymbol = "upylon";
 const kUsdSymbol = "ustripeusd";
+const kAtomSymbol = "uphoton";
+const kEuroSymbol = "eeur";
+const kAgoricSymbol = "urun";
+
+
 
 const kErrProfileNotExist = 'profileDoesNotExist';
 

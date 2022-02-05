@@ -10,6 +10,9 @@ class Denom {
   static List<Denom> get availableDenoms => [
     Denom(name: "Pylon", symbol: kPylonSymbol),
     Denom(name: "USD", symbol: kUsdSymbol),
+    Denom(name: "Atom", symbol: kAtomSymbol),
+    Denom(name: "EEur", symbol: kEuroSymbol),
+    Denom(name: "Agoric", symbol: kAgoricSymbol),
   ];
 
 }
