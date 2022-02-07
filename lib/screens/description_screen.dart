@@ -209,7 +209,6 @@ class _CurrencyDropDown extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // TODO: implement build
     return Consumer<EaselProvider>(
       builder: (_, provider, __) => DropdownButton<String>(
         value: provider.selectedDenom.symbol,
