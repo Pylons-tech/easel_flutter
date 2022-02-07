@@ -178,29 +178,5 @@ class _PublishScreenState extends State<PublishScreen> {
     );
   }
 
-  Widget _buildDetailInfo(
-      {required BuildContext context,
-      required String title,
-      required String text}) {
-    return Padding(
-      padding: const EdgeInsets.only(top: 9.0),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: [
-          Text(
-            title,
-            style: Theme.of(context).textTheme.caption!.copyWith(
-                  fontSize: 14,
-                ),
-          ),
-          Text(
-            text,
-            style: Theme.of(context).textTheme.caption!.copyWith(
-                  fontSize: 14,
-                ),
-          )
-        ],
-      ),
-    );
-  }
+
 }
