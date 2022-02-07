@@ -13,6 +13,7 @@ import 'package:provider/provider.dart';
 
 class DescriptionScreen extends StatefulWidget {
   final PageController controller;
+
   const DescriptionScreen({Key? key, required this.controller})
       : super(key: key);
 
@@ -57,9 +58,7 @@ class _DescriptionScreenState extends State<DescriptionScreen> {
                           return null;
                         },
                       ),
-                      const VerticalSpace(
-                        20,
-                      ),
+                      const VerticalSpace(20),
                       EaselTextField(
                         title: kGiveNFTNameText,
                         controller: provider.artNameController,
@@ -74,9 +73,7 @@ class _DescriptionScreenState extends State<DescriptionScreen> {
                           return null;
                         },
                       ),
-                      const VerticalSpace(
-                        20,
-                      ),
+                      const VerticalSpace(20),
                       EaselTextField(
                         title: kDescribeNFTText,
                         noOfLines: 4,
@@ -102,9 +99,7 @@ class _DescriptionScreenState extends State<DescriptionScreen> {
                             color: EaselAppTheme.kGrey,
                             fontWeight: FontWeight.w600),
                       ),
-                      const VerticalSpace(
-                        20,
-                      ),
+                      const VerticalSpace(20),
                       EaselTextField(
                         title: kPriceText,
                         keyboardType: TextInputType.number,
@@ -127,9 +122,7 @@ class _DescriptionScreenState extends State<DescriptionScreen> {
                           return null;
                         },
                       ),
-                      const VerticalSpace(
-                        20,
-                      ),
+                      const VerticalSpace(20),
                       EaselTextField(
                         title: "$kNoOfEditionText ($kMaxText: $kMaxEdition)",
                         keyboardType: TextInputType.number,
@@ -157,9 +150,7 @@ class _DescriptionScreenState extends State<DescriptionScreen> {
                           return null;
                         },
                       ),
-                      const VerticalSpace(
-                        20,
-                      ),
+                      const VerticalSpace(20),
                       EaselTextField(
                         title: kRoyaltiesText,
                         hint: kRoyaltyHintText,
@@ -182,34 +173,25 @@ class _DescriptionScreenState extends State<DescriptionScreen> {
                           return null;
                         },
                       ),
-                      const VerticalSpace(
-                        4,
-                      ),
+                      const VerticalSpace(4),
                       Text(
                         "$kRoyaltyNoteText “$kMinRoyalty”",
                         style: Theme.of(context).textTheme.subtitle2!.copyWith(
                             color: EaselAppTheme.kGrey,
                             fontWeight: FontWeight.w600),
                       ),
-                      const VerticalSpace(
-                        20,
-                      ),
+                      const VerticalSpace(20),
                       Align(
                         child: PylonsRoundButton(onPressed: () {
                           FocusScope.of(context).unfocus();
                           if (_formKey.currentState!.validate()) {
-                            // print(controller.page!);
-                            final currentPage = widget.controller.page!;
-                            double nextPage =
-                                currentPage < 3.0 ? (currentPage + 1) : 3;
-                            // print(xx);
-                            widget.controller.jumpToPage(nextPage.toInt());
+                            widget.controller.nextPage(
+                                duration: const Duration(milliseconds: 300),
+                                curve: Curves.easeIn);
                           }
                         }),
                       ),
-                      const VerticalSpace(
-                        20,
-                      ),
+                      const VerticalSpace(20),
                     ],
                   ),
                 ),

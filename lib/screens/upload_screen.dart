@@ -7,7 +7,6 @@ import 'package:easel_flutter/utils/file_utils.dart';
 import 'package:easel_flutter/utils/easel_app_theme.dart';
 import 'package:easel_flutter/utils/screen_size_util.dart';
 import 'package:easel_flutter/utils/space_utils.dart';
-import 'package:easel_flutter/widgets/assets.dart';
 import 'package:easel_flutter/widgets/pylons_round_button.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
@@ -15,6 +14,7 @@ import 'package:provider/provider.dart';
 
 class UploadScreen extends StatefulWidget {
   final PageController controller;
+
   const UploadScreen({Key? key, required this.controller}) : super(key: key);
 
   @override
@@ -24,11 +24,10 @@ class UploadScreen extends StatefulWidget {
 class _UploadScreenState extends State<UploadScreen> {
   ValueNotifier<bool> showError = ValueNotifier(false);
   ValueNotifier<String> errorText = ValueNotifier("Pick a file");
-  late EaselProvider provider;
 
   @override
   Widget build(BuildContext context) {
-    provider = Provider.of<EaselProvider>(context);
+    EaselProvider provider = context.read();
     return Scaffold(
       body: Stack(
         children: [
@@ -52,7 +51,9 @@ class _UploadScreenState extends State<UploadScreen> {
                   }),
                   PylonsRoundButton(onPressed: () {
                     if (provider.file != null) {
-                      widget.controller.jumpToPage(1);
+                      widget.controller.nextPage(
+                          duration: const Duration(milliseconds: 300),
+                          curve: Curves.easeIn);
                     } else {
                       errorText.value = 'Pick a file';
                       showError.value = true;
@@ -84,6 +85,7 @@ class _UploadScreenState extends State<UploadScreen> {
 
 class _UploadWidget extends StatefulWidget {
   final Function(PlatformFile?) onFilePicked;
+
   const _UploadWidget({
     Key? key,
     required this.onFilePicked,
@@ -99,32 +101,17 @@ class _UploadWidgetState extends State<_UploadWidget> {
     return Consumer<EaselProvider>(
       builder: (_, provider, __) => Column(
         children: [
-          Text(
-            "Upload",
-            style: Theme.of(context)
-                .textTheme
-                .headline5!
-                .copyWith(fontWeight: FontWeight.w600),
-          ),
           const VerticalSpace(5),
           Container(
             width: double.infinity,
             height: MediaQuery.of(context).size.width * 0.5,
-            margin: const EdgeInsets.symmetric(horizontal: 30),
-            padding: const EdgeInsets.all(70),
-            decoration: BoxDecoration(
-                color: EaselAppTheme.kBlue.withOpacity(0.05),
-                borderRadius: BorderRadius.circular(8),
-                image: provider.file != null
-                    ? DecorationImage(
-                        image: FileImage(provider.file!), fit: BoxFit.cover)
-                    : null),
+            padding: const EdgeInsets.all(60),
             child: GestureDetector(
               onTap: () async {
-                final result = await FileUtils.pickFile();
+                final result = await FileUtils.pickFile(provider.nftFormat);
                 widget.onFilePicked(result);
               },
-              child: Assets.fileImage,
+              child: Image.asset(kFileIcon),
             ),
           ),
           const VerticalSpace(5),

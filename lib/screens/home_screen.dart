@@ -1,4 +1,5 @@
 import 'package:easel_flutter/easel_provider.dart';
+import 'package:easel_flutter/screens/choose_format_screen.dart';
 import 'package:easel_flutter/screens/description_screen.dart';
 import 'package:easel_flutter/screens/mint_screen.dart';
 import 'package:easel_flutter/screens/publish_screen.dart';
@@ -31,11 +32,24 @@ class _HomeScreenState extends State<HomeScreen> {
     super.dispose();
   }
 
-  final int _numPages = 4;
+  final int _numPages = 5;
   final PageController _pageController = PageController(keepPage: true);
   final ValueNotifier<int> _currentPage = ValueNotifier(0);
 
-  List title = [kUploadText, kDescriptionText, kMintText, kPublishText];
+  List screenLabels = [
+    kStartText,
+    kUploadText,
+    kDescriptionText,
+    kMintText,
+    kPublishText
+  ];
+  List screenTitles = [
+    kChooseNFTFormatText,
+    kUploadNFTText,
+    kEditNFTText,
+    kPreviewNFTText,
+    ''
+  ];
 
   @override
   Widget build(BuildContext context) {
@@ -80,13 +94,9 @@ class _HomeScreenState extends State<HomeScreen> {
                         padding: const EdgeInsets.only(left: 10.0),
                         child: IconButton(
                             onPressed: () {
-                              if (_currentPage.value < 3) {
-                                _currentPage.value = _currentPage.value > 0
-                                    ? _currentPage.value - 1
-                                    : 0;
-
-                                _pageController.jumpToPage(_currentPage.value);
-                              }
+                              _pageController.previousPage(
+                                  duration: const Duration(milliseconds: 300),
+                                  curve: Curves.easeIn);
                             },
                             icon: const Icon(
                               Icons.arrow_back_ios,
@@ -95,27 +105,29 @@ class _HomeScreenState extends State<HomeScreen> {
                       ),
                       ValueListenableBuilder(
                         valueListenable: _currentPage,
-                        builder: (_, int currentPage, __) =>
-                            _currentPage.value == 2
-                                ? Text(
-                                    kPreviewNFTText,
-                                    style: Theme.of(context)
-                                        .textTheme
-                                        .bodyText1!
-                                        .copyWith(fontSize: 16),
-                                  )
-                                : const SizedBox.shrink(),
+                        builder: (_, int currentPage, __) {
+                          return Text(
+                            screenTitles[_currentPage.value],
+                            style: Theme.of(context)
+                                .textTheme
+                                .bodyText1!
+                                .copyWith(
+                                    fontSize: 18,
+                                    fontWeight: FontWeight.w400,
+                                    color: EaselAppTheme.kDarkText),
+                          );
+                        },
                       ),
                       ValueListenableBuilder(
                         valueListenable: _currentPage,
                         builder: (_, int currentPage, __) =>
-                            _currentPage.value == 3
+                            _currentPage.value == _numPages - 1
                                 ? Consumer<EaselProvider>(
                                     builder: (_, provider, __) =>
                                         TextButton.icon(
                                       onPressed: () {
                                         provider.initStore();
-                                        _pageController.jumpToPage(0);
+                                        _pageController.jumpToPage(_pageController.initialPage);
                                       },
                                       label: const Icon(
                                         Icons.arrow_forward_ios,
@@ -149,6 +161,9 @@ class _HomeScreenState extends State<HomeScreen> {
                     _currentPage.value = page;
                   },
                   children: [
+                    ChooseFormatScreen(
+                      controller: _pageController,
+                    ),
                     UploadScreen(
                       controller: _pageController,
                     ),
@@ -173,9 +188,9 @@ class _HomeScreenState extends State<HomeScreen> {
 
   Row _buildTitles(ScreenSizeUtil screenSize) {
     return Row(
-      children: List.generate(title.length, (index) {
+      children: List.generate(screenLabels.length, (index) {
         return SizedBox(
-          width: screenSize.width(percent: 25),
+          width: screenSize.width(percent: 20),
           child: _buildStepTitle(index),
         );
       }),
@@ -189,8 +204,11 @@ class _HomeScreenState extends State<HomeScreen> {
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
           Text(
-            title[index],
+            screenLabels[index],
             style: Theme.of(context).textTheme.bodyText2!.copyWith(
+                fontSize: 12,
+                fontFamily: 'Inter',
+                fontWeight: FontWeight.w400,
                 color: currentPage == index
                     ? EaselAppTheme.kBlack
                     : EaselAppTheme.kGrey),

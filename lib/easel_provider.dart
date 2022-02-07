@@ -1,23 +1,24 @@
 import 'dart:async';
 import 'dart:developer';
 import 'dart:io';
-import 'dart:ui' as ui;
 
 import 'package:easel_flutter/datasources/local_datasource.dart';
 import 'package:easel_flutter/datasources/remote_datasource.dart';
 import 'package:easel_flutter/main.dart';
 import 'package:easel_flutter/models/api_response.dart';
 import 'package:easel_flutter/models/denom.dart';
+import 'package:easel_flutter/models/nft_format.dart';
 import 'package:easel_flutter/utils/constants.dart';
 import 'package:easel_flutter/utils/file_utils.dart';
 import 'package:easel_flutter/widgets/loading.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:fixnum/fixnum.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:pylons_sdk/pylons_sdk.dart';
 import 'package:pylons_sdk/src/features/models/sdk_ipc_response.dart';
 import 'package:share_plus/share_plus.dart';
-
+import 'package:media_info/media_info.dart';
 
 class EaselProvider extends ChangeNotifier {
   final LocalDataSource localDataSource;
@@ -26,21 +27,33 @@ class EaselProvider extends ChangeNotifier {
   EaselProvider(this.localDataSource, this.remoteDataSource);
 
   File? _file;
+  NftFormat _nftFormat = NftFormat.supportedFormats[0];
   String _fileName = "";
   String _fileExtension = "";
   String _fileSize = "0";
   int _fileHeight = 0;
   int _fileWidth = 0;
+  int _fileDuration = 0;
   String? _cookbookId;
   String _recipeId = "";
   Denom _selectedDenom = Denom(name: "Pylon", symbol: kPylonSymbol);
 
   File? get file => _file;
+
+  NftFormat get nftFormat => _nftFormat;
+
   String get fileName => _fileName;
+
   String get fileExtension => _fileExtension;
+
   String get fileSize => _fileSize;
+
   int get fileHeight => _fileHeight;
+
+  int get fileDuration => _fileDuration;
+
   int get fileWidth => _fileWidth;
+
   Denom get selectedDenom => _selectedDenom;
 
   final artistNameController = TextEditingController();
@@ -54,10 +67,12 @@ class EaselProvider extends ChangeNotifier {
 
   initStore() {
     _file = null;
+    _nftFormat = NftFormat.supportedFormats[0];
     _fileName = "";
     _fileSize = "0";
     _fileHeight = 0;
     _fileWidth = 0;
+    _fileDuration = 0;
     _recipeId = "";
     _selectedDenom = Denom(name: "Pylon", symbol: kPylonSymbol);
 
@@ -70,26 +85,43 @@ class EaselProvider extends ChangeNotifier {
     notifyListeners();
   }
 
+  Future<void> setFormat(BuildContext context, NftFormat format) async {
+    _nftFormat = format;
+    notifyListeners();
+  }
+
   Future<void> setFile(BuildContext context, PlatformFile selectedFile) async {
     _file = File(selectedFile.path!);
     _fileName = selectedFile.name;
     _fileSize = FileUtils.getFileSizeString(fileLength: _file!.lengthSync());
     _fileExtension = FileUtils.getExtension(_fileName);
-    await _calculateDimension(_file!);
+    await _getMetadata(_file!);
     notifyListeners();
   }
 
-  /// calculates the width and height of a file
-  /// input [file] and sets [_fileHeight] and [_fileWidth]
-  Future<void> _calculateDimension(File file) async {
-    final image = Image.file(file);
-    Completer<ui.Image> completer = Completer<ui.Image>();
-    image.image.resolve(const ImageConfiguration()).addListener(ImageStreamListener((ImageInfo image, bool _) {
-      completer.complete(image.image);
-    }));
-    ui.Image info = await completer.future;
-    _fileWidth = info.width;
-    _fileHeight = info.height;
+  /// get media attributes (width/height/duration) of the file
+  /// input [file] and sets [_fileHeight], [_fileWidth], and [_fileDuration]
+  Future<void> _getMetadata(File file) async {
+    final MediaInfo _mediaInfo = MediaInfo();
+    final Map<String, dynamic> info;
+    try {
+      info = await _mediaInfo.getMediaInfo(file.path);
+    } on PlatformException catch (e) {
+      print('Error occurred while parsing the chosen media file: $e');
+      _fileWidth = 0;
+      _fileHeight = 0;
+      _fileDuration = 0;
+      return;
+    }
+
+    if (_nftFormat.format == kImageText || _nftFormat.format == kVideoText) {
+      _fileWidth = info['width'];
+      _fileHeight = info['height'];
+    }
+
+    if (_nftFormat.format == kAudioText || _nftFormat.format == kVideoText) {
+      _fileDuration = info['durationMs'];
+    }
   }
 
   void setSelectedDenom(Denom value) {
@@ -117,7 +149,8 @@ class EaselProvider extends ChangeNotifier {
       return true;
     }
 
-    ScaffoldMessenger.of(navigatorKey.currentState!.overlay!.context).showSnackBar(SnackBar(content: Text(response.error)));
+    ScaffoldMessenger.of(navigatorKey.currentState!.overlay!.context)
+        .showSnackBar(SnackBar(content: Text(response.error)));
     return false;
   }
 
@@ -128,14 +161,11 @@ class EaselProvider extends ChangeNotifier {
     _cookbookId = localDataSource.getCookbookId();
     String savedUserName = localDataSource.getCookBookGeneratorUsername();
 
-
-
-    if (_cookbookId == null  || isDifferentUserName(savedUserName)) {
+    if (_cookbookId == null || isDifferentUserName(savedUserName)) {
       // create cookbook
       final isCookBookCreated = await createCookbook();
 
-      if (isCookBookCreated ) {
-
+      if (isCookBookCreated) {
         // get device cookbook id
         _cookbookId = localDataSource.getCookbookId();
       } else {
@@ -145,17 +175,25 @@ class EaselProvider extends ChangeNotifier {
 
     _recipeId = localDataSource.autoGenerateEaselId();
 
-    final loading = Loading().showLoading(message: "Uploading image...");
+    final loading =
+        Loading().showLoading(message: "Uploading ${_nftFormat.format}...");
     final uploadResponse = await remoteDataSource.uploadFile(_file!);
     loading.dismiss();
     if (uploadResponse.status == Status.error) {
-      ScaffoldMessenger.of(navigatorKey.currentState!.overlay!.context).showSnackBar(SnackBar(content: Text(uploadResponse.errorMessage ?? "Upload error occurred")));
+      ScaffoldMessenger.of(navigatorKey.currentState!.overlay!.context)
+          .showSnackBar(SnackBar(
+              content: Text(
+                  uploadResponse.errorMessage ?? "Upload error occurred")));
       return false;
     }
 
-    String residual = DecString.decStringFromDouble(double.parse(royaltyController.text.trim()));
+    String residual = DecString.decStringFromDouble(
+        double.parse(royaltyController.text.trim()));
 
-    String price = (double.parse(priceController.text.replaceAll(",", "").trim()) * 1000000).toStringAsFixed(0);
+    String price =
+        (double.parse(priceController.text.replaceAll(",", "").trim()) *
+                1000000)
+            .toStringAsFixed(0);
     var recipe = Recipe(
         cookbookID: _cookbookId,
         iD: _recipeId,
@@ -183,24 +221,54 @@ class EaselProvider extends ChangeNotifier {
               longs: [
                 LongParam(key: "Quantity", weightRanges: [
                   IntWeightRange(
-                      lower: Int64(int.parse(noOfEditionController.text.replaceAll(",", "").trim())), upper: Int64(int.parse(noOfEditionController.text.replaceAll(",", "").trim())), weight: Int64(1))
+                      lower: Int64(int.parse(noOfEditionController.text
+                          .replaceAll(",", "")
+                          .trim())),
+                      upper: Int64(int.parse(noOfEditionController.text
+                          .replaceAll(",", "")
+                          .trim())),
+                      weight: Int64(1))
                 ]),
-                LongParam(key: "Width", weightRanges: [IntWeightRange(lower: Int64(_fileWidth), upper: Int64(_fileWidth), weight: Int64(1))]),
-                LongParam(key: "Height", weightRanges: [IntWeightRange(lower: Int64(_fileHeight), upper: Int64(_fileHeight), weight: Int64(1))])
+                LongParam(key: "Width", weightRanges: [
+                  IntWeightRange(
+                      lower: Int64(_fileWidth),
+                      upper: Int64(_fileWidth),
+                      weight: Int64(1))
+                ]),
+                LongParam(key: "Height", weightRanges: [
+                  IntWeightRange(
+                      lower: Int64(_fileHeight),
+                      upper: Int64(_fileHeight),
+                      weight: Int64(1))
+                ]),
+                LongParam(key: "Duration", weightRanges: [
+                  IntWeightRange(
+                      lower: Int64(_fileDuration),
+                      upper: Int64(_fileDuration),
+                      weight: Int64(1))
+                ]),
               ],
               strings: [
                 StringParam(key: "Name", value: artNameController.text.trim()),
                 StringParam(key: "App_Type", value: "Easel"),
-                StringParam(key: "Description", value: descriptionController.text.trim()),
-                StringParam(key: "NFT_URL", value: "$ipfsDomain/${uploadResponse.data?.value?.cid ?? ""}"),
-                StringParam(key: "Creator", value: artistNameController.text.trim()),
+                StringParam(
+                    key: "Description",
+                    value: descriptionController.text.trim()),
+                StringParam(
+                    key: "NFT_URL",
+                    value:
+                        "$ipfsDomain/${uploadResponse.data?.value?.cid ?? ""}"),
+                StringParam(
+                    key: "Creator", value: artistNameController.text.trim()),
               ],
               mutableStrings: [],
               transferFee: [Coin(denom: kPylonSymbol, amount: "1")],
-              tradePercentage: DecString.decStringFromDouble(double.parse(royaltyController.text.trim())),
+              tradePercentage: DecString.decStringFromDouble(
+                  double.parse(royaltyController.text.trim())),
               tradeable: true,
               amountMinted: Int64(0),
-              quantity: Int64(int.parse(noOfEditionController.text.replaceAll(",", "").trim()))),
+              quantity: Int64(int.parse(
+                  noOfEditionController.text.replaceAll(",", "").trim()))),
         ], itemModifyOutputs: []),
         outputs: [
           WeightedOutputs(entryIDs: ["Easel_NFT"], weight: Int64(1))
@@ -215,16 +283,20 @@ class EaselProvider extends ChangeNotifier {
     log('From App $response');
 
     if (response.success) {
-      ScaffoldMessenger.of(navigatorKey.currentState!.overlay!.context).showSnackBar(const SnackBar(content: Text("Recipe created")));
+      ScaffoldMessenger.of(navigatorKey.currentState!.overlay!.context)
+          .showSnackBar(const SnackBar(content: Text("Recipe created")));
       log("${response.data}");
       return true;
     } else {
-      ScaffoldMessenger.of(navigatorKey.currentState!.overlay!.context).showSnackBar(SnackBar(content: Text("Recipe error : ${response.error}")));
+      ScaffoldMessenger.of(navigatorKey.currentState!.overlay!.context)
+          .showSnackBar(
+              SnackBar(content: Text("Recipe error : ${response.error}")));
       return false;
     }
   }
 
-  bool isDifferentUserName(String savedUserName) => (currentUsername.isNotEmpty && savedUserName != currentUsername);
+  bool isDifferentUserName(String savedUserName) =>
+      (currentUsername.isNotEmpty && savedUserName != currentUsername);
 
   Future<void> shareNFT() async {
     String url = FileUtils.generateEaselLink(

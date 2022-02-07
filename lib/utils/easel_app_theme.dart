@@ -20,4 +20,7 @@ class EaselAppTheme {
         scaffoldBackgroundColor: kWhite,
         visualDensity: VisualDensity.standard,
       );
+
+  static Color cardBackground = const Color(0xFFC4C4C4).withOpacity(0.2);
+  static Color cardBackgroundSelected = const Color(0x801212C4).withOpacity(0.2);
 }

@@ -1,20 +1,27 @@
 import 'dart:math';
 
+import 'package:easel_flutter/models/nft_format.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:path/path.dart' as p;
 
 import 'constants.dart';
 
 class FileUtils {
-  /// This function picks a file (png, jpg, jpeg, svg) from device storage
+  /// This function picks a file with the given [format] from device storage
   ///
   /// returns [PlatformFile] the selected file
   ///
   /// or null if aborted
-  static Future<PlatformFile?> pickFile() async {
-    FilePickerResult? result =
-        await FilePicker.platform.pickFiles(type: FileType.image);
-
+  static Future<PlatformFile?> pickFile(NftFormat format) async {
+    FileType _type = FileType.any;
+    if (format.format == kImageText) {
+      _type = FileType.image;
+    } else if (format.format == kVideoText) {
+      _type = FileType.video;
+    } else if (format.format == kAudioText) {
+      _type = FileType.audio;
+    }
+    FilePickerResult? result = await FilePicker.platform.pickFiles(type: _type);
     if (result != null) {
       return result.files.single;
     }
@@ -54,16 +61,15 @@ class FileUtils {
         suffixes[i];
   }
 
-  static String generateEaselLink({required String recipeId, required String cookbookId}) {
+  static String generateEaselLink(
+      {required String recipeId, required String cookbookId}) {
     return Uri.https(kWalletDynamicLink, "/", {
       "amv": "1",
       "apn": kWalletAndroidId,
       "ibi": kWalletIOSId,
       "imv": "1",
-      "link": "$kWalletWebLink/?action=purchase_nft&recipe_id=$recipeId&cookbook_id=$cookbookId&nft_amount=1"
+      "link":
+          "$kWalletWebLink/?action=purchase_nft&recipe_id=$recipeId&cookbook_id=$cookbookId&nft_amount=1"
     }).toString();
   }
-
-
-
 }
