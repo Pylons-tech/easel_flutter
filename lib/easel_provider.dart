@@ -14,6 +14,7 @@ import 'package:easel_flutter/widgets/loading.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:fixnum/fixnum.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:pylons_sdk/pylons_sdk.dart';
 import 'package:pylons_sdk/src/features/models/sdk_ipc_response.dart';
 import 'package:share_plus/share_plus.dart';
@@ -105,21 +106,20 @@ class EaselProvider extends ChangeNotifier {
     final Map<String, dynamic> info;
     try {
       info = await _mediaInfo.getMediaInfo(file.path);
-    } on Exception catch (e) {
-      print('error caught: $e');
+    } on PlatformException catch (e) {
+      print('Error occurred while parsing the chosen media file: $e');
       _fileWidth = 0;
       _fileHeight = 0;
       _fileDuration = 0;
       return;
     }
-    if (_nftFormat.format == kImageText) {
+
+    if (_nftFormat.format == kImageText || _nftFormat.format == kVideoText) {
       _fileWidth = info['width'];
       _fileHeight = info['height'];
-    } else if (_nftFormat.format == kAudioText) {
-      _fileDuration = info['durationMs'];
-    } else if (_nftFormat.format == kVideoText) {
-      _fileWidth = info['width'];
-      _fileHeight = info['height'];
+    }
+
+    if (_nftFormat.format == kAudioText || _nftFormat.format == kVideoText) {
       _fileDuration = info['durationMs'];
     }
   }
