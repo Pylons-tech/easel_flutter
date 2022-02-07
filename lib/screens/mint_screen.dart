@@ -12,6 +12,7 @@ import 'package:provider/provider.dart';
 
 class MintScreen extends StatelessWidget {
   final PageController controller;
+
   const MintScreen({Key? key, required this.controller}) : super(key: key);
 
   @override
@@ -132,7 +133,9 @@ class MintScreen extends StatelessWidget {
                               return;
                             }
 
-                            controller.jumpToPage(4);
+                            controller.nextPage(
+                                duration: const Duration(milliseconds: 300),
+                                curve: Curves.easeIn);
                           }),
                         ),
                         const VerticalSpace(

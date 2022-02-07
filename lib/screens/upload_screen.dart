@@ -24,11 +24,10 @@ class UploadScreen extends StatefulWidget {
 class _UploadScreenState extends State<UploadScreen> {
   ValueNotifier<bool> showError = ValueNotifier(false);
   ValueNotifier<String> errorText = ValueNotifier("Pick a file");
-  late EaselProvider provider;
 
   @override
   Widget build(BuildContext context) {
-    provider = Provider.of<EaselProvider>(context);
+    EaselProvider provider = context.read();
     return Scaffold(
       body: Stack(
         children: [
@@ -52,7 +51,9 @@ class _UploadScreenState extends State<UploadScreen> {
                   }),
                   PylonsRoundButton(onPressed: () {
                     if (provider.file != null) {
-                      widget.controller.jumpToPage(2);
+                      widget.controller.nextPage(
+                          duration: const Duration(milliseconds: 300),
+                          curve: Curves.easeIn);
                     } else {
                       errorText.value = 'Pick a file';
                       showError.value = true;
@@ -110,9 +111,7 @@ class _UploadWidgetState extends State<_UploadWidget> {
                 final result = await FileUtils.pickFile(provider.nftFormat);
                 widget.onFilePicked(result);
               },
-              child: Image.asset(
-                "assets/images/file.png",
-              ),
+              child: Image.asset(kFileIcon),
             ),
           ),
           const VerticalSpace(5),

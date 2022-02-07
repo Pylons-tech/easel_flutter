@@ -91,7 +91,7 @@ class EaselProvider extends ChangeNotifier {
     _fileName = selectedFile.name;
     _fileSize = FileUtils.getFileSizeString(fileLength: _file!.lengthSync());
     _fileExtension = FileUtils.getExtension(_fileName);
-    if (_nftFormat.format == 'image') {
+    if (_nftFormat.format == kImageText) {
       await _calculateDimension(_file!);
     }
     notifyListeners();
