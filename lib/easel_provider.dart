@@ -16,8 +16,7 @@ import 'package:fixnum/fixnum.dart';
 import 'package:flutter/material.dart';
 import 'package:pylons_sdk/pylons_sdk.dart';
 import 'package:pylons_sdk/src/features/models/sdk_ipc_response.dart';
-import 'package:sanitize_html/sanitize_html.dart';
-import 'package:share/share.dart';
+import 'package:share_plus/share_plus.dart';
 import 'package:media_info/media_info.dart';
 
 class EaselProvider extends ChangeNotifier {
@@ -304,7 +303,7 @@ class EaselProvider extends ChangeNotifier {
       cookbookId: _cookbookId ?? '',
       recipeId: _recipeId,
     );
-    Share.share(sanitizeHtml(url), subject: 'My Easel NFT');
+    Share.share("My Easel NFT\n\n$url", subject: 'My Easel NFT');
   }
 
   @override
