@@ -1,7 +1,6 @@
 import 'dart:async';
 import 'dart:developer';
 import 'dart:io';
-import 'dart:ui' as ui;
 
 import 'package:easel_flutter/datasources/local_datasource.dart';
 import 'package:easel_flutter/datasources/remote_datasource.dart';
@@ -19,6 +18,7 @@ import 'package:pylons_sdk/pylons_sdk.dart';
 import 'package:pylons_sdk/src/features/models/sdk_ipc_response.dart';
 import 'package:sanitize_html/sanitize_html.dart';
 import 'package:share/share.dart';
+import 'package:media_info/media_info.dart';
 
 class EaselProvider extends ChangeNotifier {
   final LocalDataSource localDataSource;
@@ -33,6 +33,7 @@ class EaselProvider extends ChangeNotifier {
   String _fileSize = "0";
   int _fileHeight = 0;
   int _fileWidth = 0;
+  int _fileDuration = 0;
   String? _cookbookId;
   String _recipeId = "";
   Denom _selectedDenom = Denom(name: "Pylon", symbol: kPylonSymbol);
@@ -48,6 +49,8 @@ class EaselProvider extends ChangeNotifier {
   String get fileSize => _fileSize;
 
   int get fileHeight => _fileHeight;
+
+  int get fileDuration => _fileDuration;
 
   int get fileWidth => _fileWidth;
 
@@ -69,6 +72,7 @@ class EaselProvider extends ChangeNotifier {
     _fileSize = "0";
     _fileHeight = 0;
     _fileWidth = 0;
+    _fileDuration = 0;
     _recipeId = "";
     _selectedDenom = Denom(name: "Pylon", symbol: kPylonSymbol);
 
@@ -91,25 +95,34 @@ class EaselProvider extends ChangeNotifier {
     _fileName = selectedFile.name;
     _fileSize = FileUtils.getFileSizeString(fileLength: _file!.lengthSync());
     _fileExtension = FileUtils.getExtension(_fileName);
-    if (_nftFormat.format == kImageText) {
-      await _calculateDimension(_file!);
-    }
+    await _getMetadata(_file!);
     notifyListeners();
   }
 
-  /// calculates the width and height of a file
-  /// input [file] and sets [_fileHeight] and [_fileWidth]
-  Future<void> _calculateDimension(File file) async {
-    final image = Image.file(file);
-    Completer<ui.Image> completer = Completer<ui.Image>();
-    image.image
-        .resolve(const ImageConfiguration())
-        .addListener(ImageStreamListener((ImageInfo image, bool _) {
-      completer.complete(image.image);
-    }));
-    ui.Image info = await completer.future;
-    _fileWidth = info.width;
-    _fileHeight = info.height;
+  /// get media attributes (width/height/duration) of the file
+  /// input [file] and sets [_fileHeight], [_fileWidth], and [_fileDuration]
+  Future<void> _getMetadata(File file) async {
+    final MediaInfo _mediaInfo = MediaInfo();
+    final Map<String, dynamic> info;
+    try {
+      info = await _mediaInfo.getMediaInfo(file.path);
+    } on Exception catch (e) {
+      print('error caught: $e');
+      _fileWidth = 0;
+      _fileHeight = 0;
+      _fileDuration = 0;
+      return;
+    }
+    if (_nftFormat.format == kImageText) {
+      _fileWidth = info['width'];
+      _fileHeight = info['height'];
+    } else if (_nftFormat.format == kAudioText) {
+      _fileDuration = info['durationMs'];
+    } else if (_nftFormat.format == kVideoText) {
+      _fileWidth = info['width'];
+      _fileHeight = info['height'];
+      _fileDuration = info['durationMs'];
+    }
   }
 
   void setSelectedDenom(Denom value) {
@@ -228,7 +241,13 @@ class EaselProvider extends ChangeNotifier {
                       lower: Int64(_fileHeight),
                       upper: Int64(_fileHeight),
                       weight: Int64(1))
-                ])
+                ]),
+                LongParam(key: "Duration", weightRanges: [
+                  IntWeightRange(
+                      lower: Int64(_fileDuration),
+                      upper: Int64(_fileDuration),
+                      weight: Int64(1))
+                ]),
               ],
               strings: [
                 StringParam(key: "Name", value: artNameController.text.trim()),
