@@ -19,6 +19,7 @@ import 'package:pylons_sdk/src/features/models/sdk_ipc_response.dart';
 import 'package:sanitize_html/sanitize_html.dart';
 import 'package:share/share.dart';
 import 'package:media_info/media_info.dart';
+import 'package:share_plus/share_plus.dart';
 
 class EaselProvider extends ChangeNotifier {
   final LocalDataSource localDataSource;
