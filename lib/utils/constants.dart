@@ -44,6 +44,7 @@ const kWelcomeToEaselText = "Welcome to Easel";
 const kCreatedByText = "Created by";
 const kDescriptionText = "Description";
 const kSizeText = "Size";
+const kDurationText = "Duration";
 const kDateText = "Date";
 const kRoyaltyText = "Royalty";
 const kPreviewNFTText = "Preview NFT";
