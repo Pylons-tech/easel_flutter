@@ -67,6 +67,8 @@ dependencies:
   media_info: ^0.9.0
 
   video_player: ^2.2.18
+  just_audio: ^0.9.19
+  audio_video_progress_bar: ^0.10.0
 
 # used for bitmap manipulation, needed for svg to png conversion
 #  bitmap: ^0.1.2

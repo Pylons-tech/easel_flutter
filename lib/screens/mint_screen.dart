@@ -3,6 +3,7 @@ import 'package:easel_flutter/utils/constants.dart';
 import 'package:easel_flutter/utils/date_utils.dart';
 import 'package:easel_flutter/utils/easel_app_theme.dart';
 import 'package:easel_flutter/utils/space_utils.dart';
+import 'package:easel_flutter/widgets/audio_widget.dart';
 import 'package:easel_flutter/widgets/background_widget.dart';
 import 'package:easel_flutter/widgets/image_widget.dart';
 import 'package:easel_flutter/widgets/pylons_button.dart';
@@ -31,10 +32,13 @@ class MintScreen extends StatelessWidget {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  if (provider.nftFormat.format == kImageText)
-                    ImageWidget(file: provider.file!),
-                  if (provider.nftFormat.format == kVideoText)
-                    VideoWidget(file: provider.file!),
+                  provider.nftFormat.format == kImageText
+                      ? ImageWidget(file: provider.file!)
+                      : provider.nftFormat.format == kVideoText
+                          ? VideoWidget(file: provider.file!)
+                          : provider.nftFormat.format == kAudioText
+                              ? AudioWidget(file: provider.file!)
+                              : Container(),
                   const SizedBox(height: 10),
                   Padding(
                     padding: const EdgeInsets.symmetric(horizontal: 20),

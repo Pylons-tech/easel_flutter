@@ -3,6 +3,7 @@ import 'package:easel_flutter/utils/constants.dart';
 import 'package:easel_flutter/utils/date_utils.dart';
 import 'package:easel_flutter/utils/easel_app_theme.dart';
 import 'package:easel_flutter/utils/space_utils.dart';
+import 'package:easel_flutter/widgets/audio_widget.dart';
 import 'package:easel_flutter/widgets/background_widget.dart';
 import 'package:easel_flutter/widgets/image_widget.dart';
 import 'package:easel_flutter/widgets/rounded_purple_button_widget.dart';
@@ -60,10 +61,13 @@ class _PublishScreenState extends State<PublishScreen> {
                   children: [
                     Stack(
                       children: [
-                        if (provider.nftFormat.format == kImageText)
-                          ImageWidget(file: provider.file!),
-                        if (provider.nftFormat.format == kVideoText)
-                          VideoWidget(file: provider.file!),
+                        provider.nftFormat.format == kImageText
+                            ? ImageWidget(file: provider.file!)
+                            : provider.nftFormat.format == kVideoText
+                                ? VideoWidget(file: provider.file!)
+                                : provider.nftFormat.format == kAudioText
+                                    ? AudioWidget(file: provider.file!)
+                                    : Container(),
                         Positioned(
                             top: 60,
                             right: 10,
