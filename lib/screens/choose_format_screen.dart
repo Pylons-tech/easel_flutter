@@ -130,7 +130,7 @@ class _CardWidget extends StatelessWidget {
           onTap: onTap,
           child: Container(
               width: screenSize.width(percent: 45),
-              height: screenSize.width(percent: 45),
+              height: screenSize.width(percent: 42),
               padding: const EdgeInsets.all(50),
               decoration: BoxDecoration(
                 color: selected
