@@ -61,13 +61,15 @@ class _PublishScreenState extends State<PublishScreen> {
                   children: [
                     Stack(
                       children: [
-                        provider.nftFormat.format == kImageText
-                            ? ImageWidget(file: provider.file!)
-                            : provider.nftFormat.format == kVideoText
-                                ? VideoWidget(file: provider.file!)
-                                : provider.nftFormat.format == kAudioText
-                                    ? AudioWidget(file: provider.file!)
-                                    : Container(),
+                        if (provider.nftFormat.format == kImageText) ...[
+                          ImageWidget(file: provider.file!)
+                        ],
+                        if (provider.nftFormat.format == kVideoText) ...[
+                          VideoWidget(file: provider.file!)
+                        ],
+                        if (provider.nftFormat.format == kAudioText) ...[
+                          AudioWidget(file: provider.file!)
+                        ],
                         Positioned(
                             top: 60,
                             right: 10,
@@ -140,23 +142,25 @@ class _PublishScreenState extends State<PublishScreen> {
                                       fontSize: 14,
                                     ),
                           ),
-                          if (provider.nftFormat.format != kAudioText)
+                          if (provider.nftFormat.format != kAudioText) ...[
                             Text(
                               "$kSizeText: ${provider.fileWidth} x ${provider.fileHeight}px ${provider.fileExtension.toUpperCase()}",
                               style:
                                   Theme.of(context).textTheme.caption!.copyWith(
                                         fontSize: 14,
                                       ),
-                            ),
+                            )
+                          ],
                           if (provider.nftFormat.format == kVideoText ||
-                              provider.nftFormat.format == kAudioText)
+                              provider.nftFormat.format == kAudioText) ...[
                             Text(
                               "$kDurationText: ${provider.fileDuration / kSecInMillis} sec",
                               style:
                                   Theme.of(context).textTheme.caption!.copyWith(
                                         fontSize: 14,
                                       ),
-                            ),
+                            )
+                          ],
                           Text(
                             "$kDateText: ${getDate()}",
                             style:

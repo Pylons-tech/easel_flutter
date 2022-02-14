@@ -32,13 +32,15 @@ class MintScreen extends StatelessWidget {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  provider.nftFormat.format == kImageText
-                      ? ImageWidget(file: provider.file!)
-                      : provider.nftFormat.format == kVideoText
-                          ? VideoWidget(file: provider.file!)
-                          : provider.nftFormat.format == kAudioText
-                              ? AudioWidget(file: provider.file!)
-                              : Container(),
+                  if (provider.nftFormat.format == kImageText) ...[
+                    ImageWidget(file: provider.file!)
+                  ],
+                  if (provider.nftFormat.format == kVideoText) ...[
+                    VideoWidget(file: provider.file!)
+                  ],
+                  if (provider.nftFormat.format == kAudioText) ...[
+                    AudioWidget(file: provider.file!)
+                  ],
                   const SizedBox(height: 10),
                   Padding(
                     padding: const EdgeInsets.symmetric(horizontal: 20),
@@ -101,23 +103,25 @@ class MintScreen extends StatelessWidget {
                                 fontSize: 14,
                               ),
                         ),
-                        if (provider.nftFormat.format != kAudioText)
+                        if (provider.nftFormat.format != kAudioText) ...[
                           Text(
                             "$kSizeText: ${provider.fileWidth} x ${provider.fileHeight}px ${provider.fileExtension.toUpperCase()}",
                             style:
                                 Theme.of(context).textTheme.caption!.copyWith(
                                       fontSize: 14,
                                     ),
-                          ),
+                          )
+                        ],
                         if (provider.nftFormat.format == kVideoText ||
-                            provider.nftFormat.format == kAudioText)
+                            provider.nftFormat.format == kAudioText) ...[
                           Text(
                             "$kDurationText: ${provider.fileDuration / kSecInMillis} sec",
                             style:
                                 Theme.of(context).textTheme.caption!.copyWith(
                                       fontSize: 14,
                                     ),
-                          ),
+                          )
+                        ],
                         Text(
                           "$kDateText: ${getDate()}",
                           style: Theme.of(context).textTheme.caption!.copyWith(

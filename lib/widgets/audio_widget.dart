@@ -36,8 +36,8 @@ class _AudioWidgetState extends State<AudioWidget> {
   Future<void> _init() async {
     try {
       await _player.setUrl(widget.file.path);
-    } catch (e) {
-      debugPrint('An error occured $e');
+    } catch (audioPrepareException) {
+      debugPrint('An error occured $audioPrepareException');
     }
   }
 
