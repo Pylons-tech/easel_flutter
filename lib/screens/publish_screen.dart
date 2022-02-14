@@ -151,7 +151,7 @@ class _PublishScreenState extends State<PublishScreen> {
                           if (provider.nftFormat.format == kVideoText ||
                               provider.nftFormat.format == kAudioText)
                             Text(
-                              "$kDurationText: ${provider.fileDuration / 1000} sec",
+                              "$kDurationText: ${provider.fileDuration / kSecInMillis} sec",
                               style:
                                   Theme.of(context).textTheme.caption!.copyWith(
                                         fontSize: 14,
