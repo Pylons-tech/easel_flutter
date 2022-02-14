@@ -254,6 +254,7 @@ class EaselProvider extends ChangeNotifier {
                 StringParam(
                     key: "Description",
                     value: descriptionController.text.trim()),
+                StringParam(key: "NFT_Format", value: _nftFormat.format),
                 StringParam(
                     key: "NFT_URL",
                     value:

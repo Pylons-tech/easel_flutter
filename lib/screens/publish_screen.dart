@@ -3,9 +3,11 @@ import 'package:easel_flutter/utils/constants.dart';
 import 'package:easel_flutter/utils/date_utils.dart';
 import 'package:easel_flutter/utils/easel_app_theme.dart';
 import 'package:easel_flutter/utils/space_utils.dart';
+import 'package:easel_flutter/widgets/audio_widget.dart';
 import 'package:easel_flutter/widgets/background_widget.dart';
 import 'package:easel_flutter/widgets/image_widget.dart';
 import 'package:easel_flutter/widgets/rounded_purple_button_widget.dart';
+import 'package:easel_flutter/widgets/video_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -59,9 +61,15 @@ class _PublishScreenState extends State<PublishScreen> {
                   children: [
                     Stack(
                       children: [
-                        provider.file != null
-                            ? ImageWidget(file: provider.file!)
-                            : Container(),
+                        if (provider.nftFormat.format == kImageText) ...[
+                          ImageWidget(file: provider.file!)
+                        ],
+                        if (provider.nftFormat.format == kVideoText) ...[
+                          VideoWidget(file: provider.file!)
+                        ],
+                        if (provider.nftFormat.format == kAudioText) ...[
+                          AudioWidget(file: provider.file!)
+                        ],
                         Positioned(
                             top: 60,
                             right: 10,
@@ -134,13 +142,25 @@ class _PublishScreenState extends State<PublishScreen> {
                                       fontSize: 14,
                                     ),
                           ),
-                          Text(
-                            "$kSizeText: ${provider.fileWidth} x ${provider.fileHeight}px ${provider.fileExtension.toUpperCase()}",
-                            style:
-                                Theme.of(context).textTheme.caption!.copyWith(
-                                      fontSize: 14,
-                                    ),
-                          ),
+                          if (provider.nftFormat.format != kAudioText) ...[
+                            Text(
+                              "$kSizeText: ${provider.fileWidth} x ${provider.fileHeight}px ${provider.fileExtension.toUpperCase()}",
+                              style:
+                                  Theme.of(context).textTheme.caption!.copyWith(
+                                        fontSize: 14,
+                                      ),
+                            )
+                          ],
+                          if (provider.nftFormat.format == kVideoText ||
+                              provider.nftFormat.format == kAudioText) ...[
+                            Text(
+                              "$kDurationText: ${provider.fileDuration / kSecInMillis} sec",
+                              style:
+                                  Theme.of(context).textTheme.caption!.copyWith(
+                                        fontSize: 14,
+                                      ),
+                            )
+                          ],
                           Text(
                             "$kDateText: ${getDate()}",
                             style:
@@ -177,6 +197,4 @@ class _PublishScreenState extends State<PublishScreen> {
       ),
     );
   }
-
-
 }

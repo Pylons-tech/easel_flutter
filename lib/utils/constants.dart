@@ -44,6 +44,7 @@ const kWelcomeToEaselText = "Welcome to Easel";
 const kCreatedByText = "Created by";
 const kDescriptionText = "Description";
 const kSizeText = "Size";
+const kDurationText = "Duration";
 const kDateText = "Date";
 const kRoyaltyText = "Royalty";
 const kPreviewNFTText = "Preview NFT";
@@ -73,6 +74,7 @@ const kMinRoyalty = 0;
 const kMaxRoyalty = 99.99;
 const kFileSizeLimitInGB = 32;
 const kMaxPriceLength = 14;
+const kSecInMillis = 1000;
 
 const kPylonSymbol = "upylon";
 const kUsdSymbol = "ustripeusd";
@@ -80,10 +82,7 @@ const kAtomSymbol = "uphoton";
 const kEuroSymbol = "eeur";
 const kAgoricSymbol = "urun";
 
-
-
 const kErrProfileNotExist = 'profileDoesNotExist';
-
 
 const kWalletIOSId = 'xyz.pylons.wallet';
 const kWalletAndroidId = 'tech.pylons.wallet';
