@@ -10,7 +10,7 @@ class NftFormat {
 
   static List<NftFormat> get supportedFormats => [
         NftFormat(format: kImageText, extensions: ['jpg', 'png', 'svg', 'heif']),
-        NftFormat(format: kVideoText, extensions: ['mp4']),
+        NftFormat(format: kVideoText, extensions: ['mp4', 'mov', 'm4v', 'avi']),
         NftFormat(format: k3dText, extensions: ['gltf', 'glb']),
         NftFormat(format: kAudioText, extensions: ['wav', 'aiff', 'alac', 'flac', 'mp3', 'aac', 'wma', 'ogg']),
       ];
