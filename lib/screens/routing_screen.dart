@@ -32,8 +32,6 @@ class _RoutingScreenState extends State<RoutingScreen> {
   Widget build(BuildContext context) {
     return FocusDetector(
       onFocusGained: () async {
-        print("OnFocusFained again");
-
         final isExist = await PylonsWallet.instance.exists();
         if (isExist) {
           final response = await context.read<EaselProvider>().getProfile();
@@ -51,9 +49,7 @@ class _RoutingScreenState extends State<RoutingScreen> {
         }
       },
       onFocusLost: () {
-        print("OnFocusLost");
         if (!(ModalRoute.of(context)?.isCurrent ?? false)) {
-          print("OnFocusLost closing");
           Navigator.of(context).pop();
         }
       },
@@ -84,7 +80,7 @@ class _RoutingScreenState extends State<RoutingScreen> {
   }
 
   void showAppNotInstalledDialog() {
-     MessageDialog().show(kPylonsAppNotInstalledText,
+    MessageDialog().show(kPylonsAppNotInstalledText,
         button: TextButton(
             onPressed: () {
               PylonsWallet.instance.goToInstall();
@@ -96,7 +92,7 @@ class _RoutingScreenState extends State<RoutingScreen> {
   }
 
   void showCreateAnAccountDialog(SDKIPCResponse<dynamic> response) {
-     MessageDialog().show(response.error,
+    MessageDialog().show(response.error,
         button: TextButton(
             onPressed: () {
               PylonsWallet.instance.goToPylons();
@@ -108,7 +104,7 @@ class _RoutingScreenState extends State<RoutingScreen> {
   }
 
   void showUserNameDialog(SDKIPCResponse<dynamic> response) {
-      MessageDialog().show("$kWelcomeToEaselText, ${response.data["username"]}",
+    MessageDialog().show("$kWelcomeToEaselText, ${response.data["username"]}",
         button: TextButton(
             onPressed: () {
               navigatorKey.currentState!.pushReplacement(
