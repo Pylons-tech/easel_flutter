@@ -23,6 +23,8 @@ class RoutingScreen extends StatefulWidget {
 class _RoutingScreenState extends State<RoutingScreen> {
   ValueNotifier<String> username = ValueNotifier("");
 
+  RoutingScreenState routingScreenState = RoutingScreenState.initial;
+
   @override
   void dispose() {
     super.dispose();
@@ -31,25 +33,11 @@ class _RoutingScreenState extends State<RoutingScreen> {
   @override
   Widget build(BuildContext context) {
     return FocusDetector(
-      onFocusGained: () async {
-        final isExist = await PylonsWallet.instance.exists();
-        if (isExist) {
-          final response = await context.read<EaselProvider>().getProfile();
-          if (response.success) {
-            username.value = response.data["username"] ?? "";
-
-            showUserNameDialog(response);
-          } else if (response.errorCode == kErrProfileNotExist) {
-            showCreateAnAccountDialog(response);
-          } else {
-            MessageDialog().show("$kProfileErrorOccurredText: ${response.error}");
-          }
-        } else {
-          showAppNotInstalledDialog();
-        }
+      onFocusGained: () {
+        checkConfigurations();
       },
       onFocusLost: () {
-        if (!(ModalRoute.of(context)?.isCurrent ?? false)) {
+        if (!(ModalRoute.of(context)?.isCurrent ?? false) && routingScreenState != RoutingScreenState.userNameShown) {
           Navigator.of(context).pop();
         }
       },
@@ -103,10 +91,12 @@ class _RoutingScreenState extends State<RoutingScreen> {
             )));
   }
 
-  void showUserNameDialog(SDKIPCResponse<dynamic> response) {
-    MessageDialog().show("$kWelcomeToEaselText, ${response.data["username"]}",
+  void showUserNameDialog() {
+    MessageDialog().show("$kWelcomeToEaselText, ${username.value}",
         button: TextButton(
             onPressed: () {
+              Navigator.of(context).pop();
+
               navigatorKey.currentState!.pushReplacement(
                 MaterialPageRoute(
                   builder: (_) => const HomeScreen(),
@@ -115,4 +105,41 @@ class _RoutingScreenState extends State<RoutingScreen> {
             },
             child: const Text(kOkText)));
   }
+
+  void checkConfigurations() async {
+    switch (routingScreenState) {
+      case RoutingScreenState.initial:
+
+        final isExist = await PylonsWallet.instance.exists();
+
+        if (isExist) {
+          checkConfigurations();
+          routingScreenState = RoutingScreenState.appInstalled;
+          return;
+        }
+
+        showAppNotInstalledDialog();
+
+        break;
+      case RoutingScreenState.appInstalled:
+        final response = await context.read<EaselProvider>().getProfile();
+
+        if (response.success) {
+          username.value = response.data["username"] ?? "";
+          routingScreenState = RoutingScreenState.userNameShown;
+          checkConfigurations();
+          return;
+        } else if (response.errorCode == kErrProfileNotExist) {
+          showCreateAnAccountDialog(response);
+        } else {
+          MessageDialog().show("$kProfileErrorOccurredText: ${response.error}");
+        }
+        break;
+      case RoutingScreenState.userNameShown:
+        showUserNameDialog();
+        break;
+    }
+  }
 }
+
+enum RoutingScreenState { initial, appInstalled, userNameShown }
