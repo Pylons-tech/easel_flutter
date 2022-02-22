@@ -10,6 +10,7 @@ import 'package:easel_flutter/utils/screen_size_util.dart';
 import 'package:easel_flutter/utils/space_utils.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:pylons_sdk/pylons_sdk.dart';
 import 'package:steps_indicator/steps_indicator.dart';
 
 class HomeScreen extends StatefulWidget {
@@ -90,18 +91,43 @@ class _HomeScreenState extends State<HomeScreen> {
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      Padding(
-                        padding: const EdgeInsets.only(left: 10.0),
-                        child: IconButton(
-                            onPressed: () {
-                              _pageController.previousPage(
-                                  duration: const Duration(milliseconds: 300),
-                                  curve: Curves.easeIn);
-                            },
-                            icon: const Icon(
-                              Icons.arrow_back_ios,
-                              color: EaselAppTheme.kGrey,
-                            )),
+                      ValueListenableBuilder(
+                        valueListenable: _currentPage,
+                        builder: (_, int currentPage, __) =>
+                            _currentPage.value == _numPages - 1
+                                ? Consumer<EaselProvider>(
+                                    builder: (_, provider, __) => TextButton(
+                                      onPressed: () {
+                                        provider.initStore();
+                                        _pageController.jumpToPage(
+                                            _pageController.initialPage);
+                                      },
+                                      child: Text(
+                                        kMintMoreText,
+                                        style: Theme.of(context)
+                                            .textTheme
+                                            .bodyText1!
+                                            .copyWith(
+                                                fontSize: 20,
+                                                color: EaselAppTheme.kBlue,
+                                                fontWeight: FontWeight.w400),
+                                      ),
+                                    ),
+                                  )
+                                : Padding(
+                                    padding: const EdgeInsets.only(left: 10.0),
+                                    child: IconButton(
+                                        onPressed: () {
+                                          _pageController.previousPage(
+                                              duration: const Duration(
+                                                  milliseconds: 300),
+                                              curve: Curves.easeIn);
+                                        },
+                                        icon: const Icon(
+                                          Icons.arrow_back_ios,
+                                          color: EaselAppTheme.kGrey,
+                                        )),
+                                  ),
                       ),
                       ValueListenableBuilder(
                         valueListenable: _currentPage,
@@ -126,8 +152,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                     builder: (_, provider, __) =>
                                         TextButton.icon(
                                       onPressed: () {
-                                        provider.initStore();
-                                        _pageController.jumpToPage(_pageController.initialPage);
+                                        PylonsWallet.instance.goToPylons();
                                       },
                                       label: const Icon(
                                         Icons.arrow_forward_ios,
@@ -135,7 +160,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                         size: 18,
                                       ),
                                       icon: Text(
-                                        kMintMoreText,
+                                        kGoToWalletText,
                                         style: Theme.of(context)
                                             .textTheme
                                             .bodyText1!
