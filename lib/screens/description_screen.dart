@@ -31,6 +31,14 @@ class _DescriptionScreenState extends State<DescriptionScreen> {
   }
 
   @override
+  void initState() {
+    super.initState();
+    context.read<EaselProvider>().artistNameController.text = context.read<EaselProvider>().currentUsername;
+  }
+
+
+
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
       body: Stack(

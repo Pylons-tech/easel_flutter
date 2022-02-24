@@ -279,7 +279,7 @@ class EaselProvider extends ChangeNotifier {
         extraInfo: "extraInfo");
 
     log("${recipe.toProto3Json()}");
-    var response = await PylonsWallet.instance.txCreateRecipe(recipe);
+    var response = await PylonsWallet.instance.txCreateRecipe(recipe, requestResponse: false);
 
     log('From App $response');
 
