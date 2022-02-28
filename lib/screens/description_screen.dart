@@ -14,8 +14,7 @@ import 'package:provider/provider.dart';
 class DescriptionScreen extends StatefulWidget {
   final PageController controller;
 
-  const DescriptionScreen({Key? key, required this.controller})
-      : super(key: key);
+  const DescriptionScreen({Key? key, required this.controller}) : super(key: key);
 
   @override
   State<DescriptionScreen> createState() => _DescriptionScreenState();
@@ -33,10 +32,9 @@ class _DescriptionScreenState extends State<DescriptionScreen> {
   @override
   void initState() {
     super.initState();
+
     context.read<EaselProvider>().artistNameController.text = context.read<EaselProvider>().currentUsername;
   }
-
-
 
   @override
   Widget build(BuildContext context) {
@@ -51,8 +49,8 @@ class _DescriptionScreenState extends State<DescriptionScreen> {
           SingleChildScrollView(
             child: Padding(
               padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
-              child: Consumer<EaselProvider>(
-                builder: (_, provider, __) => Form(
+              child: Consumer<EaselProvider>(builder: (_, provider, __) {
+                return Form(
                   key: _formKey,
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
@@ -87,9 +85,7 @@ class _DescriptionScreenState extends State<DescriptionScreen> {
                         noOfLines: 4,
                         controller: provider.descriptionController,
                         textCapitalization: TextCapitalization.sentences,
-                        inputFormatters: [
-                          LengthLimitingTextInputFormatter(kMaxDescription)
-                        ],
+                        inputFormatters: [LengthLimitingTextInputFormatter(kMaxDescription)],
                         validator: (value) {
                           if (value!.isEmpty) {
                             return kEnterNFTDescriptionText;
@@ -103,19 +99,18 @@ class _DescriptionScreenState extends State<DescriptionScreen> {
                       const VerticalSpace(4),
                       Text(
                         "$kMaxDescription $kCharacterLimitText",
-                        style: Theme.of(context).textTheme.subtitle2!.copyWith(
-                            color: EaselAppTheme.kGrey,
-                            fontWeight: FontWeight.w600),
+                        style: Theme.of(context).textTheme.subtitle2!.copyWith(color: EaselAppTheme.kGrey, fontWeight: FontWeight.w600),
                       ),
                       const VerticalSpace(20),
                       EaselTextField(
+                        key: ValueKey("${provider.selectedDenom.name}-amount" ),
                         title: kPriceText,
                         keyboardType: TextInputType.number,
                         inputFormatters: [
                           FilteringTextInputFormatter.digitsOnly,
                           LengthLimitingTextInputFormatter(kMaxPriceLength),
-                          AmountFormatter(
-                              maxDigits: kMaxPriceLength, isDecimal: true)
+                          provider.selectedDenom.getFormatter()
+
                         ],
                         controller: provider.priceController,
                         suffix: const _CurrencyDropDown(),
@@ -124,14 +119,14 @@ class _DescriptionScreenState extends State<DescriptionScreen> {
                             return kEnterPriceText;
                           }
 
-                          if (double.parse(value.replaceAll(",", "")) <
-                              kMinValue) return "$kMinIsText $kMinValue";
+                          if (double.parse(value.replaceAll(",", "")) < kMinValue) return "$kMinIsText $kMinValue";
 
                           return null;
                         },
                       ),
                       const VerticalSpace(20),
                       EaselTextField(
+                        key: ValueKey(provider.selectedDenom.name),
                         title: "$kNoOfEditionText ($kMaxText: $kMaxEdition)",
                         keyboardType: TextInputType.number,
                         inputFormatters: [
@@ -146,12 +141,10 @@ class _DescriptionScreenState extends State<DescriptionScreen> {
                           if (value!.isEmpty) {
                             return kEnterEditionText;
                           }
-                          if (int.parse(value.replaceAll(",", "")) <
-                              kMinValue) {
+                          if (int.parse(value.replaceAll(",", "")) < kMinValue) {
                             return "$kMinIsText $kMinValue";
                           }
-                          if (int.parse(value.replaceAll(",", "")) >
-                              kMaxEdition) {
+                          if (int.parse(value.replaceAll(",", "")) > kMaxEdition) {
                             return "$kMaxIsTextText $kMaxEdition";
                           }
 
@@ -184,26 +177,22 @@ class _DescriptionScreenState extends State<DescriptionScreen> {
                       const VerticalSpace(4),
                       Text(
                         "$kRoyaltyNoteText “$kMinRoyalty”",
-                        style: Theme.of(context).textTheme.subtitle2!.copyWith(
-                            color: EaselAppTheme.kGrey,
-                            fontWeight: FontWeight.w600),
+                        style: Theme.of(context).textTheme.subtitle2!.copyWith(color: EaselAppTheme.kGrey, fontWeight: FontWeight.w600),
                       ),
                       const VerticalSpace(20),
                       Align(
                         child: PylonsRoundButton(onPressed: () {
                           FocusScope.of(context).unfocus();
                           if (_formKey.currentState!.validate()) {
-                            widget.controller.nextPage(
-                                duration: const Duration(milliseconds: 300),
-                                curve: Curves.easeIn);
+                            widget.controller.nextPage(duration: const Duration(milliseconds: 300), curve: Curves.easeIn);
                           }
                         }),
                       ),
                       const VerticalSpace(20),
                     ],
                   ),
-                ),
-              ),
+                );
+              }),
             ),
           ),
         ],
@@ -220,22 +209,19 @@ class _CurrencyDropDown extends StatelessWidget {
     return Consumer<EaselProvider>(
       builder: (_, provider, __) => DropdownButton<String>(
         value: provider.selectedDenom.symbol,
-        icon: const Icon(Icons.keyboard_arrow_down,
-            size: 16, color: EaselAppTheme.kBlue),
+        icon: const Icon(Icons.keyboard_arrow_down, size: 16, color: EaselAppTheme.kBlue),
         iconSize: 30,
         elevation: 16,
         underline: const SizedBox(),
         focusColor: EaselAppTheme.kBlue,
         dropdownColor: EaselAppTheme.kWhite,
-        style: const TextStyle(
-            color: EaselAppTheme.kBlack,
-            fontSize: 16,
-            fontWeight: FontWeight.w500),
+        style: const TextStyle(color: EaselAppTheme.kBlack, fontSize: 16, fontWeight: FontWeight.w500),
         onChanged: (String? data) {
           if (data != null) {
-            final value = Denom.availableDenoms
-                .firstWhere((denom) => denom.symbol == data);
+            final value = Denom.availableDenoms.firstWhere((denom) => denom.symbol == data);
+            provider.priceController.clear();
             provider.setSelectedDenom(value);
+
           }
         },
         items: Denom.availableDenoms.map((Denom value) {

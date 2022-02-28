@@ -51,9 +51,11 @@ class _UploadScreenState extends State<UploadScreen> {
                   }),
                   PylonsRoundButton(onPressed: () {
                     if (provider.file != null) {
+                      context.read<EaselProvider>().priceController.clear();
                       widget.controller.nextPage(
                           duration: const Duration(milliseconds: 300),
                           curve: Curves.easeIn);
+
                     } else {
                       errorText.value = 'Pick a file';
                       showError.value = true;
