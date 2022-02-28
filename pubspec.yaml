@@ -49,7 +49,7 @@ dependencies:
 
   provider: ^6.0.1
 
-  pylons_sdk: ^0.0.8
+  pylons_sdk: ^0.0.7
 
   google_fonts: ^2.1.0
 
