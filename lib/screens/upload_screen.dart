@@ -55,7 +55,6 @@ class _UploadScreenState extends State<UploadScreen> {
                       widget.controller.nextPage(
                           duration: const Duration(milliseconds: 300),
                           curve: Curves.easeIn);
-
                     } else {
                       errorText.value = 'Pick a file';
                       showError.value = true;
@@ -111,7 +110,13 @@ class _UploadWidgetState extends State<_UploadWidget> {
             child: GestureDetector(
               onTap: () async {
                 final result = await FileUtils.pickFile(provider.nftFormat);
-                widget.onFilePicked(result);
+                if (result == null) {
+                  ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+                    content: Text("Unsupported format."),
+                  ));
+                } else {
+                  widget.onFilePicked(result);
+                }
               },
               child: Image.asset(kFileIcon),
             ),

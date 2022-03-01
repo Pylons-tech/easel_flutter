@@ -13,5 +13,5 @@ class NftFormat {
         NftFormat(format: kVideoText, extensions: ['mp4', 'mov', 'm4v', 'avi']),
         NftFormat(format: k3dText, extensions: ['gltf', 'glb']),
         NftFormat(format: kAudioText, extensions: ['wav', 'aiff', 'alac', 'flac', 'mp3', 'aac', 'wma', 'ogg']),
-      ];
+  ];
 }

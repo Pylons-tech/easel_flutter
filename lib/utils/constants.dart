@@ -48,6 +48,7 @@ const kDurationText = "Duration";
 const kDateText = "Date";
 const kRoyaltyText = "Royalty";
 const kPreviewNFTText = "Preview NFT";
+const kPreview3dModelText = "Click here to preview\nyour selected 3D Model";
 const kMintMoreText = "Mint More";
 const kGoToWalletText = "Go to Wallet";
 const kChooseNFTFormatText = "Choose your NFT format";
