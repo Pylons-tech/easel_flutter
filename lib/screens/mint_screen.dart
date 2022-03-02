@@ -1,4 +1,5 @@
 import 'package:easel_flutter/easel_provider.dart';
+import 'package:easel_flutter/screens/model_viewer_screen.dart';
 import 'package:easel_flutter/utils/constants.dart';
 import 'package:easel_flutter/utils/date_utils.dart';
 import 'package:easel_flutter/utils/easel_app_theme.dart';
@@ -37,6 +38,30 @@ class MintScreen extends StatelessWidget {
                   ],
                   if (provider.nftFormat.format == kVideoText) ...[
                     VideoWidget(file: provider.file!)
+                  ],
+                  if (provider.nftFormat.format == k3dText) ...[
+                    Center(
+                        child: TextButton(
+                          onPressed: () {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) =>
+                                      ModelViewerScreen(file: provider.file!)),
+                            );
+                          },
+                          child: Text(
+                            kPreview3dModelText,
+                            textAlign: TextAlign.center,
+                            style: Theme.of(context)
+                                .textTheme
+                                .bodyText1!
+                                .copyWith(
+                                    fontSize: 16,
+                                    color: EaselAppTheme.kBlue,
+                                    fontWeight: FontWeight.w400),
+                          ),
+                        )),
                   ],
                   if (provider.nftFormat.format == kAudioText) ...[
                     AudioWidget(file: provider.file!)
