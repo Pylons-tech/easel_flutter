@@ -14,6 +14,8 @@ class Denom {
         Denom(name: "Atom", symbol: kAtomSymbol),
         Denom(name: "EEur", symbol: kEuroSymbol),
         Denom(name: "Agoric", symbol: kAgoricSymbol),
+        Denom(name: "Juno", symbol: kJunoSymbol),
+        Denom(name: "Luna", symbol: kLunaSymbol),
       ];
 
   TextInputFormatter getFormatter() {

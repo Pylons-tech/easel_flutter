@@ -125,7 +125,7 @@ class _RoutingScreenState extends State<RoutingScreen> {
         final response = await context.read<EaselProvider>().getProfile();
 
         if (response.success) {
-          username.value = response.data["username"] ?? "";
+          username.value = response.data.username ;
           routingScreenState = RoutingScreenState.userNameShown;
           checkConfigurations();
           return;
