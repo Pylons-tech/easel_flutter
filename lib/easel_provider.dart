@@ -287,7 +287,7 @@ class EaselProvider extends ChangeNotifier {
     super.dispose();
   }
 
-  Future<SDKIPCResponse> getProfile() async {
+  Future<SDKIPCResponse<Profile>> getProfile() async {
     var sdkResponse = await PylonsWallet.instance.getProfile();
 
     if (sdkResponse.success) {

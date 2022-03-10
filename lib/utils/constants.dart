@@ -83,6 +83,9 @@ const kUsdSymbol = "ustripeusd";
 const kAtomSymbol = "uphoton";
 const kEuroSymbol = "eeur";
 const kAgoricSymbol = "urun";
+const kJunoSymbol = "ujunox";
+const kLunaSymbol = "uluna";
+
 
 const kErrProfileNotExist = 'profileDoesNotExist';
 
