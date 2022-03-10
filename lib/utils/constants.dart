@@ -92,3 +92,5 @@ const kWalletIOSId = 'xyz.pylons.wallet';
 const kWalletAndroidId = 'tech.pylons.wallet';
 const kWalletWebLink = 'https://wallet.pylons.tech';
 const kWalletDynamicLink = 'pylons.page.link';
+
+const kStripeAccountDoesntExists = 'Kindly register Stripe account in wallet';

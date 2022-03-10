@@ -36,6 +36,7 @@ class EaselProvider extends ChangeNotifier {
   int _fileDuration = 0;
   String? _cookbookId;
   String _recipeId = "";
+  var stripeAccountExists = false;
   Denom _selectedDenom = Denom(name: "Pylon", symbol: kPylonSymbol);
 
   File? get file => _file;
@@ -149,14 +150,17 @@ class EaselProvider extends ChangeNotifier {
       return true;
     }
 
-    ScaffoldMessenger.of(navigatorKey.currentState!.overlay!.context)
-        .showSnackBar(SnackBar(content: Text(response.error)));
+    ScaffoldMessenger.of(navigatorKey.currentState!.overlay!.context).showSnackBar(SnackBar(content: Text(response.error)));
     return false;
   }
 
   /// sends a createRecipe Tx message to the wallet
   /// return true or false depending on the response from the wallet app
   Future<bool> createRecipe() async {
+    if (!shouldMintUSDOrNot()) {
+      return false;
+    }
+
     // get device cookbook id
     _cookbookId = localDataSource.getCookbookId();
     String savedUserName = localDataSource.getCookBookGeneratorUsername();
@@ -175,25 +179,17 @@ class EaselProvider extends ChangeNotifier {
 
     _recipeId = localDataSource.autoGenerateEaselId();
 
-    final loading =
-        Loading().showLoading(message: "Uploading ${_nftFormat.format}...");
+    final loading = Loading().showLoading(message: "Uploading ${_nftFormat.format}...");
     final uploadResponse = await remoteDataSource.uploadFile(_file!);
     loading.dismiss();
     if (uploadResponse.status == Status.error) {
-      ScaffoldMessenger.of(navigatorKey.currentState!.overlay!.context)
-          .showSnackBar(SnackBar(
-              content: Text(
-                  uploadResponse.errorMessage ?? "Upload error occurred")));
+      ScaffoldMessenger.of(navigatorKey.currentState!.overlay!.context).showSnackBar(SnackBar(content: Text(uploadResponse.errorMessage ?? "Upload error occurred")));
       return false;
     }
 
-    String residual = DecString.decStringFromDouble(
-        double.parse(royaltyController.text.trim()));
+    String residual = DecString.decStringFromDouble(double.parse(royaltyController.text.trim()));
 
-    String price =
-        (double.parse(priceController.text.replaceAll(",", "").trim()) *
-                1000000)
-            .toStringAsFixed(0);
+    String price = (double.parse(priceController.text.replaceAll(",", "").trim()) * 1000000).toStringAsFixed(0);
     var recipe = Recipe(
         cookbookID: _cookbookId,
         iD: _recipeId,
@@ -221,55 +217,26 @@ class EaselProvider extends ChangeNotifier {
               longs: [
                 LongParam(key: "Quantity", weightRanges: [
                   IntWeightRange(
-                      lower: Int64(int.parse(noOfEditionController.text
-                          .replaceAll(",", "")
-                          .trim())),
-                      upper: Int64(int.parse(noOfEditionController.text
-                          .replaceAll(",", "")
-                          .trim())),
-                      weight: Int64(1))
+                      lower: Int64(int.parse(noOfEditionController.text.replaceAll(",", "").trim())), upper: Int64(int.parse(noOfEditionController.text.replaceAll(",", "").trim())), weight: Int64(1))
                 ]),
-                LongParam(key: "Width", weightRanges: [
-                  IntWeightRange(
-                      lower: Int64(_fileWidth),
-                      upper: Int64(_fileWidth),
-                      weight: Int64(1))
-                ]),
-                LongParam(key: "Height", weightRanges: [
-                  IntWeightRange(
-                      lower: Int64(_fileHeight),
-                      upper: Int64(_fileHeight),
-                      weight: Int64(1))
-                ]),
-                LongParam(key: "Duration", weightRanges: [
-                  IntWeightRange(
-                      lower: Int64(_fileDuration),
-                      upper: Int64(_fileDuration),
-                      weight: Int64(1))
-                ]),
+                LongParam(key: "Width", weightRanges: [IntWeightRange(lower: Int64(_fileWidth), upper: Int64(_fileWidth), weight: Int64(1))]),
+                LongParam(key: "Height", weightRanges: [IntWeightRange(lower: Int64(_fileHeight), upper: Int64(_fileHeight), weight: Int64(1))]),
+                LongParam(key: "Duration", weightRanges: [IntWeightRange(lower: Int64(_fileDuration), upper: Int64(_fileDuration), weight: Int64(1))]),
               ],
               strings: [
                 StringParam(key: "Name", value: artNameController.text.trim()),
                 StringParam(key: "App_Type", value: "Easel"),
-                StringParam(
-                    key: "Description",
-                    value: descriptionController.text.trim()),
+                StringParam(key: "Description", value: descriptionController.text.trim()),
                 StringParam(key: "NFT_Format", value: _nftFormat.format),
-                StringParam(
-                    key: "NFT_URL",
-                    value:
-                        "$ipfsDomain/${uploadResponse.data?.value?.cid ?? ""}"),
-                StringParam(
-                    key: "Creator", value: artistNameController.text.trim()),
+                StringParam(key: "NFT_URL", value: "$ipfsDomain/${uploadResponse.data?.value?.cid ?? ""}"),
+                StringParam(key: "Creator", value: artistNameController.text.trim()),
               ],
               mutableStrings: [],
               transferFee: [Coin(denom: kPylonSymbol, amount: "1")],
-              tradePercentage: DecString.decStringFromDouble(
-                  double.parse(royaltyController.text.trim())),
+              tradePercentage: DecString.decStringFromDouble(double.parse(royaltyController.text.trim())),
               tradeable: true,
               amountMinted: Int64(0),
-              quantity: Int64(int.parse(
-                  noOfEditionController.text.replaceAll(",", "").trim()))),
+              quantity: Int64(int.parse(noOfEditionController.text.replaceAll(",", "").trim()))),
         ], itemModifyOutputs: []),
         outputs: [
           WeightedOutputs(entryIDs: ["Easel_NFT"], weight: Int64(1))
@@ -284,20 +251,16 @@ class EaselProvider extends ChangeNotifier {
     log('From App $response');
 
     if (response.success) {
-      ScaffoldMessenger.of(navigatorKey.currentState!.overlay!.context)
-          .showSnackBar(const SnackBar(content: Text("Recipe created")));
+      ScaffoldMessenger.of(navigatorKey.currentState!.overlay!.context).showSnackBar(const SnackBar(content: Text("Recipe created")));
       log("${response.data}");
       return true;
     } else {
-      ScaffoldMessenger.of(navigatorKey.currentState!.overlay!.context)
-          .showSnackBar(
-              SnackBar(content: Text("Recipe error : ${response.error}")));
+      ScaffoldMessenger.of(navigatorKey.currentState!.overlay!.context).showSnackBar(SnackBar(content: Text("Recipe error : ${response.error}")));
       return false;
     }
   }
 
-  bool isDifferentUserName(String savedUserName) =>
-      (currentUsername.isNotEmpty && savedUserName != currentUsername);
+  bool isDifferentUserName(String savedUserName) => (currentUsername.isNotEmpty && savedUserName != currentUsername);
 
   Future<void> shareNFT() async {
     String url = FileUtils.generateEaselLink(
@@ -322,8 +285,19 @@ class EaselProvider extends ChangeNotifier {
 
     if (sdkResponse.success) {
       currentUsername = sdkResponse.data.username;
+      stripeAccountExists = sdkResponse.data.stripeExists;
     }
 
     return sdkResponse;
+  }
+
+  bool shouldMintUSDOrNot() {
+    if (stripeAccountExists) {
+      return true;
+    }
+
+    ScaffoldMessenger.of(navigatorKey.currentState!.overlay!.context).showSnackBar(const SnackBar(content: Text(kStripeAccountDoesntExists)));
+
+    return false;
   }
 }
