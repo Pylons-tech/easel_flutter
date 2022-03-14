@@ -291,8 +291,14 @@ class EaselProvider extends ChangeNotifier {
     return sdkResponse;
   }
 
+
+  /// false || true (Stripe account doesn't exists and selected Denom is not USD) return true
+  /// true  || false (Stripe account exists and selected denom is not USD ) returns true
+  /// false || false (Stripe account doesnt exists and selected denom is USD) return false
+  /// false || true (Stripe account doesnt exists and selected denom is not  USD) return true
+
   bool shouldMintUSDOrNot() {
-    if (stripeAccountExists) {
+    if (stripeAccountExists || _selectedDenom.symbol != kUsdSymbol) {
       return true;
     }
 

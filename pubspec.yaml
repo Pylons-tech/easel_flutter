@@ -15,7 +15,7 @@ publish_to: 'none' # Remove this line if you wish to publish to pub.dev
 # In iOS, build-name is used as CFBundleShortVersionString while build-number used as CFBundleVersion.
 # Read more about iOS versioning at
 # https://developer.apple.com/library/archive/documentation/General/Reference/InfoPlistKeyReference/Articles/CoreFoundationKeys.html
-version: 1.0.1+25
+version: 1.0.1+26
 
 environment:
   sdk: ">=2.12.0 <3.0.0"
@@ -69,7 +69,7 @@ dependencies:
   video_player: ^2.2.18
   just_audio: ^0.9.19
   audio_video_progress_bar: ^0.10.0
-  model_viewer: ^0.8.1
+  model_viewer_plus: 1.1.2
 
 # used for bitmap manipulation, needed for svg to png conversion
 #  bitmap: ^0.1.2

@@ -7,6 +7,7 @@ import 'package:easel_flutter/utils/space_utils.dart';
 import 'package:easel_flutter/widgets/audio_widget.dart';
 import 'package:easel_flutter/widgets/background_widget.dart';
 import 'package:easel_flutter/widgets/image_widget.dart';
+import 'package:easel_flutter/widgets/model_viewer.dart';
 import 'package:easel_flutter/widgets/pylons_button.dart';
 import 'package:easel_flutter/widgets/video_widget.dart';
 import 'package:flutter/material.dart';
@@ -31,41 +32,18 @@ class MintScreen extends StatelessWidget {
           Consumer<EaselProvider>(
             builder: (_, provider, __) => SingleChildScrollView(
               child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
+                crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: [
-                  if (provider.nftFormat.format == kImageText) ...[
-                    ImageWidget(file: provider.file!)
-                  ],
-                  if (provider.nftFormat.format == kVideoText) ...[
-                    VideoWidget(file: provider.file!)
-                  ],
+                  if (provider.nftFormat.format == kImageText) ...[ImageWidget(file: provider.file!)],
+                  if (provider.nftFormat.format == kVideoText) ...[VideoWidget(file: provider.file!)],
                   if (provider.nftFormat.format == k3dText) ...[
-                    Center(
-                        child: TextButton(
-                          onPressed: () {
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                  builder: (context) =>
-                                      ModelViewerScreen(file: provider.file!)),
-                            );
-                          },
-                          child: Text(
-                            kPreview3dModelText,
-                            textAlign: TextAlign.center,
-                            style: Theme.of(context)
-                                .textTheme
-                                .bodyText1!
-                                .copyWith(
-                                    fontSize: 16,
-                                    color: EaselAppTheme.kBlue,
-                                    fontWeight: FontWeight.w400),
-                          ),
-                        )),
+                    SizedBox(
+                        height: MediaQuery.of(context).size.height * 0.3,
+                        child: ModalViewer(
+                          file: provider.file!,
+                        ))
                   ],
-                  if (provider.nftFormat.format == kAudioText) ...[
-                    AudioWidget(file: provider.file!)
-                  ],
+                  if (provider.nftFormat.format == kAudioText) ...[AudioWidget(file: provider.file!)],
                   const SizedBox(height: 10),
                   Padding(
                     padding: const EdgeInsets.symmetric(horizontal: 20),
@@ -74,11 +52,10 @@ class MintScreen extends StatelessWidget {
                       children: [
                         Text(
                           provider.artNameController.text,
-                          style:
-                              Theme.of(context).textTheme.headline5!.copyWith(
-                                    color: EaselAppTheme.kDarkText,
-                                    fontWeight: FontWeight.w600,
-                                  ),
+                          style: Theme.of(context).textTheme.headline5!.copyWith(
+                                color: EaselAppTheme.kDarkText,
+                                fontWeight: FontWeight.w600,
+                              ),
                         ),
                         const VerticalSpace(
                           4,
@@ -87,19 +64,11 @@ class MintScreen extends StatelessWidget {
                           text: TextSpan(
                               text: "$kCreatedByText ",
                               style: GoogleFonts.inter(
-                                  textStyle: Theme.of(context)
-                                      .textTheme
-                                      .bodyText2!
-                                      .copyWith(
+                                  textStyle: Theme.of(context).textTheme.bodyText2!.copyWith(
                                         fontSize: 20,
                                         color: EaselAppTheme.kDarkText,
                                       )),
-                              children: [
-                                TextSpan(
-                                    text: provider.artistNameController.text,
-                                    style: const TextStyle(
-                                        color: EaselAppTheme.kBlue))
-                              ]),
+                              children: [TextSpan(text: provider.artistNameController.text, style: const TextStyle(color: EaselAppTheme.kBlue))]),
                         ),
                         const Divider(
                           height: 40,
@@ -107,17 +76,13 @@ class MintScreen extends StatelessWidget {
                         ),
                         Text(
                           kDescriptionText,
-                          style:
-                              Theme.of(context).textTheme.bodyText2!.copyWith(
-                                    fontSize: 18,
-                                  ),
+                          style: Theme.of(context).textTheme.bodyText2!.copyWith(
+                                fontSize: 18,
+                              ),
                         ),
                         Text(
                           provider.descriptionController.text,
-                          style: Theme.of(context).textTheme.caption!.copyWith(
-                              fontSize: 14,
-                              color: EaselAppTheme.kLightText,
-                              fontWeight: FontWeight.w300),
+                          style: Theme.of(context).textTheme.caption!.copyWith(fontSize: 14, color: EaselAppTheme.kLightText, fontWeight: FontWeight.w300),
                         ),
                         const VerticalSpace(
                           10,
@@ -131,20 +96,17 @@ class MintScreen extends StatelessWidget {
                         if (provider.nftFormat.format != kAudioText) ...[
                           Text(
                             "$kSizeText: ${provider.fileWidth} x ${provider.fileHeight}px ${provider.fileExtension.toUpperCase()}",
-                            style:
-                                Theme.of(context).textTheme.caption!.copyWith(
-                                      fontSize: 14,
-                                    ),
+                            style: Theme.of(context).textTheme.caption!.copyWith(
+                                  fontSize: 14,
+                                ),
                           )
                         ],
-                        if (provider.nftFormat.format == kVideoText ||
-                            provider.nftFormat.format == kAudioText) ...[
+                        if (provider.nftFormat.format == kVideoText || provider.nftFormat.format == kAudioText) ...[
                           Text(
                             "$kDurationText: ${provider.fileDuration / kSecInMillis} sec",
-                            style:
-                                Theme.of(context).textTheme.caption!.copyWith(
-                                      fontSize: 14,
-                                    ),
+                            style: Theme.of(context).textTheme.caption!.copyWith(
+                                  fontSize: 14,
+                                ),
                           )
                         ],
                         Text(
@@ -173,17 +135,14 @@ class MintScreen extends StatelessWidget {
                         ),
                         Align(
                           child: PylonsButton(onPressed: () async {
-                            bool isRecipeCreated =
-                                await provider.createRecipe();
+                            bool isRecipeCreated = await provider.createRecipe();
                             // log("Recipe created: $isRecipeCreated");
 
                             if (!isRecipeCreated) {
                               return;
                             }
 
-                            controller.nextPage(
-                                duration: const Duration(milliseconds: 300),
-                                curve: Curves.easeIn);
+                            controller.nextPage(duration: const Duration(milliseconds: 300), curve: Curves.easeIn);
                           }),
                         ),
                         const VerticalSpace(
