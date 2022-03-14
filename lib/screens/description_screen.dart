@@ -103,15 +103,10 @@ class _DescriptionScreenState extends State<DescriptionScreen> {
                       ),
                       const VerticalSpace(20),
                       EaselTextField(
-                        key: ValueKey("${provider.selectedDenom.name}-amount" ),
+                        key: ValueKey("${provider.selectedDenom.name}-amount"),
                         title: kPriceText,
                         keyboardType: TextInputType.number,
-                        inputFormatters: [
-                          FilteringTextInputFormatter.digitsOnly,
-                          LengthLimitingTextInputFormatter(kMaxPriceLength),
-                          provider.selectedDenom.getFormatter()
-
-                        ],
+                        inputFormatters: [FilteringTextInputFormatter.digitsOnly, LengthLimitingTextInputFormatter(kMaxPriceLength), provider.selectedDenom.getFormatter()],
                         controller: provider.priceController,
                         suffix: const _CurrencyDropDown(),
                         validator: (value) {
@@ -208,6 +203,9 @@ class _CurrencyDropDown extends StatelessWidget {
   Widget build(BuildContext context) {
     return Consumer<EaselProvider>(
       builder: (_, provider, __) => DropdownButton<String>(
+        onTap: () {
+          FocusManager.instance.primaryFocus?.unfocus();
+        },
         value: provider.selectedDenom.symbol,
         icon: const Icon(Icons.keyboard_arrow_down, size: 16, color: EaselAppTheme.kBlue),
         iconSize: 30,
@@ -221,7 +219,6 @@ class _CurrencyDropDown extends StatelessWidget {
             final value = Denom.availableDenoms.firstWhere((denom) => denom.symbol == data);
             provider.priceController.clear();
             provider.setSelectedDenom(value);
-
           }
         },
         items: Denom.availableDenoms.map((Denom value) {
