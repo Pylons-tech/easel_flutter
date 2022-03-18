@@ -35,6 +35,12 @@ app.*.symbols
 # Obfuscation related
 app.*.map.json
 
+# Android Studio will place build artifacts here
+/android/app/debug
+/android/app/profile
+/android/app/release
+/android/app/build
+
 # If you're building an application, you may want to check-in your pubspec.lock
 pubspec.lock
 

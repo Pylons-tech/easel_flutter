@@ -82,6 +82,7 @@ dependencies:
 
   focus_detector: ^2.0.1
 
+  flutter_screenutil: ^5.3.1
 
 dev_dependencies:
   flutter_test:

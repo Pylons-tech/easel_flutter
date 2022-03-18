@@ -66,6 +66,7 @@ const kImageDescText = "JPG, PNG, SVG, HEIF";
 const kVideoDescText = "MP4";
 const kAudioDescText = "MP3, FLAC or WAV";
 const k3dDescText = "GLTF or GLB";
+const kGetStarted = "Get Started";
 
 const kMinNFTName = 9;
 const kMinDescription = 20;
