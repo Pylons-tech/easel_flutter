@@ -17,24 +17,7 @@ class PylonsButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return /*TextButton.icon(
-      onPressed: onPressed,
-      icon: Padding(
-        padding: const EdgeInsets.only(right: 20.0),
-        child: Text(
-          btnText,
-          style: const TextStyle(color: EaselAppTheme.kWhite, fontSize: 16),
-        ),
-      ),
-      label: const Icon(Icons.arrow_forward_ios, color: EaselAppTheme.kWhite),
-      style: TextButton.styleFrom(
-          backgroundColor: EaselAppTheme.kBlue,
-          padding:
-              const EdgeInsets.only(left: 50, right: 10, top: 10, bottom: 10),
-          shadowColor: EaselAppTheme.kBlue,
-          elevation: 10),
-    );*/
-        GestureDetector(
+    return GestureDetector(
       child: Material(
           color: Colors.transparent,
           elevation: 10,
