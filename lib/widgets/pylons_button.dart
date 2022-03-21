@@ -1,3 +1,4 @@
+import 'package:easel_flutter/utils/constants.dart';
 import 'package:easel_flutter/utils/easel_app_theme.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
@@ -26,8 +27,7 @@ class PylonsButton extends StatelessWidget {
             height: 0.12.sw,
             child: Stack(
               children: [
-                SvgPicture.asset("assets/images/svg/rectangular_button.svg",
-                    fit: BoxFit.cover),
+                SvgPicture.asset(kSvgPylonsButtonBg, fit: BoxFit.cover),
                 Center(
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.center,
