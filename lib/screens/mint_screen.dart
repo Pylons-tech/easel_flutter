@@ -1,5 +1,4 @@
 import 'package:easel_flutter/easel_provider.dart';
-import 'package:easel_flutter/screens/model_viewer_screen.dart';
 import 'package:easel_flutter/utils/constants.dart';
 import 'package:easel_flutter/utils/date_utils.dart';
 import 'package:easel_flutter/utils/easel_app_theme.dart';
@@ -134,16 +133,23 @@ class MintScreen extends StatelessWidget {
                           20,
                         ),
                         Align(
-                          child: PylonsButton(onPressed: () async {
-                            bool isRecipeCreated = await provider.createRecipe();
-                            // log("Recipe created: $isRecipeCreated");
+                          child: PylonsButton(
+                            onPressed: () async {
+                              bool isRecipeCreated =
+                                  await provider.createRecipe();
+                              // log("Recipe created: $isRecipeCreated");
 
-                            if (!isRecipeCreated) {
-                              return;
-                            }
+                              if (!isRecipeCreated) {
+                                return;
+                              }
 
-                            controller.nextPage(duration: const Duration(milliseconds: 300), curve: Curves.easeIn);
-                          }),
+                              controller.nextPage(
+                                  duration: const Duration(milliseconds: 300),
+                                  curve: Curves.easeIn);
+                            },
+                            btnText: kMintText,
+                            showArrow: true,
+                          ),
                         ),
                         const VerticalSpace(
                           20,

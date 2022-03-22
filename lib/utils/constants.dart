@@ -5,6 +5,8 @@ const kUsername = "username";
 const kShareIcon = 'assets/images/share_ic.png';
 const kSaveIcon = 'assets/images/save_ic.png';
 const kFileIcon = 'assets/images/file.png';
+const kSvgPylonsButtonBg = 'assets/images/svg/rectangular_button.svg';
+const kSvgSplash = 'assets/images/svg/splash.svg';
 const ipfsDomain = "https://ipfs.io/ipfs";
 const kPlayStoreUrl =
     "https://play.google.com/store/apps/details?id=tech.pylons.wallet";
@@ -66,6 +68,7 @@ const kImageDescText = "JPG, PNG, SVG, HEIF";
 const kVideoDescText = "MP4";
 const kAudioDescText = "MP3, FLAC or WAV";
 const k3dDescText = "GLTF or GLB";
+const kGetStarted = "Get Started";
 
 const kMinNFTName = 9;
 const kMinDescription = 20;
