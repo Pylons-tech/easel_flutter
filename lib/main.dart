@@ -1,8 +1,7 @@
 import 'package:easel_flutter/easel_provider.dart';
 import 'package:easel_flutter/screens/splash_screen.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:easel_flutter/utils/dependency_injection/dependency_injection_container.dart'
-    as di;
+import 'package:easel_flutter/utils/dependency_injection/dependency_injection_container.dart' as di;
 import 'package:easel_flutter/utils/easel_app_theme.dart';
 import 'package:flutter/material.dart';
 import 'package:get_it/get_it.dart';
@@ -32,6 +31,15 @@ class MyApp extends StatelessWidget {
       child: ScreenUtilInit(
           minTextAdapt: true,
           builder: () => MaterialApp(
+                builder: (context, widget) {
+
+                  ScreenUtil.setContext(context);
+                  return MediaQuery(
+
+                    data: MediaQuery.of(context).copyWith(textScaleFactor: 1.0),
+                    child: widget!,
+                  );
+                },
                 title: 'Easel',
                 navigatorKey: navigatorKey,
                 theme: EaselAppTheme.theme(context),
