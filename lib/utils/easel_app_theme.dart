@@ -11,7 +11,12 @@ class EaselAppTheme {
   static const Color kLightText = Color(0xFF464545);
   static const Color kRed = Color(0xFFFC4403);
   static const Color kWhite02 = Color.fromRGBO(255, 255, 255, 0.2);
-  static const Color kPurple06 = Color.fromRGBO(18, 18, 196, 0.6);
+  static const Color kWhite03 = Color(0xFFFBFBFB);
+  static const Color kPurple01 = Color.fromRGBO(18, 18, 196, 0.6);
+  static const Color kPurple02 = Color(0xFF4534CE);
+  static const Color kDarkGreen = Color(0xFF3A8977);
+  static const Color kYellow = Color(0xFFFFD83D);
+  static const Color kLightRed = Color(0xFFEF4421);
 
   static ThemeData theme(BuildContext context) => ThemeData(
         backgroundColor: kWhite,

@@ -8,9 +8,11 @@ class PylonsButton extends StatelessWidget {
   final VoidCallback onPressed;
   final String btnText;
   final bool showArrow;
+  final bool isBlue;
 
   const PylonsButton(
       {Key? key,
+      this.isBlue = true,
       required this.btnText,
       required this.showArrow,
       required this.onPressed})
@@ -27,7 +29,8 @@ class PylonsButton extends StatelessWidget {
             height: 0.12.sw,
             child: Stack(
               children: [
-                SvgPicture.asset(kSvgPylonsButtonBg, fit: BoxFit.cover),
+                SvgPicture.asset(isBlue ? kSvgRectBlue : kSvgRectRed,
+                    fit: BoxFit.cover),
                 Center(
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.center,
