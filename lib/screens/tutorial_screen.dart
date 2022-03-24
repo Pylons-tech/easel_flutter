@@ -24,7 +24,7 @@ class _TutorialScreenState extends State<TutorialScreen> {
                     item['image'],
                     fit: BoxFit.contain,
                   )),
-              if (kTutorialItems.indexOf(item) == 2) ...[
+              if (kTutorialItems.indexOf(item) == kTutorialItems.length - 1) ...[
                 SizedBox(
                   height: 0.15.sh,
                   child: Align(
@@ -32,8 +32,8 @@ class _TutorialScreenState extends State<TutorialScreen> {
                     child: GestureDetector(
                       child: Container(
                         alignment: Alignment.center,
-                        margin: const EdgeInsets.only(right: 10, bottom: 2),
-                        padding: const EdgeInsets.only(bottom: 8),
+                        margin: EdgeInsets.only(right: 10.w, bottom: 2.h),
+                        padding: EdgeInsets.only(bottom: 8.h),
                         width: 0.17.sh,
                         height: 0.08.sh,
                         decoration: const BoxDecoration(
@@ -41,26 +41,26 @@ class _TutorialScreenState extends State<TutorialScreen> {
                               image: AssetImage(kTooltipBalloon),
                               fit: BoxFit.contain),
                         ),
-                        child: const Text(
+                        child: Text(
                           kWhyAppNeeded,
                           style: TextStyle(
-                              fontSize: 12.0,
+                              fontSize: 12.sp,
                               fontWeight: FontWeight.w400,
                               color: EaselAppTheme.kWhite),
                         ),
                       ),
                       onTap: () {
-                        print("clicked bubble!");
+                        /// To-Do: bottom drawer that explains why the pylons app is required
                       },
                     ),
                   ),
                 ),
                 RichText(
                   text: TextSpan(
-                    style: const TextStyle(
-                        fontSize: 18.0,
+                    style: TextStyle(
+                        fontSize: 18.sp,
                         fontWeight: FontWeight.w800,
-                        color: Color(0xFF333333)),
+                        color: EaselAppTheme.kDartGrey),
                     children: <TextSpan>[
                       TextSpan(text: item['header']),
                       TextSpan(
@@ -73,19 +73,19 @@ class _TutorialScreenState extends State<TutorialScreen> {
               ] else ...[
                 SizedBox(height: 0.15.sh),
                 Text(item['header'],
-                    style: const TextStyle(
-                        fontSize: 18.0,
+                    style: TextStyle(
+                        fontSize: 18.sp,
                         fontWeight: FontWeight.w800,
-                        color: Color(0xFF333333)),
+                        color: EaselAppTheme.kDartGrey),
                     textAlign: TextAlign.center),
               ],
               const SizedBox(height: 15),
               Container(
-                  padding: const EdgeInsets.symmetric(horizontal: 20.0),
+                  padding: EdgeInsets.symmetric(horizontal: 20.w),
                   child: Text(item['description'],
-                      style: const TextStyle(
+                      style: TextStyle(
                           color: Colors.black,
-                          fontSize: 16.0,
+                          fontSize: 16.sp,
                           fontWeight: FontWeight.w400),
                       textAlign: TextAlign.center)),
             ],
@@ -95,9 +95,9 @@ class _TutorialScreenState extends State<TutorialScreen> {
   List<Widget> indicator() => List<Widget>.generate(
       slides.length,
       (index) => Container(
-            margin: const EdgeInsets.symmetric(horizontal: 4.0),
-            height: currentPage.round() == index ? 18.0 : 12.0,
-            width: currentPage.round() == index ? 18.0 : 12.0,
+            margin: EdgeInsets.symmetric(horizontal: 4.w),
+            height: currentPage.round() == index ? 18.w : 12.h,
+            width: currentPage.round() == index ? 18.w : 12.h,
             decoration: BoxDecoration(
               color: currentPage.round() == index
                   ? getColorPerPage(index)
@@ -147,8 +147,8 @@ class _TutorialScreenState extends State<TutorialScreen> {
           Align(
               alignment: Alignment.bottomCenter,
               child: Container(
-                margin: const EdgeInsets.only(bottom: 120.0),
-                padding: const EdgeInsets.symmetric(vertical: 10.0),
+                margin: EdgeInsets.only(bottom: 120.h),
+                padding: EdgeInsets.symmetric(vertical: 10.h),
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: indicator(),
@@ -156,7 +156,7 @@ class _TutorialScreenState extends State<TutorialScreen> {
               )
               //  ),
               ),
-          if (currentPage.round() == 2) ...[
+          if (currentPage.round() == slides.length - 1) ...[
             Align(
                 alignment: Alignment.bottomRight,
                 child: Container(
