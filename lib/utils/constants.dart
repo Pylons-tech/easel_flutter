@@ -1,3 +1,24 @@
+const List kTutorialItems = [
+  {
+    "header": "Upload your NFT file",
+    "description": "Choose the file you wish to mint into a NFT!",
+    "image": "assets/images/tutorial1.png"
+  },
+  {
+    "header": "Edit your NFT Details",
+    "description":
+        "Enter information describing your NFT including the price you wish to sell it for!",
+    "image": "assets/images/tutorial2.png"
+  },
+  {
+    "header": "Manage your NFT with the ",
+    "header1": "Pylons app",
+    "description":
+        "You can store, collect & manage all your NFTs in the Pylons app!",
+    "image": "assets/images/tutorial3.png"
+  },
+];
+
 const kImage = "https://images.unsplash.com/photo-1635488640163"
     "-e5f6782cda6e?ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=2576&q=80";
 const kCookbookId = "cookbook_id";
@@ -5,8 +26,12 @@ const kUsername = "username";
 const kShareIcon = 'assets/images/share_ic.png';
 const kSaveIcon = 'assets/images/save_ic.png';
 const kFileIcon = 'assets/images/file.png';
-const kSvgPylonsButtonBg = 'assets/images/svg/rectangular_button.svg';
+const kTooltipBalloon = 'assets/images/tooltip_balloon.png';
+
 const kSvgSplash = 'assets/images/svg/splash.svg';
+const kSvgRectBlue = 'assets/images/svg/rectangular_button_blue.svg';
+const kSvgRectRed = 'assets/images/svg/rectangular_button_red.svg';
+
 const ipfsDomain = "https://ipfs.io/ipfs";
 const kPlayStoreUrl =
     "https://play.google.com/store/apps/details?id=tech.pylons.wallet";
@@ -69,6 +94,8 @@ const kVideoDescText = "MP4";
 const kAudioDescText = "MP3, FLAC or WAV";
 const k3dDescText = "GLTF or GLB";
 const kGetStarted = "Get Started";
+const kContinue = "Continue";
+const kWhyAppNeeded = "Why the app is\nneeded?        \u21E9";
 
 const kMinNFTName = 9;
 const kMinDescription = 20;
@@ -88,7 +115,6 @@ const kEuroSymbol = "eeur";
 const kAgoricSymbol = "urun";
 const kJunoSymbol = "ujunox";
 const kLunaSymbol = "uluna";
-
 
 const kErrProfileNotExist = 'profileDoesNotExist';
 

@@ -29,7 +29,7 @@ class RoundedPurpleButtonWidget extends StatelessWidget {
             stops: [0.0, 1.0],
             colors: [
               EaselAppTheme.kWhite02,
-              EaselAppTheme.kPurple06,
+              EaselAppTheme.kPurple01,
             ],
           ),
           borderRadius: BorderRadius.circular(40),
