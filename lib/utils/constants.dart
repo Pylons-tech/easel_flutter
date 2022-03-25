@@ -67,7 +67,8 @@ const kPylonsAppNotInstalledText =
     "Pylons app is not installed on this device. Please install Pylons app to continue";
 const kClickToInstallText = "Click here to install";
 const kClickToLogInText = "Click here to log into Pylons";
-const kWelcomeToEaselText = "Welcome to Easel";
+const kWelcomeToEaselText = "Welcome to Easel,";
+const kEaselDescriptionText = "Easel is a NFT minter that allows you to create NFTs from any mobile device!\n\nOnce you successfully upload an audio, video or image file, enter the required information and press “Publish”, your file is transformed into a NFT that is stored on the Pylons blockchain indefinitely!\n\nYou’ll be able to view your new NFT in the Easel folder located in your Pylons Wallet.";
 const kCreatedByText = "Created by";
 const kDescriptionText = "Description";
 const kSizeText = "Size";

@@ -1,4 +1,4 @@
-import 'package:easel_flutter/screens/routing_screen.dart';
+import 'package:easel_flutter/screens/welcome_screen.dart';
 import 'package:easel_flutter/utils/easel_app_theme.dart';
 import 'package:easel_flutter/widgets/pylons_button.dart';
 import 'package:flutter/material.dart';
@@ -166,7 +166,7 @@ class _TutorialScreenState extends State<TutorialScreen> {
                       Navigator.push(
                         context,
                         MaterialPageRoute(
-                            builder: (context) => const RoutingScreen()),
+                            builder: (context) => const WelcomeScreen()),
                       );
                     },
                     btnText: kContinue,
