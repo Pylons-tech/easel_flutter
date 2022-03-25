@@ -37,7 +37,7 @@ class EaselProvider extends ChangeNotifier {
   String? _cookbookId;
   String _recipeId = "";
   var stripeAccountExists = false;
-  Denom _selectedDenom = Denom(name: "Pylon", symbol: kPylonSymbol);
+  Denom _selectedDenom = Denom(name: kUSDText, symbol: kUsdSymbol);
 
   File? get file => _file;
 
@@ -75,7 +75,7 @@ class EaselProvider extends ChangeNotifier {
     _fileWidth = 0;
     _fileDuration = 0;
     _recipeId = "";
-    _selectedDenom = Denom(name: "Pylon", symbol: kPylonSymbol);
+    _selectedDenom = Denom(name: kUSDText, symbol: kUsdSymbol);
 
     artistNameController.clear();
     artNameController.clear();

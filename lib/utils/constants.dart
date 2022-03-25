@@ -116,6 +116,16 @@ const kAgoricSymbol = "urun";
 const kJunoSymbol = "ujunox";
 const kLunaSymbol = "uluna";
 
+const kPylonText = "Pylon";
+const kUSDText = "USD";
+const kAtomText = "Atom";
+const kEurText = "EEur";
+const kAgoricText = "Agoric";
+const kJunoText = "Juno";
+const kLunaText = "Luna";
+
+
+
 const kErrProfileNotExist = 'profileDoesNotExist';
 
 const kWalletIOSId = 'xyz.pylons.wallet';
