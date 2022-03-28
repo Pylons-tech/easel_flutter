@@ -97,6 +97,14 @@ const k3dDescText = "GLTF or GLB";
 const kGetStarted = "Get Started";
 const kContinue = "Continue";
 const kWhyAppNeeded = "Why the app is\nneeded?        \u21E9";
+const kDownloadPylons = "Download Pylons app";
+const kWhyAppNeededDesc1 = "Your Pylons app is your gateway to the Pylons ecosystem";
+const kWhyAppNeededDescSummary1 = "Discover new NFTs, apps & adventures";
+const kWhyAppNeededDesc2 = "It makes managing your crypto easy";
+const kWhyAppNeededDescSummary2 = "No frills. No complexities. One wallet  address for all your crypto";
+const kWhyAppNeededDesc3 = "You can always delete it if you’d like";
+const kWhyAppNeededDescSummary3 = "No subscriptions. We don’t sell your information. We only charge a fee when you purchase a NFT";
+const kPylonsAlreadyInstalled = "Pylons already installed.";
 
 const kMinNFTName = 9;
 const kMinDescription = 20;

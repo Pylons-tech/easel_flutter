@@ -30,7 +30,6 @@ class SplashScreen extends StatelessWidget {
                 );
               },
               btnText: kGetStarted,
-              showArrow: false,
             ),
           ),
         ),

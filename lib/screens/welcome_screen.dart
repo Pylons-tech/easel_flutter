@@ -47,7 +47,6 @@ class WelcomeScreen extends StatelessWidget {
                 );
               },
               btnText: kGetStarted,
-              showArrow: false,
               isBlue: false,
             ),
           ),
