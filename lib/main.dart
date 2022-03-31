@@ -1,5 +1,9 @@
 import 'package:easel_flutter/easel_provider.dart';
+import 'package:easel_flutter/screens/routing_screen.dart';
 import 'package:easel_flutter/screens/splash_screen.dart';
+import 'package:easel_flutter/screens/tutorial_screen.dart';
+import 'package:easel_flutter/screens/welcome_screen.dart';
+import 'package:easel_flutter/utils/route_util.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:easel_flutter/utils/dependency_injection/dependency_injection_container.dart' as di;
 import 'package:easel_flutter/utils/easel_app_theme.dart';
@@ -32,10 +36,8 @@ class MyApp extends StatelessWidget {
           minTextAdapt: true,
           builder: () => MaterialApp(
                 builder: (context, widget) {
-
                   ScreenUtil.setContext(context);
                   return MediaQuery(
-
                     data: MediaQuery.of(context).copyWith(textScaleFactor: 1.0),
                     child: widget!,
                   );
@@ -43,7 +45,13 @@ class MyApp extends StatelessWidget {
                 title: 'Easel',
                 navigatorKey: navigatorKey,
                 theme: EaselAppTheme.theme(context),
-                home: const SplashScreen(),
+                initialRoute: '/',
+                routes: {
+                  '/': (context) => const SplashScreen(),
+                  RouteUtil.ROUTE_TUTORIAL: (context) => const TutorialScreen(),
+                  RouteUtil.ROUTE_WELCOME: (context) => const WelcomeScreen(),
+                  RouteUtil.ROUTE_ROUTING: (context) => const RoutingScreen(),
+                },
               )),
     );
   }

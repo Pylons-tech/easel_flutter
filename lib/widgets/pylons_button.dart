@@ -13,8 +13,8 @@ class PylonsButton extends StatelessWidget {
   const PylonsButton(
       {Key? key,
       this.isBlue = true,
+      this.showArrow = false,
       required this.btnText,
-      required this.showArrow,
       required this.onPressed})
       : super(key: key);
 

@@ -1,5 +1,4 @@
-import 'package:easel_flutter/screens/routing_screen.dart';
-import 'package:easel_flutter/screens/tutorial_screen.dart';
+import 'package:easel_flutter/utils/route_util.dart';
 import 'package:flutter/material.dart';
 import 'package:easel_flutter/widgets/pylons_button.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -25,13 +24,9 @@ class SplashScreen extends StatelessWidget {
             alignment: Alignment.center,
             child: PylonsButton(
               onPressed: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(builder: (context) => const TutorialScreen()),
-                );
+                Navigator.of(context).pushNamed(RouteUtil.ROUTE_TUTORIAL);
               },
               btnText: kGetStarted,
-              showArrow: false,
             ),
           ),
         ),

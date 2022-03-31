@@ -56,7 +56,7 @@ class _RoutingScreenState extends State<RoutingScreen> {
                   ValueListenableBuilder<String>(
                       valueListenable: username,
                       builder: (_, String name, __) {
-                        return Text("$kWelcomeToEaselText, $name");
+                        return Text("$kWelcomeToEaselText $name");
                       }),
                 ],
               ),
@@ -92,7 +92,7 @@ class _RoutingScreenState extends State<RoutingScreen> {
   }
 
   void showUserNameDialog() {
-    MessageDialog().show("$kWelcomeToEaselText, ${username.value}",
+    MessageDialog().show("$kWelcomeToEaselText ${username.value}",
         button: TextButton(
             onPressed: () {
               Navigator.of(context).pop();
