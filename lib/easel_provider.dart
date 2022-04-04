@@ -86,8 +86,13 @@ class EaselProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-  Future<void> setFormat(BuildContext context, NftFormat format) async {
-    _nftFormat = format;
+  Future<void> resolveNftFormat(BuildContext context, String ext) async {
+    for (var format in NftFormat.supportedFormats) {
+      if (format.extensions.contains(ext)) {
+        _nftFormat = format;
+        break;
+      }
+    }
     notifyListeners();
   }
 
@@ -150,7 +155,8 @@ class EaselProvider extends ChangeNotifier {
       return true;
     }
 
-    ScaffoldMessenger.of(navigatorKey.currentState!.overlay!.context).showSnackBar(SnackBar(content: Text(response.error)));
+    ScaffoldMessenger.of(navigatorKey.currentState!.overlay!.context)
+        .showSnackBar(SnackBar(content: Text(response.error)));
     return false;
   }
 
@@ -183,7 +189,8 @@ class EaselProvider extends ChangeNotifier {
     final uploadResponse = await remoteDataSource.uploadFile(_file!);
     loading.dismiss();
     if (uploadResponse.status == Status.error) {
-      ScaffoldMessenger.of(navigatorKey.currentState!.overlay!.context).showSnackBar(SnackBar(content: Text(uploadResponse.errorMessage ?? "Upload error occurred")));
+      ScaffoldMessenger.of(navigatorKey.currentState!.overlay!.context)
+          .showSnackBar(SnackBar(content: Text(uploadResponse.errorMessage ?? "Upload error occurred")));
       return false;
     }
 
@@ -217,11 +224,19 @@ class EaselProvider extends ChangeNotifier {
               longs: [
                 LongParam(key: "Quantity", weightRanges: [
                   IntWeightRange(
-                      lower: Int64(int.parse(noOfEditionController.text.replaceAll(",", "").trim())), upper: Int64(int.parse(noOfEditionController.text.replaceAll(",", "").trim())), weight: Int64(1))
+                      lower: Int64(int.parse(noOfEditionController.text.replaceAll(",", "").trim())),
+                      upper: Int64(int.parse(noOfEditionController.text.replaceAll(",", "").trim())),
+                      weight: Int64(1))
                 ]),
-                LongParam(key: "Width", weightRanges: [IntWeightRange(lower: Int64(_fileWidth), upper: Int64(_fileWidth), weight: Int64(1))]),
-                LongParam(key: "Height", weightRanges: [IntWeightRange(lower: Int64(_fileHeight), upper: Int64(_fileHeight), weight: Int64(1))]),
-                LongParam(key: "Duration", weightRanges: [IntWeightRange(lower: Int64(_fileDuration), upper: Int64(_fileDuration), weight: Int64(1))]),
+                LongParam(key: "Width", weightRanges: [
+                  IntWeightRange(lower: Int64(_fileWidth), upper: Int64(_fileWidth), weight: Int64(1))
+                ]),
+                LongParam(key: "Height", weightRanges: [
+                  IntWeightRange(lower: Int64(_fileHeight), upper: Int64(_fileHeight), weight: Int64(1))
+                ]),
+                LongParam(key: "Duration", weightRanges: [
+                  IntWeightRange(lower: Int64(_fileDuration), upper: Int64(_fileDuration), weight: Int64(1))
+                ]),
               ],
               strings: [
                 StringParam(key: "Name", value: artNameController.text.trim()),
@@ -251,11 +266,13 @@ class EaselProvider extends ChangeNotifier {
     log('From App $response');
 
     if (response.success) {
-      ScaffoldMessenger.of(navigatorKey.currentState!.overlay!.context).showSnackBar(const SnackBar(content: Text("Recipe created")));
+      ScaffoldMessenger.of(navigatorKey.currentState!.overlay!.context)
+          .showSnackBar(const SnackBar(content: Text("Recipe created")));
       log("${response.data}");
       return true;
     } else {
-      ScaffoldMessenger.of(navigatorKey.currentState!.overlay!.context).showSnackBar(SnackBar(content: Text("Recipe error : ${response.error}")));
+      ScaffoldMessenger.of(navigatorKey.currentState!.overlay!.context)
+          .showSnackBar(SnackBar(content: Text("Recipe error : ${response.error}")));
       return false;
     }
   }
@@ -291,7 +308,6 @@ class EaselProvider extends ChangeNotifier {
     return sdkResponse;
   }
 
-
   /// false || true (Stripe account doesn't exists and selected Denom is not USD) return true
   /// true  || false (Stripe account exists and selected denom is not USD ) returns true
   /// false || false (Stripe account doesnt exists and selected denom is USD) return false
@@ -302,7 +318,8 @@ class EaselProvider extends ChangeNotifier {
       return true;
     }
 
-    ScaffoldMessenger.of(navigatorKey.currentState!.overlay!.context).showSnackBar(const SnackBar(content: Text(kStripeAccountDoesntExists)));
+    ScaffoldMessenger.of(navigatorKey.currentState!.overlay!.context)
+        .showSnackBar(const SnackBar(content: Text(kStripeAccountDoesntExists)));
 
     return false;
   }

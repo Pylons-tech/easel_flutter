@@ -25,12 +25,17 @@ const kCookbookId = "cookbook_id";
 const kUsername = "username";
 const kShareIcon = 'assets/images/share_ic.png';
 const kSaveIcon = 'assets/images/save_ic.png';
-const kFileIcon = 'assets/images/file.png';
 const kTooltipBalloon = 'assets/images/tooltip_balloon.png';
 
 const kSvgSplash = 'assets/images/svg/splash.svg';
 const kSvgRectBlue = 'assets/images/svg/rectangular_button_blue.svg';
 const kSvgRectRed = 'assets/images/svg/rectangular_button_red.svg';
+const kSvgDashedBox = 'assets/images/svg/dashed_box.svg';
+const kSvgFileUpload = 'assets/images/svg/file_upload.svg';
+const kSvgNftTypeImage = 'assets/images/svg/nft_type_image.svg';
+const kSvgNftTypeVideo = 'assets/images/svg/nft_type_video.svg';
+const kSvgNftType3d = 'assets/images/svg/nft_type_3d.svg';
+const kSvgNftTypeAudio = 'assets/images/svg/nft_type_audio.svg';
 
 const ipfsDomain = "https://ipfs.io/ipfs";
 const kPlayStoreUrl =
@@ -79,7 +84,6 @@ const kPreviewNFTText = "Preview NFT";
 const kPreview3dModelText = "Click here to preview\nyour selected 3D Model";
 const kMintMoreText = "Mint More";
 const kGoToWalletText = "Go to Wallet";
-const kChooseNFTFormatText = "Choose your NFT format";
 const kUploadNFTText = "Upload your NFT file";
 const kEditNFTText = "Edit your NFT Details";
 const kStartText = "Start";
@@ -105,6 +109,7 @@ const kWhyAppNeededDescSummary2 = "No frills. No complexities. One wallet  addre
 const kWhyAppNeededDesc3 = "You can always delete it if you’d like";
 const kWhyAppNeededDescSummary3 = "No subscriptions. We don’t sell your information. We only charge a fee when you purchase a NFT";
 const kPylonsAlreadyInstalled = "Pylons already installed.";
+const kTapToSelect = "Tap to Select";
 
 const kMinNFTName = 9;
 const kMinDescription = 20;
