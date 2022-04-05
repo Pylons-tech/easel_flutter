@@ -150,7 +150,7 @@ class _UploadWidgetState extends State<_UploadWidget> {
                 onTap: () async {
                   final result = await FileUtils.pickFile();
                   if (result == null) {
-                    ScaffoldHelper(context).show(message: kErrUnsupportedFormat);
+                    context.show(message: kErrUnsupportedFormat);
                   } else {
                     provider.resolveNftFormat(context, result.extension!);
                     widget.onFilePicked(result);

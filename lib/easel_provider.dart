@@ -156,7 +156,7 @@ class EaselProvider extends ChangeNotifier {
       return true;
     }
 
-    ScaffoldHelper(navigatorKey.currentState!.overlay!.context).show(message: response.error);
+    navigatorKey.currentState!.overlay!.context.show(message: response.error);
     return false;
   }
 
@@ -189,8 +189,7 @@ class EaselProvider extends ChangeNotifier {
     final uploadResponse = await remoteDataSource.uploadFile(_file!);
     loading.dismiss();
     if (uploadResponse.status == Status.error) {
-      ScaffoldHelper(navigatorKey.currentState!.overlay!.context)
-          .show(message: uploadResponse.errorMessage ?? kErrUpload);
+      navigatorKey.currentState!.overlay!.context.show(message: uploadResponse.errorMessage ?? kErrUpload);
       return false;
     }
 
@@ -266,11 +265,11 @@ class EaselProvider extends ChangeNotifier {
     log('From App $response');
 
     if (response.success) {
-      ScaffoldHelper(navigatorKey.currentState!.overlay!.context).show(message: kRecipeCreated);
+      navigatorKey.currentState!.overlay!.context.show(message: kRecipeCreated);
       log("${response.data}");
       return true;
     } else {
-      ScaffoldHelper(navigatorKey.currentState!.overlay!.context).show(message: "$kErrRecipe ${response.error}");
+      navigatorKey.currentState!.overlay!.context.show(message: "$kErrRecipe ${response.error}");
       return false;
     }
   }
@@ -316,7 +315,7 @@ class EaselProvider extends ChangeNotifier {
       return true;
     }
 
-    ScaffoldHelper(navigatorKey.currentState!.overlay!.context).show(message: kStripeAccountDoesntExists);
+    navigatorKey.currentState!.overlay!.context.show(message: kStripeAccountDoesntExists);
 
     return false;
   }

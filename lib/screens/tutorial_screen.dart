@@ -269,7 +269,7 @@ class _TutorialScreenState extends State<TutorialScreen> {
                   if (!appAlreadyInstalled) {
                     PylonsWallet.instance.goToInstall();
                   } else {
-                    ScaffoldHelper(context).show(message: kPylonsAlreadyInstalled);
+                    context.show(message: kPylonsAlreadyInstalled);
                   }
                 },
                 btnText: kDownloadPylons,
