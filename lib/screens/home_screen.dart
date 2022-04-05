@@ -89,7 +89,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                   child: Text(
                                     kMintMoreText,
                                     style: Theme.of(context).textTheme.bodyText1!.copyWith(
-                                        fontSize: 20, color: EaselAppTheme.kBlue, fontWeight: FontWeight.w400),
+                                        fontSize: 20.sp, color: EaselAppTheme.kBlue, fontWeight: FontWeight.w400),
                                   ),
                                 ),
                               )
@@ -114,7 +114,7 @@ class _HomeScreenState extends State<HomeScreen> {
                             style: Theme.of(context)
                                 .textTheme
                                 .bodyText1!
-                                .copyWith(fontSize: 18, fontWeight: FontWeight.w400, color: EaselAppTheme.kDarkText),
+                                .copyWith(fontSize: 18.sp, fontWeight: FontWeight.w400, color: EaselAppTheme.kDarkText),
                           );
                         },
                       ),
@@ -134,7 +134,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                   icon: Text(
                                     kGoToWalletText,
                                     style: Theme.of(context).textTheme.bodyText1!.copyWith(
-                                        fontSize: 20, color: EaselAppTheme.kBlue, fontWeight: FontWeight.w400),
+                                        fontSize: 20.sp, color: EaselAppTheme.kBlue, fontWeight: FontWeight.w400),
                                   ),
                                 ),
                               )
@@ -195,7 +195,7 @@ class _HomeScreenState extends State<HomeScreen> {
           Text(
             screenLabels[index],
             style: Theme.of(context).textTheme.bodyText2!.copyWith(
-                fontSize: 12,
+                fontSize: 12.sp,
                 fontFamily: 'Inter',
                 fontWeight: FontWeight.w400,
                 color: currentPage == index ? EaselAppTheme.kBlack : EaselAppTheme.kGrey),

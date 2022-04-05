@@ -12,9 +12,7 @@ class NftFormat {
   String getExtensionsList() {
     var ret = '';
     for (var i = 0; i < extensions.length; i++) {
-      if (i == 4) {
-        ret += ',\n';
-      } else if (ret.isNotEmpty) {
+      if (ret.isNotEmpty) {
         ret += ', ';
       }
       ret += extensions[i].toUpperCase();
@@ -34,8 +32,8 @@ class NftFormat {
 
   static List<String> getAllSupportedExts() {
     List<String> allExts = [];
-    for (var i = 0; i < supportedFormats.length; i++) {
-      allExts += supportedFormats[i].extensions;
+    for (var format in supportedFormats) {
+      allExts += format.extensions;
     }
     return allExts;
   }

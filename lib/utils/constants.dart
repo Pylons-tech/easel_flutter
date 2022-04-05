@@ -6,15 +6,13 @@ const List kTutorialItems = [
   },
   {
     "header": "Edit your NFT Details",
-    "description":
-        "Enter information describing your NFT including the price you wish to sell it for!",
+    "description": "Enter information describing your NFT including the price you wish to sell it for!",
     "image": "assets/images/tutorial2.png"
   },
   {
     "header": "Manage your NFT with the ",
     "header1": "Pylons app",
-    "description":
-        "You can store, collect & manage all your NFTs in the Pylons app!",
+    "description": "You can store, collect & manage all your NFTs in the Pylons app!",
     "image": "assets/images/tutorial3.png"
   },
 ];
@@ -38,8 +36,7 @@ const kSvgNftType3d = 'assets/images/svg/nft_type_3d.svg';
 const kSvgNftTypeAudio = 'assets/images/svg/nft_type_audio.svg';
 
 const ipfsDomain = "https://ipfs.io/ipfs";
-const kPlayStoreUrl =
-    "https://play.google.com/store/apps/details?id=tech.pylons.wallet";
+const kPlayStoreUrl = "https://play.google.com/store/apps/details?id=tech.pylons.wallet";
 
 const kNameAsArtistText = "Your name as the artist";
 const kGiveNFTNameText = "Give your NFT a name";
@@ -66,14 +63,12 @@ const kEnterMoreThanText = "Enter more than";
 const kCharactersText = "characters";
 const kMaxText = "Max";
 const kOkText = "Ok";
-const kProfileErrorOccurredText =
-    "Error occurred while fetching wallet profile";
-const kPylonsAppNotInstalledText =
-    "Pylons app is not installed on this device. Please install Pylons app to continue";
+const kPylonsAppNotInstalledText = "Pylons app is not installed on this device. Please install Pylons app to continue";
 const kClickToInstallText = "Click here to install";
 const kClickToLogInText = "Click here to log into Pylons";
 const kWelcomeToEaselText = "Welcome to Easel,";
-const kEaselDescriptionText = "Easel is a NFT minter that allows you to create NFTs from any mobile device!\n\nOnce you successfully upload an audio, video or image file, enter the required information and press “Publish”, your file is transformed into a NFT that is stored on the Pylons blockchain indefinitely!\n\nYou’ll be able to view your new NFT in the Easel folder located in your Pylons Wallet.";
+const kEaselDescriptionText =
+    "Easel is a NFT minter that allows you to create NFTs from any mobile device!\n\nOnce you successfully upload an audio, video or image file, enter the required information and press “Publish”, your file is transformed into a NFT that is stored on the Pylons blockchain indefinitely!\n\nYou’ll be able to view your new NFT in the Easel folder located in your Pylons Wallet.";
 const kCreatedByText = "Created by";
 const kDescriptionText = "Description";
 const kSizeText = "Size";
@@ -94,10 +89,6 @@ const kImageText = "Image";
 const kVideoText = "Video";
 const kAudioText = "Audio";
 const k3dText = "3D";
-const kImageDescText = "JPG, PNG, SVG, HEIF";
-const kVideoDescText = "MP4";
-const kAudioDescText = "MP3, FLAC or WAV";
-const k3dDescText = "GLTF or GLB";
 const kGetStarted = "Get Started";
 const kContinue = "Continue";
 const kWhyAppNeeded = "Why the app is\nneeded?        \u21E9";
@@ -107,7 +98,8 @@ const kWhyAppNeededDescSummary1 = "Discover new NFTs, apps & adventures";
 const kWhyAppNeededDesc2 = "It makes managing your crypto easy";
 const kWhyAppNeededDescSummary2 = "No frills. No complexities. One wallet  address for all your crypto";
 const kWhyAppNeededDesc3 = "You can always delete it if you’d like";
-const kWhyAppNeededDescSummary3 = "No subscriptions. We don’t sell your information. We only charge a fee when you purchase a NFT";
+const kWhyAppNeededDescSummary3 =
+    "No subscriptions. We don’t sell your information. We only charge a fee when you purchase a NFT";
 const kPylonsAlreadyInstalled = "Pylons already installed.";
 const kTapToSelect = "Tap to Select";
 
@@ -138,9 +130,14 @@ const kAgoricText = "Agoric";
 const kJunoText = "Juno";
 const kLunaText = "Luna";
 
-
-
 const kErrProfileNotExist = 'profileDoesNotExist';
+const kErrProfileFetch = "Error occurred while fetching wallet profile";
+const kErrUpload = 'Upload error occurred';
+const kErrFileNotPicked = 'Pick a file';
+const kErrUnsupportedFormat = 'Unsupported format';
+const kErrRecipe = 'Recipe error :';
+
+const kRecipeCreated = 'Recipe created';
 
 const kWalletIOSId = 'xyz.pylons.wallet';
 const kWalletAndroidId = 'tech.pylons.wallet';

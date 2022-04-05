@@ -190,7 +190,7 @@ class EaselProvider extends ChangeNotifier {
     loading.dismiss();
     if (uploadResponse.status == Status.error) {
       ScaffoldMessenger.of(navigatorKey.currentState!.overlay!.context)
-          .showSnackBar(SnackBar(content: Text(uploadResponse.errorMessage ?? "Upload error occurred")));
+          .showSnackBar(SnackBar(content: Text(uploadResponse.errorMessage ?? kErrUpload)));
       return false;
     }
 
@@ -267,12 +267,12 @@ class EaselProvider extends ChangeNotifier {
 
     if (response.success) {
       ScaffoldMessenger.of(navigatorKey.currentState!.overlay!.context)
-          .showSnackBar(const SnackBar(content: Text("Recipe created")));
+          .showSnackBar(const SnackBar(content: Text(kRecipeCreated)));
       log("${response.data}");
       return true;
     } else {
       ScaffoldMessenger.of(navigatorKey.currentState!.overlay!.context)
-          .showSnackBar(SnackBar(content: Text("Recipe error : ${response.error}")));
+          .showSnackBar(SnackBar(content: Text("$kErrRecipe ${response.error}")));
       return false;
     }
   }

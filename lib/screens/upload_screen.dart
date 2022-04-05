@@ -4,9 +4,9 @@ import 'dart:ui';
 import 'package:easel_flutter/easel_provider.dart';
 import 'package:easel_flutter/models/nft_format.dart';
 import 'package:easel_flutter/utils/constants.dart';
+import 'package:easel_flutter/utils/extension_util.dart';
 import 'package:easel_flutter/utils/file_utils.dart';
 import 'package:easel_flutter/utils/easel_app_theme.dart';
-import 'package:easel_flutter/utils/screen_size_util.dart';
 import 'package:easel_flutter/utils/space_utils.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
@@ -69,11 +69,14 @@ class _UploadScreenState extends State<UploadScreen> {
                                           fontSize: 18.sp,
                                           fontWeight: FontWeight.w800)),
                                 ),
-                                Text(format.getExtensionsList(),
-                                    style: Theme.of(context).textTheme.subtitle2!.copyWith(
-                                        color: EaselAppTheme.kLightPurple,
-                                        fontSize: 18.sp,
-                                        fontWeight: FontWeight.w800)),
+                                SizedBox(
+                                  width: 0.6.sw,
+                                  child: Text(format.getExtensionsList(),
+                                      style: Theme.of(context).textTheme.subtitle2!.copyWith(
+                                          color: EaselAppTheme.kLightPurple,
+                                          fontSize: 18.sp,
+                                          fontWeight: FontWeight.w800)),
+                                ),
                               ])),
                         )
                         .toList(),
@@ -89,7 +92,7 @@ class _UploadScreenState extends State<UploadScreen> {
                               widget.controller
                                   .nextPage(duration: const Duration(milliseconds: 300), curve: Curves.easeIn);
                             } else {
-                              errorText.value = 'Pick a file';
+                              errorText.value = kErrFileNotPicked;
                               showError.value = true;
                             }
                           },
@@ -147,9 +150,7 @@ class _UploadWidgetState extends State<_UploadWidget> {
                 onTap: () async {
                   final result = await FileUtils.pickFile();
                   if (result == null) {
-                    ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
-                      content: Text("Unsupported format."),
-                    ));
+                    ScaffoldHelper(context).show(message: kErrUnsupportedFormat);
                   } else {
                     provider.resolveNftFormat(context, result.extension!);
                     widget.onFilePicked(result);
@@ -200,20 +201,18 @@ class _ErrorMessageWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final screenSize = ScreenSizeUtil(context);
-
     return Stack(
       children: [
         Positioned(
           right: 0,
           child: SizedBox(
-            width: screenSize.width(),
+            width: 1.0.sw,
             child: ClipRRect(
               borderRadius: const BorderRadius.only(topLeft: Radius.circular(14), bottomLeft: Radius.circular(14)),
               child: BackdropFilter(
                 filter: ImageFilter.blur(sigmaX: 2.0, sigmaY: 2.0),
                 child: Container(
-                  height: screenSize.height(percent: 85),
+                  height: 0.85.sh,
                   // width: screenSize.width(),
                   decoration: BoxDecoration(color: EaselAppTheme.kWhite.withOpacity(0.2)),
                 ),
@@ -223,7 +222,7 @@ class _ErrorMessageWidget extends StatelessWidget {
         ),
         Container(
           width: double.infinity,
-          height: screenSize.width(percent: 85),
+          height: 0.85.sw,
           margin: const EdgeInsets.only(
             left: 20,
           ),
@@ -246,7 +245,7 @@ class _ErrorMessageWidget extends StatelessWidget {
                   Expanded(
                     child: Text(
                       errorMessage,
-                      style: const TextStyle(color: Colors.white, fontSize: 18, fontWeight: FontWeight.w500),
+                      style: TextStyle(color: Colors.white, fontSize: 18.sp, fontWeight: FontWeight.w500),
                     ),
                   )
                 ],
@@ -257,15 +256,15 @@ class _ErrorMessageWidget extends StatelessWidget {
                   children: [
                     Text(
                       "• ${kFileSizeLimitInGB}GB Limit",
-                      style: Theme.of(context).textTheme.bodyText2!.copyWith(color: Colors.white, fontSize: 16),
+                      style: Theme.of(context).textTheme.bodyText2!.copyWith(color: Colors.white, fontSize: 16.sp),
                     ),
                     Text(
                       "• JPG, JPEG or PNG format",
-                      style: Theme.of(context).textTheme.bodyText2!.copyWith(color: Colors.white, fontSize: 16),
+                      style: Theme.of(context).textTheme.bodyText2!.copyWith(color: Colors.white, fontSize: 16.sp),
                     ),
                     Text(
                       "• One file per upload",
-                      style: Theme.of(context).textTheme.bodyText2!.copyWith(color: Colors.white, fontSize: 16),
+                      style: Theme.of(context).textTheme.bodyText2!.copyWith(color: Colors.white, fontSize: 16.sp),
                     ),
                   ],
                 ),
