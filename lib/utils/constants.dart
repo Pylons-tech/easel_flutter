@@ -135,6 +135,7 @@ const kErrProfileFetch = "Error occurred while fetching wallet profile";
 const kErrUpload = 'Upload error occurred';
 const kErrFileNotPicked = 'Pick a file';
 const kErrUnsupportedFormat = 'Unsupported format';
+const kErrFileMetaParse = 'Error occurred while parsing the chosen media file:';
 const kErrRecipe = 'Recipe error :';
 
 const kRecipeCreated = 'Recipe created';

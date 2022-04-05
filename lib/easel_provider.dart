@@ -9,6 +9,7 @@ import 'package:easel_flutter/models/api_response.dart';
 import 'package:easel_flutter/models/denom.dart';
 import 'package:easel_flutter/models/nft_format.dart';
 import 'package:easel_flutter/utils/constants.dart';
+import 'package:easel_flutter/utils/extension_util.dart';
 import 'package:easel_flutter/utils/file_utils.dart';
 import 'package:easel_flutter/widgets/loading.dart';
 import 'package:file_picker/file_picker.dart';
@@ -113,7 +114,7 @@ class EaselProvider extends ChangeNotifier {
     try {
       info = await _mediaInfo.getMediaInfo(file.path);
     } on PlatformException catch (e) {
-      print('Error occurred while parsing the chosen media file: $e');
+      print('kErrFileMetaParse $e');
       _fileWidth = 0;
       _fileHeight = 0;
       _fileDuration = 0;
@@ -155,8 +156,7 @@ class EaselProvider extends ChangeNotifier {
       return true;
     }
 
-    ScaffoldMessenger.of(navigatorKey.currentState!.overlay!.context)
-        .showSnackBar(SnackBar(content: Text(response.error)));
+    ScaffoldHelper(navigatorKey.currentState!.overlay!.context).show(message: response.error);
     return false;
   }
 
@@ -189,8 +189,8 @@ class EaselProvider extends ChangeNotifier {
     final uploadResponse = await remoteDataSource.uploadFile(_file!);
     loading.dismiss();
     if (uploadResponse.status == Status.error) {
-      ScaffoldMessenger.of(navigatorKey.currentState!.overlay!.context)
-          .showSnackBar(SnackBar(content: Text(uploadResponse.errorMessage ?? kErrUpload)));
+      ScaffoldHelper(navigatorKey.currentState!.overlay!.context)
+          .show(message: uploadResponse.errorMessage ?? kErrUpload);
       return false;
     }
 
@@ -266,13 +266,11 @@ class EaselProvider extends ChangeNotifier {
     log('From App $response');
 
     if (response.success) {
-      ScaffoldMessenger.of(navigatorKey.currentState!.overlay!.context)
-          .showSnackBar(const SnackBar(content: Text(kRecipeCreated)));
+      ScaffoldHelper(navigatorKey.currentState!.overlay!.context).show(message: kRecipeCreated);
       log("${response.data}");
       return true;
     } else {
-      ScaffoldMessenger.of(navigatorKey.currentState!.overlay!.context)
-          .showSnackBar(SnackBar(content: Text("$kErrRecipe ${response.error}")));
+      ScaffoldHelper(navigatorKey.currentState!.overlay!.context).show(message: "$kErrRecipe ${response.error}");
       return false;
     }
   }
@@ -318,8 +316,7 @@ class EaselProvider extends ChangeNotifier {
       return true;
     }
 
-    ScaffoldMessenger.of(navigatorKey.currentState!.overlay!.context)
-        .showSnackBar(const SnackBar(content: Text(kStripeAccountDoesntExists)));
+    ScaffoldHelper(navigatorKey.currentState!.overlay!.context).show(message: kStripeAccountDoesntExists);
 
     return false;
   }
