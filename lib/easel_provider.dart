@@ -9,6 +9,7 @@ import 'package:easel_flutter/models/api_response.dart';
 import 'package:easel_flutter/models/denom.dart';
 import 'package:easel_flutter/models/nft_format.dart';
 import 'package:easel_flutter/utils/constants.dart';
+import 'package:easel_flutter/utils/extension_util.dart';
 import 'package:easel_flutter/utils/file_utils.dart';
 import 'package:easel_flutter/widgets/loading.dart';
 import 'package:file_picker/file_picker.dart';
@@ -86,8 +87,13 @@ class EaselProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-  Future<void> setFormat(BuildContext context, NftFormat format) async {
-    _nftFormat = format;
+  Future<void> resolveNftFormat(BuildContext context, String ext) async {
+    for (var format in NftFormat.supportedFormats) {
+      if (format.extensions.contains(ext)) {
+        _nftFormat = format;
+        break;
+      }
+    }
     notifyListeners();
   }
 
@@ -108,7 +114,7 @@ class EaselProvider extends ChangeNotifier {
     try {
       info = await _mediaInfo.getMediaInfo(file.path);
     } on PlatformException catch (e) {
-      print('Error occurred while parsing the chosen media file: $e');
+      print('kErrFileMetaParse $e');
       _fileWidth = 0;
       _fileHeight = 0;
       _fileDuration = 0;
@@ -150,7 +156,7 @@ class EaselProvider extends ChangeNotifier {
       return true;
     }
 
-    ScaffoldMessenger.of(navigatorKey.currentState!.overlay!.context).showSnackBar(SnackBar(content: Text(response.error)));
+    navigatorKey.currentState!.overlay!.context.show(message: response.error);
     return false;
   }
 
@@ -183,7 +189,7 @@ class EaselProvider extends ChangeNotifier {
     final uploadResponse = await remoteDataSource.uploadFile(_file!);
     loading.dismiss();
     if (uploadResponse.status == Status.error) {
-      ScaffoldMessenger.of(navigatorKey.currentState!.overlay!.context).showSnackBar(SnackBar(content: Text(uploadResponse.errorMessage ?? "Upload error occurred")));
+      navigatorKey.currentState!.overlay!.context.show(message: uploadResponse.errorMessage ?? kErrUpload);
       return false;
     }
 
@@ -217,11 +223,19 @@ class EaselProvider extends ChangeNotifier {
               longs: [
                 LongParam(key: "Quantity", weightRanges: [
                   IntWeightRange(
-                      lower: Int64(int.parse(noOfEditionController.text.replaceAll(",", "").trim())), upper: Int64(int.parse(noOfEditionController.text.replaceAll(",", "").trim())), weight: Int64(1))
+                      lower: Int64(int.parse(noOfEditionController.text.replaceAll(",", "").trim())),
+                      upper: Int64(int.parse(noOfEditionController.text.replaceAll(",", "").trim())),
+                      weight: Int64(1))
                 ]),
-                LongParam(key: "Width", weightRanges: [IntWeightRange(lower: Int64(_fileWidth), upper: Int64(_fileWidth), weight: Int64(1))]),
-                LongParam(key: "Height", weightRanges: [IntWeightRange(lower: Int64(_fileHeight), upper: Int64(_fileHeight), weight: Int64(1))]),
-                LongParam(key: "Duration", weightRanges: [IntWeightRange(lower: Int64(_fileDuration), upper: Int64(_fileDuration), weight: Int64(1))]),
+                LongParam(key: "Width", weightRanges: [
+                  IntWeightRange(lower: Int64(_fileWidth), upper: Int64(_fileWidth), weight: Int64(1))
+                ]),
+                LongParam(key: "Height", weightRanges: [
+                  IntWeightRange(lower: Int64(_fileHeight), upper: Int64(_fileHeight), weight: Int64(1))
+                ]),
+                LongParam(key: "Duration", weightRanges: [
+                  IntWeightRange(lower: Int64(_fileDuration), upper: Int64(_fileDuration), weight: Int64(1))
+                ]),
               ],
               strings: [
                 StringParam(key: "Name", value: artNameController.text.trim()),
@@ -251,11 +265,11 @@ class EaselProvider extends ChangeNotifier {
     log('From App $response');
 
     if (response.success) {
-      ScaffoldMessenger.of(navigatorKey.currentState!.overlay!.context).showSnackBar(const SnackBar(content: Text("Recipe created")));
+      navigatorKey.currentState!.overlay!.context.show(message: kRecipeCreated);
       log("${response.data}");
       return true;
     } else {
-      ScaffoldMessenger.of(navigatorKey.currentState!.overlay!.context).showSnackBar(SnackBar(content: Text("Recipe error : ${response.error}")));
+      navigatorKey.currentState!.overlay!.context.show(message: "$kErrRecipe ${response.error}");
       return false;
     }
   }
@@ -291,7 +305,6 @@ class EaselProvider extends ChangeNotifier {
     return sdkResponse;
   }
 
-
   /// false || true (Stripe account doesn't exists and selected Denom is not USD) return true
   /// true  || false (Stripe account exists and selected denom is not USD ) returns true
   /// false || false (Stripe account doesnt exists and selected denom is USD) return false
@@ -302,7 +315,7 @@ class EaselProvider extends ChangeNotifier {
       return true;
     }
 
-    ScaffoldMessenger.of(navigatorKey.currentState!.overlay!.context).showSnackBar(const SnackBar(content: Text(kStripeAccountDoesntExists)));
+    navigatorKey.currentState!.overlay!.context.show(message: kStripeAccountDoesntExists);
 
     return false;
   }

@@ -132,7 +132,7 @@ class _RoutingScreenState extends State<RoutingScreen> {
         } else if (response.errorCode == kErrProfileNotExist) {
           showCreateAnAccountDialog(response);
         } else {
-          MessageDialog().show("$kProfileErrorOccurredText: ${response.error}");
+          MessageDialog().show("$kErrProfileFetch: ${response.error}");
         }
         break;
       case RoutingScreenState.userNameShown:

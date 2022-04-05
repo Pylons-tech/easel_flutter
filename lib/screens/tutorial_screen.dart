@@ -1,6 +1,7 @@
 import 'package:bottom_drawer/bottom_drawer.dart';
 import 'package:easel_flutter/screens/welcome_screen.dart';
 import 'package:easel_flutter/utils/easel_app_theme.dart';
+import 'package:easel_flutter/utils/extension_util.dart';
 import 'package:easel_flutter/utils/route_util.dart';
 import 'package:easel_flutter/widgets/pylons_button.dart';
 import 'package:flutter/material.dart';
@@ -268,9 +269,7 @@ class _TutorialScreenState extends State<TutorialScreen> {
                   if (!appAlreadyInstalled) {
                     PylonsWallet.instance.goToInstall();
                   } else {
-                    ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
-                      content: Text(kPylonsAlreadyInstalled),
-                    ));
+                    context.show(message: kPylonsAlreadyInstalled);
                   }
                 },
                 btnText: kDownloadPylons,

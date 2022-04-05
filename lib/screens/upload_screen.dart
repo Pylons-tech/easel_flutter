@@ -2,15 +2,19 @@ import 'dart:io';
 import 'dart:ui';
 
 import 'package:easel_flutter/easel_provider.dart';
+import 'package:easel_flutter/models/nft_format.dart';
 import 'package:easel_flutter/utils/constants.dart';
+import 'package:easel_flutter/utils/extension_util.dart';
 import 'package:easel_flutter/utils/file_utils.dart';
 import 'package:easel_flutter/utils/easel_app_theme.dart';
-import 'package:easel_flutter/utils/screen_size_util.dart';
 import 'package:easel_flutter/utils/space_utils.dart';
-import 'package:easel_flutter/widgets/pylons_round_button.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:provider/provider.dart';
+
+import '../widgets/pylons_button.dart';
 
 class UploadScreen extends StatefulWidget {
   final PageController controller;
@@ -38,28 +42,65 @@ class _UploadScreenState extends State<UploadScreen> {
                 children: [
                   _UploadWidget(onFilePicked: (result) async {
                     if (result != null) {
-                      if (FileUtils.getFileSizeInGB(
-                              File(result.path!).lengthSync()) <=
-                          kFileSizeLimitInGB) {
+                      if (FileUtils.getFileSizeInGB(File(result.path!).lengthSync()) <= kFileSizeLimitInGB) {
                         await provider.setFile(context, result);
                       } else {
-                        errorText.value =
-                            '"${result.name}" could not be uploaded';
+                        errorText.value = '"${result.name}" could not be uploaded';
                         showError.value = true;
                       }
                     }
                   }),
-                  PylonsRoundButton(onPressed: () {
-                    if (provider.file != null) {
-                      context.read<EaselProvider>().priceController.clear();
-                      widget.controller.nextPage(
-                          duration: const Duration(milliseconds: 300),
-                          curve: Curves.easeIn);
-                    } else {
-                      errorText.value = 'Pick a file';
-                      showError.value = true;
-                    }
-                  }),
+                  Column(
+                    children: NftFormat.supportedFormats
+                        .map(
+                          (format) => Padding(
+                              padding: EdgeInsets.symmetric(horizontal: 12.w, vertical: 2.h),
+                              child: Row(children: [
+                                SizedBox(
+                                  height: 22.h,
+                                  width: 40.w,
+                                  child: SvgPicture.asset(format.badge),
+                                ),
+                                SizedBox(
+                                  width: 72.w,
+                                  child: Text(format.format,
+                                      style: Theme.of(context).textTheme.subtitle2!.copyWith(
+                                          color: EaselAppTheme.kDartGrey02,
+                                          fontSize: 18.sp,
+                                          fontWeight: FontWeight.w800)),
+                                ),
+                                SizedBox(
+                                  width: 0.6.sw,
+                                  child: Text(format.getExtensionsList(),
+                                      style: Theme.of(context).textTheme.subtitle2!.copyWith(
+                                          color: EaselAppTheme.kLightPurple,
+                                          fontSize: 18.sp,
+                                          fontWeight: FontWeight.w800)),
+                                ),
+                              ])),
+                        )
+                        .toList(),
+                  ),
+                  Align(
+                    alignment: Alignment.centerRight,
+                    child: Container(
+                      padding: EdgeInsets.symmetric(horizontal: 0.12.sw),
+                      child: PylonsButton(
+                          onPressed: () {
+                            if (provider.file != null) {
+                              context.read<EaselProvider>().priceController.clear();
+                              widget.controller
+                                  .nextPage(duration: const Duration(milliseconds: 300), curve: Curves.easeIn);
+                            } else {
+                              errorText.value = kErrFileNotPicked;
+                              showError.value = true;
+                            }
+                          },
+                          btnText: kContinue,
+                          isBlue: false,
+                          showArrow: true),
+                    ),
+                  )
                 ],
               ),
             ),
@@ -102,26 +143,38 @@ class _UploadWidgetState extends State<_UploadWidget> {
     return Consumer<EaselProvider>(
       builder: (_, provider, __) => Column(
         children: [
-          const VerticalSpace(5),
-          Container(
+          SizedBox(
             width: double.infinity,
-            height: MediaQuery.of(context).size.width * 0.5,
-            padding: const EdgeInsets.all(60),
+            height: 0.26.sh,
             child: GestureDetector(
-              onTap: () async {
-                final result = await FileUtils.pickFile(provider.nftFormat);
-                if (result == null) {
-                  ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
-                    content: Text("Unsupported format."),
-                  ));
-                } else {
-                  widget.onFilePicked(result);
-                }
-              },
-              child: Image.asset(kFileIcon),
-            ),
+                onTap: () async {
+                  final result = await FileUtils.pickFile();
+                  if (result == null) {
+                    context.show(message: kErrUnsupportedFormat);
+                  } else {
+                    provider.resolveNftFormat(context, result.extension!);
+                    widget.onFilePicked(result);
+                  }
+                },
+                child: Stack(
+                  alignment: Alignment.center,
+                  children: [
+                    SvgPicture.asset(kSvgDashedBox),
+                    Column(
+                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                      children: [
+                        Text(kTapToSelect,
+                            style: Theme.of(context).textTheme.subtitle2!.copyWith(
+                                color: EaselAppTheme.kLightPurple, fontSize: 22.sp, fontWeight: FontWeight.w800)),
+                        SvgPicture.asset(kSvgFileUpload),
+                        Text("${kFileSizeLimitInGB}GB Limit",
+                            style: Theme.of(context).textTheme.bodyText2!.copyWith(
+                                color: EaselAppTheme.kLightPurple, fontSize: 15, fontWeight: FontWeight.w800)),
+                      ],
+                    ),
+                  ],
+                )),
           ),
-          const VerticalSpace(5),
           Text(
             provider.fileName,
             style: Theme.of(context).textTheme.subtitle2!.copyWith(
@@ -141,34 +194,27 @@ class _UploadWidgetState extends State<_UploadWidget> {
 }
 
 class _ErrorMessageWidget extends StatelessWidget {
-  const _ErrorMessageWidget(
-      {Key? key, required this.errorMessage, required this.onClose})
-      : super(key: key);
+  const _ErrorMessageWidget({Key? key, required this.errorMessage, required this.onClose}) : super(key: key);
 
   final String errorMessage;
   final VoidCallback onClose;
 
   @override
   Widget build(BuildContext context) {
-    final screenSize = ScreenSizeUtil(context);
-
     return Stack(
       children: [
         Positioned(
           right: 0,
           child: SizedBox(
-            width: screenSize.width(),
+            width: 1.0.sw,
             child: ClipRRect(
-              borderRadius: const BorderRadius.only(
-                  topLeft: Radius.circular(14),
-                  bottomLeft: Radius.circular(14)),
+              borderRadius: const BorderRadius.only(topLeft: Radius.circular(14), bottomLeft: Radius.circular(14)),
               child: BackdropFilter(
                 filter: ImageFilter.blur(sigmaX: 2.0, sigmaY: 2.0),
                 child: Container(
-                  height: screenSize.height(percent: 85),
+                  height: 0.85.sh,
                   // width: screenSize.width(),
-                  decoration: BoxDecoration(
-                      color: EaselAppTheme.kWhite.withOpacity(0.2)),
+                  decoration: BoxDecoration(color: EaselAppTheme.kWhite.withOpacity(0.2)),
                 ),
               ),
             ),
@@ -176,16 +222,14 @@ class _ErrorMessageWidget extends StatelessWidget {
         ),
         Container(
           width: double.infinity,
-          height: screenSize.width(percent: 85),
+          height: 0.85.sw,
           margin: const EdgeInsets.only(
             left: 20,
           ),
           padding: const EdgeInsets.symmetric(horizontal: 30, vertical: 40),
           decoration: BoxDecoration(
               color: EaselAppTheme.kRed.withOpacity(0.75),
-              borderRadius: const BorderRadius.only(
-                  topLeft: Radius.circular(14),
-                  bottomLeft: Radius.circular(14))),
+              borderRadius: const BorderRadius.only(topLeft: Radius.circular(14), bottomLeft: Radius.circular(14))),
           child: Column(
             children: [
               Row(
@@ -201,10 +245,7 @@ class _ErrorMessageWidget extends StatelessWidget {
                   Expanded(
                     child: Text(
                       errorMessage,
-                      style: const TextStyle(
-                          color: Colors.white,
-                          fontSize: 18,
-                          fontWeight: FontWeight.w500),
+                      style: TextStyle(color: Colors.white, fontSize: 18.sp, fontWeight: FontWeight.w500),
                     ),
                   )
                 ],
@@ -215,24 +256,15 @@ class _ErrorMessageWidget extends StatelessWidget {
                   children: [
                     Text(
                       "• ${kFileSizeLimitInGB}GB Limit",
-                      style: Theme.of(context)
-                          .textTheme
-                          .bodyText2!
-                          .copyWith(color: Colors.white, fontSize: 16),
+                      style: Theme.of(context).textTheme.bodyText2!.copyWith(color: Colors.white, fontSize: 16.sp),
                     ),
                     Text(
                       "• JPG, JPEG or PNG format",
-                      style: Theme.of(context)
-                          .textTheme
-                          .bodyText2!
-                          .copyWith(color: Colors.white, fontSize: 16),
+                      style: Theme.of(context).textTheme.bodyText2!.copyWith(color: Colors.white, fontSize: 16.sp),
                     ),
                     Text(
                       "• One file per upload",
-                      style: Theme.of(context)
-                          .textTheme
-                          .bodyText2!
-                          .copyWith(color: Colors.white, fontSize: 16),
+                      style: Theme.of(context).textTheme.bodyText2!.copyWith(color: Colors.white, fontSize: 16.sp),
                     ),
                   ],
                 ),
