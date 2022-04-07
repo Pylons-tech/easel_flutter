@@ -163,29 +163,21 @@ class _UploadWidgetState extends State<_UploadWidget> {
                     Column(
                       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                       children: [
-                        Text(kTapToSelect,
-                            style: Theme.of(context).textTheme.subtitle2!.copyWith(
-                                color: EaselAppTheme.kLightPurple, fontSize: 22.sp, fontWeight: FontWeight.w800)),
+                        Padding(
+                            padding: EdgeInsets.symmetric(horizontal: 0.18.sw),
+                            child: Text(provider.fileName.isEmpty ? kTapToSelect : provider.fileName,
+                                style: Theme.of(context).textTheme.subtitle2!.copyWith(
+                                    color: EaselAppTheme.kLightPurple,
+                                    fontSize: provider.fileName.isEmpty ? 22.sp : 16.sp,
+                                    fontWeight: FontWeight.w800))),
                         SvgPicture.asset(kSvgFileUpload),
-                        Text("${kFileSizeLimitInGB}GB Limit",
+                        Text(provider.fileName.isEmpty ? "${kFileSizeLimitInGB}GB Limit" : provider.fileSize,
                             style: Theme.of(context).textTheme.bodyText2!.copyWith(
-                                color: EaselAppTheme.kLightPurple, fontSize: 15, fontWeight: FontWeight.w800)),
+                                color: EaselAppTheme.kLightPurple, fontSize: 15.sp, fontWeight: FontWeight.w800)),
                       ],
                     ),
                   ],
                 )),
-          ),
-          Text(
-            provider.fileName,
-            style: Theme.of(context).textTheme.subtitle2!.copyWith(
-                  color: EaselAppTheme.kLightGrey,
-                ),
-          ),
-          Text(
-            provider.fileSize,
-            style: Theme.of(context).textTheme.subtitle2!.copyWith(
-                  color: EaselAppTheme.kLightGrey,
-                ),
           ),
         ],
       ),
