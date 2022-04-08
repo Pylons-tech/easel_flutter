@@ -30,6 +30,9 @@ const kSvgRectBlue = 'assets/images/svg/rectangular_button_blue.svg';
 const kSvgRectRed = 'assets/images/svg/rectangular_button_red.svg';
 const kSvgDashedBox = 'assets/images/svg/dashed_box.svg';
 const kSvgFileUpload = 'assets/images/svg/file_upload.svg';
+const kSvgUploadErrorBG = 'assets/images/svg/upload_error_background.svg';
+const kSvgCloseIcon = 'assets/images/svg/close_icon.svg';
+const kSvgCloseButton = 'assets/images/svg/close_button.svg';
 const kSvgNftTypeImage = 'assets/images/svg/nft_type_image.svg';
 const kSvgNftTypeVideo = 'assets/images/svg/nft_type_video.svg';
 const kSvgNftType3d = 'assets/images/svg/nft_type_3d.svg';
@@ -102,6 +105,7 @@ const kWhyAppNeededDescSummary3 =
     "No subscriptions. We don’t sell your information. We only charge a fee when you purchase a NFT";
 const kPylonsAlreadyInstalled = "Pylons already installed.";
 const kTapToSelect = "Tap to Select";
+const kCloseText = "Close";
 
 const kMinNFTName = 9;
 const kMinDescription = 20;

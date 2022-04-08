@@ -35,90 +35,82 @@ class _UploadScreenState extends State<UploadScreen> {
     return Scaffold(
       body: Stack(
         children: [
-          Column(children: [
-            Expanded(
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                children: [
-                  _UploadWidget(onFilePicked: (result) async {
-                    if (result != null) {
-                      if (FileUtils.getFileSizeInGB(File(result.path!).lengthSync()) <= kFileSizeLimitInGB) {
-                        await provider.setFile(context, result);
-                      } else {
-                        errorText.value = '"${result.name}" could not be uploaded';
-                        showError.value = true;
-                      }
-                    }
-                  }),
-                  Column(
-                    children: NftFormat.supportedFormats
-                        .map(
-                          (format) => Padding(
-                              padding: EdgeInsets.symmetric(horizontal: 12.w, vertical: 2.h),
-                              child: Row(children: [
-                                SizedBox(
-                                  height: 22.h,
-                                  width: 40.w,
-                                  child: SvgPicture.asset(format.badge),
-                                ),
-                                SizedBox(
-                                  width: 72.w,
-                                  child: Text(format.format,
-                                      style: Theme.of(context).textTheme.subtitle2!.copyWith(
-                                          color: EaselAppTheme.kDartGrey02,
-                                          fontSize: 18.sp,
-                                          fontWeight: FontWeight.w800)),
-                                ),
-                                SizedBox(
-                                  width: 0.6.sw,
-                                  child: Text(format.getExtensionsList(),
-                                      style: Theme.of(context).textTheme.subtitle2!.copyWith(
-                                          color: EaselAppTheme.kLightPurple,
-                                          fontSize: 18.sp,
-                                          fontWeight: FontWeight.w800)),
-                                ),
-                              ])),
-                        )
-                        .toList(),
-                  ),
-                  Align(
-                    alignment: Alignment.centerRight,
-                    child: Container(
-                      padding: EdgeInsets.symmetric(horizontal: 0.12.sw),
-                      child: PylonsButton(
-                          onPressed: () {
-                            if (provider.file != null) {
-                              context.read<EaselProvider>().priceController.clear();
-                              widget.controller
-                                  .nextPage(duration: const Duration(milliseconds: 300), curve: Curves.easeIn);
-                            } else {
-                              errorText.value = kErrFileNotPicked;
-                              showError.value = true;
-                            }
-                          },
-                          btnText: kContinue,
-                          isBlue: false,
-                          showArrow: true),
-                    ),
-                  )
-                ],
-              ),
-            ),
-            const SizedBox(height: 20),
-          ]),
-          Positioned(
-            child: ValueListenableBuilder(
-              valueListenable: showError,
-              builder: (_, bool value, __) => value
-                  ? _ErrorMessageWidget(
-                      errorMessage: errorText.value,
-                      onClose: () {
-                        showError.value = false;
-                      },
+          Column(
+            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            children: [
+              _UploadWidget(onFilePicked: (result) async {
+                if (result != null) {
+                  provider.resolveNftFormat(context, result.extension!);
+                  if (FileUtils.getFileSizeInGB(File(result.path!).lengthSync()) <= kFileSizeLimitInGB) {
+                    await provider.setFile(context, result);
+                  } else {
+                    errorText.value = '"${result.name}" could not be uploaded';
+                    showError.value = true;
+                  }
+                } else {
+                  errorText.value = kErrUnsupportedFormat;
+                  showError.value = true;
+                }
+              }),
+              Column(
+                children: NftFormat.supportedFormats
+                    .map(
+                      (format) => Padding(
+                          padding: EdgeInsets.symmetric(horizontal: 12.w, vertical: 2.h),
+                          child: Row(children: [
+                            SizedBox(
+                              height: 22.h,
+                              width: 40.w,
+                              child: SvgPicture.asset(format.badge),
+                            ),
+                            SizedBox(
+                              width: 72.w,
+                              child: Text(format.format,
+                                  style: Theme.of(context).textTheme.subtitle2!.copyWith(
+                                      color: EaselAppTheme.kDartGrey02, fontSize: 18.sp, fontWeight: FontWeight.w800)),
+                            ),
+                            SizedBox(
+                              width: 0.6.sw,
+                              child: Text(format.getExtensionsList(),
+                                  style: Theme.of(context).textTheme.subtitle2!.copyWith(
+                                      color: EaselAppTheme.kLightPurple, fontSize: 18.sp, fontWeight: FontWeight.w800)),
+                            ),
+                          ])),
                     )
-                  : const SizedBox.shrink(),
-            ),
-          )
+                    .toList(),
+              ),
+              Align(
+                alignment: Alignment.centerRight,
+                child: Container(
+                  padding: EdgeInsets.symmetric(horizontal: 0.12.sw),
+                  child: PylonsButton(
+                      onPressed: () {
+                        if (provider.file != null) {
+                          context.read<EaselProvider>().priceController.clear();
+                          widget.controller.nextPage(duration: const Duration(milliseconds: 300), curve: Curves.easeIn);
+                        } else {
+                          errorText.value = kErrFileNotPicked;
+                          showError.value = true;
+                        }
+                      },
+                      btnText: kContinue,
+                      isBlue: false,
+                      showArrow: true),
+                ),
+              )
+            ],
+          ),
+          ValueListenableBuilder(
+            valueListenable: showError,
+            builder: (_, bool value, __) => value
+                ? _ErrorMessageWidget(
+                    errorMessage: errorText.value,
+                    onClose: () {
+                      showError.value = false;
+                    },
+                  )
+                : const SizedBox.shrink(),
+          ),
         ],
       ),
     );
@@ -141,45 +133,39 @@ class _UploadWidgetState extends State<_UploadWidget> {
   @override
   Widget build(BuildContext context) {
     return Consumer<EaselProvider>(
-      builder: (_, provider, __) => Column(
-        children: [
-          SizedBox(
-            width: double.infinity,
-            height: 0.26.sh,
-            child: GestureDetector(
-                onTap: () async {
-                  final result = await FileUtils.pickFile();
-                  if (result == null) {
-                    context.show(message: kErrUnsupportedFormat);
-                  } else {
-                    provider.resolveNftFormat(context, result.extension!);
-                    widget.onFilePicked(result);
-                  }
-                },
-                child: Stack(
-                  alignment: Alignment.center,
-                  children: [
-                    SvgPicture.asset(kSvgDashedBox),
-                    Column(
-                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                      children: [
-                        Padding(
-                            padding: EdgeInsets.symmetric(horizontal: 0.18.sw),
-                            child: Text(provider.fileName.isEmpty ? kTapToSelect : provider.fileName,
-                                style: Theme.of(context).textTheme.subtitle2!.copyWith(
-                                    color: EaselAppTheme.kLightPurple,
-                                    fontSize: provider.fileName.isEmpty ? 22.sp : 16.sp,
-                                    fontWeight: FontWeight.w800))),
-                        SvgPicture.asset(kSvgFileUpload),
-                        Text(provider.fileName.isEmpty ? "${kFileSizeLimitInGB}GB Limit" : provider.fileSize,
-                            style: Theme.of(context).textTheme.bodyText2!.copyWith(
-                                color: EaselAppTheme.kLightPurple, fontSize: 15.sp, fontWeight: FontWeight.w800)),
-                      ],
-                    ),
-                  ],
-                )),
-          ),
-        ],
+      builder: (_, provider, __) => Padding(
+        padding: EdgeInsets.only(top: 8.h),
+        child: SizedBox(
+          width: 0.8.sw,
+          child: GestureDetector(
+              onTap: () async {
+                final result = await FileUtils.pickFile();
+                widget.onFilePicked(result);
+              },
+              child: Stack(
+                alignment: Alignment.center,
+                children: [
+                  SvgPicture.asset(kSvgDashedBox),
+                  Column(
+                    children: [
+                      Padding(
+                          padding: EdgeInsets.symmetric(horizontal: 0.18.sw),
+                          child: Text(provider.fileName.isEmpty ? kTapToSelect : provider.fileName,
+                              style: Theme.of(context).textTheme.subtitle2!.copyWith(
+                                  color: EaselAppTheme.kLightPurple,
+                                  fontSize: provider.fileName.isEmpty ? 22.sp : 16.sp,
+                                  fontWeight: FontWeight.w800))),
+                      SizedBox(height: 25.h),
+                      SvgPicture.asset(kSvgFileUpload),
+                      SizedBox(height: 10.h),
+                      Text(provider.fileName.isEmpty ? "${kFileSizeLimitInGB}GB Limit" : provider.fileSize,
+                          style: Theme.of(context).textTheme.bodyText2!.copyWith(
+                              color: EaselAppTheme.kLightPurple, fontSize: 15.sp, fontWeight: FontWeight.w800)),
+                    ],
+                  ),
+                ],
+              )),
+        ),
       ),
     );
   }
@@ -193,78 +179,78 @@ class _ErrorMessageWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Stack(
-      children: [
-        Positioned(
-          right: 0,
-          child: SizedBox(
-            width: 1.0.sw,
-            child: ClipRRect(
-              borderRadius: const BorderRadius.only(topLeft: Radius.circular(14), bottomLeft: Radius.circular(14)),
-              child: BackdropFilter(
-                filter: ImageFilter.blur(sigmaX: 2.0, sigmaY: 2.0),
-                child: Container(
-                  height: 0.85.sh,
-                  // width: screenSize.width(),
-                  decoration: BoxDecoration(color: EaselAppTheme.kWhite.withOpacity(0.2)),
+    return Padding(
+      padding: EdgeInsets.symmetric(horizontal: 0.1.sw),
+      child: Stack(
+        alignment: Alignment.center,
+        children: [
+          SvgPicture.asset(kSvgUploadErrorBG),
+          Container(
+            width: double.infinity,
+            height: 0.9.sw,
+            padding: const EdgeInsets.symmetric(horizontal: 30, vertical: 40),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                SvgPicture.asset(kSvgCloseIcon),
+                SizedBox(height: 15.h),
+                Expanded(
+                  child: Text(
+                    errorMessage,
+                    style: TextStyle(color: Colors.white, fontSize: 18.sp, fontWeight: FontWeight.w800),
+                  ),
                 ),
-              ),
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text("• ${kFileSizeLimitInGB}GB Limit",
+                          style: Theme.of(context)
+                              .textTheme
+                              .bodyText2!
+                              .copyWith(color: Colors.white, fontSize: 16.sp, fontWeight: FontWeight.w800)),
+                      Text("• Image, Video, 3D or Audio",
+                          style: Theme.of(context)
+                              .textTheme
+                              .bodyText2!
+                              .copyWith(color: Colors.white, fontSize: 16.sp, fontWeight: FontWeight.w800)),
+                      Text("• One file per upload",
+                          style: Theme.of(context)
+                              .textTheme
+                              .bodyText2!
+                              .copyWith(color: Colors.white, fontSize: 16.sp, fontWeight: FontWeight.w800)),
+                    ],
+                  ),
+                ),
+                SizedBox(height: 10.h),
+                GestureDetector(
+                  child: SizedBox(
+                    width: 0.5.sw,
+                    height: 0.12.sw,
+                    child: Stack(
+                      children: [
+                        SvgPicture.asset(kSvgCloseButton, fit: BoxFit.cover),
+                        Center(
+                          child: Text(
+                            kCloseText,
+                            style: Theme.of(context)
+                                .textTheme
+                                .bodyText1!
+                                .copyWith(fontSize: 16.sp, color: EaselAppTheme.kWhite, fontWeight: FontWeight.w300),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                  onTap: () {
+                    onClose();
+                  },
+                ),
+              ],
             ),
           ),
-        ),
-        Container(
-          width: double.infinity,
-          height: 0.85.sw,
-          margin: const EdgeInsets.only(
-            left: 20,
-          ),
-          padding: const EdgeInsets.symmetric(horizontal: 30, vertical: 40),
-          decoration: BoxDecoration(
-              color: EaselAppTheme.kRed.withOpacity(0.75),
-              borderRadius: const BorderRadius.only(topLeft: Radius.circular(14), bottomLeft: Radius.circular(14))),
-          child: Column(
-            children: [
-              Row(
-                children: [
-                  IconButton(
-                      onPressed: onClose,
-                      icon: const Icon(
-                        Icons.clear,
-                        color: Colors.white,
-                        size: 30,
-                      )),
-                  const HorizontalSpace(20),
-                  Expanded(
-                    child: Text(
-                      errorMessage,
-                      style: TextStyle(color: Colors.white, fontSize: 18.sp, fontWeight: FontWeight.w500),
-                    ),
-                  )
-                ],
-              ),
-              Expanded(
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Text(
-                      "• ${kFileSizeLimitInGB}GB Limit",
-                      style: Theme.of(context).textTheme.bodyText2!.copyWith(color: Colors.white, fontSize: 16.sp),
-                    ),
-                    Text(
-                      "• JPG, JPEG or PNG format",
-                      style: Theme.of(context).textTheme.bodyText2!.copyWith(color: Colors.white, fontSize: 16.sp),
-                    ),
-                    Text(
-                      "• One file per upload",
-                      style: Theme.of(context).textTheme.bodyText2!.copyWith(color: Colors.white, fontSize: 16.sp),
-                    ),
-                  ],
-                ),
-              )
-            ],
-          ),
-        ),
-      ],
+        ],
+      ),
     );
   }
 }
