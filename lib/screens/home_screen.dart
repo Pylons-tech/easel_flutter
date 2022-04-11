@@ -36,7 +36,7 @@ class _HomeScreenState extends State<HomeScreen> {
   final PageController _pageController = PageController(keepPage: true);
   final ValueNotifier<int> _currentPage = ValueNotifier(0);
 
-  List screenLabels = [kUploadText, kDescriptionText, kMintText, kPublishText];
+  List screenLabels = [kUploadText, kEditText, kMintText, kPublishText];
   List screenTitles = [kUploadNFTText, kEditNFTText, kPreviewNFTText, ''];
 
   @override
@@ -60,24 +60,22 @@ class _HomeScreenState extends State<HomeScreen> {
                   undoneLineThickness: 1.5,
                   unselectedStepColorIn: EaselAppTheme.kLightGrey,
                   unselectedStepColorOut: EaselAppTheme.kLightGrey,
-                  doneStepColor: EaselAppTheme.kLightGrey,
-                  selectedStepColorIn: EaselAppTheme.kBlue,
-                  selectedStepColorOut: EaselAppTheme.kBlue,
-                  enableLineAnimation: false,
-                  enableStepAnimation: false,
+                  doneStepColor: EaselAppTheme.kDarkGreen,
+                  selectedStepColorIn: EaselAppTheme.kDarkGreen,
+                  selectedStepColorOut: EaselAppTheme.kDarkGreen,
+                  enableLineAnimation: true,
+                  enableStepAnimation: true,
                 ),
               ),
               const VerticalSpace(5),
               _buildTitles(),
               const VerticalSpace(10),
-              Align(
-                alignment: Alignment.centerLeft,
-                child: SizedBox(
-                  width: 1.0.sw,
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      ValueListenableBuilder(
+              Stack(
+                alignment: Alignment.center,
+                children: [
+                  Align(
+                      alignment: Alignment.centerLeft,
+                      child: ValueListenableBuilder(
                         valueListenable: _currentPage,
                         builder: (_, int currentPage, __) => _currentPage.value == _numPages - 1
                             ? Consumer<EaselProvider>(
@@ -94,31 +92,33 @@ class _HomeScreenState extends State<HomeScreen> {
                                 ),
                               )
                             : Padding(
-                                padding: const EdgeInsets.only(left: 10.0),
+                                padding: EdgeInsets.only(left: 10.sp),
                                 child: IconButton(
-                                    onPressed: () {
-                                      _pageController.previousPage(
-                                          duration: const Duration(milliseconds: 300), curve: Curves.easeIn);
-                                    },
-                                    icon: const Icon(
-                                      Icons.arrow_back_ios,
-                                      color: EaselAppTheme.kGrey,
-                                    )),
-                              ),
-                      ),
-                      ValueListenableBuilder(
-                        valueListenable: _currentPage,
-                        builder: (_, int currentPage, __) {
-                          return Text(
-                            screenTitles[_currentPage.value],
-                            style: Theme.of(context)
-                                .textTheme
-                                .bodyText1!
-                                .copyWith(fontSize: 18.sp, fontWeight: FontWeight.w400, color: EaselAppTheme.kDarkText),
-                          );
-                        },
-                      ),
-                      ValueListenableBuilder(
+                                  onPressed: () {
+                                    _pageController.previousPage(
+                                        duration: const Duration(milliseconds: 300), curve: Curves.easeIn);
+                                  },
+                                  icon: const Icon(
+                                    Icons.arrow_back_ios,
+                                    color: EaselAppTheme.kGrey,
+                                  ),
+                                )),
+                      )),
+                  ValueListenableBuilder(
+                    valueListenable: _currentPage,
+                    builder: (_, int currentPage, __) {
+                      return Text(
+                        screenTitles[_currentPage.value],
+                        style: Theme.of(context)
+                            .textTheme
+                            .bodyText1!
+                            .copyWith(fontSize: 18.sp, fontWeight: FontWeight.w400, color: EaselAppTheme.kDarkText),
+                      );
+                    },
+                  ),
+                  Align(
+                      alignment: Alignment.centerRight,
+                      child: ValueListenableBuilder(
                         valueListenable: _currentPage,
                         builder: (_, int currentPage, __) => _currentPage.value == _numPages - 1
                             ? Consumer<EaselProvider>(
@@ -139,10 +139,8 @@ class _HomeScreenState extends State<HomeScreen> {
                                 ),
                               )
                             : const SizedBox.shrink(),
-                      ),
-                    ],
-                  ),
-                ),
+                      ))
+                ],
               ),
               const VerticalSpace(6),
               Expanded(
