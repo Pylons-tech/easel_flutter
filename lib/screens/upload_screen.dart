@@ -206,12 +206,12 @@ class _ErrorMessageWidget extends StatelessWidget {
                               .textTheme
                               .bodyText2!
                               .copyWith(color: Colors.white, fontSize: 16.sp, fontWeight: FontWeight.w800)),
-                      Text("• Image, Video, 3D or Audio",
+                      Text(kUploadHint2,
                           style: Theme.of(context)
                               .textTheme
                               .bodyText2!
                               .copyWith(color: Colors.white, fontSize: 16.sp, fontWeight: FontWeight.w800)),
-                      Text("• One file per upload",
+                      Text(kUploadHint3,
                           style: Theme.of(context)
                               .textTheme
                               .bodyText2!

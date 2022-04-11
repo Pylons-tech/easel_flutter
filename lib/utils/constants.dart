@@ -106,6 +106,8 @@ const kWhyAppNeededDescSummary3 =
 const kPylonsAlreadyInstalled = "Pylons already installed.";
 const kTapToSelect = "Tap to Select";
 const kCloseText = "Close";
+const kUploadHint2 = "• Image, Video, 3D or Audio";
+const kUploadHint3 = "• One file per upload";
 
 const kMinNFTName = 9;
 const kMinDescription = 20;
