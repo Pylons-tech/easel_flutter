@@ -43,23 +43,27 @@ class FileUtils {
 
   /// converts file size from bytes to gigabytes
   static double getFileSizeInGB(int fileLength) {
-    return fileLength / (1024 * 1024 * 1024).toDouble();
+    return (fileLength / (1024 * 1024 * 1024)).ceilToDouble();
   }
 
   // formats file size to different byte units
-  static String getFileSizeString({required int fileLength, int precision = 2}) {
-    const suffixes = ["B", "KB", "MB", "GB", "TB"];
+  static String getFileSizeString(
+      {required int fileLength, int precision = 2}) {
+    const suffixes = ["b", "kb", "MB", "GB", "TB"];
     var i = (log(fileLength) / log(1024)).floor();
-    return ((fileLength / pow(1024, i)).toStringAsFixed(precision)) + suffixes[i];
+    return ((fileLength / pow(1024, i)).toStringAsFixed(precision)) +
+        suffixes[i];
   }
 
-  static String generateEaselLink({required String recipeId, required String cookbookId}) {
+  static String generateEaselLink(
+      {required String recipeId, required String cookbookId}) {
     return Uri.https(kWalletDynamicLink, "/", {
       "amv": "1",
       "apn": kWalletAndroidId,
       "ibi": kWalletIOSId,
       "imv": "1",
-      "link": "$kWalletWebLink/?action=purchase_nft&recipe_id=$recipeId&cookbook_id=$cookbookId&nft_amount=1"
+      "link":
+          "$kWalletWebLink/?action=purchase_nft&recipe_id=$recipeId&cookbook_id=$cookbookId&nft_amount=1"
     }).toString();
   }
 }

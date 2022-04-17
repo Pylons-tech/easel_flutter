@@ -74,7 +74,7 @@ class MintScreen extends StatelessWidget {
                           thickness: 1.2,
                         ),
                         Text(
-                          kEditText,
+                          kDescriptionText,
                           style: Theme.of(context).textTheme.bodyText2!.copyWith(
                                 fontSize: 18,
                               ),
