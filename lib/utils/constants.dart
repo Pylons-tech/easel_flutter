@@ -30,9 +30,6 @@ const kSvgRectBlue = 'assets/images/svg/rectangular_button_blue.svg';
 const kSvgRectRed = 'assets/images/svg/rectangular_button_red.svg';
 const kSvgDashedBox = 'assets/images/svg/dashed_box.svg';
 const kSvgFileUpload = 'assets/images/svg/file_upload.svg';
-const kSvgUploadErrorBG = 'assets/images/svg/upload_error_background.svg';
-const kSvgCloseIcon = 'assets/images/svg/close_icon.svg';
-const kSvgCloseButton = 'assets/images/svg/close_button.svg';
 const kSvgNftTypeImage = 'assets/images/svg/nft_type_image.svg';
 const kSvgNftTypeVideo = 'assets/images/svg/nft_type_video.svg';
 const kSvgNftType3d = 'assets/images/svg/nft_type_3d.svg';
@@ -73,7 +70,7 @@ const kWelcomeToEaselText = "Welcome to Easel,";
 const kEaselDescriptionText =
     "Easel is a NFT minter that allows you to create NFTs from any mobile device!\n\nOnce you successfully upload an audio, video or image file, enter the required information and press “Publish”, your file is transformed into a NFT that is stored on the Pylons blockchain indefinitely!\n\nYou’ll be able to view your new NFT in the Easel folder located in your Pylons Wallet.";
 const kCreatedByText = "Created by";
-const kEditText = "Edit";
+const kDescriptionText = "Description";
 const kSizeText = "Size";
 const kDurationText = "Duration";
 const kDateText = "Date";
@@ -105,9 +102,6 @@ const kWhyAppNeededDescSummary3 =
     "No subscriptions. We don’t sell your information. We only charge a fee when you purchase a NFT";
 const kPylonsAlreadyInstalled = "Pylons already installed.";
 const kTapToSelect = "Tap to Select";
-const kCloseText = "Close";
-const kUploadHint2 = "• Image, Video, 3D or Audio";
-const kUploadHint3 = "• One file per upload";
 
 const kMinNFTName = 9;
 const kMinDescription = 20;
