@@ -12,10 +12,15 @@ import 'package:get_it/get_it.dart';
 import 'package:provider/provider.dart';
 import 'package:pylons_sdk/pylons_sdk.dart';
 
+
+bool isTablet = false;
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
   PylonsWallet.setup(mode: PylonsMode.prod, host: 'easel');
   di.init();
+
+
+  isTablet = MediaQueryData.fromWindow(WidgetsBinding.instance!.window).size.shortestSide >= 600;
 
   runApp(const MyApp());
 }

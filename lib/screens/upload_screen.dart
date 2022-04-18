@@ -5,11 +5,13 @@ import 'package:easel_flutter/models/nft_format.dart';
 import 'package:easel_flutter/utils/constants.dart';
 import 'package:easel_flutter/utils/file_utils.dart';
 import 'package:easel_flutter/utils/easel_app_theme.dart';
+import 'package:easel_flutter/utils/screen_responsive.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:provider/provider.dart';
+import 'package:flutter_svg_provider/flutter_svg_provider.dart' as svg_provider;
 
 import '../widgets/pylons_button.dart';
 
@@ -23,7 +25,6 @@ class UploadScreen extends StatefulWidget {
 }
 
 class _UploadScreenState extends State<UploadScreen> {
-  ValueNotifier<bool> showError = ValueNotifier(false);
   ValueNotifier<String> errorText = ValueNotifier("Pick a file");
 
   @override
@@ -42,11 +43,11 @@ class _UploadScreenState extends State<UploadScreen> {
                     await provider.setFile(context, result);
                   } else {
                     errorText.value = '"${result.name}" could not be uploaded';
-                    showError.value = true;
+                    showErrorDialog();
                   }
                 } else {
                   errorText.value = kErrUnsupportedFormat;
-                  showError.value = true;
+                  showErrorDialog();
                 }
               }),
               Column(
@@ -62,15 +63,12 @@ class _UploadScreenState extends State<UploadScreen> {
                             ),
                             SizedBox(
                               width: 72.w,
-                              child: Text(format.format,
-                                  style: Theme.of(context).textTheme.subtitle2!.copyWith(
-                                      color: EaselAppTheme.kDartGrey02, fontSize: 18.sp, fontWeight: FontWeight.w800)),
+                              child: Text(format.format, style: Theme.of(context).textTheme.subtitle2!.copyWith(color: EaselAppTheme.kDartGrey02, fontSize: 18.sp, fontWeight: FontWeight.w800)),
                             ),
                             SizedBox(
                               width: 0.6.sw,
                               child: Text(format.getExtensionsList(),
-                                  style: Theme.of(context).textTheme.subtitle2!.copyWith(
-                                      color: EaselAppTheme.kLightPurple, fontSize: 18.sp, fontWeight: FontWeight.w800)),
+                                  style: Theme.of(context).textTheme.subtitle2!.copyWith(color: EaselAppTheme.kLightPurple, fontSize: 18.sp, fontWeight: FontWeight.w800)),
                             ),
                           ])),
                     )
@@ -87,7 +85,7 @@ class _UploadScreenState extends State<UploadScreen> {
                           widget.controller.nextPage(duration: const Duration(milliseconds: 300), curve: Curves.easeIn);
                         } else {
                           errorText.value = kErrFileNotPicked;
-                          showError.value = true;
+                          showErrorDialog();
                         }
                       },
                       btnText: kContinue,
@@ -97,20 +95,20 @@ class _UploadScreenState extends State<UploadScreen> {
               )
             ],
           ),
-          ValueListenableBuilder(
-            valueListenable: showError,
-            builder: (_, bool value, __) => value
-                ? _ErrorMessageWidget(
-                    errorMessage: errorText.value,
-                    onClose: () {
-                      showError.value = false;
-                    },
-                  )
-                : const SizedBox.shrink(),
-          ),
         ],
       ),
     );
+  }
+
+  void showErrorDialog() {
+    showDialog(
+        context: context,
+        builder: (context) => _ErrorMessageWidget(
+              errorMessage: errorText.value,
+              onClose: () {
+                Navigator.of(context).pop();
+              },
+            ));
   }
 }
 
@@ -148,16 +146,15 @@ class _UploadWidgetState extends State<_UploadWidget> {
                       Padding(
                           padding: EdgeInsets.symmetric(horizontal: 0.18.sw),
                           child: Text(provider.fileName.isEmpty ? kTapToSelect : provider.fileName,
-                              style: Theme.of(context).textTheme.subtitle2!.copyWith(
-                                  color: EaselAppTheme.kLightPurple,
-                                  fontSize: provider.fileName.isEmpty ? 22.sp : 16.sp,
-                                  fontWeight: FontWeight.w800))),
+                              style: Theme.of(context)
+                                  .textTheme
+                                  .subtitle2!
+                                  .copyWith(color: EaselAppTheme.kLightPurple, fontSize: provider.fileName.isEmpty ? 22.sp : 16.sp, fontWeight: FontWeight.w800))),
                       SizedBox(height: 25.h),
                       SvgPicture.asset(kSvgFileUpload),
                       SizedBox(height: 10.h),
                       Text(provider.fileName.isEmpty ? "${kFileSizeLimitInGB}GB Limit" : provider.fileSize,
-                          style: Theme.of(context).textTheme.bodyText2!.copyWith(
-                              color: EaselAppTheme.kLightPurple, fontSize: 15.sp, fontWeight: FontWeight.w800)),
+                          style: Theme.of(context).textTheme.bodyText2!.copyWith(color: EaselAppTheme.kLightPurple, fontSize: 15.sp, fontWeight: FontWeight.w800)),
                     ],
                   ),
                 ],
@@ -176,77 +173,114 @@ class _ErrorMessageWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    return ScreenResponsive(
+      mobileScreen: (BuildContext context) =>  buildMobile(context),
+      tabletScreen: (context) => buildTablet(context),
+    );
+  }
+
+  Padding buildTablet(BuildContext context) {
     return Padding(
-      padding: EdgeInsets.symmetric(horizontal: 0.1.sw),
-      child: Stack(
-        alignment: Alignment.center,
-        children: [
-          SvgPicture.asset(kSvgUploadErrorBG),
-          Container(
-            width: double.infinity,
-            height: 0.9.sw,
-            padding: const EdgeInsets.symmetric(horizontal: 30, vertical: 40),
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      padding: EdgeInsets.symmetric(horizontal: 0.17.sw),
+      child: Container(
+        decoration: const BoxDecoration(image: DecorationImage(image: svg_provider.Svg(kSvgUploadErrorBG))),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            SvgPicture.asset(kSvgCloseIcon, height: 30.h,),
+            SizedBox(height: 30.h),
+            Text(
+              errorMessage,
+              style: TextStyle(color: Colors.white, fontSize: 18.sp, fontWeight: FontWeight.w800),
+            ),
+            SizedBox(height: 30.h),
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                SvgPicture.asset(kSvgCloseIcon),
-                SizedBox(height: 15.h),
-                Expanded(
-                  child: Text(
-                    errorMessage,
-                    style: TextStyle(color: Colors.white, fontSize: 18.sp, fontWeight: FontWeight.w800),
-                  ),
-                ),
-                Expanded(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text("• ${kFileSizeLimitInGB}GB Limit",
-                          style: Theme.of(context)
-                              .textTheme
-                              .bodyText2!
-                              .copyWith(color: Colors.white, fontSize: 16.sp, fontWeight: FontWeight.w800)),
-                      Text(kUploadHint2,
-                          style: Theme.of(context)
-                              .textTheme
-                              .bodyText2!
-                              .copyWith(color: Colors.white, fontSize: 16.sp, fontWeight: FontWeight.w800)),
-                      Text(kUploadHint3,
-                          style: Theme.of(context)
-                              .textTheme
-                              .bodyText2!
-                              .copyWith(color: Colors.white, fontSize: 16.sp, fontWeight: FontWeight.w800)),
-                    ],
-                  ),
-                ),
-                SizedBox(height: 10.h),
-                GestureDetector(
-                  child: SizedBox(
-                    width: 0.5.sw,
-                    height: 0.12.sw,
-                    child: Stack(
-                      children: [
-                        SvgPicture.asset(kSvgCloseButton, fit: BoxFit.cover),
-                        Center(
-                          child: Text(
-                            kCloseText,
-                            style: Theme.of(context)
-                                .textTheme
-                                .bodyText1!
-                                .copyWith(fontSize: 16.sp, color: EaselAppTheme.kWhite, fontWeight: FontWeight.w300),
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                  onTap: () {
-                    onClose();
-                  },
-                ),
+                Text("• ${kFileSizeLimitInGB}GB Limit", style: Theme.of(context).textTheme.bodyText2!.copyWith(color: Colors.white, fontSize: 16.sp, fontWeight: FontWeight.w800)),
+                Text(kUploadHint2, style: Theme.of(context).textTheme.bodyText2!.copyWith(color: Colors.white, fontSize: 16.sp, fontWeight: FontWeight.w800)),
+                Text(kUploadHint3, style: Theme.of(context).textTheme.bodyText2!.copyWith(color: Colors.white, fontSize: 16.sp, fontWeight: FontWeight.w800)),
               ],
             ),
-          ),
-        ],
+            SizedBox(height: 30.h),
+            GestureDetector(
+              child: SizedBox(
+                width: 0.35.sw,
+                height: 0.09.sw,
+                child: Stack(
+                  children: [
+                    Positioned.fill(child: SvgPicture.asset(kSvgCloseButton, fit: BoxFit.cover)),
+                    Center(
+                      child: Text(
+                        kCloseText,
+                        style: Theme.of(context).textTheme.bodyText1!.copyWith(fontSize: 16.sp, color: EaselAppTheme.kWhite, fontWeight: FontWeight.w300),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+              onTap: () {
+                onClose();
+              },
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+
+
+  Padding buildMobile(BuildContext context) {
+    return Padding(
+      padding: EdgeInsets.symmetric(horizontal: 0.10.sw),
+      child: Container(
+        decoration: const BoxDecoration(image: DecorationImage(image: svg_provider.Svg(kSvgUploadErrorBG))),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            SizedBox(height: 10.h),
+            SvgPicture.asset(kSvgCloseIcon, height: 30.h,),
+            SizedBox(height: 30.h),
+            Text(
+              errorMessage,
+              style: TextStyle(color: Colors.white, fontSize: 18.sp, fontWeight: FontWeight.w800),
+            ),
+            SizedBox(height: 30.h),
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text("• ${kFileSizeLimitInGB}GB Limit", style: Theme.of(context).textTheme.bodyText2!.copyWith(color: Colors.white, fontSize: 16.sp, fontWeight: FontWeight.w800)),
+                Text(kUploadHint2, style: Theme.of(context).textTheme.bodyText2!.copyWith(color: Colors.white, fontSize: 16.sp, fontWeight: FontWeight.w800)),
+                Text(kUploadHint3, style: Theme.of(context).textTheme.bodyText2!.copyWith(color: Colors.white, fontSize: 16.sp, fontWeight: FontWeight.w800)),
+              ],
+            ),
+            SizedBox(height: 30.h),
+            GestureDetector(
+              child: SizedBox(
+                width: 0.35.sw,
+                height: 0.09.sw,
+                child: Stack(
+                  children: [
+                    Positioned.fill(child: SvgPicture.asset(kSvgCloseButton, fit: BoxFit.cover)),
+                    Center(
+                      child: Text(
+                        kCloseText,
+                        style: Theme.of(context).textTheme.bodyText1!.copyWith(fontSize: 16.sp, color: EaselAppTheme.kWhite, fontWeight: FontWeight.w300),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+              onTap: () {
+                onClose();
+              },
+            ),
+            SizedBox(height: 10.h),
+          ],
+        ),
       ),
     );
   }
