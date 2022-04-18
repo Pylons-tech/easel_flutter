@@ -134,7 +134,7 @@ class _UploadWidgetState extends State<_UploadWidget> {
           width: 0.8.sw,
           child: GestureDetector(
               onTap: () async {
-                final result = await FileUtils.pickFile();
+                final result = await FileUtils.pickFile(provider.nftFormat);
                 widget.onFilePicked(result);
               },
               child: Stack(
@@ -144,7 +144,7 @@ class _UploadWidgetState extends State<_UploadWidget> {
                   Column(
                     children: [
                       Padding(
-                          padding: EdgeInsets.symmetric(horizontal: 0.18.sw),
+                          padding: EdgeInsets.symmetric(horizontal: 0.08.sw),
                           child: Text(provider.fileName.isEmpty ? kTapToSelect : provider.fileName,
                               style: Theme.of(context)
                                   .textTheme
