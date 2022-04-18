@@ -87,6 +87,11 @@ class EaselProvider extends ChangeNotifier {
     notifyListeners();
   }
 
+  Future<void> setFormat(BuildContext context, NftFormat format) async {
+    _nftFormat = format;
+    notifyListeners();
+  }
+
   Future<void> resolveNftFormat(BuildContext context, String ext) async {
     for (var format in NftFormat.supportedFormats) {
       if (format.extensions.contains(ext)) {

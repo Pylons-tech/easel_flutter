@@ -12,10 +12,26 @@ class FileUtils {
   /// returns [PlatformFile] the selected file
   ///
   /// or null if aborted
-  static Future<PlatformFile?> pickFile() async {
-    FilePickerResult? result = await FilePicker.platform.pickFiles(type: FileType.any);
+  static Future<PlatformFile?> pickFile(NftFormat format) async {
+    FileType _type;
+    switch (format.format) {
+      case kImageText:
+        _type = FileType.image;
+        break;
+      case kVideoText:
+        _type = FileType.video;
+        break;
+      case kAudioText:
+        _type = FileType.audio;
+        break;
+      default:
+        _type = FileType.any;
+        break;
+    }
 
-    if (result != null && NftFormat.getAllSupportedExts().contains(result.files.single.extension)) {
+    FilePickerResult? result = await FilePicker.platform.pickFiles(type: _type);
+
+    if (result != null && format.extensions.contains(result.files.single.extension)) {
       return result.files.single;
     }
 

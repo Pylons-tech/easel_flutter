@@ -38,7 +38,7 @@ class MintScreen extends StatelessWidget {
                   if (provider.nftFormat.format == k3dText) ...[
                     SizedBox(
                         height: MediaQuery.of(context).size.height * 0.3,
-                        child: ModalViewer(
+                        child: Model3dViewer(
                           file: provider.file!,
                         ))
                   ],
