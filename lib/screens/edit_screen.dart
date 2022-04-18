@@ -11,16 +11,16 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 
-class DescriptionScreen extends StatefulWidget {
+class EditScreen extends StatefulWidget {
   final PageController controller;
 
-  const DescriptionScreen({Key? key, required this.controller}) : super(key: key);
+  const EditScreen({Key? key, required this.controller}) : super(key: key);
 
   @override
-  State<DescriptionScreen> createState() => _DescriptionScreenState();
+  State<EditScreen> createState() => _EditScreenState();
 }
 
-class _DescriptionScreenState extends State<DescriptionScreen> {
+class _EditScreenState extends State<EditScreen> {
   final _formKey = GlobalKey<FormState>();
 
   @override

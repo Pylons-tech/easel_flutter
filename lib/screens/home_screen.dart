@@ -1,5 +1,5 @@
 import 'package:easel_flutter/easel_provider.dart';
-import 'package:easel_flutter/screens/description_screen.dart';
+import 'package:easel_flutter/screens/edit_screen.dart';
 import 'package:easel_flutter/screens/mint_screen.dart';
 import 'package:easel_flutter/screens/publish_screen.dart';
 import 'package:easel_flutter/screens/upload_screen.dart';
@@ -11,6 +11,8 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:provider/provider.dart';
 import 'package:pylons_sdk/pylons_sdk.dart';
 import 'package:steps_indicator/steps_indicator.dart';
+
+import 'choose_format_screen.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({Key? key}) : super(key: key);
@@ -32,12 +34,12 @@ class _HomeScreenState extends State<HomeScreen> {
     super.dispose();
   }
 
-  final int _numPages = 4;
+  final int _numPages = 5;
   final PageController _pageController = PageController(keepPage: true);
   final ValueNotifier<int> _currentPage = ValueNotifier(0);
 
-  List screenLabels = [kUploadText, kEditText, kMintText, kPublishText];
-  List screenTitles = [kUploadNFTText, kEditNFTText, kPreviewNFTText, ''];
+  List screenLabels = [kStartText, kUploadText, kEditText, kMintText, kPublishText];
+  List screenTitles = [kChooseNFTFormatText, kUploadNFTText, kEditNFTText, kPreviewNFTText, ''];
 
   @override
   Widget build(BuildContext context) {
@@ -53,7 +55,7 @@ class _HomeScreenState extends State<HomeScreen> {
                 builder: (_, int value, __) => StepsIndicator(
                   selectedStep: _currentPage.value,
                   nbSteps: _numPages,
-                  lineLength: 0.9.sw / _numPages,
+                  lineLength: 0.85.sw / _numPages,
                   doneLineColor: EaselAppTheme.kLightGrey,
                   undoneLineColor: EaselAppTheme.kLightGrey,
                   doneLineThickness: 1.5,
@@ -151,10 +153,13 @@ class _HomeScreenState extends State<HomeScreen> {
                     _currentPage.value = page;
                   },
                   children: [
+                    ChooseFormatScreen(
+                      controller: _pageController,
+                    ),
                     UploadScreen(
                       controller: _pageController,
                     ),
-                    DescriptionScreen(
+                    EditScreen(
                       controller: _pageController,
                     ),
                     MintScreen(

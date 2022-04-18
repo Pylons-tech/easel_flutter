@@ -82,6 +82,7 @@ const kPreviewNFTText = "Preview NFT";
 const kPreview3dModelText = "Click here to preview\nyour selected 3D Model";
 const kMintMoreText = "Mint More";
 const kGoToWalletText = "Go to Wallet";
+const kChooseNFTFormatText = "Choose your NFT format";
 const kUploadNFTText = "Upload your NFT file";
 const kEditNFTText = "Edit your NFT Details";
 const kStartText = "Start";
