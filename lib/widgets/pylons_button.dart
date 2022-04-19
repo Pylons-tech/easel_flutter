@@ -1,3 +1,4 @@
+import 'package:easel_flutter/main.dart';
 import 'package:easel_flutter/utils/constants.dart';
 import 'package:easel_flutter/utils/easel_app_theme.dart';
 import 'package:flutter/material.dart';
@@ -20,17 +21,30 @@ class PylonsButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+
+
+    final Size txtSize = _textSize(btnText, Theme.of(context).textTheme.bodyText1!.copyWith(
+        fontSize: 16.sp,
+        color: EaselAppTheme.kWhite,
+        fontWeight: FontWeight.w600));
+
     return GestureDetector(
       child: Material(
           color: Colors.transparent,
           elevation: 10,
           child: SizedBox(
-            width: 0.5.sw,
-            height: 0.12.sw,
+            width: isTablet ? 0.3.sw: 0.5.sw,
+            height: isTablet ? 0.07.sw: 0.12.sw,
             child: Stack(
               children: [
-                SvgPicture.asset(isBlue ? kSvgRectBlue : kSvgRectRed,
-                    fit: BoxFit.cover),
+                Positioned(
+                  left: 0,
+                  right: 0,
+                  top: 0,
+                  bottom: 0,
+                  child: SvgPicture.asset(isBlue ? kSvgRectBlue : kSvgRectRed,
+                      fit: BoxFit.cover),
+                ),
                 Center(
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.center,
@@ -38,7 +52,7 @@ class PylonsButton extends StatelessWidget {
                       Text(
                         btnText,
                         style: Theme.of(context).textTheme.bodyText1!.copyWith(
-                            fontSize: 16,
+                            fontSize: 16.sp,
                             color: EaselAppTheme.kWhite,
                             fontWeight: FontWeight.w600),
                       ),
@@ -57,5 +71,13 @@ class PylonsButton extends StatelessWidget {
         onPressed();
       },
     );
+  }
+
+  // Here it is!
+  Size _textSize(String text, TextStyle style) {
+    final TextPainter textPainter = TextPainter(
+        text: TextSpan(text: text, style: style), maxLines: 1, textDirection: TextDirection.ltr)
+      ..layout(minWidth: 0, maxWidth: double.infinity);
+    return textPainter.size;
   }
 }

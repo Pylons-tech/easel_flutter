@@ -39,9 +39,10 @@ dependencies:
 
   cached_network_image: ^3.1.0
 
-  flutter_svg: ^0.23.0+1
+  flutter_svg: ^1.0.3
 
-# file_picker plugin is used so we can pick single/multiple files with extension filtering support.
+
+  # file_picker plugin is used so we can pick single/multiple files with extension filtering support.
 #  with this plugin, we can filter the file extension(not just images) we want users to pick.
   file_picker: ^4.5.0
 
@@ -60,6 +61,9 @@ dependencies:
   shared_preferences: ^2.0.8
 
   intl: ^0.17.0
+
+  flutter_svg_provider: ^1.0.3
+
 
 
   share_plus: ^3.0.4  # Used for sharing the NFT link.

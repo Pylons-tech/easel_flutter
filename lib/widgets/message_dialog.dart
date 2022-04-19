@@ -1,5 +1,6 @@
 import 'package:easel_flutter/main.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 class MessageDialog {
   MessageDialog();
@@ -11,7 +12,7 @@ class MessageDialog {
       builder: (ctx) => WillPopScope(
         onWillPop: () => Future.value(false),
         child: AlertDialog(
-          content: Text(message),
+          content: Text(message, style: TextStyle(fontSize: 16.sp),),
           actions: [button],
         ),
       ),
