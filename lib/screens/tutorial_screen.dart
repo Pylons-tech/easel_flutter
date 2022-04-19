@@ -1,4 +1,5 @@
 import 'package:bottom_drawer/bottom_drawer.dart';
+import 'package:easel_flutter/main.dart';
 import 'package:easel_flutter/screens/welcome_screen.dart';
 import 'package:easel_flutter/utils/easel_app_theme.dart';
 import 'package:easel_flutter/utils/extension_util.dart';
@@ -72,7 +73,7 @@ class _TutorialScreenState extends State<TutorialScreen> {
                       child: GestureDetector(
                         child: Container(
                           alignment: Alignment.center,
-                          margin: EdgeInsets.only(right: 10.w, bottom: 2.h),
+                          margin: EdgeInsets.only(right: isTablet ? 50.w : 10.w, bottom: 2.h),
                           padding: EdgeInsets.only(bottom: 8.h),
                           width: 0.17.sh,
                           height: 0.08.sh,
