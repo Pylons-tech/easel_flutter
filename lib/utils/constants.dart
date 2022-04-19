@@ -123,7 +123,7 @@ const kSecInMillis = 1000;
 
 const kPylonSymbol = "upylon";
 const kUsdSymbol = "ustripeusd";
-const kAtomSymbol = "uphoton";
+const kAtomSymbol = "uatom";
 const kEuroSymbol = "eeur";
 const kAgoricSymbol = "urun";
 const kJunoSymbol = "ujunox";
