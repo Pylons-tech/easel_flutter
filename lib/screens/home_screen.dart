@@ -5,6 +5,7 @@ import 'package:easel_flutter/screens/publish_screen.dart';
 import 'package:easel_flutter/screens/upload_screen.dart';
 import 'package:easel_flutter/utils/constants.dart';
 import 'package:easel_flutter/utils/easel_app_theme.dart';
+import 'package:easel_flutter/utils/screen_responsive.dart';
 import 'package:easel_flutter/utils/space_utils.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -88,8 +89,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                   },
                                   child: Text(
                                     kMintMoreText,
-                                    style: Theme.of(context).textTheme.bodyText1!.copyWith(
-                                        fontSize: 20.sp, color: EaselAppTheme.kBlue, fontWeight: FontWeight.w400),
+                                    style: Theme.of(context).textTheme.bodyText1!.copyWith(fontSize: 20.sp, color: EaselAppTheme.kBlue, fontWeight: FontWeight.w400),
                                   ),
                                 ),
                               )
@@ -97,8 +97,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                 padding: EdgeInsets.only(left: 10.sp),
                                 child: IconButton(
                                   onPressed: () {
-                                    _pageController.previousPage(
-                                        duration: const Duration(milliseconds: 300), curve: Curves.easeIn);
+                                    _pageController.previousPage(duration: const Duration(milliseconds: 300), curve: Curves.easeIn);
                                   },
                                   icon: const Icon(
                                     Icons.arrow_back_ios,
@@ -111,13 +110,11 @@ class _HomeScreenState extends State<HomeScreen> {
                     builder: (_, int currentPage, __) {
                       return Text(
                         screenTitles[_currentPage.value],
-                        style: Theme.of(context)
-                            .textTheme
-                            .bodyText1!
-                            .copyWith(fontSize: 18.sp, fontWeight: FontWeight.w400, color: EaselAppTheme.kDarkText),
+                        style: Theme.of(context).textTheme.bodyText1!.copyWith(fontSize: 18.sp, fontWeight: FontWeight.w400, color: EaselAppTheme.kDarkText),
                       );
                     },
                   ),
+
                   Align(
                       alignment: Alignment.centerRight,
                       child: ValueListenableBuilder(
@@ -135,8 +132,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                   ),
                                   icon: Text(
                                     kGoToWalletText,
-                                    style: Theme.of(context).textTheme.bodyText1!.copyWith(
-                                        fontSize: 20.sp, color: EaselAppTheme.kBlue, fontWeight: FontWeight.w400),
+                                    style: Theme.of(context).textTheme.bodyText1!.copyWith(fontSize: 20.sp, color: EaselAppTheme.kBlue, fontWeight: FontWeight.w400),
                                   ),
                                 ),
                               )
@@ -144,7 +140,10 @@ class _HomeScreenState extends State<HomeScreen> {
                       ))
                 ],
               ),
-              const VerticalSpace(6),
+              ScreenResponsive(
+                mobileScreen: (context) => const VerticalSpace(6),
+                tabletScreen: (BuildContext context) => const VerticalSpace(30),
+              ),
               Expanded(
                 child: PageView(
                   controller: _pageController,
@@ -197,11 +196,10 @@ class _HomeScreenState extends State<HomeScreen> {
         children: [
           Text(
             screenLabels[index],
-            style: Theme.of(context).textTheme.bodyText2!.copyWith(
-                fontSize: 12.sp,
-                fontFamily: 'Inter',
-                fontWeight: FontWeight.w400,
-                color: currentPage == index ? EaselAppTheme.kBlack : EaselAppTheme.kGrey),
+            style: Theme.of(context)
+                .textTheme
+                .bodyText2!
+                .copyWith(fontSize: 12.sp, fontFamily: 'Inter', fontWeight: FontWeight.w400, color: currentPage == index ? EaselAppTheme.kBlack : EaselAppTheme.kGrey),
           ),
         ],
       ),

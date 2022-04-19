@@ -1,6 +1,7 @@
 import 'package:easel_flutter/easel_provider.dart';
 import 'package:easel_flutter/models/nft_format.dart';
 import 'package:easel_flutter/utils/easel_app_theme.dart';
+import 'package:easel_flutter/utils/screen_responsive.dart';
 import 'package:easel_flutter/utils/space_utils.dart';
 import 'package:easel_flutter/widgets/pylons_round_button.dart';
 import 'package:flutter/material.dart';
@@ -87,7 +88,7 @@ class _ChooseFormatScreenState extends State<ChooseFormatScreen> {
               const SizedBox(width: 10),
             ],
           ),
-          const SizedBox(height: 20),
+          ScreenResponsive(mobileScreen: (context) => const SizedBox(height: 20), tabletScreen: (BuildContext context)  =>  SizedBox(height: 40.h), ),
           Align(
             child: PylonsRoundButton(onPressed: () {
               if (_tempFormat?.format != provider.nftFormat.format) {
@@ -124,39 +125,41 @@ class _CardWidget extends StatelessWidget {
       children: [
         GestureDetector(
           onTap: onTap,
-          child: Container(
-              width: 0.45.sw,
-              height: 0.42.sw,
-              padding: const EdgeInsets.all(50),
-              decoration: BoxDecoration(
-                color: selected ? EaselAppTheme.cardBackgroundSelected : EaselAppTheme.cardBackground,
-              ),
-              child: Image.asset(
-                "assets/images/$icon.png",
-              )),
+          child: ScreenResponsive(
+            tabletScreen: (BuildContext context) => Container(
+                width: 0.38.sw,
+                height: 0.34.sw,
+                padding: const EdgeInsets.all(50),
+                decoration: BoxDecoration(
+                  color: selected ? EaselAppTheme.cardBackgroundSelected : EaselAppTheme.cardBackground,
+                ),
+                child: Image.asset(
+                  "assets/images/$icon.png",
+                )),
+            mobileScreen: (BuildContext context) => Container(
+                width: 0.45.sw,
+                height: 0.42.sw,
+                padding: const EdgeInsets.all(50),
+                decoration: BoxDecoration(
+                  color: selected ? EaselAppTheme.cardBackgroundSelected : EaselAppTheme.cardBackground,
+                ),
+                child: Image.asset(
+                  "assets/images/$icon.png",
+                )),
+          ),
         ),
-        const VerticalSpace(8),
+        // const VerticalSpace(8),
         Text(
           text,
-          style: Theme.of(context).textTheme.bodyText1!.copyWith(
-              color: selected ? EaselAppTheme.kBlue : EaselAppTheme.kBlue.withOpacity(0.5),
-              fontSize: 20,
-              fontWeight: FontWeight.w600),
+          style: Theme.of(context).textTheme.bodyText1!.copyWith(color: selected ? EaselAppTheme.kBlue : EaselAppTheme.kBlue.withOpacity(0.5), fontSize: 20, fontWeight: FontWeight.w600),
         ),
         const VerticalSpace(6),
         SizedBox(
           width: 0.4.sw,
-          child: Flexible(
-            child: RichText(
-              overflow: TextOverflow.ellipsis,
-              textAlign: TextAlign.center,
-              text: TextSpan(
-                  style: Theme.of(context)
-                      .textTheme
-                      .bodyText1!
-                      .copyWith(color: EaselAppTheme.kLightGrey, fontSize: 15, fontWeight: FontWeight.w600),
-                  text: secondaryText),
-            ),
+          child: RichText(
+            overflow: TextOverflow.ellipsis,
+            textAlign: TextAlign.center,
+            text: TextSpan(style: Theme.of(context).textTheme.bodyText1!.copyWith(color: EaselAppTheme.kLightGrey, fontSize: 15, fontWeight: FontWeight.w600), text: secondaryText),
           ),
         )
       ],
