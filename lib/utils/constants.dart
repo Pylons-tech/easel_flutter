@@ -128,6 +128,7 @@ const kEuroSymbol = "eeur";
 const kAgoricSymbol = "urun";
 const kJunoSymbol = "ujunox";
 const kLunaSymbol = "uluna";
+const kUSTSymbol = "uusd";
 
 const kPylonText = "Pylon";
 const kUSDText = "USD";
@@ -136,6 +137,7 @@ const kEurText = "EEur";
 const kAgoricText = "Agoric";
 const kJunoText = "Juno";
 const kLunaText = "Luna";
+const kUSTText = "UST";
 
 const kErrProfileNotExist = 'profileDoesNotExist';
 const kErrProfileFetch = "Error occurred while fetching wallet profile";
