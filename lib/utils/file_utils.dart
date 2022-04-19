@@ -70,12 +70,6 @@ class FileUtils {
   }
 
   static String generateEaselLink({required String recipeId, required String cookbookId}) {
-    return Uri.https(kWalletDynamicLink, "/", {
-      "amv": "1",
-      "apn": kWalletAndroidId,
-      "ibi": kWalletIOSId,
-      "imv": "1",
-      "link": "$kWalletWebLink/?action=purchase_nft&recipe_id=$recipeId&cookbook_id=$cookbookId&nft_amount=1"
-    }).toString();
+    return "$kWalletWebLink/?action=purchase_nft&recipe_id=$recipeId&cookbook_id=$cookbookId&nft_amount=1";
   }
 }

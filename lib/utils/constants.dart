@@ -155,3 +155,5 @@ const kWalletWebLink = 'https://wallet.pylons.tech';
 const kWalletDynamicLink = 'pylons.page.link';
 
 const kStripeAccountDoesntExists = 'Kindly register Stripe account in wallet';
+
+const double TABLET_MIN_WIDTH = 600;

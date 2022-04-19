@@ -21,6 +21,13 @@ class PylonsButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+
+
+    final Size txtSize = _textSize(btnText, Theme.of(context).textTheme.bodyText1!.copyWith(
+        fontSize: 16.sp,
+        color: EaselAppTheme.kWhite,
+        fontWeight: FontWeight.w600));
+
     return GestureDetector(
       child: Material(
           color: Colors.transparent,
@@ -64,5 +71,13 @@ class PylonsButton extends StatelessWidget {
         onPressed();
       },
     );
+  }
+
+  // Here it is!
+  Size _textSize(String text, TextStyle style) {
+    final TextPainter textPainter = TextPainter(
+        text: TextSpan(text: text, style: style), maxLines: 1, textDirection: TextDirection.ltr)
+      ..layout(minWidth: 0, maxWidth: double.infinity);
+    return textPainter.size;
   }
 }

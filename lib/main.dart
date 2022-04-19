@@ -3,6 +3,7 @@ import 'package:easel_flutter/screens/routing_screen.dart';
 import 'package:easel_flutter/screens/splash_screen.dart';
 import 'package:easel_flutter/screens/tutorial_screen.dart';
 import 'package:easel_flutter/screens/welcome_screen.dart';
+import 'package:easel_flutter/utils/constants.dart';
 import 'package:easel_flutter/utils/route_util.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:easel_flutter/utils/dependency_injection/dependency_injection_container.dart' as di;
@@ -20,7 +21,7 @@ void main() {
   di.init();
 
 
-  isTablet = MediaQueryData.fromWindow(WidgetsBinding.instance!.window).size.shortestSide >= 600;
+  isTablet = MediaQueryData.fromWindow(WidgetsBinding.instance!.window).size.shortestSide >= TABLET_MIN_WIDTH;
 
   runApp(const MyApp());
 }

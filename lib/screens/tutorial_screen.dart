@@ -3,6 +3,7 @@ import 'package:easel_flutter/screens/welcome_screen.dart';
 import 'package:easel_flutter/utils/easel_app_theme.dart';
 import 'package:easel_flutter/utils/extension_util.dart';
 import 'package:easel_flutter/utils/route_util.dart';
+import 'package:easel_flutter/utils/screen_responsive.dart';
 import 'package:easel_flutter/widgets/pylons_button.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -175,6 +176,7 @@ class _TutorialScreenState extends State<TutorialScreen> {
       body: Padding(
         padding: EdgeInsets.symmetric(horizontal: 32.w),
         child: Column(
+          crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
             SizedBox(height: 30.h),
             Row(
@@ -261,18 +263,25 @@ class _TutorialScreenState extends State<TutorialScreen> {
               ],
             ),
             SizedBox(height: 20.h),
-            Align(
-              alignment: Alignment.center,
-              child: PylonsButton(
-                onPressed: () async {
-                  final appAlreadyInstalled = await PylonsWallet.instance.exists();
-                  if (!appAlreadyInstalled) {
-                    PylonsWallet.instance.goToInstall();
-                  } else {
-                    context.show(message: kPylonsAlreadyInstalled);
-                  }
-                },
-                btnText: kDownloadPylons,
+            ScreenResponsive(
+              mobileScreen: (context) =>  Align(
+                alignment: Alignment.center,
+                child: PylonsButton(
+                  onPressed: () async {
+                    await onDownloadNowPressed(context);
+                  },
+                  btnText: kDownloadPylons,
+                ),
+              ), tabletScreen: (BuildContext context) => Center(
+                child: SizedBox(
+                  width: 0.5.sw,
+                  child: PylonsButton(
+                  onPressed: () async {
+                    await onDownloadNowPressed(context);
+                  },
+                  btnText: kDownloadPylons,
+            ),
+                ),
               ),
             )
           ],
@@ -283,5 +292,14 @@ class _TutorialScreenState extends State<TutorialScreen> {
       color: EaselAppTheme.kLightGrey02,
       controller: myBottomDrawerController,
     );
+  }
+
+  Future<void> onDownloadNowPressed(BuildContext context) async {
+     final appAlreadyInstalled = await PylonsWallet.instance.exists();
+    if (!appAlreadyInstalled) {
+      PylonsWallet.instance.goToInstall();
+    } else {
+      context.show(message: kPylonsAlreadyInstalled);
+    }
   }
 }
