@@ -1,6 +1,5 @@
 import 'package:bottom_drawer/bottom_drawer.dart';
 import 'package:easel_flutter/main.dart';
-import 'package:easel_flutter/screens/welcome_screen.dart';
 import 'package:easel_flutter/utils/easel_app_theme.dart';
 import 'package:easel_flutter/utils/extension_util.dart';
 import 'package:easel_flutter/utils/route_util.dart';
@@ -86,7 +85,6 @@ class _TutorialScreenState extends State<TutorialScreen> {
                           ),
                         ),
                         onTap: () {
-                          /// To-Do: bottom drawer that explains why the pylons app is required
                           myBottomDrawerController.open();
                         },
                       ),

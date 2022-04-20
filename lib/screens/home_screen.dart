@@ -1,6 +1,7 @@
 import 'package:easel_flutter/easel_provider.dart';
 import 'package:easel_flutter/screens/edit_screen.dart';
 import 'package:easel_flutter/screens/mint_screen.dart';
+import 'package:easel_flutter/screens/preview_screen.dart';
 import 'package:easel_flutter/screens/publish_screen.dart';
 import 'package:easel_flutter/screens/upload_screen.dart';
 import 'package:easel_flutter/utils/constants.dart';
@@ -35,12 +36,15 @@ class _HomeScreenState extends State<HomeScreen> {
     super.dispose();
   }
 
-  final int _numPages = 5;
+  final int _numPages = 6;
   final PageController _pageController = PageController(keepPage: true);
   final ValueNotifier<int> _currentPage = ValueNotifier(0);
 
-  List screenLabels = [kStartText, kUploadText, kEditText, kMintText, kPublishText];
-  List screenTitles = [kChooseNFTFormatText, kUploadNFTText, kEditNFTText, kPreviewNFTText, ''];
+  final int _numSteps = 3;
+  final ValueNotifier<int> _currentStep = ValueNotifier(0);
+
+  List stepLabels = [kUploadText, kEditText, kPublishText];
+  List pageTitles = [kChooseNFTFormatText, kUploadNFTText, kPreviewNFTText, kEditNFTText, kPreviewNFTText, ''];
 
   @override
   Widget build(BuildContext context) {
@@ -52,11 +56,11 @@ class _HomeScreenState extends State<HomeScreen> {
             children: [
               const VerticalSpace(20),
               ValueListenableBuilder(
-                valueListenable: _currentPage,
+                valueListenable: _currentStep,
                 builder: (_, int value, __) => StepsIndicator(
-                  selectedStep: _currentPage.value,
-                  nbSteps: _numPages,
-                  lineLength: 0.85.sw / _numPages,
+                  selectedStep: _currentStep.value,
+                  nbSteps: _numSteps,
+                  lineLength: 0.7.sw / _numSteps,
                   doneLineColor: EaselAppTheme.kLightGrey,
                   undoneLineColor: EaselAppTheme.kLightGrey,
                   doneLineThickness: 1.5,
@@ -71,7 +75,7 @@ class _HomeScreenState extends State<HomeScreen> {
                 ),
               ),
               const VerticalSpace(5),
-              _buildTitles(),
+              _stepLabel(),
               const VerticalSpace(10),
               Stack(
                 alignment: Alignment.center,
@@ -89,7 +93,8 @@ class _HomeScreenState extends State<HomeScreen> {
                                   },
                                   child: Text(
                                     kMintMoreText,
-                                    style: Theme.of(context).textTheme.bodyText1!.copyWith(fontSize: 20.sp, color: EaselAppTheme.kBlue, fontWeight: FontWeight.w400),
+                                    style: Theme.of(context).textTheme.bodyText1!.copyWith(
+                                        fontSize: 20.sp, color: EaselAppTheme.kBlue, fontWeight: FontWeight.w400),
                                   ),
                                 ),
                               )
@@ -97,7 +102,8 @@ class _HomeScreenState extends State<HomeScreen> {
                                 padding: EdgeInsets.only(left: 10.sp),
                                 child: IconButton(
                                   onPressed: () {
-                                    _pageController.previousPage(duration: const Duration(milliseconds: 300), curve: Curves.easeIn);
+                                    _pageController.previousPage(
+                                        duration: const Duration(milliseconds: 300), curve: Curves.easeIn);
                                   },
                                   icon: const Icon(
                                     Icons.arrow_back_ios,
@@ -109,12 +115,14 @@ class _HomeScreenState extends State<HomeScreen> {
                     valueListenable: _currentPage,
                     builder: (_, int currentPage, __) {
                       return Text(
-                        screenTitles[_currentPage.value],
-                        style: Theme.of(context).textTheme.bodyText1!.copyWith(fontSize: 18.sp, fontWeight: FontWeight.w400, color: EaselAppTheme.kDarkText),
+                        pageTitles[_currentPage.value],
+                        style: Theme.of(context)
+                            .textTheme
+                            .bodyText1!
+                            .copyWith(fontSize: 18.sp, fontWeight: FontWeight.w400, color: EaselAppTheme.kDarkText),
                       );
                     },
                   ),
-
                   Align(
                       alignment: Alignment.centerRight,
                       child: ValueListenableBuilder(
@@ -132,7 +140,8 @@ class _HomeScreenState extends State<HomeScreen> {
                                   ),
                                   icon: Text(
                                     kGoToWalletText,
-                                    style: Theme.of(context).textTheme.bodyText1!.copyWith(fontSize: 20.sp, color: EaselAppTheme.kBlue, fontWeight: FontWeight.w400),
+                                    style: Theme.of(context).textTheme.bodyText1!.copyWith(
+                                        fontSize: 20.sp, color: EaselAppTheme.kBlue, fontWeight: FontWeight.w400),
                                   ),
                                 ),
                               )
@@ -142,7 +151,7 @@ class _HomeScreenState extends State<HomeScreen> {
               ),
               ScreenResponsive(
                 mobileScreen: (context) => const VerticalSpace(6),
-                tabletScreen: (BuildContext context) => const VerticalSpace(30),
+                tabletScreen: (context) => const VerticalSpace(30),
               ),
               Expanded(
                 child: PageView(
@@ -150,23 +159,21 @@ class _HomeScreenState extends State<HomeScreen> {
                   physics: const NeverScrollableScrollPhysics(),
                   onPageChanged: (int page) {
                     _currentPage.value = page;
+                    if (page <= 2) {
+                      _currentStep.value = 0;
+                    } else if (page > 3) {
+                      _currentStep.value = _numSteps - 1;
+                    } else {
+                      _currentStep.value = 1;
+                    }
                   },
                   children: [
-                    ChooseFormatScreen(
-                      controller: _pageController,
-                    ),
-                    UploadScreen(
-                      controller: _pageController,
-                    ),
-                    EditScreen(
-                      controller: _pageController,
-                    ),
-                    MintScreen(
-                      controller: _pageController,
-                    ),
-                    PublishScreen(
-                      controller: _pageController,
-                    )
+                    ChooseFormatScreen(controller: _pageController),
+                    UploadScreen(controller: _pageController),
+                    PreviewScreen(controller: _pageController),
+                    EditScreen(controller: _pageController),
+                    MintScreen(controller: _pageController),
+                    PublishScreen(controller: _pageController)
                   ],
                 ),
               ),
@@ -177,29 +184,33 @@ class _HomeScreenState extends State<HomeScreen> {
     );
   }
 
-  Row _buildTitles() {
-    return Row(
-      children: List.generate(screenLabels.length, (index) {
-        return SizedBox(
-          width: (1 / screenLabels.length).sw,
-          child: _buildStepTitle(index),
-        );
-      }),
+  Padding _stepLabel() {
+    return Padding(
+      padding: EdgeInsets.symmetric(horizontal: 0.1.sw),
+      child: Row(
+        children: List.generate(stepLabels.length, (index) {
+          return SizedBox(
+            width: (0.8.sw / stepLabels.length),
+            child: _buildStepLabel(index),
+          );
+        }),
+      ),
     );
   }
 
-  Widget _buildStepTitle(int index) {
+  Widget _buildStepLabel(int index) {
     return ValueListenableBuilder(
       valueListenable: _currentPage,
       builder: (_, int currentPage, __) => Row(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
           Text(
-            screenLabels[index],
-            style: Theme.of(context)
-                .textTheme
-                .bodyText2!
-                .copyWith(fontSize: 12.sp, fontFamily: 'Inter', fontWeight: FontWeight.w400, color: currentPage == index ? EaselAppTheme.kBlack : EaselAppTheme.kGrey),
+            stepLabels[index],
+            style: Theme.of(context).textTheme.bodyText2!.copyWith(
+                fontSize: 12.sp,
+                fontFamily: 'Inter',
+                fontWeight: FontWeight.w400,
+                color: currentPage == index ? EaselAppTheme.kBlack : EaselAppTheme.kGrey),
           ),
         ],
       ),
