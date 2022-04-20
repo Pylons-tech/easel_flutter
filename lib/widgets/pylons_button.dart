@@ -12,29 +12,18 @@ class PylonsButton extends StatelessWidget {
   final bool isBlue;
 
   const PylonsButton(
-      {Key? key,
-      this.isBlue = true,
-      this.showArrow = false,
-      required this.btnText,
-      required this.onPressed})
+      {Key? key, this.isBlue = true, this.showArrow = false, required this.btnText, required this.onPressed})
       : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-
-
-    final Size txtSize = _textSize(btnText, Theme.of(context).textTheme.bodyText1!.copyWith(
-        fontSize: 16.sp,
-        color: EaselAppTheme.kWhite,
-        fontWeight: FontWeight.w600));
-
     return GestureDetector(
       child: Material(
           color: Colors.transparent,
           elevation: 10,
           child: SizedBox(
-            width: isTablet ? 0.3.sw: 0.5.sw,
-            height: isTablet ? 0.07.sw: 0.12.sw,
+            width: isTablet ? 0.3.sw : 0.5.sw,
+            height: isTablet ? 0.07.sw : 0.12.sw,
             child: Stack(
               children: [
                 Positioned(
@@ -42,8 +31,7 @@ class PylonsButton extends StatelessWidget {
                   right: 0,
                   top: 0,
                   bottom: 0,
-                  child: SvgPicture.asset(isBlue ? kSvgRectBlue : kSvgRectRed,
-                      fit: BoxFit.cover),
+                  child: SvgPicture.asset(isBlue ? kSvgRectBlue : kSvgRectRed, fit: BoxFit.cover),
                 ),
                 Center(
                   child: Row(
@@ -51,15 +39,14 @@ class PylonsButton extends StatelessWidget {
                     children: [
                       Text(
                         btnText,
-                        style: Theme.of(context).textTheme.bodyText1!.copyWith(
-                            fontSize: 16.sp,
-                            color: EaselAppTheme.kWhite,
-                            fontWeight: FontWeight.w600),
+                        style: Theme.of(context)
+                            .textTheme
+                            .bodyText1!
+                            .copyWith(fontSize: 16.sp, color: EaselAppTheme.kWhite, fontWeight: FontWeight.w600),
                       ),
                       if (showArrow) ...[
                         const SizedBox(width: 6),
-                        const Icon(Icons.arrow_forward,
-                            color: EaselAppTheme.kWhite),
+                        const Icon(Icons.arrow_forward, color: EaselAppTheme.kWhite),
                       ]
                     ],
                   ),
@@ -71,13 +58,5 @@ class PylonsButton extends StatelessWidget {
         onPressed();
       },
     );
-  }
-
-  // Here it is!
-  Size _textSize(String text, TextStyle style) {
-    final TextPainter textPainter = TextPainter(
-        text: TextSpan(text: text, style: style), maxLines: 1, textDirection: TextDirection.ltr)
-      ..layout(minWidth: 0, maxWidth: double.infinity);
-    return textPainter.size;
   }
 }
