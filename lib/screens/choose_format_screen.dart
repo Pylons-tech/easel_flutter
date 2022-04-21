@@ -1,12 +1,14 @@
 import 'package:easel_flutter/easel_provider.dart';
 import 'package:easel_flutter/models/nft_format.dart';
+import 'package:easel_flutter/utils/constants.dart';
 import 'package:easel_flutter/utils/easel_app_theme.dart';
 import 'package:easel_flutter/utils/screen_responsive.dart';
 import 'package:easel_flutter/utils/space_utils.dart';
-import 'package:easel_flutter/widgets/pylons_round_button.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:provider/provider.dart';
+
+import '../widgets/pylons_button.dart';
 
 class ChooseFormatScreen extends StatefulWidget {
   final PageController controller;
@@ -88,16 +90,28 @@ class _ChooseFormatScreenState extends State<ChooseFormatScreen> {
               const SizedBox(width: 10),
             ],
           ),
-          ScreenResponsive(mobileScreen: (context) => const SizedBox(height: 20), tabletScreen: (BuildContext context)  =>  SizedBox(height: 40.h), ),
-          Align(
-            child: PylonsRoundButton(onPressed: () {
-              if (_tempFormat?.format != provider.nftFormat.format) {
-                provider.initStore();
-              }
-              provider.setFormat(context, _tempFormat!);
-              widget.controller.nextPage(duration: const Duration(milliseconds: 300), curve: Curves.easeIn);
-            }),
+          ScreenResponsive(
+            mobileScreen: (context) => const SizedBox(height: 20),
+            tabletScreen: (BuildContext context) => SizedBox(height: 40.h),
           ),
+          Padding(
+            padding: EdgeInsets.only(top: 20.h, right: 20.w),
+            child: Align(
+              alignment: Alignment.centerRight,
+              child: PylonsButton(
+                onPressed: () {
+                  if (_tempFormat?.format != provider.nftFormat.format) {
+                    provider.initStore();
+                  }
+                  provider.setFormat(context, _tempFormat!);
+                  widget.controller.nextPage(duration: const Duration(milliseconds: 300), curve: Curves.easeIn);
+                },
+                btnText: kContinue,
+                showArrow: true,
+                isBlue: false,
+              ),
+            ),
+          )
         ],
       ),
     );
@@ -151,7 +165,10 @@ class _CardWidget extends StatelessWidget {
         // const VerticalSpace(8),
         Text(
           text,
-          style: Theme.of(context).textTheme.bodyText1!.copyWith(color: selected ? EaselAppTheme.kBlue : EaselAppTheme.kBlue.withOpacity(0.5), fontSize: 20, fontWeight: FontWeight.w600),
+          style: Theme.of(context).textTheme.bodyText1!.copyWith(
+              color: selected ? EaselAppTheme.kBlue : EaselAppTheme.kBlue.withOpacity(0.5),
+              fontSize: 20,
+              fontWeight: FontWeight.w600),
         ),
         const VerticalSpace(6),
         SizedBox(
@@ -159,7 +176,12 @@ class _CardWidget extends StatelessWidget {
           child: RichText(
             overflow: TextOverflow.ellipsis,
             textAlign: TextAlign.center,
-            text: TextSpan(style: Theme.of(context).textTheme.bodyText1!.copyWith(color: EaselAppTheme.kLightGrey, fontSize: 15, fontWeight: FontWeight.w600), text: secondaryText),
+            text: TextSpan(
+                style: Theme.of(context)
+                    .textTheme
+                    .bodyText1!
+                    .copyWith(color: EaselAppTheme.kLightGrey, fontSize: 15, fontWeight: FontWeight.w600),
+                text: secondaryText),
           ),
         )
       ],
