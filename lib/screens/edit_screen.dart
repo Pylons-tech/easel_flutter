@@ -8,7 +8,9 @@ import 'package:easel_flutter/widgets/easel_text_field.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
+import 'package:flutter_svg_provider/flutter_svg_provider.dart' as svg_provider;
 
 import '../widgets/pylons_button.dart';
 
@@ -50,7 +52,8 @@ class _EditScreenState extends State<EditScreen> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   EaselTextField(
-                    title: kGiveNFTNameText,
+                    label: kGiveNFTNameText,
+                    hint: kHintNftName,
                     controller: provider.artNameController,
                     textCapitalization: TextCapitalization.sentences,
                     validator: (value) {
@@ -65,7 +68,8 @@ class _EditScreenState extends State<EditScreen> {
                   ),
                   const VerticalSpace(20),
                   EaselTextField(
-                    title: kNameAsArtistText,
+                    label: kNameAsArtistText,
+                    hint: kHintArtistName,
                     controller: provider.artistNameController,
                     textCapitalization: TextCapitalization.sentences,
                     validator: (value) {
@@ -75,8 +79,9 @@ class _EditScreenState extends State<EditScreen> {
                   ),
                   const VerticalSpace(20),
                   EaselTextField(
-                    title: kDescribeNFTText,
-                    noOfLines: 4,
+                    label: kDescribeNFTText,
+                    hint: kHintNftDesc,
+                    noOfLines: 5,
                     controller: provider.descriptionController,
                     textCapitalization: TextCapitalization.sentences,
                     inputFormatters: [LengthLimitingTextInputFormatter(kMaxDescription)],
@@ -90,40 +95,15 @@ class _EditScreenState extends State<EditScreen> {
                       return null;
                     },
                   ),
-                  const VerticalSpace(4),
                   Text(
                     "$kMaxDescription $kCharacterLimitText",
-                    style: Theme.of(context)
-                        .textTheme
-                        .subtitle2!
-                        .copyWith(color: EaselAppTheme.kGrey, fontWeight: FontWeight.w600),
-                  ),
-                  const VerticalSpace(20),
-                  EaselTextField(
-                    key: ValueKey("${provider.selectedDenom.name}-amount"),
-                    title: kPriceText,
-                    keyboardType: TextInputType.number,
-                    inputFormatters: [
-                      FilteringTextInputFormatter.digitsOnly,
-                      LengthLimitingTextInputFormatter(kMaxPriceLength),
-                      provider.selectedDenom.getFormatter()
-                    ],
-                    controller: provider.priceController,
-                    suffix: const _CurrencyDropDown(),
-                    validator: (value) {
-                      if (value!.isEmpty) {
-                        return kEnterPriceText;
-                      }
-
-                      if (double.parse(value.replaceAll(",", "")) < kMinValue) return "$kMinIsText $kMinValue";
-
-                      return null;
-                    },
+                    style: TextStyle(color: EaselAppTheme.kLightPurple, fontSize: 14.sp, fontWeight: FontWeight.w800),
                   ),
                   const VerticalSpace(20),
                   EaselTextField(
                     key: ValueKey(provider.selectedDenom.name),
-                    title: "$kNoOfEditionText ($kMaxText: $kMaxEdition)",
+                    label: "$kNoOfEditionText ($kMaxText: ${NumberFormat.decimalPattern('hi').format(kMaxEdition)})",
+                    hint: kHintNoEdition,
                     keyboardType: TextInputType.number,
                     inputFormatters: [
                       FilteringTextInputFormatter.digitsOnly,
@@ -149,7 +129,30 @@ class _EditScreenState extends State<EditScreen> {
                   ),
                   const VerticalSpace(20),
                   EaselTextField(
-                    title: kRoyaltiesText,
+                    key: ValueKey("${provider.selectedDenom.name}-amount"),
+                    label: kPriceText,
+                    hint: kHintPrice,
+                    keyboardType: TextInputType.number,
+                    inputFormatters: [
+                      FilteringTextInputFormatter.digitsOnly,
+                      LengthLimitingTextInputFormatter(kMaxPriceLength),
+                      provider.selectedDenom.getFormatter()
+                    ],
+                    controller: provider.priceController,
+                    suffix: const _CurrencyDropDown(),
+                    validator: (value) {
+                      if (value!.isEmpty) {
+                        return kEnterPriceText;
+                      }
+
+                      if (double.parse(value.replaceAll(",", "")) < kMinValue) return "$kMinIsText $kMinValue";
+
+                      return null;
+                    },
+                  ),
+                  const VerticalSpace(20),
+                  EaselTextField(
+                    label: kRoyaltiesText,
                     hint: kRoyaltyHintText,
                     keyboardType: TextInputType.number,
                     inputFormatters: [
@@ -170,13 +173,9 @@ class _EditScreenState extends State<EditScreen> {
                       return null;
                     },
                   ),
-                  const VerticalSpace(4),
                   Text(
-                    "$kRoyaltyNoteText “$kMinRoyalty”",
-                    style: Theme.of(context)
-                        .textTheme
-                        .subtitle2!
-                        .copyWith(color: EaselAppTheme.kGrey, fontWeight: FontWeight.w600),
+                    "$kRoyaltyNoteText “$kMinRoyalty”.",
+                    style: TextStyle(color: EaselAppTheme.kLightPurple, fontWeight: FontWeight.w800, fontSize: 14.sp),
                   ),
                   const VerticalSpace(20),
                   Align(
@@ -215,13 +214,13 @@ class _CurrencyDropDown extends StatelessWidget {
           FocusManager.instance.primaryFocus?.unfocus();
         },
         value: provider.selectedDenom.symbol,
-        icon: const Icon(Icons.keyboard_arrow_down, size: 16, color: EaselAppTheme.kBlue),
+        icon: const Icon(Icons.keyboard_arrow_down, size: 16, color: EaselAppTheme.kPurple03),
         iconSize: 30,
         elevation: 16,
         underline: const SizedBox(),
         focusColor: EaselAppTheme.kBlue,
-        dropdownColor: EaselAppTheme.kWhite,
-        style: const TextStyle(color: EaselAppTheme.kBlack, fontSize: 16, fontWeight: FontWeight.w500),
+        dropdownColor: EaselAppTheme.kPurple03,
+        style: TextStyle(color: EaselAppTheme.kDarkText, fontSize: 18.sp, fontWeight: FontWeight.w400),
         onChanged: (String? data) {
           if (data != null) {
             final value = Denom.availableDenoms.firstWhere((denom) => denom.symbol == data);

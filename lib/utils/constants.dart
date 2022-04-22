@@ -37,6 +37,8 @@ const kSvgNftTypeImage = 'assets/images/svg/nft_type_image.svg';
 const kSvgNftTypeVideo = 'assets/images/svg/nft_type_video.svg';
 const kSvgNftType3d = 'assets/images/svg/nft_type_3d.svg';
 const kSvgNftTypeAudio = 'assets/images/svg/nft_type_audio.svg';
+const kSvgText1FieldBG = 'assets/images/svg/text_field_background_1.svg';
+const kSvgTextXFieldBG = 'assets/images/svg/text_field_background_x.svg';
 
 const ipfsDomain = "https://ipfs.io/ipfs";
 const kPlayStoreUrl = "https://play.google.com/store/apps/details?id=tech.pylons.wallet";
@@ -52,12 +54,12 @@ const kEnterNFTDescriptionText = "Enter NFT description";
 const kPriceText = "Price";
 const kEnterPriceText = "Enter price";
 const kEnterEditionText = "Enter number of editions";
-const kNoOfEditionText = "Number of Editions";
+const kNoOfEditionText = "Number of editions";
 const kEnterRoyaltyText = "Enter royalty in percentage";
 const kRoyaltiesText = "Royalties (%)";
-const kRoyaltyHintText = "10%";
+const kRoyaltyHintText = "5%";
 const kRoyaltyNoteText =
-    "Percentage of all secondary market sales automatically distributed to the creator.\nTo opt out set value to";
+    "Percentage of all secondary market sales automatically distributed to the NFT creator.\nTo opt out set value to";
 const kRoyaltyRangeText = "Allowed royalty is between";
 const kMinIsText = "Minimum is";
 const kMaxIsTextText = "Maximum is";
@@ -109,6 +111,11 @@ const kTapToSelect = "Tap to Select";
 const kCloseText = "Close";
 const kUploadHint2 = "• Image, Video, 3D or Audio";
 const kUploadHint3 = "• One file per upload";
+const kHintNftName = "Timeless Classic";
+const kHintArtistName = "Hans Zimmer";
+const kHintNftDesc = "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercita. Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod";
+const kHintNoEdition = "100";
+const kHintPrice = "10.87";
 
 const kMinNFTName = 9;
 const kMinDescription = 20;
