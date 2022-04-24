@@ -85,7 +85,6 @@ const kGoToWalletText = "Go to Wallet";
 const kChooseNFTFormatText = "Choose your NFT format";
 const kUploadNFTText = "Upload your NFT file";
 const kEditNFTText = "Edit your NFT Details";
-// const kStartText = "Start";
 const kUploadText = "Upload";
 const kMintText = "Mint";
 const kPublishText = "Publish";

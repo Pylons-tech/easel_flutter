@@ -26,6 +26,17 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
+  final int _numPages = 6;
+  final PageController _pageController = PageController(keepPage: true);
+  final ValueNotifier<int> _currentPage = ValueNotifier(0);
+  static const _kPageEdit = 3;
+
+  final int _numSteps = 3;
+  final ValueNotifier<int> _currentStep = ValueNotifier(0);
+
+  List stepLabels = [kUploadText, kEditText, kPublishText];
+  List pageTitles = [kChooseNFTFormatText, kUploadNFTText, kPreviewNFTText, kEditNFTText, kPreviewNFTText, ''];
+
   @override
   void initState() {
     super.initState();
@@ -35,16 +46,6 @@ class _HomeScreenState extends State<HomeScreen> {
   void dispose() {
     super.dispose();
   }
-
-  final int _numPages = 6;
-  final PageController _pageController = PageController(keepPage: true);
-  final ValueNotifier<int> _currentPage = ValueNotifier(0);
-
-  final int _numSteps = 3;
-  final ValueNotifier<int> _currentStep = ValueNotifier(0);
-
-  List stepLabels = [kUploadText, kEditText, kPublishText];
-  List pageTitles = [kChooseNFTFormatText, kUploadNFTText, kPreviewNFTText, kEditNFTText, kPreviewNFTText, ''];
 
   @override
   Widget build(BuildContext context) {
@@ -159,13 +160,7 @@ class _HomeScreenState extends State<HomeScreen> {
                   physics: const NeverScrollableScrollPhysics(),
                   onPageChanged: (int page) {
                     _currentPage.value = page;
-                    if (page <= 2) {
-                      _currentStep.value = 0;
-                    } else if (page > 3) {
-                      _currentStep.value = _numSteps - 1;
-                    } else {
-                      _currentStep.value = 1;
-                    }
+                    _currentStep.value = page < _kPageEdit ? 0 : (page == _kPageEdit ? 1 : _numSteps - 1);
                   },
                   children: [
                     ChooseFormatScreen(controller: _pageController),
