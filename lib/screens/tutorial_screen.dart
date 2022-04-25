@@ -1,4 +1,5 @@
 import 'package:bottom_drawer/bottom_drawer.dart';
+import 'package:easel_flutter/datasources/local_datasource.dart';
 import 'package:easel_flutter/main.dart';
 import 'package:easel_flutter/utils/easel_app_theme.dart';
 import 'package:easel_flutter/utils/extension_util.dart';
@@ -7,6 +8,7 @@ import 'package:easel_flutter/utils/screen_responsive.dart';
 import 'package:easel_flutter/widgets/pylons_button.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:get_it/get_it.dart';
 import 'package:pylons_sdk/pylons_sdk.dart';
 
 import '../utils/constants.dart';
@@ -147,13 +149,16 @@ class _TutorialScreenState extends State<TutorialScreen> {
               )
               //  ),
               ),
-          if (currentPage.round() == slides.length - 1) ...[
+          if (isLastPage()) ...[
             Align(
                 alignment: Alignment.bottomRight,
                 child: Container(
                   margin: EdgeInsets.only(right: 25.w, bottom: 40.h),
                   child: PylonsButton(
                     onPressed: () async {
+
+                      GetIt.I.get<LocalDataSource>().saveOnBoardingComplete();
+
                       Navigator.of(context).pushNamed(RouteUtil.ROUTE_WELCOME);
                     },
                     btnText: kContinue,
@@ -169,6 +174,8 @@ class _TutorialScreenState extends State<TutorialScreen> {
       ),
     );
   }
+
+  bool isLastPage() => currentPage.round() == slides.length - 1;
 
   Widget buildBottomDrawer(BuildContext context) {
     return BottomDrawer(

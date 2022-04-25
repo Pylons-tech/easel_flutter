@@ -1,9 +1,11 @@
+import 'package:easel_flutter/datasources/local_datasource.dart';
 import 'package:easel_flutter/utils/route_util.dart';
 import 'package:easel_flutter/utils/screen_responsive.dart';
 import 'package:flutter/material.dart';
 import 'package:easel_flutter/widgets/pylons_button.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:get_it/get_it.dart';
 
 import '../utils/constants.dart';
 
@@ -32,6 +34,11 @@ class SplashScreen extends StatelessWidget {
             alignment: Alignment.center,
             child: PylonsButton(
               onPressed: () {
+                var onBoardingComplete = GetIt.I.get<LocalDataSource>().getOnBoardingComplete();
+                if (onBoardingComplete) {
+                  Navigator.of(context).pushNamed(RouteUtil.ROUTE_WELCOME);
+                  return;
+                }
                 Navigator.of(context).pushNamed(RouteUtil.ROUTE_TUTORIAL);
               },
               btnText: kGetStarted,
@@ -57,13 +64,9 @@ class SplashScreen extends StatelessWidget {
               mainAxisSize: MainAxisSize.min,
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
-                Align(
-                    alignment: Alignment.centerLeft,
-                    child: SvgPicture.asset(kSplashTabEasel)),
+                Align(alignment: Alignment.centerLeft, child: SvgPicture.asset(kSplashTabEasel)),
                 SizedBox(height: 10.h),
-                Align(
-                    alignment: Alignment.centerLeft,
-                    child: SvgPicture.asset(kSplashNFTCreatorTab)),
+                Align(alignment: Alignment.centerLeft, child: SvgPicture.asset(kSplashNFTCreatorTab)),
               ],
             ),
           ),
@@ -76,6 +79,11 @@ class SplashScreen extends StatelessWidget {
             alignment: Alignment.center,
             child: PylonsButton(
               onPressed: () {
+                var onBoardingComplete = GetIt.I.get<LocalDataSource>().getOnBoardingComplete();
+                if (onBoardingComplete) {
+                  Navigator.of(context).pushNamed(RouteUtil.ROUTE_WELCOME);
+                  return;
+                }
                 Navigator.of(context).pushNamed(RouteUtil.ROUTE_TUTORIAL);
               },
               btnText: kGetStarted,

@@ -4,8 +4,21 @@ import 'package:easel_flutter/utils/date_utils.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 abstract class LocalDataSource {
+
+
+
+  /// This method will get the already created cookbook from the local database
+  /// Output: [String] if the cookbook already exists return cookbook else return null
   String? getCookbookId();
+
+
+  /// This method will generate the cookbook id for the easel app
+  /// Output: [String] the id of the cookbook which will contains all the NFTs.
   Future<String> autoGenerateCookbookId();
+
+
+  /// This method will generate easel Id for the NFT
+  /// Output: [String] the id of the NFT that is going to be added in the recipe
   String autoGenerateEaselId();
 
 
@@ -23,10 +36,30 @@ abstract class LocalDataSource {
   String getCookBookGeneratorUsername();
 
 
+
+
+  /// This method will save the on boarding complete in the local datastore
+  /// Output: [bool] returns whether the operation is successful or not
+  Future<bool> saveOnBoardingComplete();
+
+
+
+
+  /// This method will get the on boarding status from the local datastore
+  /// Output: [bool] returns whether the operation is successful or not
+  bool getOnBoardingComplete();
+
 }
 
 class LocalDataSourceImpl implements LocalDataSource {
+
+
+
+  static const String ONBOARDING_COMPLETE = "";
+
   final SharedPreferences sharedPreferences;
+
+
 
   LocalDataSourceImpl(this.sharedPreferences);
 
@@ -67,6 +100,16 @@ class LocalDataSourceImpl implements LocalDataSource {
   @override
   String getCookBookGeneratorUsername() {
     return  sharedPreferences.getString(kUsername) ?? '';
+  }
+
+  @override
+  bool getOnBoardingComplete() {
+    return  sharedPreferences.getBool(ONBOARDING_COMPLETE) ?? false;
+  }
+
+  @override
+  Future<bool> saveOnBoardingComplete() async {
+    return await sharedPreferences.setBool(ONBOARDING_COMPLETE, true);
   }
 
 
