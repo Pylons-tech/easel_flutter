@@ -1,4 +1,3 @@
-import 'package:easel_flutter/screens/routing_screen.dart';
 import 'package:easel_flutter/utils/easel_app_theme.dart';
 import 'package:easel_flutter/utils/route_util.dart';
 import 'package:flutter/material.dart';
