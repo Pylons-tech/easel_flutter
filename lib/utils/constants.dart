@@ -26,6 +26,9 @@ const kSaveIcon = 'assets/images/save_ic.png';
 const kTooltipBalloon = 'assets/images/tooltip_balloon.png';
 
 const kSvgSplash = 'assets/images/svg/splash.svg';
+const kSvgTabSplash = 'assets/images/svg/background_tab.svg';
+const kSplashTabEasel = 'assets/images/svg/easel_tab.svg';
+const kSplashNFTCreatorTab = 'assets/images/svg/nft_creator_tab.svg';
 const kSvgRectBlue = 'assets/images/svg/rectangular_button_blue.svg';
 const kSvgRectRed = 'assets/images/svg/rectangular_button_red.svg';
 const kSvgDashedBox = 'assets/images/svg/dashed_box.svg';
