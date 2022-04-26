@@ -119,7 +119,7 @@ class _PublishScreenState extends State<PublishScreen> {
                             thickness: 1.2,
                           ),
                           Text(
-                            kEditText,
+                            kNftDetailsText,
                             style:
                                 Theme.of(context).textTheme.bodyText2!.copyWith(
                                       fontSize: 18,

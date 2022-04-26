@@ -78,6 +78,7 @@ const kWelcomeToEaselText = "Welcome to Easel,";
 const kEaselDescriptionText =
     "Easel is a NFT minter that allows you to create NFTs from any mobile device!\n\nOnce you successfully upload an audio, video or image file, enter the required information and press “Publish”, your file is transformed into a NFT that is stored on the Pylons blockchain indefinitely!\n\nYou’ll be able to view your new NFT in the Easel folder located in your Pylons Wallet.";
 const kCreatedByText = "Created by";
+const kNftDetailsText = "NFT Details";
 const kEditText = "Edit";
 const kSizeText = "Size";
 const kDurationText = "Duration";
