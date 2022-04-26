@@ -87,7 +87,6 @@ class _TutorialScreenState extends State<TutorialScreen> {
                           ),
                         ),
                         onTap: () {
-                          /// To-Do: bottom drawer that explains why the pylons app is required
                           myBottomDrawerController.open();
                         },
                       ),
@@ -271,7 +270,7 @@ class _TutorialScreenState extends State<TutorialScreen> {
             ),
             SizedBox(height: 20.h),
             ScreenResponsive(
-              mobileScreen: (context) =>  Align(
+              mobileScreen: (context) => Align(
                 alignment: Alignment.center,
                 child: PylonsButton(
                   onPressed: () async {
@@ -279,15 +278,16 @@ class _TutorialScreenState extends State<TutorialScreen> {
                   },
                   btnText: kDownloadPylons,
                 ),
-              ), tabletScreen: (BuildContext context) => Center(
+              ),
+              tabletScreen: (BuildContext context) => Center(
                 child: SizedBox(
                   width: 0.5.sw,
                   child: PylonsButton(
-                  onPressed: () async {
-                    await onDownloadNowPressed(context);
-                  },
-                  btnText: kDownloadPylons,
-            ),
+                    onPressed: () async {
+                      await onDownloadNowPressed(context);
+                    },
+                    btnText: kDownloadPylons,
+                  ),
                 ),
               ),
             )
@@ -302,7 +302,7 @@ class _TutorialScreenState extends State<TutorialScreen> {
   }
 
   Future<void> onDownloadNowPressed(BuildContext context) async {
-     final appAlreadyInstalled = await PylonsWallet.instance.exists();
+    final appAlreadyInstalled = await PylonsWallet.instance.exists();
     if (!appAlreadyInstalled) {
       PylonsWallet.instance.goToInstall();
     } else {

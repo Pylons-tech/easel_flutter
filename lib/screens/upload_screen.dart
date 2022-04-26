@@ -174,7 +174,7 @@ class _ErrorMessageWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ScreenResponsive(
-      mobileScreen: (BuildContext context) =>  buildMobile(context),
+      mobileScreen: (context) => buildMobile(context),
       tabletScreen: (context) => buildTablet(context),
     );
   }
