@@ -92,6 +92,7 @@ const kChooseNFTFormatText = "Choose your NFT format";
 const kUploadNFTText = "Upload your NFT file";
 const kEditNFTText = "Edit your NFT Details";
 const kUploadText = "Upload";
+const kPreviewText = "Preview";
 const kMintText = "Mint";
 const kPublishText = "Publish";
 const kImageText = "Image";

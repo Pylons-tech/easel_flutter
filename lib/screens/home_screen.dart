@@ -29,13 +29,14 @@ class _HomeScreenState extends State<HomeScreen> {
   final int _numPages = 6;
   final PageController _pageController = PageController(keepPage: true);
   final ValueNotifier<int> _currentPage = ValueNotifier(0);
+  static const _kPagePreview = 2;
   static const _kPageEdit = 3;
 
-  final int _numSteps = 3;
+  final int _numSteps = 4;
   final ValueNotifier<int> _currentStep = ValueNotifier(0);
 
-  List stepLabels = [kUploadText, kEditText, kPublishText];
-  List pageTitles = [kChooseNFTFormatText, kUploadNFTText, kPreviewNFTText, kEditNFTText, kPreviewNFTText, ''];
+  final List stepLabels = [kUploadText, kPreviewText, kEditText, kPublishText];
+  final List pageTitles = [kChooseNFTFormatText, kUploadNFTText, kPreviewNFTText, kEditNFTText, kPreviewNFTText, ''];
 
   @override
   void initState() {
@@ -61,8 +62,8 @@ class _HomeScreenState extends State<HomeScreen> {
                 builder: (_, int value, __) => StepsIndicator(
                   selectedStep: _currentStep.value,
                   nbSteps: _numSteps,
-                  lineLength: 0.7.sw / _numSteps,
-                  doneLineColor: EaselAppTheme.kLightGrey,
+                  lineLength: 0.68.sw / _numSteps,
+                  doneLineColor: EaselAppTheme.kDarkGreen,
                   undoneLineColor: EaselAppTheme.kLightGrey,
                   doneLineThickness: 1.5,
                   undoneLineThickness: 1.5,
@@ -73,6 +74,13 @@ class _HomeScreenState extends State<HomeScreen> {
                   selectedStepColorOut: EaselAppTheme.kDarkGreen,
                   enableLineAnimation: true,
                   enableStepAnimation: true,
+                  lineLengthCustomStep: [],
+                  doneStepWidget: Container(
+                      width: 12.w, height: 12.h, decoration: const BoxDecoration(color: EaselAppTheme.kDarkGreen)),
+                  unselectedStepWidget: Container(
+                      width: 12.w, height: 12.h, decoration: const BoxDecoration(color: EaselAppTheme.kLightGrey)),
+                  selectedStepWidget: Container(
+                      width: 12.w, height: 12.h, decoration: const BoxDecoration(color: EaselAppTheme.kDarkGreen)),
                 ),
               ),
               const VerticalSpace(5),
@@ -160,7 +168,11 @@ class _HomeScreenState extends State<HomeScreen> {
                   physics: const NeverScrollableScrollPhysics(),
                   onPageChanged: (int page) {
                     _currentPage.value = page;
-                    _currentStep.value = page < _kPageEdit ? 0 : (page == _kPageEdit ? 1 : _numSteps - 1);
+                    _currentStep.value = page < _kPagePreview
+                        ? 0
+                        : page == _kPagePreview
+                            ? 1
+                            : (page == _kPageEdit ? 2 : _numSteps - 1);
                   },
                   children: [
                     ChooseFormatScreen(controller: _pageController),
@@ -205,7 +217,7 @@ class _HomeScreenState extends State<HomeScreen> {
                 fontSize: 12.sp,
                 fontFamily: 'Inter',
                 fontWeight: FontWeight.w400,
-                color: currentPage == index ? EaselAppTheme.kBlack : EaselAppTheme.kGrey),
+                color: _currentStep.value >= index ? EaselAppTheme.kDarkGreen : EaselAppTheme.kGrey),
           ),
         ],
       ),
