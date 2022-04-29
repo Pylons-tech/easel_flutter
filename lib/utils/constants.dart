@@ -36,10 +36,10 @@ const kSvgFileUpload = 'assets/images/svg/file_upload.svg';
 const kSvgUploadErrorBG = 'assets/images/svg/upload_error_background.svg';
 const kSvgCloseIcon = 'assets/images/svg/close_icon.svg';
 const kSvgCloseButton = 'assets/images/svg/close_button.svg';
-const kSvgNftTypeImage = 'assets/images/svg/nft_type_image.svg';
-const kSvgNftTypeVideo = 'assets/images/svg/nft_type_video.svg';
-const kSvgNftType3d = 'assets/images/svg/nft_type_3d.svg';
-const kSvgNftTypeAudio = 'assets/images/svg/nft_type_audio.svg';
+const kSvgNftFormatImage = 'assets/images/svg/nft_format_image.svg';
+const kSvgNftFormatVideo = 'assets/images/svg/nft_format_video.svg';
+const kSvgNftFormat3d = 'assets/images/svg/nft_format_3d.svg';
+const kSvgNftFormatAudio = 'assets/images/svg/nft_format_audio.svg';
 const kSvgText1FieldBG = 'assets/images/svg/text_field_background_1.svg';
 const kSvgTextXFieldBG = 'assets/images/svg/text_field_background_x.svg';
 
@@ -114,9 +114,11 @@ const kTapToSelect = "Tap to Select";
 const kCloseText = "Close";
 const kUploadHint2 = "• Image, Video, 3D or Audio";
 const kUploadHint3 = "• One file per upload";
+const kUploadHintAll = "GB Limit\nOne file per upload";
 const kHintNftName = "Timeless Classic";
 const kHintArtistName = "Hans Zimmer";
-const kHintNftDesc = "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercita. Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod";
+const kHintNftDesc =
+    "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercita. Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod";
 const kHintNoEdition = "100";
 const kHintPrice = "10.87";
 

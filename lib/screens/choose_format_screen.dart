@@ -6,6 +6,7 @@ import 'package:easel_flutter/utils/screen_responsive.dart';
 import 'package:easel_flutter/utils/space_utils.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:flutter_svg/svg.dart';
 import 'package:provider/provider.dart';
 
 import '../widgets/pylons_button.dart';
@@ -28,90 +29,101 @@ class _ChooseFormatScreenState extends State<ChooseFormatScreen> {
     _tempFormat ??= provider.nftFormat;
     return Scaffold(
       body: Column(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+          Column(
             children: [
-              const SizedBox(width: 10),
-              _CardWidget(
-                text: NftFormat.supportedFormats[0].format,
-                secondaryText: NftFormat.supportedFormats[0].getExtensionsList(),
-                selected: _tempFormat?.format == NftFormat.supportedFormats[0].format,
-                icon: 'nft_format_image',
-                onTap: () {
-                  setState(() {
-                    _tempFormat = NftFormat.supportedFormats[0];
-                  });
-                },
+              Text("$kFileSizeLimitInGB$kUploadHintAll",
+                  textAlign: TextAlign.center,
+                  style: Theme.of(context)
+                      .textTheme
+                      .bodyText2!
+                      .copyWith(color: EaselAppTheme.kLightPurple, fontSize: 15.sp, fontWeight: FontWeight.w600)),
+              SizedBox(height: 40.h),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                children: [
+                  const SizedBox(width: 10),
+                  _CardWidget(
+                    text: NftFormat.supportedFormats[0].format,
+                    secondaryText: NftFormat.supportedFormats[0].getExtensionsList(),
+                    selected: _tempFormat?.format == NftFormat.supportedFormats[0].format,
+                    icon: NftFormat.supportedFormats[0].badge,
+                    backColor: NftFormat.supportedFormats[0].color,
+                    onTap: () {
+                      setState(() {
+                        _tempFormat = NftFormat.supportedFormats[0];
+                      });
+                    },
+                  ),
+                  const SizedBox(width: 10),
+                  _CardWidget(
+                    text: NftFormat.supportedFormats[1].format,
+                    secondaryText: NftFormat.supportedFormats[1].getExtensionsList(),
+                    selected: _tempFormat?.format == NftFormat.supportedFormats[1].format,
+                    icon: NftFormat.supportedFormats[1].badge,
+                    backColor: NftFormat.supportedFormats[1].color,
+                    onTap: () {
+                      setState(() {
+                        _tempFormat = NftFormat.supportedFormats[1];
+                      });
+                    },
+                  ),
+                  const SizedBox(width: 10),
+                ],
               ),
-              const SizedBox(width: 10),
-              _CardWidget(
-                text: NftFormat.supportedFormats[1].format,
-                secondaryText: NftFormat.supportedFormats[1].getExtensionsList(),
-                selected: _tempFormat?.format == NftFormat.supportedFormats[1].format,
-                icon: 'nft_format_video',
-                onTap: () {
-                  setState(() {
-                    _tempFormat = NftFormat.supportedFormats[1];
-                  });
-                },
+              const SizedBox(height: 20),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                children: [
+                  const SizedBox(width: 10),
+                  _CardWidget(
+                    text: NftFormat.supportedFormats[2].format,
+                    secondaryText: NftFormat.supportedFormats[2].getExtensionsList(),
+                    selected: _tempFormat?.format == NftFormat.supportedFormats[2].format,
+                    icon: NftFormat.supportedFormats[2].badge,
+                    backColor: NftFormat.supportedFormats[2].color,
+                    onTap: () {
+                      setState(() {
+                        _tempFormat = NftFormat.supportedFormats[2];
+                      });
+                    },
+                  ),
+                  const SizedBox(width: 10),
+                  _CardWidget(
+                    text: NftFormat.supportedFormats[3].format,
+                    secondaryText: NftFormat.supportedFormats[3].getExtensionsList(),
+                    selected: _tempFormat?.format == NftFormat.supportedFormats[3].format,
+                    icon: NftFormat.supportedFormats[3].badge,
+                    backColor: NftFormat.supportedFormats[3].color,
+                    onTap: () {
+                      setState(() {
+                        _tempFormat = NftFormat.supportedFormats[3];
+                      });
+                    },
+                  ),
+                  const SizedBox(width: 10),
+                ],
               ),
-              const SizedBox(width: 10),
             ],
           ),
-          const SizedBox(height: 20),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-            children: [
-              const SizedBox(width: 10),
-              _CardWidget(
-                text: NftFormat.supportedFormats[2].format,
-                secondaryText: NftFormat.supportedFormats[2].getExtensionsList(),
-                selected: _tempFormat?.format == NftFormat.supportedFormats[2].format,
-                icon: 'nft_format_3d',
-                onTap: () {
-                  setState(() {
-                    _tempFormat = NftFormat.supportedFormats[2];
-                  });
-                },
-              ),
-              const SizedBox(width: 10),
-              _CardWidget(
-                text: NftFormat.supportedFormats[3].format,
-                secondaryText: NftFormat.supportedFormats[3].getExtensionsList(),
-                selected: _tempFormat?.format == NftFormat.supportedFormats[3].format,
-                icon: 'nft_format_audio',
-                onTap: () {
-                  setState(() {
-                    _tempFormat = NftFormat.supportedFormats[3];
-                  });
-                },
-              ),
-              const SizedBox(width: 10),
-            ],
+          Align(
+            alignment: Alignment.centerRight,
+            child: Container(
+                margin: EdgeInsets.only(right: 25.w, bottom: 40.h),
+                child: PylonsButton(
+                  onPressed: () {
+                    if (_tempFormat?.format != provider.nftFormat.format) {
+                      provider.initStore();
+                    }
+                    provider.setFormat(context, _tempFormat!);
+                    widget.controller.nextPage(duration: const Duration(milliseconds: 300), curve: Curves.easeIn);
+                  },
+                  btnText: kContinue,
+                  isBlue: false,
+                  showArrow: true,
+                )),
           ),
-          ScreenResponsive(
-            mobileScreen: (context) => const SizedBox(height: 20),
-            tabletScreen: (BuildContext context) => SizedBox(height: 40.h),
-          ),
-          Padding(
-            padding: EdgeInsets.only(top: 20.h, right: 20.w),
-            child: Align(
-              alignment: Alignment.centerRight,
-              child: PylonsButton(
-                onPressed: () {
-                  if (_tempFormat?.format != provider.nftFormat.format) {
-                    provider.initStore();
-                  }
-                  provider.setFormat(context, _tempFormat!);
-                  widget.controller.nextPage(duration: const Duration(milliseconds: 300), curve: Curves.easeIn);
-                },
-                btnText: kContinue,
-                showArrow: true,
-                isBlue: false,
-              ),
-            ),
-          )
         ],
       ),
     );
@@ -125,12 +137,14 @@ class _CardWidget extends StatelessWidget {
     required this.secondaryText,
     required this.icon,
     required this.onTap,
+    required this.backColor,
     this.selected = false,
   }) : super(key: key);
   final bool selected;
   final String text;
   final String secondaryText;
   final String icon;
+  final Color backColor;
   final VoidCallback onTap;
 
   @override
@@ -140,35 +154,43 @@ class _CardWidget extends StatelessWidget {
         GestureDetector(
           onTap: onTap,
           child: ScreenResponsive(
-            tabletScreen: (BuildContext context) => Container(
-                width: 0.38.sw,
-                height: 0.34.sw,
-                padding: const EdgeInsets.all(50),
-                decoration: BoxDecoration(
-                  color: selected ? EaselAppTheme.cardBackgroundSelected : EaselAppTheme.cardBackground,
-                ),
-                child: Image.asset(
-                  "assets/images/$icon.png",
-                )),
-            mobileScreen: (BuildContext context) => Container(
-                width: 0.45.sw,
-                height: 0.42.sw,
-                padding: const EdgeInsets.all(50),
-                decoration: BoxDecoration(
-                  color: selected ? EaselAppTheme.cardBackgroundSelected : EaselAppTheme.cardBackground,
-                ),
-                child: Image.asset(
-                  "assets/images/$icon.png",
-                )),
-          ),
-        ),
-        // const VerticalSpace(8),
-        Text(
-          text,
-          style: Theme.of(context).textTheme.bodyText1!.copyWith(
-              color: selected ? EaselAppTheme.kBlue : EaselAppTheme.kBlue.withOpacity(0.5),
-              fontSize: 20,
-              fontWeight: FontWeight.w600),
+              tabletScreen: (BuildContext context) => Container(
+                  width: 0.21.sw,
+                  height: 0.21.sw,
+                  padding: EdgeInsets.symmetric(horizontal: 0.05.sw, vertical: 4.5.h),
+                  decoration: BoxDecoration(color: backColor),
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    children: [
+                      Text(
+                        text,
+                        style: Theme.of(context)
+                            .textTheme
+                            .bodyText1!
+                            .copyWith(color: EaselAppTheme.kWhite, fontSize: 15.sp, fontWeight: FontWeight.w400),
+                      ),
+                      SvgPicture.asset(icon)
+                    ],
+                  )),
+              mobileScreen: (BuildContext context) => Container(
+                    width: 0.25.sw,
+                    height: 0.25.sw,
+                    padding: EdgeInsets.symmetric(horizontal: 0.06.sw, vertical: 5.h),
+                    decoration: BoxDecoration(color: backColor),
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                      children: [
+                        Text(
+                          text,
+                          style: Theme.of(context)
+                              .textTheme
+                              .bodyText1!
+                              .copyWith(color: EaselAppTheme.kWhite, fontSize: 15.sp, fontWeight: FontWeight.w400),
+                        ),
+                        SvgPicture.asset(icon),
+                      ],
+                    ),
+                  )),
         ),
         const VerticalSpace(6),
         SizedBox(
@@ -180,9 +202,15 @@ class _CardWidget extends StatelessWidget {
                 style: Theme.of(context)
                     .textTheme
                     .bodyText1!
-                    .copyWith(color: EaselAppTheme.kLightGrey, fontSize: 15, fontWeight: FontWeight.w600),
+                    .copyWith(color: EaselAppTheme.kLightPurple, fontSize: 12.sp, fontWeight: FontWeight.w400),
                 text: secondaryText),
           ),
+        ),
+        const VerticalSpace(6),
+        Container(
+          width: 15.w,
+          height: 15.h,
+          decoration: BoxDecoration(color: selected ? backColor : EaselAppTheme.kLightGrey),
         )
       ],
     );

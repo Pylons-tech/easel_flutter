@@ -54,21 +54,26 @@ class _UploadScreenState extends State<UploadScreen> {
                 children: NftFormat.supportedFormats
                     .map(
                       (format) => Padding(
-                          padding: EdgeInsets.symmetric(horizontal: 12.w, vertical: 2.h),
+                          padding: EdgeInsets.symmetric(horizontal: 15.w, vertical: 2.h),
                           child: Row(children: [
-                            SizedBox(
+                            Container(
                               height: 22.h,
-                              width: 40.w,
-                              child: SvgPicture.asset(format.badge),
+                              width: 22.h,
+                              child: Padding(padding: EdgeInsets.all(4.w), child: SvgPicture.asset(format.badge)),
+                              decoration: BoxDecoration(color: format.color),
                             ),
+                            SizedBox(width: 10.w),
                             SizedBox(
                               width: 72.w,
-                              child: Text(format.format, style: Theme.of(context).textTheme.subtitle2!.copyWith(color: EaselAppTheme.kDartGrey02, fontSize: 18.sp, fontWeight: FontWeight.w800)),
+                              child: Text(format.format,
+                                  style: Theme.of(context).textTheme.subtitle2!.copyWith(
+                                      color: EaselAppTheme.kDartGrey02, fontSize: 18.sp, fontWeight: FontWeight.w800)),
                             ),
                             SizedBox(
                               width: 0.6.sw,
                               child: Text(format.getExtensionsList(),
-                                  style: Theme.of(context).textTheme.subtitle2!.copyWith(color: EaselAppTheme.kLightPurple, fontSize: 18.sp, fontWeight: FontWeight.w800)),
+                                  style: Theme.of(context).textTheme.subtitle2!.copyWith(
+                                      color: EaselAppTheme.kLightPurple, fontSize: 18.sp, fontWeight: FontWeight.w800)),
                             ),
                           ])),
                     )
@@ -77,7 +82,7 @@ class _UploadScreenState extends State<UploadScreen> {
               Align(
                 alignment: Alignment.centerRight,
                 child: Container(
-                  padding: EdgeInsets.symmetric(horizontal: 0.12.sw),
+                  margin: EdgeInsets.only(right: 25.w),
                   child: PylonsButton(
                       onPressed: () {
                         if (provider.file != null) {
@@ -146,15 +151,16 @@ class _UploadWidgetState extends State<_UploadWidget> {
                       Padding(
                           padding: EdgeInsets.symmetric(horizontal: 0.08.sw),
                           child: Text(provider.fileName.isEmpty ? kTapToSelect : provider.fileName,
-                              style: Theme.of(context)
-                                  .textTheme
-                                  .subtitle2!
-                                  .copyWith(color: EaselAppTheme.kLightPurple, fontSize: provider.fileName.isEmpty ? 22.sp : 16.sp, fontWeight: FontWeight.w800))),
+                              style: Theme.of(context).textTheme.subtitle2!.copyWith(
+                                  color: EaselAppTheme.kLightPurple,
+                                  fontSize: provider.fileName.isEmpty ? 22.sp : 16.sp,
+                                  fontWeight: FontWeight.w800))),
                       SizedBox(height: 25.h),
                       SvgPicture.asset(kSvgFileUpload),
                       SizedBox(height: 10.h),
                       Text(provider.fileName.isEmpty ? "${kFileSizeLimitInGB}GB Limit" : provider.fileSize,
-                          style: Theme.of(context).textTheme.bodyText2!.copyWith(color: EaselAppTheme.kLightPurple, fontSize: 15.sp, fontWeight: FontWeight.w800)),
+                          style: Theme.of(context).textTheme.bodyText2!.copyWith(
+                              color: EaselAppTheme.kLightPurple, fontSize: 15.sp, fontWeight: FontWeight.w800)),
                     ],
                   ),
                 ],
@@ -188,7 +194,10 @@ class _ErrorMessageWidget extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.center,
           mainAxisSize: MainAxisSize.min,
           children: [
-            SvgPicture.asset(kSvgCloseIcon, height: 30.h,),
+            SvgPicture.asset(
+              kSvgCloseIcon,
+              height: 30.h,
+            ),
             SizedBox(height: 30.h),
             Text(
               errorMessage,
@@ -198,9 +207,21 @@ class _ErrorMessageWidget extends StatelessWidget {
             Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text("• ${kFileSizeLimitInGB}GB Limit", style: Theme.of(context).textTheme.bodyText2!.copyWith(color: Colors.white, fontSize: 16.sp, fontWeight: FontWeight.w800)),
-                Text(kUploadHint2, style: Theme.of(context).textTheme.bodyText2!.copyWith(color: Colors.white, fontSize: 16.sp, fontWeight: FontWeight.w800)),
-                Text(kUploadHint3, style: Theme.of(context).textTheme.bodyText2!.copyWith(color: Colors.white, fontSize: 16.sp, fontWeight: FontWeight.w800)),
+                Text("• ${kFileSizeLimitInGB}GB Limit",
+                    style: Theme.of(context)
+                        .textTheme
+                        .bodyText2!
+                        .copyWith(color: Colors.white, fontSize: 16.sp, fontWeight: FontWeight.w800)),
+                Text(kUploadHint2,
+                    style: Theme.of(context)
+                        .textTheme
+                        .bodyText2!
+                        .copyWith(color: Colors.white, fontSize: 16.sp, fontWeight: FontWeight.w800)),
+                Text(kUploadHint3,
+                    style: Theme.of(context)
+                        .textTheme
+                        .bodyText2!
+                        .copyWith(color: Colors.white, fontSize: 16.sp, fontWeight: FontWeight.w800)),
               ],
             ),
             SizedBox(height: 30.h),
@@ -214,7 +235,10 @@ class _ErrorMessageWidget extends StatelessWidget {
                     Center(
                       child: Text(
                         kCloseText,
-                        style: Theme.of(context).textTheme.bodyText1!.copyWith(fontSize: 16.sp, color: EaselAppTheme.kWhite, fontWeight: FontWeight.w300),
+                        style: Theme.of(context)
+                            .textTheme
+                            .bodyText1!
+                            .copyWith(fontSize: 16.sp, color: EaselAppTheme.kWhite, fontWeight: FontWeight.w300),
                       ),
                     ),
                   ],
@@ -230,8 +254,6 @@ class _ErrorMessageWidget extends StatelessWidget {
     );
   }
 
-
-
   Padding buildMobile(BuildContext context) {
     return Padding(
       padding: EdgeInsets.symmetric(horizontal: 0.10.sw),
@@ -242,7 +264,10 @@ class _ErrorMessageWidget extends StatelessWidget {
           mainAxisSize: MainAxisSize.min,
           children: [
             SizedBox(height: 10.h),
-            SvgPicture.asset(kSvgCloseIcon, height: 30.h,),
+            SvgPicture.asset(
+              kSvgCloseIcon,
+              height: 30.h,
+            ),
             SizedBox(height: 30.h),
             Text(
               errorMessage,
@@ -252,9 +277,21 @@ class _ErrorMessageWidget extends StatelessWidget {
             Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text("• ${kFileSizeLimitInGB}GB Limit", style: Theme.of(context).textTheme.bodyText2!.copyWith(color: Colors.white, fontSize: 16.sp, fontWeight: FontWeight.w800)),
-                Text(kUploadHint2, style: Theme.of(context).textTheme.bodyText2!.copyWith(color: Colors.white, fontSize: 16.sp, fontWeight: FontWeight.w800)),
-                Text(kUploadHint3, style: Theme.of(context).textTheme.bodyText2!.copyWith(color: Colors.white, fontSize: 16.sp, fontWeight: FontWeight.w800)),
+                Text("• ${kFileSizeLimitInGB}GB Limit",
+                    style: Theme.of(context)
+                        .textTheme
+                        .bodyText2!
+                        .copyWith(color: Colors.white, fontSize: 16.sp, fontWeight: FontWeight.w800)),
+                Text(kUploadHint2,
+                    style: Theme.of(context)
+                        .textTheme
+                        .bodyText2!
+                        .copyWith(color: Colors.white, fontSize: 16.sp, fontWeight: FontWeight.w800)),
+                Text(kUploadHint3,
+                    style: Theme.of(context)
+                        .textTheme
+                        .bodyText2!
+                        .copyWith(color: Colors.white, fontSize: 16.sp, fontWeight: FontWeight.w800)),
               ],
             ),
             SizedBox(height: 30.h),
@@ -268,7 +305,10 @@ class _ErrorMessageWidget extends StatelessWidget {
                     Center(
                       child: Text(
                         kCloseText,
-                        style: Theme.of(context).textTheme.bodyText1!.copyWith(fontSize: 16.sp, color: EaselAppTheme.kWhite, fontWeight: FontWeight.w300),
+                        style: Theme.of(context)
+                            .textTheme
+                            .bodyText1!
+                            .copyWith(fontSize: 16.sp, color: EaselAppTheme.kWhite, fontWeight: FontWeight.w300),
                       ),
                     ),
                   ],

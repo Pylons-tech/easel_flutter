@@ -29,18 +29,19 @@ class _PreviewScreenState extends State<PreviewScreen> {
             if (provider.nftFormat.format == kVideoText) ...[VideoWidget(file: provider.file!)],
             if (provider.nftFormat.format == k3dText) ...[Model3dViewer(file: provider.file!)],
             if (provider.nftFormat.format == kAudioText) ...[AudioWidget(file: provider.file!)],
-            Padding(padding: EdgeInsets.only(bottom: 30.h, right: 20.w),
-            child: Align(
-              alignment: Alignment.bottomRight,
-              child: PylonsButton(
-                  onPressed: () {
-                    widget.controller.nextPage(duration: const Duration(milliseconds: 300), curve: Curves.easeIn);
-                  },
-                  btnText: kContinue,
-                  isBlue: false,
-                  showArrow: true),
-            ),)
-
+            Padding(
+              padding: EdgeInsets.only(bottom: 30.h, right: 25.w),
+              child: Align(
+                alignment: Alignment.bottomRight,
+                child: PylonsButton(
+                    onPressed: () {
+                      widget.controller.nextPage(duration: const Duration(milliseconds: 300), curve: Curves.easeIn);
+                    },
+                    btnText: kContinue,
+                    isBlue: false,
+                    showArrow: true),
+              ),
+            )
           ],
         ),
       ),
