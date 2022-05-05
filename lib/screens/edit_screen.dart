@@ -1,16 +1,16 @@
 import 'package:easel_flutter/easel_provider.dart';
-import 'package:easel_flutter/models/denom.dart';
 import 'package:easel_flutter/utils/amount_formatter.dart';
 import 'package:easel_flutter/utils/constants.dart';
 import 'package:easel_flutter/utils/easel_app_theme.dart';
 import 'package:easel_flutter/utils/space_utils.dart';
+import 'package:easel_flutter/widgets/easel_currency_input_field.dart';
+import 'package:easel_flutter/widgets/easel_hashtag_input_field.dart';
 import 'package:easel_flutter/widgets/easel_text_field.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
-import 'package:flutter_svg_provider/flutter_svg_provider.dart' as svg_provider;
 
 import '../widgets/pylons_button.dart';
 
@@ -51,6 +51,13 @@ class _EditScreenState extends State<EditScreen> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
+                  Text(kEditNoticeText,
+                      textAlign: TextAlign.center,
+                      style: Theme.of(context)
+                          .textTheme
+                          .bodyText1!
+                          .copyWith(fontSize: 15.sp, color: EaselAppTheme.kLightPurple, fontWeight: FontWeight.w400)),
+                  const VerticalSpace(20),
                   EaselTextField(
                     label: kGiveNFTNameText,
                     hint: kHintNftName,
@@ -100,6 +107,19 @@ class _EditScreenState extends State<EditScreen> {
                     style: TextStyle(color: EaselAppTheme.kLightPurple, fontSize: 14.sp, fontWeight: FontWeight.w800),
                   ),
                   const VerticalSpace(20),
+                  EaselHashtagInputField(
+                    controller: provider.hashtagsController,
+                    validator: (value) {
+                      if (value!.isEmpty) {
+                        return kEnterPriceText;
+                      }
+
+                      if (double.parse(value.replaceAll(",", "")) < kMinValue) return "$kMinIsText $kMinValue";
+
+                      return null;
+                    },
+                  ),
+                  const VerticalSpace(20),
                   EaselTextField(
                     key: ValueKey(provider.selectedDenom.name),
                     label: "$kNoOfEditionText ($kMaxText: ${NumberFormat.decimalPattern('hi').format(kMaxEdition)})",
@@ -123,29 +143,6 @@ class _EditScreenState extends State<EditScreen> {
                       if (int.parse(value.replaceAll(",", "")) > kMaxEdition) {
                         return "$kMaxIsTextText $kMaxEdition";
                       }
-
-                      return null;
-                    },
-                  ),
-                  const VerticalSpace(20),
-                  EaselTextField(
-                    key: ValueKey("${provider.selectedDenom.name}-amount"),
-                    label: kPriceText,
-                    hint: kHintPrice,
-                    keyboardType: TextInputType.number,
-                    inputFormatters: [
-                      FilteringTextInputFormatter.digitsOnly,
-                      LengthLimitingTextInputFormatter(kMaxPriceLength),
-                      provider.selectedDenom.getFormatter()
-                    ],
-                    controller: provider.priceController,
-                    suffix: const _CurrencyDropDown(),
-                    validator: (value) {
-                      if (value!.isEmpty) {
-                        return kEnterPriceText;
-                      }
-
-                      if (double.parse(value.replaceAll(",", "")) < kMinValue) return "$kMinIsText $kMinValue";
 
                       return null;
                     },
@@ -178,6 +175,25 @@ class _EditScreenState extends State<EditScreen> {
                     style: TextStyle(color: EaselAppTheme.kLightPurple, fontWeight: FontWeight.w800, fontSize: 14.sp),
                   ),
                   const VerticalSpace(20),
+                  EaselCurrencyInputField(
+                    key: ValueKey("${provider.selectedDenom.name}-amount"),
+                    inputFormatters: [
+                      FilteringTextInputFormatter.digitsOnly,
+                      LengthLimitingTextInputFormatter(kMaxPriceLength),
+                      provider.selectedDenom.getFormatter()
+                    ],
+                    controller: provider.priceController,
+                    validator: (value) {
+                      if (value!.isEmpty) {
+                        return kEnterPriceText;
+                      }
+
+                      if (double.parse(value.replaceAll(",", "")) < kMinValue) return "$kMinIsText $kMinValue";
+
+                      return null;
+                    },
+                  ),
+                  const VerticalSpace(40),
                   Align(
                     alignment: Alignment.centerRight,
                     child: PylonsButton(
@@ -198,42 +214,6 @@ class _EditScreenState extends State<EditScreen> {
             );
           }),
         ),
-      ),
-    );
-  }
-}
-
-class _CurrencyDropDown extends StatelessWidget {
-  const _CurrencyDropDown({Key? key}) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    return Consumer<EaselProvider>(
-      builder: (_, provider, __) => DropdownButton<String>(
-        onTap: () {
-          FocusManager.instance.primaryFocus?.unfocus();
-        },
-        value: provider.selectedDenom.symbol,
-        icon: const Icon(Icons.keyboard_arrow_down, size: 16, color: EaselAppTheme.kPurple03),
-        iconSize: 30,
-        elevation: 16,
-        underline: const SizedBox(),
-        focusColor: EaselAppTheme.kBlue,
-        dropdownColor: EaselAppTheme.kPurple03,
-        style: TextStyle(color: EaselAppTheme.kDarkText, fontSize: 18.sp, fontWeight: FontWeight.w400),
-        onChanged: (String? data) {
-          if (data != null) {
-            final value = Denom.availableDenoms.firstWhere((denom) => denom.symbol == data);
-            provider.priceController.clear();
-            provider.setSelectedDenom(value);
-          }
-        },
-        items: Denom.availableDenoms.map((Denom value) {
-          return DropdownMenuItem<String>(
-            value: value.symbol,
-            child: Text(value.name),
-          );
-        }).toList(),
       ),
     );
   }
