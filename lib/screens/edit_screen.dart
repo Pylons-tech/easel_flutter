@@ -56,7 +56,7 @@ class _EditScreenState extends State<EditScreen> {
                       style: Theme.of(context)
                           .textTheme
                           .bodyText1!
-                          .copyWith(fontSize: 15.sp, color: EaselAppTheme.kLightPurple, fontWeight: FontWeight.w400)),
+                          .copyWith(fontSize: 14.sp, color: EaselAppTheme.kLightPurple, fontWeight: FontWeight.w400)),
                   const VerticalSpace(20),
                   EaselTextField(
                     label: kGiveNFTNameText,
@@ -107,18 +107,7 @@ class _EditScreenState extends State<EditScreen> {
                     style: TextStyle(color: EaselAppTheme.kLightPurple, fontSize: 14.sp, fontWeight: FontWeight.w800),
                   ),
                   const VerticalSpace(20),
-                  EaselHashtagInputField(
-                    controller: provider.hashtagsController,
-                    validator: (value) {
-                      if (value!.isEmpty) {
-                        return kEnterPriceText;
-                      }
-
-                      if (double.parse(value.replaceAll(",", "")) < kMinValue) return "$kMinIsText $kMinValue";
-
-                      return null;
-                    },
-                  ),
+                  const EaselHashtagInputField(),
                   const VerticalSpace(20),
                   EaselTextField(
                     key: ValueKey(provider.selectedDenom.name),

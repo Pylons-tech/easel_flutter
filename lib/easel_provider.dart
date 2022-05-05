@@ -14,6 +14,7 @@ import 'package:easel_flutter/utils/file_utils.dart';
 import 'package:easel_flutter/widgets/loading.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:fixnum/fixnum.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:pylons_sdk/pylons_sdk.dart';
@@ -61,10 +62,10 @@ class EaselProvider extends ChangeNotifier {
   final artistNameController = TextEditingController();
   final artNameController = TextEditingController();
   final descriptionController = TextEditingController();
-  final hashtagsController = TextEditingController();
   final noOfEditionController = TextEditingController();
   final priceController = TextEditingController();
   final royaltyController = TextEditingController();
+  final List<String> hashtagsList = [];
 
   String currentUsername = '';
 
@@ -82,10 +83,10 @@ class EaselProvider extends ChangeNotifier {
     artistNameController.clear();
     artNameController.clear();
     descriptionController.clear();
-    hashtagsController.clear();
     noOfEditionController.clear();
     priceController.clear();
     royaltyController.clear();
+    hashtagsList.clear();
     notifyListeners();
   }
 
@@ -121,7 +122,9 @@ class EaselProvider extends ChangeNotifier {
     try {
       info = await _mediaInfo.getMediaInfo(file.path);
     } on PlatformException catch (e) {
-      print('kErrFileMetaParse $e');
+      if (kDebugMode) {
+        print('kErrFileMetaParse $e');
+      }
       _fileWidth = 0;
       _fileHeight = 0;
       _fileDuration = 0;
@@ -248,7 +251,7 @@ class EaselProvider extends ChangeNotifier {
                 StringParam(key: "Name", value: artNameController.text.trim()),
                 StringParam(key: "App_Type", value: "Easel"),
                 StringParam(key: "Description", value: descriptionController.text.trim()),
-                StringParam(key: "Hashtags", value: hashtagsController.text.trim()),
+                StringParam(key: "Hashtags", value: hashtagsList.join('#')),
                 StringParam(key: "NFT_Format", value: _nftFormat.format),
                 StringParam(key: "NFT_URL", value: "$ipfsDomain/${uploadResponse.data?.value?.cid ?? ""}"),
                 StringParam(key: "Creator", value: artistNameController.text.trim()),

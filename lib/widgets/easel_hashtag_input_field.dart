@@ -4,30 +4,45 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:provider/provider.dart';
 
-class EaselHashtagInputField extends StatelessWidget {
-  const EaselHashtagInputField({Key? key, this.controller, this.validator, this.inputFormatters = const []})
-      : super(key: key);
+import '../easel_provider.dart';
 
-  final TextEditingController? controller;
-  final String? Function(String?)? validator;
-  final List<TextInputFormatter> inputFormatters;
+class EaselHashtagInputField extends StatefulWidget {
+  const EaselHashtagInputField({Key? key}) : super(key: key);
+
+  @override
+  State<StatefulWidget> createState() {
+    return _HashtagInputFieldState();
+  }
+}
+
+class _HashtagInputFieldState extends State<EaselHashtagInputField> {
+  final _inputController = TextEditingController();
+  late final ValueNotifier<List<String>> _hashtagsNotifier;
+
+  @override
+  void initState() {
+    super.initState();
+
+    _hashtagsNotifier = ValueNotifier(context.read<EaselProvider>().hashtagsList);
+  }
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        SizedBox(
-          height: 22.h,
-          child: Text(
-            kHashtagsText,
-            textAlign: TextAlign.start,
-            style: TextStyle(fontSize: 18.sp, fontWeight: FontWeight.w500),
+    return Consumer<EaselProvider>(
+      builder: (_, provider, __) => Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          SizedBox(
+            height: 22.h,
+            child: Text(
+              kHashtagsText,
+              textAlign: TextAlign.start,
+              style: TextStyle(fontSize: 18.sp, fontWeight: FontWeight.w500),
+            ),
           ),
-        ),
-        Stack(
-          children: [
+          Stack(children: [
             Container(
               margin: EdgeInsets.only(top: 2.5.h),
               child: SvgPicture.asset(kSvgTextHalfFieldBG),
@@ -38,13 +53,11 @@ class EaselHashtagInputField extends StatelessWidget {
                 Flexible(
                     child: TextFormField(
                         style: TextStyle(fontSize: 18.sp, fontWeight: FontWeight.w400, color: EaselAppTheme.kDarkText),
-                        controller: controller,
-                        validator: validator,
+                        controller: _inputController,
                         minLines: 1,
                         maxLines: 1,
                         keyboardType: TextInputType.text,
                         textCapitalization: TextCapitalization.none,
-                        inputFormatters: inputFormatters,
                         decoration: InputDecoration(
                             hintText: kHintHashtag,
                             hintStyle: TextStyle(fontSize: 18.sp, color: EaselAppTheme.kGrey),
@@ -57,7 +70,13 @@ class EaselHashtagInputField extends StatelessWidget {
                     SvgPicture.asset(kSvgButtonLightPurple),
                     TextButton(
                       onPressed: () {
-
+                        setState(() {
+                          var trimmed = _inputController.text.trim();
+                          trimmed = trimmed.replaceAll('#', '');
+                          if (!_hashtagsNotifier.value.contains(trimmed)) {
+                            _hashtagsNotifier.value.add(trimmed);
+                          }
+                        });
                       },
                       child: Text(kAddText,
                           textAlign: TextAlign.center,
@@ -67,9 +86,37 @@ class EaselHashtagInputField extends StatelessWidget {
                 )
               ],
             )
-          ],
-        ),
-      ],
+          ]),
+          Padding(
+              padding: EdgeInsets.symmetric(horizontal: 16.w),
+              child: SingleChildScrollView(
+                scrollDirection: Axis.horizontal,
+                child: Row(
+                  children: _hashtagsNotifier.value
+                      .map((hashtag) => Row(
+                            children: [
+                              Text('#' + hashtag,
+                                  style: TextStyle(
+                                      fontSize: 14.sp, fontWeight: FontWeight.w400, color: EaselAppTheme.kGrey)),
+                              IconButton(
+                                onPressed: () {
+                                  setState(() {
+                                    _hashtagsNotifier.value.remove(hashtag);
+                                  });
+                                },
+                                icon: const Icon(
+                                  Icons.close,
+                                  color: EaselAppTheme.kLightGrey,
+                                ),
+                              ),
+                              SizedBox(width: 10.w)
+                            ],
+                          ))
+                      .toList(),
+                ),
+              ))
+        ],
+      ),
     );
   }
 }

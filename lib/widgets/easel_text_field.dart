@@ -60,8 +60,7 @@ class EaselTextField extends StatelessWidget {
                 hintStyle: TextStyle(fontSize: noOfLines == 1 ? 18.sp : 15.sp, color: EaselAppTheme.kGrey),
                 border: const OutlineInputBorder(borderSide: BorderSide.none),
                 floatingLabelBehavior: FloatingLabelBehavior.always,
-                // suffix: suffix,
-                contentPadding: noOfLines == 1 ? const EdgeInsets.fromLTRB(10, 2, 10, 0) : null,
+                contentPadding: noOfLines == 1 ? EdgeInsets.fromLTRB(10.w, 2.h, 10.w, 0) : null,
               ),
             )
           ],
