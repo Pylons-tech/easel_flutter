@@ -1,6 +1,6 @@
 import 'package:easel_flutter/easel_provider.dart';
 import 'package:easel_flutter/screens/edit_screen.dart';
-import 'package:easel_flutter/screens/mint_screen.dart';
+import 'package:easel_flutter/screens/list_screen.dart';
 import 'package:easel_flutter/screens/preview_screen.dart';
 import 'package:easel_flutter/screens/publish_screen.dart';
 import 'package:easel_flutter/screens/upload_screen.dart';
@@ -35,7 +35,7 @@ class _HomeScreenState extends State<HomeScreen> {
   final int _numSteps = 4;
   final ValueNotifier<int> _currentStep = ValueNotifier(0);
 
-  final List stepLabels = [kUploadText, kPreviewText, kEditText, kPublishText];
+  final List stepLabels = [kUploadText, kPreviewText, kEditText, kListText];
   final List pageTitles = [kChooseNFTFormatText, kUploadNFTText, kPreviewNFTText, kEditNFTText, kPreviewNFTText, ''];
 
   @override
@@ -74,7 +74,7 @@ class _HomeScreenState extends State<HomeScreen> {
                   selectedStepColorOut: EaselAppTheme.kDarkGreen,
                   enableLineAnimation: true,
                   enableStepAnimation: true,
-                  lineLengthCustomStep: [],
+                  lineLengthCustomStep: const [],
                   doneStepWidget: Container(
                       width: 12.w, height: 12.h, decoration: const BoxDecoration(color: EaselAppTheme.kDarkGreen)),
                   unselectedStepWidget: Container(
@@ -179,7 +179,7 @@ class _HomeScreenState extends State<HomeScreen> {
                     UploadScreen(controller: _pageController),
                     PreviewScreen(controller: _pageController),
                     EditScreen(controller: _pageController),
-                    MintScreen(controller: _pageController),
+                    ListScreen(controller: _pageController),
                     PublishScreen(controller: _pageController)
                   ],
                 ),

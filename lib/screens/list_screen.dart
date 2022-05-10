@@ -13,10 +13,10 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
 
-class MintScreen extends StatelessWidget {
+class ListScreen extends StatelessWidget {
   final PageController controller;
 
-  const MintScreen({Key? key, required this.controller}) : super(key: key);
+  const ListScreen({Key? key, required this.controller}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
