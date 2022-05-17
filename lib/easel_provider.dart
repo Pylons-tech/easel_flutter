@@ -17,6 +17,7 @@ import 'package:fixnum/fixnum.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:pylons_sdk/pylons_sdk.dart';
 import 'package:pylons_sdk/src/features/models/sdk_ipc_response.dart';
 import 'package:share_plus/share_plus.dart';
@@ -173,7 +174,7 @@ class EaselProvider extends ChangeNotifier {
   /// sends a createRecipe Tx message to the wallet
   /// return true or false depending on the response from the wallet app
   Future<bool> createRecipe() async {
-    if (!shouldMintUSDOrNot()) {
+    if (!await shouldMintUSDOrNot()) {
       return false;
     }
 
@@ -320,14 +321,32 @@ class EaselProvider extends ChangeNotifier {
   /// true  || false (Stripe account exists and selected denom is not USD ) returns true
   /// false || false (Stripe account doesnt exists and selected denom is USD) return false
   /// false || true (Stripe account doesnt exists and selected denom is not  USD) return true
-
-  bool shouldMintUSDOrNot() {
+  Future<bool> shouldMintUSDOrNot() async {
     if (stripeAccountExists || _selectedDenom.symbol != kUsdSymbol) {
       return true;
     }
 
-    navigatorKey.currentState!.overlay!.context.show(message: kErrNoStripeAccount);
+    Completer<bool> stripeTryAgainCompleter = Completer<bool>();
 
-    return false;
+    ScaffoldMessenger.maybeOf(navigatorKey.currentState!.overlay!.context)?.hideCurrentSnackBar();
+    ScaffoldMessenger.maybeOf(navigatorKey.currentState!.overlay!.context)!.showSnackBar(SnackBar(
+      content: Text(
+        kErrNoStripeAccount,
+        textAlign: TextAlign.start,
+        style: TextStyle(
+          fontSize: 14.sp,
+        ),
+      ),
+      duration: const Duration(days: 1),
+      action: SnackBarAction(
+        onPressed: () async {
+          await getProfile();
+          stripeTryAgainCompleter.complete(stripeAccountExists);
+        },
+        label: kTryAgain,
+      ),
+    ));
+
+    return stripeTryAgainCompleter.future;
   }
 }

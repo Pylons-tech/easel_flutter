@@ -185,3 +185,4 @@ const kErrUnsupportedFormat = 'Unsupported format';
 const kErrFileMetaParse = 'Error occurred while parsing the chosen media file:';
 const kErrRecipe = 'Recipe error :';
 const kErrNoStripeAccount = 'Kindly register Stripe account in wallet';
+const kTryAgain = "Try again";

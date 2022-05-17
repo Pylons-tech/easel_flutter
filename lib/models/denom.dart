@@ -16,8 +16,6 @@ class Denom {
         Denom(name: kEurText, symbol: kEuroSymbol, icon: kIconDenomEmoney),
         Denom(name: kAgoricText, symbol: kAgoricSymbol, icon: kIconDenomAgoric),
         Denom(name: kJunoText, symbol: kJunoSymbol, icon: kIconDenomJuno),
-        Denom(name: kLunaText, symbol: kLunaSymbol, icon: kIconDenomLuna),
-        Denom(name: kUSTText, symbol: kUSTSymbol, icon: kIconDenomUst),
       ];
 
   TextInputFormatter getFormatter() {
