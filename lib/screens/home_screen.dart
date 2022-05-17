@@ -74,7 +74,7 @@ class _HomeScreenState extends State<HomeScreen> {
                   selectedStepColorOut: EaselAppTheme.kDarkGreen,
                   enableLineAnimation: true,
                   enableStepAnimation: true,
-                  lineLengthCustomStep: [],
+                  lineLengthCustomStep: const [],
                   doneStepWidget: Container(
                       width: 12.w, height: 12.h, decoration: const BoxDecoration(color: EaselAppTheme.kDarkGreen)),
                   unselectedStepWidget: Container(

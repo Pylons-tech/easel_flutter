@@ -3,7 +3,6 @@ import 'package:easel_flutter/models/nft_format.dart';
 import 'package:easel_flutter/utils/constants.dart';
 import 'package:easel_flutter/utils/easel_app_theme.dart';
 import 'package:easel_flutter/utils/screen_responsive.dart';
-import 'package:easel_flutter/utils/space_utils.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/svg.dart';
@@ -33,12 +32,6 @@ class _ChooseFormatScreenState extends State<ChooseFormatScreen> {
         children: [
           Column(
             children: [
-              Text("$kFileSizeLimitInGB$kUploadHintAll",
-                  textAlign: TextAlign.center,
-                  style: Theme.of(context)
-                      .textTheme
-                      .bodyText2!
-                      .copyWith(color: EaselAppTheme.kLightPurple, fontSize: 15.sp, fontWeight: FontWeight.w600)),
               SizedBox(height: 40.h),
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
@@ -105,6 +98,17 @@ class _ChooseFormatScreenState extends State<ChooseFormatScreen> {
                   const SizedBox(width: 10),
                 ],
               ),
+              Align(
+                  alignment: Alignment.centerRight,
+                  child: Padding(
+                    padding: EdgeInsets.only(top: 22.h, right: 25.w),
+                    child: Text("$kFileSizeLimitInGB$kUploadHintAll",
+                        textAlign: TextAlign.end,
+                        style: Theme.of(context)
+                            .textTheme
+                            .bodyText2!
+                            .copyWith(color: EaselAppTheme.kLightPurple, fontSize: 15.sp, fontWeight: FontWeight.w600)),
+                  )),
             ],
           ),
           Align(
@@ -153,65 +157,48 @@ class _CardWidget extends StatelessWidget {
       children: [
         GestureDetector(
           onTap: onTap,
-          child: ScreenResponsive(
-              tabletScreen: (BuildContext context) => Container(
-                  width: 0.21.sw,
-                  height: 0.21.sw,
-                  padding: EdgeInsets.symmetric(horizontal: 0.05.sw, vertical: 4.5.h),
-                  decoration: BoxDecoration(color: backColor),
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+          child: Container(
+              width: 0.4.sw,
+              height: 0.4.sw,
+              padding: EdgeInsets.symmetric(horizontal: 0.05.sw, vertical: 4.5.h),
+              decoration: BoxDecoration(color: backColor),
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                children: [
+                  SvgPicture.asset(icon),
+                  Column(
                     children: [
                       Text(
                         text,
                         style: Theme.of(context)
                             .textTheme
                             .bodyText1!
-                            .copyWith(color: EaselAppTheme.kWhite, fontSize: 15.sp, fontWeight: FontWeight.w400),
+                            .copyWith(color: EaselAppTheme.kWhite, fontSize: 18.sp, fontWeight: FontWeight.w600),
                       ),
-                      SvgPicture.asset(icon)
+                      SizedBox(height: 3.h),
+                      RichText(
+                        overflow: TextOverflow.ellipsis,
+                        textAlign: TextAlign.center,
+                        text: TextSpan(
+                            style: Theme.of(context)
+                                .textTheme
+                                .bodyText1!
+                                .copyWith(color: EaselAppTheme.kWhite, fontSize: 12.sp, fontWeight: FontWeight.w600),
+                            text: secondaryText),
+                      ),
                     ],
-                  )),
-              mobileScreen: (BuildContext context) => Container(
-                    width: 0.25.sw,
-                    height: 0.25.sw,
-                    padding: EdgeInsets.symmetric(horizontal: 0.06.sw, vertical: 5.h),
-                    decoration: BoxDecoration(color: backColor),
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                      children: [
-                        Text(
-                          text,
-                          style: Theme.of(context)
-                              .textTheme
-                              .bodyText1!
-                              .copyWith(color: EaselAppTheme.kWhite, fontSize: 15.sp, fontWeight: FontWeight.w400),
-                        ),
-                        SvgPicture.asset(icon),
-                      ],
+                  ),
+                  Container(
+                    width: 12.w,
+                    height: 12.h,
+                    decoration: BoxDecoration(
+                      color: selected ? backColor : EaselAppTheme.kWhite,
+                      border: Border.all(color: Colors.white, width: 3),
                     ),
-                  )),
+                  )
+                ],
+              )),
         ),
-        const VerticalSpace(6),
-        SizedBox(
-          width: 0.4.sw,
-          child: RichText(
-            overflow: TextOverflow.ellipsis,
-            textAlign: TextAlign.center,
-            text: TextSpan(
-                style: Theme.of(context)
-                    .textTheme
-                    .bodyText1!
-                    .copyWith(color: EaselAppTheme.kLightPurple, fontSize: 12.sp, fontWeight: FontWeight.w400),
-                text: secondaryText),
-          ),
-        ),
-        const VerticalSpace(6),
-        Container(
-          width: 15.w,
-          height: 15.h,
-          decoration: BoxDecoration(color: selected ? backColor : EaselAppTheme.kLightGrey),
-        )
       ],
     );
   }

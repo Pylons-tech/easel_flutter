@@ -21,8 +21,8 @@ void main() {
   di.init();
 
 
-  print(MediaQueryData.fromWindow(WidgetsBinding.instance!.window).size.shortestSide);
-  isTablet = MediaQueryData.fromWindow(WidgetsBinding.instance!.window).size.shortestSide >= TABLET_MIN_WIDTH;
+  print(MediaQueryData.fromWindow(WidgetsBinding.instance.window).size.shortestSide);
+  isTablet = MediaQueryData.fromWindow(WidgetsBinding.instance.window).size.shortestSide >= TABLET_MIN_WIDTH;
 
   runApp(const MyApp());
 }
