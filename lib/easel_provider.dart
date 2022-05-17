@@ -170,7 +170,6 @@ class EaselProvider extends ChangeNotifier {
   /// return true or false depending on the response from the wallet app
   Future<bool> createRecipe() async {
     if (!await shouldMintUSDOrNot()) {
-      print("Back");
       return false;
     }
 
