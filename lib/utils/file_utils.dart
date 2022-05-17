@@ -70,6 +70,6 @@ class FileUtils {
   }
 
   static String generateEaselLink({required String recipeId, required String cookbookId}) {
-    return "$kWalletWebLink/?action=purchase_nft&recipe_id=$recipeId&cookbook_id=$cookbookId&nft_amount=1";
+    return "$kWalletWebLink/?action=purchase_nft&recipe_id=$recipeId&cookbook_id=$cookbookId";
   }
 }

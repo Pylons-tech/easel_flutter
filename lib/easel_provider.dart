@@ -16,6 +16,7 @@ import 'package:file_picker/file_picker.dart';
 import 'package:fixnum/fixnum.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:pylons_sdk/pylons_sdk.dart';
 import 'package:pylons_sdk/src/features/models/sdk_ipc_response.dart';
 import 'package:share_plus/share_plus.dart';
@@ -168,7 +169,7 @@ class EaselProvider extends ChangeNotifier {
   /// sends a createRecipe Tx message to the wallet
   /// return true or false depending on the response from the wallet app
   Future<bool> createRecipe() async {
-    if (!shouldMintUSDOrNot()) {
+    if (!await shouldMintUSDOrNot()) {
       return false;
     }
 
@@ -228,19 +229,11 @@ class EaselProvider extends ChangeNotifier {
               longs: [
                 LongParam(key: "Quantity", weightRanges: [
                   IntWeightRange(
-                      lower: Int64(int.parse(noOfEditionController.text.replaceAll(",", "").trim())),
-                      upper: Int64(int.parse(noOfEditionController.text.replaceAll(",", "").trim())),
-                      weight: Int64(1))
+                      lower: Int64(int.parse(noOfEditionController.text.replaceAll(",", "").trim())), upper: Int64(int.parse(noOfEditionController.text.replaceAll(",", "").trim())), weight: Int64(1))
                 ]),
-                LongParam(key: "Width", weightRanges: [
-                  IntWeightRange(lower: Int64(_fileWidth), upper: Int64(_fileWidth), weight: Int64(1))
-                ]),
-                LongParam(key: "Height", weightRanges: [
-                  IntWeightRange(lower: Int64(_fileHeight), upper: Int64(_fileHeight), weight: Int64(1))
-                ]),
-                LongParam(key: "Duration", weightRanges: [
-                  IntWeightRange(lower: Int64(_fileDuration), upper: Int64(_fileDuration), weight: Int64(1))
-                ]),
+                LongParam(key: "Width", weightRanges: [IntWeightRange(lower: Int64(_fileWidth), upper: Int64(_fileWidth), weight: Int64(1))]),
+                LongParam(key: "Height", weightRanges: [IntWeightRange(lower: Int64(_fileHeight), upper: Int64(_fileHeight), weight: Int64(1))]),
+                LongParam(key: "Duration", weightRanges: [IntWeightRange(lower: Int64(_fileDuration), upper: Int64(_fileDuration), weight: Int64(1))]),
               ],
               strings: [
                 StringParam(key: "Name", value: artNameController.text.trim()),
@@ -315,13 +308,32 @@ class EaselProvider extends ChangeNotifier {
   /// false || false (Stripe account doesnt exists and selected denom is USD) return false
   /// false || true (Stripe account doesnt exists and selected denom is not  USD) return true
 
-  bool shouldMintUSDOrNot() {
+  Future<bool> shouldMintUSDOrNot() async {
     if (stripeAccountExists || _selectedDenom.symbol != kUsdSymbol) {
       return true;
     }
 
-    navigatorKey.currentState!.overlay!.context.show(message: kStripeAccountDoesntExists);
+    Completer<bool> stripeTryAgainCompleter = Completer<bool>();
 
-    return false;
+    ScaffoldMessenger.maybeOf(navigatorKey.currentState!.overlay!.context)?.hideCurrentSnackBar();
+    ScaffoldMessenger.maybeOf(navigatorKey.currentState!.overlay!.context)!.showSnackBar(SnackBar(
+      content: Text(
+        kStripeAccountDoesntExists,
+        textAlign: TextAlign.start,
+        style: TextStyle(
+          fontSize: 14.sp,
+        ),
+      ),
+      duration: const Duration(days: 1),
+      action: SnackBarAction(
+        onPressed: () async {
+          await getProfile();
+          stripeTryAgainCompleter.complete(stripeAccountExists);
+        },
+        label: kTryAgain,
+      ),
+    ));
+
+    return stripeTryAgainCompleter.future;
   }
 }
