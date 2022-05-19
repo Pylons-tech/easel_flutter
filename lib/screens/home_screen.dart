@@ -3,7 +3,6 @@ import 'package:easel_flutter/screens/edit_screen.dart';
 import 'package:easel_flutter/screens/mint_screen.dart';
 import 'package:easel_flutter/screens/preview_screen.dart';
 import 'package:easel_flutter/screens/publish_screen.dart';
-import 'package:easel_flutter/screens/upload_screen.dart';
 import 'package:easel_flutter/utils/constants.dart';
 import 'package:easel_flutter/utils/easel_app_theme.dart';
 import 'package:easel_flutter/utils/screen_responsive.dart';
@@ -26,17 +25,17 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
-  final int _numPages = 6;
+  final int _numPages = 5;
   final PageController _pageController = PageController(keepPage: true);
   final ValueNotifier<int> _currentPage = ValueNotifier(0);
-  static const _kPagePreview = 2;
-  static const _kPageEdit = 3;
+  static const _kPagePreview = 1;
+  static const _kPageEdit = 2;
 
   final int _numSteps = 4;
   final ValueNotifier<int> _currentStep = ValueNotifier(0);
 
   final List stepLabels = [kUploadText, kPreviewText, kEditText, kPublishText];
-  final List pageTitles = [kChooseNFTFormatText, kUploadNFTText, kPreviewNFTText, kEditNFTText, kPreviewNFTText, ''];
+  final List pageTitles = [kUploadNFTText, kPreviewNFTText, kEditNFTText, kPreviewNFTText, ''];
 
   @override
   void initState() {
@@ -176,7 +175,6 @@ class _HomeScreenState extends State<HomeScreen> {
                   },
                   children: [
                     ChooseFormatScreen(controller: _pageController),
-                    UploadScreen(controller: _pageController),
                     PreviewScreen(controller: _pageController),
                     EditScreen(controller: _pageController),
                     MintScreen(controller: _pageController),
