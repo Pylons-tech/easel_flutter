@@ -3,7 +3,7 @@ import 'package:easel_flutter/utils/amount_formatter.dart';
 import 'package:easel_flutter/utils/constants.dart';
 import 'package:easel_flutter/utils/easel_app_theme.dart';
 import 'package:easel_flutter/utils/space_utils.dart';
-import 'package:easel_flutter/widgets/easel_currency_input_field.dart';
+import 'package:easel_flutter/widgets/easel_price_input_field.dart';
 import 'package:easel_flutter/widgets/easel_hashtag_input_field.dart';
 import 'package:easel_flutter/widgets/easel_text_field.dart';
 import 'package:flutter/material.dart';
@@ -44,19 +44,22 @@ class _EditScreenState extends State<EditScreen> {
     return Scaffold(
       body: SingleChildScrollView(
         child: Padding(
-          padding: EdgeInsets.symmetric(horizontal: 20.w, vertical: 20.h),
+          padding: EdgeInsets.symmetric(horizontal: 20.w, vertical: 15.h),
           child: Consumer<EaselProvider>(builder: (_, provider, __) {
             return Form(
               key: _formKey,
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text(kEditNoticeText,
-                      textAlign: TextAlign.center,
-                      style: Theme.of(context)
-                          .textTheme
-                          .bodyText1!
-                          .copyWith(fontSize: 14.sp, color: EaselAppTheme.kLightPurple, fontWeight: FontWeight.w400)),
+                  Align(
+                    alignment: Alignment.center,
+                    child: Text(kEditNoticeText,
+                        textAlign: TextAlign.center,
+                        style: Theme.of(context)
+                            .textTheme
+                            .bodyText1!
+                            .copyWith(fontSize: 14.sp, color: EaselAppTheme.kLightPurple, fontWeight: FontWeight.w400)),
+                  ),
                   const VerticalSpace(20),
                   EaselTextField(
                     label: kGiveNFTNameText,
@@ -164,7 +167,7 @@ class _EditScreenState extends State<EditScreen> {
                     style: TextStyle(color: EaselAppTheme.kLightPurple, fontWeight: FontWeight.w800, fontSize: 14.sp),
                   ),
                   const VerticalSpace(20),
-                  EaselCurrencyInputField(
+                  EaselPriceInputField(
                     key: ValueKey("${provider.selectedDenom.name}-amount"),
                     inputFormatters: [
                       FilteringTextInputFormatter.digitsOnly,

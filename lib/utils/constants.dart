@@ -30,6 +30,10 @@ const kIconDenomAgoric = 'assets/images/denom_agoric.png';
 const kIconDenomLuna = 'assets/images/denom_luna.png';
 const kIconDenomJuno = 'assets/images/denom_juno.png';
 
+const kTextFieldSingleLine = 'assets/images/text_field_single_line.png';
+const kTextFieldMultiLine = 'assets/images/text_field_multi_line.png';
+const kTextFieldButton = 'assets/images/text_field_button.png';
+
 /// ```SVG assets
 const kSvgSplash = 'assets/images/svg/splash.svg';
 const kSvgTabSplash = 'assets/images/svg/background_tab.svg';
@@ -46,10 +50,6 @@ const kSvgNftFormatImage = 'assets/images/svg/nft_format_image.svg';
 const kSvgNftFormatVideo = 'assets/images/svg/nft_format_video.svg';
 const kSvgNftFormat3d = 'assets/images/svg/nft_format_3d.svg';
 const kSvgNftFormatAudio = 'assets/images/svg/nft_format_audio.svg';
-const kSvgText1FieldBG = 'assets/images/svg/text_field_background_1.svg';
-const kSvgTextXFieldBG = 'assets/images/svg/text_field_background_x.svg';
-const kSvgTextHalfFieldBG = 'assets/images/svg/text_field_background_half.svg';
-const kSvgButtonLightPurple = 'assets/images/svg/button_light_purple.svg';
 
 /// ```URL constants
 const ipfsDomain = 'https://ipfs.io/ipfs';
@@ -95,7 +95,7 @@ const kLunaText = 'Luna';
 const kUSTText = 'UST';
 
 /// ```Text constants
-const kEditNoticeText = 'NOTICE:\nEverything on this screen (other than price) would be unchangeable once listed.';
+const kEditNoticeText = 'NOTICE:\nNothing can be changed once listed.';
 const kNameAsArtistText = 'Your name as the artist';
 const kGiveNFTNameText = 'Give your NFT a name';
 const kEnterArtistNameText = 'Enter artist name';
@@ -167,7 +167,7 @@ const kUploadHint2 = '• Image, Video, 3D or Audio';
 const kUploadHint3 = '• One file per upload';
 const kUploadHintAll = 'GB Limit\nOne file per upload';
 const kHintNftName = 'Bird on Shoulder';
-const kHintArtistName = 'Hans Zimmer';
+const kHintArtistName = 'Sarah Jackson';
 const kHintNftDesc =
     'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eimod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercita.';
 const kHintNoEdition = '100';

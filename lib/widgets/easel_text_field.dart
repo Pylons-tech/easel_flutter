@@ -3,7 +3,8 @@ import 'package:easel_flutter/utils/easel_app_theme.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:flutter_svg/flutter_svg.dart';
+
+import '../utils/screen_responsive.dart';
 
 class EaselTextField extends StatelessWidget {
   const EaselTextField(
@@ -40,9 +41,26 @@ class EaselTextField extends StatelessWidget {
             style: TextStyle(fontSize: 18.sp, fontWeight: FontWeight.w500),
           ),
         ),
+        SizedBox(height: 4.h),
         Stack(
           children: [
-            SvgPicture.asset(noOfLines == 1 ? kSvgText1FieldBG : kSvgTextXFieldBG),
+            ScreenResponsive(
+              mobileScreen: (context) => Container(
+                margin: EdgeInsets.only(top: 4.h),
+                child: Image.asset(
+                  noOfLines == 1 ? kTextFieldSingleLine : kTextFieldMultiLine,
+                  height: noOfLines == 1 ? 40.h : 136.h,
+                  width: 1.sw,
+                  fit: BoxFit.fill,
+                ),
+              ),
+              tabletScreen: (context) => Image.asset(
+                noOfLines == 1 ? kTextFieldSingleLine : kTextFieldMultiLine,
+                height: noOfLines == 1 ? 32.h : 110.h,
+                width: 1.sw,
+                fit: BoxFit.fill,
+              ),
+            ),
             TextFormField(
               style: TextStyle(
                   fontSize: noOfLines == 1 ? 18.sp : 15.sp,
@@ -60,7 +78,7 @@ class EaselTextField extends StatelessWidget {
                 hintStyle: TextStyle(fontSize: noOfLines == 1 ? 18.sp : 15.sp, color: EaselAppTheme.kGrey),
                 border: const OutlineInputBorder(borderSide: BorderSide.none),
                 floatingLabelBehavior: FloatingLabelBehavior.always,
-                contentPadding: noOfLines == 1 ? EdgeInsets.fromLTRB(10.w, 2.h, 10.w, 0) : null,
+                contentPadding: noOfLines == 1 ? EdgeInsets.fromLTRB(10.w, 10.h, 10.w, 2.h) : null,
               ),
             )
           ],

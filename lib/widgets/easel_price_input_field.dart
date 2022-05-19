@@ -1,16 +1,16 @@
 import 'package:easel_flutter/utils/constants.dart';
 import 'package:easel_flutter/utils/easel_app_theme.dart';
+import 'package:easel_flutter/utils/screen_responsive.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:flutter_svg/flutter_svg.dart';
 import 'package:provider/provider.dart';
 
 import '../easel_provider.dart';
 import '../models/denom.dart';
 
-class EaselCurrencyInputField extends StatelessWidget {
-  const EaselCurrencyInputField({Key? key, this.controller, this.validator, this.inputFormatters = const []})
+class EaselPriceInputField extends StatelessWidget {
+  const EaselPriceInputField({Key? key, this.controller, this.validator, this.inputFormatters = const []})
       : super(key: key);
 
   final TextEditingController? controller;
@@ -30,11 +30,15 @@ class EaselCurrencyInputField extends StatelessWidget {
             style: TextStyle(fontSize: 18.sp, fontWeight: FontWeight.w500),
           ),
         ),
+        SizedBox(height: 4.h),
         Stack(
           children: [
-            Container(
-              margin: EdgeInsets.only(top: 2.5.h),
-              child: SvgPicture.asset(kSvgTextHalfFieldBG),
+            ScreenResponsive(
+              mobileScreen: (context) => Container(
+                margin: EdgeInsets.only(top: 4.h),
+                child: Image.asset(kTextFieldSingleLine, width: 1.sw, height: 40.h, fit: BoxFit.fill),
+              ),
+              tabletScreen: (context) => Image.asset(kTextFieldSingleLine, width: 1.sw, height: 32.h, fit: BoxFit.fill),
             ),
             Row(
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -54,7 +58,7 @@ class EaselCurrencyInputField extends StatelessWidget {
                             hintStyle: TextStyle(fontSize: 18.sp, color: EaselAppTheme.kGrey),
                             border: const OutlineInputBorder(borderSide: BorderSide.none),
                             floatingLabelBehavior: FloatingLabelBehavior.always,
-                            contentPadding: EdgeInsets.fromLTRB(10.w, 2.h, 10.w, 0.h)))),
+                            contentPadding: EdgeInsets.fromLTRB(10.w, 10.h, 10.w, 0.h)))),
                 const _CurrencyDropDown()
               ],
             )
@@ -74,7 +78,10 @@ class _CurrencyDropDown extends StatelessWidget {
         builder: (_, provider, __) => Stack(
               alignment: Alignment.center,
               children: [
-                SvgPicture.asset(kSvgButtonLightPurple),
+                ScreenResponsive(
+                  mobileScreen: (context) => Image.asset(kTextFieldButton, height: 40.h, fit: BoxFit.fill),
+                  tabletScreen: (context) => Image.asset(kTextFieldButton, height: 32.h, fit: BoxFit.fill),
+                ),
                 DropdownButton<String>(
                   onTap: () {
                     FocusManager.instance.primaryFocus?.unfocus();
