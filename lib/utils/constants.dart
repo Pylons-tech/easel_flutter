@@ -94,7 +94,8 @@ const kLunaText = 'Luna';
 const kUSTText = 'UST';
 
 /// ```Text constants
-const kEditNoticeText = 'NOTICE:\nNothing can be changed once listed.';
+const kPreviewNoticeText = 'The resolution & orientation of your NFT will remain fixed as seen in the grid.';
+const kEditNoticeText = 'Nothing can be changed once listed.';
 const kNameAsArtistText = 'Your name as the artist';
 const kGiveNFTNameText = 'Give your NFT a name';
 const kEnterArtistNameText = 'Enter artist name';
@@ -133,7 +134,6 @@ const kSizeText = 'Size';
 const kDurationText = 'Duration';
 const kDateText = 'Date';
 const kRoyaltyText = 'Royalty';
-const kPreviewNFTText = '';
 const kPreview3dModelText = 'Click here to preview\nyour selected 3D Model';
 const kMintMoreText = 'Mint More';
 const kGoToWalletText = 'Go to Wallet';

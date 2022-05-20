@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:easel_flutter/easel_provider.dart';
 import 'package:easel_flutter/models/nft_format.dart';
+import 'package:easel_flutter/screens/preview_screen.dart';
 import 'package:easel_flutter/utils/constants.dart';
 import 'package:easel_flutter/utils/easel_app_theme.dart';
 import 'package:easel_flutter/utils/screen_responsive.dart';
@@ -34,7 +35,10 @@ class _ChooseFormatScreenState extends State<ChooseFormatScreen> {
       provider.resolveNftFormat(context, result.extension!);
       if (FileUtils.getFileSizeInGB(File(result.path!).lengthSync()) <= kFileSizeLimitInGB) {
         await provider.setFile(context, result);
-        widget.controller.nextPage(duration: const Duration(milliseconds: 300), curve: Curves.easeIn);
+        Navigator.push(
+          context,
+          MaterialPageRoute(builder: (context) => PreviewScreen(controller: widget.controller)),
+        );
       } else {
         errorText.value = '"${result.name}" could not be uploaded';
         showErrorDialog();
@@ -68,7 +72,7 @@ class _ChooseFormatScreenState extends State<ChooseFormatScreen> {
             children: [
               Align(
                 alignment: Alignment.center,
-                child: Text("NOTICE:\n$kFileSizeLimitInGB$kUploadHintAll",
+                child: Text("$kFileSizeLimitInGB$kUploadHintAll",
                     textAlign: TextAlign.center,
                     style: Theme.of(context)
                         .textTheme

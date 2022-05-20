@@ -40,7 +40,6 @@ class WelcomeScreen extends StatelessWidget {
             alignment: Alignment.topLeft,
             child: PylonsButton(
               onPressed: () {
-
                 Navigator.of(context).pushNamed(RouteUtil.ROUTE_ROUTING);
               },
               btnText: kGetStarted,
