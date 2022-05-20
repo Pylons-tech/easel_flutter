@@ -1,3 +1,4 @@
+import 'dart:io';
 import 'dart:math';
 
 import 'package:easel_flutter/models/nft_format.dart';
@@ -14,9 +15,15 @@ class FileUtils {
   /// or null if aborted
   static Future<PlatformFile?> pickFile(NftFormat format) async {
     FileType _type;
+    List<String>? allowedExtensions;
     switch (format.format) {
       case kImageText:
-        _type = FileType.image;
+        if (Platform.isAndroid) {
+          _type = FileType.custom;
+          allowedExtensions = ["png", "jpg", "jpeg", "svg", "heif"];
+        } else {
+          _type = FileType.image;
+        }
         break;
       case kVideoText:
         _type = FileType.video;
@@ -29,7 +36,7 @@ class FileUtils {
         break;
     }
 
-    FilePickerResult? result = await FilePicker.platform.pickFiles(type: _type);
+    FilePickerResult? result = await FilePicker.platform.pickFiles(type: _type, allowedExtensions: allowedExtensions);
 
     if (result != null && format.extensions.contains(result.files.single.extension)) {
       return result.files.single;
