@@ -25,7 +25,6 @@ class ChooseFormatScreen extends StatefulWidget {
 }
 
 class _ChooseFormatScreenState extends State<ChooseFormatScreen> {
-  NftFormat? _tempFormat;
   ValueNotifier<String> errorText = ValueNotifier(kErrFileNotPicked);
 
   void proceedToNext(PlatformFile? result) async {
@@ -69,7 +68,6 @@ class _ChooseFormatScreenState extends State<ChooseFormatScreen> {
   @override
   Widget build(BuildContext context) {
     EaselProvider provider = context.read();
-    _tempFormat ??= provider.nftFormat;
     return Scaffold(
       body: Column(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -92,14 +90,14 @@ class _ChooseFormatScreenState extends State<ChooseFormatScreen> {
                   const SizedBox(width: 10),
                   _CardWidget(
                       typeIdx: 0,
-                      selected: _tempFormat?.format == NftFormat.supportedFormats[0].format,
+                      selected: provider.nftFormat.format == NftFormat.supportedFormats[0].format,
                       onFilePicked: (result) async {
                         proceedToNext(result);
                       }),
                   const SizedBox(width: 10),
                   _CardWidget(
                       typeIdx: 1,
-                      selected: _tempFormat?.format == NftFormat.supportedFormats[1].format,
+                      selected: provider.nftFormat.format == NftFormat.supportedFormats[1].format,
                       onFilePicked: (result) async {
                         proceedToNext(result);
                       }),
@@ -113,14 +111,14 @@ class _ChooseFormatScreenState extends State<ChooseFormatScreen> {
                   const SizedBox(width: 10),
                   _CardWidget(
                       typeIdx: 2,
-                      selected: _tempFormat?.format == NftFormat.supportedFormats[2].format,
+                      selected: provider.nftFormat.format == NftFormat.supportedFormats[2].format,
                       onFilePicked: (result) async {
                         proceedToNext(result);
                       }),
                   const SizedBox(width: 10),
                   _CardWidget(
                       typeIdx: 3,
-                      selected: _tempFormat?.format == NftFormat.supportedFormats[3].format,
+                      selected: provider.nftFormat.format == NftFormat.supportedFormats[3].format,
                       onFilePicked: (result) async {
                         proceedToNext(result);
                       }),
