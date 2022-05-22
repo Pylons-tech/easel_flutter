@@ -24,10 +24,8 @@ const kTooltipBalloon = 'assets/images/tooltip_balloon.png';
 const kIconDenomUsd = 'assets/images/denom_usd.png';
 const kIconDenomPylon = 'assets/images/denom_pylon.png';
 const kIconDenomAtom = 'assets/images/denom_atom.png';
-const kIconDenomUst = 'assets/images/denom_ust.png';
 const kIconDenomEmoney = 'assets/images/denom_emoney.png';
 const kIconDenomAgoric = 'assets/images/denom_agoric.png';
-const kIconDenomLuna = 'assets/images/denom_luna.png';
 const kIconDenomJuno = 'assets/images/denom_juno.png';
 const kTextFieldSingleLine = 'assets/images/text_field_single_line.png';
 const kTextFieldMultiLine = 'assets/images/text_field_multi_line.png';
@@ -82,8 +80,6 @@ const kAtomSymbol = 'uatom';
 const kEuroSymbol = 'eeur';
 const kAgoricSymbol = 'urun';
 const kJunoSymbol = 'ujunox';
-const kLunaSymbol = 'uluna';
-const kUSTSymbol = 'uusd';
 
 const kPylonText = 'Pylon';
 const kUSDText = 'USD';
@@ -91,8 +87,6 @@ const kAtomText = 'Atom';
 const kEurText = 'EEur';
 const kAgoricText = 'Agoric';
 const kJunoText = 'Juno';
-const kLunaText = 'Luna';
-const kUSTText = 'UST';
 
 /// ```Text constants
 const kPreviewNoticeText = 'The resolution & orientation of your NFT will remain fixed as seen in the grid.';
