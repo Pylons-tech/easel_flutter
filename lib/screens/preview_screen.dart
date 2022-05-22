@@ -27,10 +27,8 @@ class _PreviewScreenState extends State<PreviewScreen> {
       body: Consumer<EaselProvider>(
         builder: (_, provider, __) => Stack(
           children: [
-            if (provider.nftFormat.format == kImageText) ...[ImageWidget(file: provider.file!)],
-            if (provider.nftFormat.format == kVideoText) ...[VideoWidget(file: provider.file!)],
-            if (provider.nftFormat.format == k3dText) ...[Model3dViewer(file: provider.file!)],
-            if (provider.nftFormat.format == kAudioText) ...[AudioWidget(file: provider.file!)],
+            buildPreviewWidget(provider),
+            Image.asset(kPreviewGradient),
             Column(children: [
               SizedBox(height: MediaQuery.of(context).viewPadding.top + 20.h),
               Align(
@@ -63,8 +61,8 @@ class _PreviewScreenState extends State<PreviewScreen> {
                 alignment: Alignment.bottomRight,
                 child: PylonsButton(
                     onPressed: () {
+                      widget.controller.nextPage(duration: const Duration(milliseconds: 10), curve: Curves.easeIn);
                       Navigator.of(context).pop();
-                      widget.controller.nextPage(duration: const Duration(milliseconds: 300), curve: Curves.easeIn);
                     },
                     btnText: kContinue,
                     isBlue: false,
@@ -75,5 +73,19 @@ class _PreviewScreenState extends State<PreviewScreen> {
         ),
       ),
     );
+  }
+
+  Widget buildPreviewWidget(EaselProvider provider) {
+    switch (provider.nftFormat.format) {
+      case kImageText:
+        return ImageWidget(file: provider.file!);
+      case kVideoText:
+        return VideoWidget(file: provider.file!);
+      case k3dText:
+        return Model3dViewer(file: provider.file!);
+      case kAudioText:
+        return AudioWidget(file: provider.file!);
+    }
+    return const SizedBox.shrink();
   }
 }

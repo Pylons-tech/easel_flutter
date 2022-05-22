@@ -93,6 +93,7 @@ class _HashtagInputFieldState extends State<EaselHashtagInputField> {
                           if (!_hashtagsNotifier.value.contains(trimmed)) {
                             _hashtagsNotifier.value.add(trimmed);
                           }
+                          _inputController.clear();
                         });
                       },
                       child: Text(kAddText,

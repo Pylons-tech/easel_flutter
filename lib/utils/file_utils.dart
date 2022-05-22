@@ -38,7 +38,7 @@ class FileUtils {
 
     FilePickerResult? result = await FilePicker.platform.pickFiles(type: _type, allowedExtensions: allowedExtensions);
 
-    if (result != null && format.extensions.contains(result.files.single.extension)) {
+    if (result != null) {
       return result.files.single;
     }
 

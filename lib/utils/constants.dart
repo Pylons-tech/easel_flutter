@@ -32,6 +32,7 @@ const kIconDenomJuno = 'assets/images/denom_juno.png';
 const kTextFieldSingleLine = 'assets/images/text_field_single_line.png';
 const kTextFieldMultiLine = 'assets/images/text_field_multi_line.png';
 const kTextFieldButton = 'assets/images/text_field_button.png';
+const kPreviewGradient = 'assets/images/preview_gradient.png';
 
 /// ```SVG assets
 const kSvgSplash = 'assets/images/svg/splash.svg';
@@ -142,8 +143,7 @@ const kUploadNFTText = 'Upload NFT file';
 const kEditNFTText = 'Edit your NFT Details';
 const kUploadText = 'Upload';
 const kPreviewText = 'Preview';
-const kMintText = 'Mint';
-const kPublishText = 'Publish';
+const kListText = 'List';
 const kImageText = 'Image';
 const kVideoText = 'Video';
 const kAudioText = 'Audio';

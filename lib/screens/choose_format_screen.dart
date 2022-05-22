@@ -26,12 +26,18 @@ class ChooseFormatScreen extends StatefulWidget {
 
 class _ChooseFormatScreenState extends State<ChooseFormatScreen> {
   NftFormat? _tempFormat;
-  ValueNotifier<String> errorText = ValueNotifier("Pick a file");
+  ValueNotifier<String> errorText = ValueNotifier(kErrFileNotPicked);
 
   void proceedToNext(PlatformFile? result) async {
     EaselProvider provider = context.read();
 
     if (result != null) {
+      if (!provider.nftFormat.extensions.contains(result.extension)) {
+        errorText.value = kErrUnsupportedFormat;
+        showErrorDialog();
+        return;
+      }
+
       provider.resolveNftFormat(context, result.extension!);
       if (FileUtils.getFileSizeInGB(File(result.path!).lengthSync()) <= kFileSizeLimitInGB) {
         await provider.setFile(context, result);
@@ -44,7 +50,7 @@ class _ChooseFormatScreenState extends State<ChooseFormatScreen> {
         showErrorDialog();
       }
     } else {
-      errorText.value = kErrUnsupportedFormat;
+      errorText.value = kErrFileNotPicked;
       showErrorDialog();
     }
   }

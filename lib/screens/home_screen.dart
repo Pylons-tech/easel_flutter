@@ -27,13 +27,12 @@ class _HomeScreenState extends State<HomeScreen> {
   final int _numPages = 4;
   final PageController _pageController = PageController(keepPage: true);
   final ValueNotifier<int> _currentPage = ValueNotifier(0);
-  static const _kPagePreview = 1;
-  static const _kPageEdit = 2;
+  static const _kPageEdit = 1;
 
-  final int _numSteps = 4;
+  final int _numSteps = 3;
   final ValueNotifier<int> _currentStep = ValueNotifier(0);
 
-  final List stepLabels = [kUploadText, kPreviewText, kEditText, kPublishText];
+  final List stepLabels = [kUploadText, kEditText, kListText];
   final List pageTitles = [kUploadNFTText, kEditNFTText, '', ''];
 
   @override
@@ -166,11 +165,11 @@ class _HomeScreenState extends State<HomeScreen> {
                   physics: const NeverScrollableScrollPhysics(),
                   onPageChanged: (int page) {
                     _currentPage.value = page;
-                    _currentStep.value = page < _kPagePreview
+                    _currentStep.value = page < _kPageEdit
                         ? 0
-                        : page == _kPagePreview
+                        : page == _kPageEdit
                             ? 1
-                            : (page == _kPageEdit ? 2 : _numSteps - 1);
+                            : _numSteps - 1;
                   },
                   children: [
                     ChooseFormatScreen(controller: _pageController),
