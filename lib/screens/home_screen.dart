@@ -103,6 +103,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                 padding: EdgeInsets.only(left: 10.sp),
                                 child: IconButton(
                                   onPressed: () {
+                                    ScaffoldMessenger.of(context).hideCurrentSnackBar();
                                     _pageController.previousPage(
                                         duration: const Duration(milliseconds: 300), curve: Curves.easeIn);
                                   },
