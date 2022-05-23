@@ -114,7 +114,7 @@ class _EditScreenState extends State<EditScreen> {
                   const VerticalSpace(20),
                   EaselTextField(
                     key: ValueKey(provider.selectedDenom.name),
-                    label: "$kNoOfEditionText ($kMaxText: ${NumberFormat.decimalPattern('hi').format(kMaxEdition)})",
+                    label: kNoOfEditionText,
                     hint: kHintNoEdition,
                     keyboardType: TextInputType.number,
                     inputFormatters: [
@@ -138,6 +138,10 @@ class _EditScreenState extends State<EditScreen> {
 
                       return null;
                     },
+                  ),
+                  Text(
+                    "${NumberFormat.decimalPattern('hi').format(kMaxEdition)} $kMaxText",
+                    style: TextStyle(color: EaselAppTheme.kLightPurple, fontSize: 14.sp, fontWeight: FontWeight.w800),
                   ),
                   const VerticalSpace(20),
                   EaselTextField(
