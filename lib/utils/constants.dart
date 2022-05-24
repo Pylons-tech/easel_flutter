@@ -1,3 +1,9 @@
+import 'package:flutter/material.dart';
+
+const Color kDarkRed = Color(0xffEF4421);
+
+
+
 const List kTutorialItems = [
   {
     "header": "Upload your NFT file",
@@ -24,6 +30,7 @@ const kUsername = "username";
 const kShareIcon = 'assets/images/share_ic.png';
 const kSaveIcon = 'assets/images/save_ic.png';
 const kTooltipBalloon = 'assets/images/tooltip_balloon.png';
+const kAlertIcon = 'assets/images/svg/i_icon.svg';
 
 const kSvgSplash = 'assets/images/svg/splash.svg';
 const kSvgTabSplash = 'assets/images/svg/background_tab.svg';
@@ -163,9 +170,6 @@ const double TABLET_MIN_WIDTH = 600;
 
 
 /// Routing screen
-const kInstallApp = "Install App";
-const kDontHavePylonsWallet = "You don't have Pylons wallet installed";
-const kSomethingWentWrong = "Something went wrong. Try again later";
-const kDontHavePylonsAccount = "You don't have Pylons account";
-const kPleaseWait = "Please wait";
-const kWelcome = "Welcome";
+const kAppNotInstalled = "Please download the Pylons app and create a username to publish a NFT in Easel.";
+const kPleaseTryAgain = "Something went wrong.\n Please try again.";
+const kCancel = "Cancel";

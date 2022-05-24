@@ -42,7 +42,7 @@ class PylonsButton extends StatelessWidget {
                         style: Theme.of(context)
                             .textTheme
                             .bodyText1!
-                            .copyWith(fontSize: 16.sp, color: EaselAppTheme.kWhite, fontWeight: FontWeight.w600),
+                            .copyWith(fontSize: 15.sp, color: EaselAppTheme.kWhite, fontWeight: FontWeight.w600),
                       ),
                       if (showArrow) ...[
                         const SizedBox(width: 6),
