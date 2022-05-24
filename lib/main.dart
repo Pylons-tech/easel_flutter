@@ -1,4 +1,5 @@
 import 'package:easel_flutter/easel_provider.dart';
+import 'package:easel_flutter/screens/home_screen.dart';
 import 'package:easel_flutter/screens/routing_screen.dart';
 import 'package:easel_flutter/screens/splash_screen.dart';
 import 'package:easel_flutter/screens/tutorial_screen.dart';
@@ -58,6 +59,7 @@ class MyApp extends StatelessWidget {
                   RouteUtil.ROUTE_TUTORIAL: (context) => const TutorialScreen(),
                   RouteUtil.ROUTE_WELCOME: (context) => const WelcomeScreen(),
                   RouteUtil.ROUTE_ROUTING: (context) => const RoutingScreen(),
+                  RouteUtil.ROUTE_HOME: (context) => const HomeScreen(),
                 },
               )),
     );

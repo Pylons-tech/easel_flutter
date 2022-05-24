@@ -1,11 +1,17 @@
+import 'dart:async';
+
 import 'package:easel_flutter/easel_provider.dart';
 import 'package:easel_flutter/main.dart';
 import 'package:easel_flutter/screens/home_screen.dart';
 import 'package:easel_flutter/utils/constants.dart';
 import 'package:easel_flutter/utils/easel_app_theme.dart';
+import 'package:easel_flutter/utils/extension_util.dart';
+import 'package:easel_flutter/utils/route_util.dart';
 import 'package:easel_flutter/widgets/background_widget.dart';
 import 'package:easel_flutter/widgets/message_dialog.dart';
+import 'package:easel_flutter/widgets/pylons_button.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:focus_detector/focus_detector.dart';
 import 'package:provider/provider.dart';
 import 'package:pylons_sdk/pylons_sdk.dart';
@@ -21,9 +27,18 @@ class RoutingScreen extends StatefulWidget {
 }
 
 class _RoutingScreenState extends State<RoutingScreen> {
-  ValueNotifier<String> username = ValueNotifier("");
+  RoutingScreenState state = RoutingScreenState.initial;
 
-  RoutingScreenState routingScreenState = RoutingScreenState.initial;
+  String userName = '';
+
+  @override
+  void initState() {
+    super.initState();
+
+    scheduleMicrotask(() {
+      checkPylonsAppExistsOrNot();
+    });
+  }
 
   @override
   void dispose() {
@@ -32,114 +47,175 @@ class _RoutingScreenState extends State<RoutingScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return FocusDetector(
-      onFocusGained: () {
-        checkConfigurations();
-      },
-      onFocusLost: () {
-        if (!(ModalRoute.of(context)?.isCurrent ?? false) && routingScreenState != RoutingScreenState.userNameShown) {
-          Navigator.of(context).pop();
-        }
-      },
-      child: Scaffold(
-        body: Stack(
-          children: [
-            const Positioned(
-              bottom: 0,
-              right: 0,
-              child: BackgroundWidget(),
+    Widget child = const SizedBox();
+    switch (state) {
+      case RoutingScreenState.initial:
+        child = const Text("Please wait");
+        break;
+      case RoutingScreenState.appNotInstalled:
+        child = buildWalletNotInstalled(context);
+        break;
+      case RoutingScreenState.accountNotCreated:
+        child = buildAccountNotCreated(context);
+        break;
+      case RoutingScreenState.somethingWentWrong:
+        child = buildSomethingWentWrong(context);
+        break;
+      case RoutingScreenState.showUsername:
+        child = Text("Welcome $userName", style: TextStyle(fontSize: 18.sp),);
+        break;
+    }
+    return Scaffold(
+      body: Stack(
+        children: [
+          const Positioned(
+            bottom: 0,
+            right: 0,
+            child: BackgroundWidget(),
+          ),
+          Align(
+            alignment: Alignment.center,
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              mainAxisSize: MainAxisSize.min,
+              children: [child],
             ),
-            Align(
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  ValueListenableBuilder<String>(
-                      valueListenable: username,
-                      builder: (_, String name, __) {
-                        return Text("$kWelcomeToEaselText $name");
-                      }),
-                ],
-              ),
-            ),
-          ],
-        ),
+          ),
+        ],
       ),
     );
   }
 
-  void showAppNotInstalledDialog() {
-    MessageDialog().show(kPylonsAppNotInstalledText,
-        button: TextButton(
-            onPressed: () {
-              PylonsWallet.instance.goToInstall();
+  Container buildWalletNotInstalled(BuildContext context) {
+    return Container(
+      padding: EdgeInsets.symmetric(horizontal: 40.w),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Text(
+            "You don't have Pylons wallet installed",
+            style: TextStyle(fontSize: 20.sp),
+          ),
+          SizedBox(
+            height: 50.h,
+          ),
+          PylonsButton(
+            onPressed: () async {
+              onDownloadNowPressed(context);
             },
-            child: const Text(
-              kClickToInstallText,
-              style: TextStyle(color: EaselAppTheme.kBlue),
-            )));
+            btnText: "Install App",
+          ),
+          const SizedBox(
+            height: 20,
+          ),
+          PylonsButton(
+            onPressed: () async {
+              checkPylonsAppExistsOrNot();
+            },
+            btnText: kTryAgain,
+          ),
+        ],
+      ),
+    );
   }
 
-  void showCreateAnAccountDialog(SDKIPCResponse<dynamic> response) {
-    MessageDialog().show(response.error,
-        button: TextButton(
-            onPressed: () {
-              PylonsWallet.instance.goToPylons();
+  Container buildAccountNotCreated(BuildContext context) {
+    return Container(
+      padding: EdgeInsets.symmetric(horizontal: 40.w),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Text(
+            "You don't have Pylons account",
+            style: TextStyle(fontSize: 20.sp),
+          ),
+          SizedBox(
+            height: 50.h,
+          ),
+          PylonsButton(
+            onPressed: () async {
+              getProfile();
             },
-            child: const Text(
-              kClickToLogInText,
-              style: TextStyle(color: EaselAppTheme.kBlue),
-            )));
+            btnText: kTryAgain,
+          ),
+        ],
+      ),
+    );
   }
 
-  void showUserNameDialog() {
-    MessageDialog().show("$kWelcomeToEaselText ${username.value}",
-        button: TextButton(
-            onPressed: () {
-              Navigator.of(context).pop();
-
-              navigatorKey.currentState!.pushReplacement(
-                MaterialPageRoute(
-                  builder: (_) => const HomeScreen(),
-                ),
-              );
+  Container buildSomethingWentWrong(BuildContext context) {
+    return Container(
+      padding: EdgeInsets.symmetric(horizontal: 40.w),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Text(
+            "Something went wrong. Try again later",
+            style: TextStyle(fontSize: 20.sp),
+          ),
+          SizedBox(
+            height: 50.h,
+          ),
+          PylonsButton(
+            onPressed: () async {
+              getProfile();
             },
-            child: const Text(kOkText)));
+            btnText: kTryAgain,
+          ),
+        ],
+      ),
+    );
   }
 
-  void checkConfigurations() async {
-    switch (routingScreenState) {
-      case RoutingScreenState.initial:
+  void checkPylonsAppExistsOrNot() async {
+    final isExist = await PylonsWallet.instance.exists();
 
-        final isExist = await PylonsWallet.instance.exists();
+    if (isExist) {
+      getProfile();
+      return;
+    }
 
-        if (isExist) {
-          checkConfigurations();
-          routingScreenState = RoutingScreenState.appInstalled;
-          return;
-        }
+    state = RoutingScreenState.appNotInstalled;
+    setState(() {});
+  }
 
-        showAppNotInstalledDialog();
+  Future<void> getProfile() async {
+    final response = await context.read<EaselProvider>().getProfile();
 
-        break;
-      case RoutingScreenState.appInstalled:
-        final response = await context.read<EaselProvider>().getProfile();
+    if (response.success) {
+      state = RoutingScreenState.showUsername;
+      userName = response.data.username;
+      setState(() {});
 
-        if (response.success) {
-          username.value = response.data.username ;
-          routingScreenState = RoutingScreenState.userNameShown;
-          checkConfigurations();
-          return;
-        } else if (response.errorCode == kErrProfileNotExist) {
-          showCreateAnAccountDialog(response);
-        } else {
-          MessageDialog().show("$kErrProfileFetch: ${response.error}");
-        }
-        break;
-      case RoutingScreenState.userNameShown:
-        showUserNameDialog();
-        break;
+      await Future.delayed(const Duration(
+        seconds: 2,
+      ));
+
+      navigatorKey.currentState!.pushReplacementNamed(RouteUtil.ROUTE_HOME);
+
+      return;
+    }
+
+    if (response.errorCode == kErrProfileNotExist) {
+      state = RoutingScreenState.accountNotCreated;
+    } else {
+      state = RoutingScreenState.somethingWentWrong;
+    }
+
+    setState(() {});
+  }
+
+  Future<void> onDownloadNowPressed(BuildContext context) async {
+    final appAlreadyInstalled = await PylonsWallet.instance.exists();
+    if (!appAlreadyInstalled) {
+      PylonsWallet.instance.goToInstall();
+    } else {
+      context.show(message: kPylonsAlreadyInstalled);
     }
   }
 }
 
-enum RoutingScreenState { initial, appInstalled, userNameShown }
+enum RoutingScreenState { initial, appNotInstalled, accountNotCreated, somethingWentWrong, showUsername }
