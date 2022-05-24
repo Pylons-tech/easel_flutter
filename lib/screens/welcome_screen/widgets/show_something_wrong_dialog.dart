@@ -2,7 +2,6 @@ import 'package:easel_flutter/screens/welcome_screen/widgets/common/dialog_clipp
 import 'package:easel_flutter/utils/easel_app_theme.dart';
 import 'package:easel_flutter/utils/extension_util.dart';
 import 'package:easel_flutter/utils/screen_responsive.dart';
-import 'package:easel_flutter/widgets/pylons_button.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/flutter_svg.dart';
