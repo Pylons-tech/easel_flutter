@@ -160,3 +160,12 @@ const kStripeAccountDoesntExists = 'Kindly register Stripe account in wallet';
 const kTryAgain = "Try again";
 
 const double TABLET_MIN_WIDTH = 600;
+
+
+/// Routing screen
+const kInstallApp = "Install App";
+const kDontHavePylonsWallet = "You don't have Pylons wallet installed";
+const kSomethingWentWrong = "Something went wrong. Try again later";
+const kDontHavePylonsAccount = "You don't have Pylons account";
+const kPleaseWait = "Please wait";
+const kWelcome = "Welcome";

@@ -2,20 +2,15 @@ import 'dart:async';
 
 import 'package:easel_flutter/easel_provider.dart';
 import 'package:easel_flutter/main.dart';
-import 'package:easel_flutter/screens/home_screen.dart';
 import 'package:easel_flutter/utils/constants.dart';
-import 'package:easel_flutter/utils/easel_app_theme.dart';
 import 'package:easel_flutter/utils/extension_util.dart';
 import 'package:easel_flutter/utils/route_util.dart';
 import 'package:easel_flutter/widgets/background_widget.dart';
-import 'package:easel_flutter/widgets/message_dialog.dart';
 import 'package:easel_flutter/widgets/pylons_button.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:focus_detector/focus_detector.dart';
 import 'package:provider/provider.dart';
 import 'package:pylons_sdk/pylons_sdk.dart';
-import 'package:pylons_sdk/src/features/models/sdk_ipc_response.dart';
 
 class RoutingScreen extends StatefulWidget {
   const RoutingScreen({Key? key}) : super(key: key);
@@ -50,7 +45,7 @@ class _RoutingScreenState extends State<RoutingScreen> {
     Widget child = const SizedBox();
     switch (state) {
       case RoutingScreenState.initial:
-        child = const Text("Please wait");
+        child =  Text(kPleaseWait, style: TextStyle(fontSize: 18.sp),);
         break;
       case RoutingScreenState.appNotInstalled:
         child = buildWalletNotInstalled(context);
@@ -62,7 +57,7 @@ class _RoutingScreenState extends State<RoutingScreen> {
         child = buildSomethingWentWrong(context);
         break;
       case RoutingScreenState.showUsername:
-        child = Text("Welcome $userName", style: TextStyle(fontSize: 18.sp),);
+        child = Text("$kWelcome $userName", style: TextStyle(fontSize: 18.sp),);
         break;
     }
     return Scaffold(
@@ -94,7 +89,7 @@ class _RoutingScreenState extends State<RoutingScreen> {
         mainAxisSize: MainAxisSize.min,
         children: [
           Text(
-            "You don't have Pylons wallet installed",
+            kDontHavePylonsWallet,
             style: TextStyle(fontSize: 20.sp),
           ),
           SizedBox(
@@ -104,7 +99,7 @@ class _RoutingScreenState extends State<RoutingScreen> {
             onPressed: () async {
               onDownloadNowPressed(context);
             },
-            btnText: "Install App",
+            btnText: kInstallApp,
           ),
           const SizedBox(
             height: 20,
@@ -128,7 +123,7 @@ class _RoutingScreenState extends State<RoutingScreen> {
         mainAxisSize: MainAxisSize.min,
         children: [
           Text(
-            "You don't have Pylons account",
+            kDontHavePylonsAccount,
             style: TextStyle(fontSize: 20.sp),
           ),
           SizedBox(
@@ -153,7 +148,7 @@ class _RoutingScreenState extends State<RoutingScreen> {
         mainAxisSize: MainAxisSize.min,
         children: [
           Text(
-            "Something went wrong. Try again later",
+            kSomethingWentWrong,
             style: TextStyle(fontSize: 20.sp),
           ),
           SizedBox(
