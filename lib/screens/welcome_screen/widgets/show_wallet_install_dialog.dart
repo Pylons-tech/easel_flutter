@@ -37,7 +37,7 @@ class ShowWalletInstallDialog {
     return ClipPath(
       clipper: DialogClipper(),
       child: Container(
-        color: kDarkRed,
+        color: EaselAppTheme.kLightRed,
         padding: EdgeInsets.symmetric(horizontal: 0.05.sw),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -98,7 +98,7 @@ class ShowWalletInstallDialog {
       child: ClipPath(
         clipper: DialogClipper(),
         child: Container(
-          color: kDarkRed,
+          color: EaselAppTheme.kLightRed,
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.stretch,
             mainAxisAlignment: MainAxisAlignment.center,

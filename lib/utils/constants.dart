@@ -31,6 +31,7 @@ const kTextFieldSingleLine = 'assets/images/text_field_single_line.png';
 const kTextFieldMultiLine = 'assets/images/text_field_multi_line.png';
 const kTextFieldButton = 'assets/images/text_field_button.png';
 const kPreviewGradient = 'assets/images/preview_gradient.png';
+const kAlertIcon = 'assets/images/svg/i_icon.svg';
 
 /// ```SVG assets
 const kSvgSplash = 'assets/images/svg/splash.svg';
@@ -179,3 +180,6 @@ const kErrFileMetaParse = 'Error occurred while parsing the chosen media file:';
 const kErrRecipe = 'Recipe error :';
 const kErrNoStripeAccount = 'Kindly register Stripe account in wallet';
 const kTryAgain = "Try again";
+const kAppNotInstalled = "Please download the Pylons app and create a username to publish a NFT in Easel.";
+const kPleaseTryAgain = "Something went wrong.\n Please try again.";
+const kCancel = "Cancel";

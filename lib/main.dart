@@ -1,10 +1,11 @@
 import 'package:easel_flutter/easel_provider.dart';
-import 'package:easel_flutter/screens/routing_screen.dart';
+import 'package:easel_flutter/screens/home_screen.dart';
 import 'package:easel_flutter/screens/splash_screen.dart';
 import 'package:easel_flutter/screens/tutorial_screen.dart';
-import 'package:easel_flutter/screens/welcome_screen.dart';
+import 'package:easel_flutter/screens/welcome_screen/welcome_screen.dart';
 import 'package:easel_flutter/utils/constants.dart';
 import 'package:easel_flutter/utils/route_util.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:easel_flutter/utils/dependency_injection/dependency_injection_container.dart' as di;
 import 'package:easel_flutter/utils/easel_app_theme.dart';
@@ -20,7 +21,9 @@ void main() {
   PylonsWallet.setup(mode: PylonsMode.prod, host: 'easel');
   di.init();
 
-  print(MediaQueryData.fromWindow(WidgetsBinding.instance.window).size.shortestSide);
+  if (kDebugMode) {
+    print("Size ${MediaQueryData.fromWindow(WidgetsBinding.instance.window).size.shortestSide}");
+  }
   isTablet = MediaQueryData.fromWindow(WidgetsBinding.instance.window).size.shortestSide >= TABLET_MIN_WIDTH;
 
   runApp(const MyApp());
@@ -56,7 +59,7 @@ class MyApp extends StatelessWidget {
                   '/': (context) => const SplashScreen(),
                   RouteUtil.ROUTE_TUTORIAL: (context) => const TutorialScreen(),
                   RouteUtil.ROUTE_WELCOME: (context) => const WelcomeScreen(),
-                  RouteUtil.ROUTE_ROUTING: (context) => const RoutingScreen(),
+                  RouteUtil.ROUTE_HOME: (context) => const HomeScreen(),
                 },
               )),
     );
