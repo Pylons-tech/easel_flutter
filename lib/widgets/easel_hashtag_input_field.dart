@@ -45,7 +45,7 @@ class _HashtagInputFieldState extends State<EaselHashtagInputField> {
           Stack(children: [
             Image.asset(
               kTextFieldSingleLine,
-              height: isTablet? 32.h : 40.h,
+              height: isTablet ? 32.h : 40.h,
               width: 1.sw,
               fit: BoxFit.fill,
             ),
@@ -55,21 +55,23 @@ class _HashtagInputFieldState extends State<EaselHashtagInputField> {
                 Flexible(
                     child: SizedBox(
                         height: isTablet ? 32.h : 40.h,
-                        child: TextFormField(
-                          style:
-                              TextStyle(fontSize: 18.sp, fontWeight: FontWeight.w400, color: EaselAppTheme.kDarkText),
-                          controller: _inputController,
-                          minLines: 1,
-                          maxLines: 1,
-                          keyboardType: TextInputType.text,
-                          textCapitalization: TextCapitalization.none,
-                          decoration: InputDecoration(
-                              hintText: kHintHashtag,
-                              hintStyle: TextStyle(fontSize: 18.sp, color: EaselAppTheme.kGrey),
-                              border: const OutlineInputBorder(borderSide: BorderSide.none),
-                              floatingLabelBehavior: FloatingLabelBehavior.always,
-                              contentPadding: EdgeInsets.fromLTRB(10.w, 10.h, 10.w, 0.h)),
-                        ))),
+                        child: Align(
+                            alignment: Alignment.center,
+                            child: TextFormField(
+                              style: TextStyle(
+                                  fontSize: 18.sp, fontWeight: FontWeight.w400, color: EaselAppTheme.kDarkText),
+                              controller: _inputController,
+                              minLines: 1,
+                              maxLines: 1,
+                              keyboardType: TextInputType.text,
+                              textCapitalization: TextCapitalization.none,
+                              decoration: InputDecoration(
+                                  hintText: kHintHashtag,
+                                  hintStyle: TextStyle(fontSize: 18.sp, color: EaselAppTheme.kGrey),
+                                  border: const OutlineInputBorder(borderSide: BorderSide.none),
+                                  floatingLabelBehavior: FloatingLabelBehavior.always,
+                                  contentPadding: EdgeInsets.fromLTRB(10.w, 10.h, 10.w, 0.h)),
+                            )))),
                 Stack(
                   alignment: Alignment.center,
                   children: [
@@ -81,7 +83,7 @@ class _HashtagInputFieldState extends State<EaselHashtagInputField> {
                           setState(() {
                             var trimmed = _inputController.text.trim();
                             trimmed = trimmed.replaceAll('#', '');
-                            if (!_hashtagsNotifier.value.contains(trimmed)) {
+                            if (trimmed.isNotEmpty && !_hashtagsNotifier.value.contains(trimmed)) {
                               _hashtagsNotifier.value.add(trimmed);
                             }
                             _inputController.clear();
