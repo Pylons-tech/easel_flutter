@@ -75,7 +75,9 @@ class _PublishScreenState extends State<PublishScreen> {
                             right: 10,
                             child: RoundedPurpleButtonWidget(
                               onPressed: () {
-                                provider.shareNFT();
+                                final Size size = MediaQuery.of(context).size;
+
+                                provider.shareNFT(size);
                               },
                               icon: kShareIcon,
                             )),
