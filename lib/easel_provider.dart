@@ -120,7 +120,6 @@ class EaselProvider extends ChangeNotifier {
     try {
       info = await _mediaInfo.getMediaInfo(file.path);
     } on PlatformException catch (e) {
-      print('kErrFileMetaParse $e');
       _fileWidth = 0;
       _fileHeight = 0;
       _fileDuration = 0;
@@ -274,12 +273,12 @@ class EaselProvider extends ChangeNotifier {
 
   bool isDifferentUserName(String savedUserName) => (currentUsername.isNotEmpty && savedUserName != currentUsername);
 
-  Future<void> shareNFT() async {
+  Future<void> shareNFT(Size size) async {
     String url = FileUtils.generateEaselLink(
       cookbookId: _cookbookId ?? '',
       recipeId: _recipeId,
     );
-    Share.share("My Easel NFT\n\n$url", subject: 'My Easel NFT');
+    Share.share("My Easel NFT\n\n$url", subject: 'My Easel NFT', sharePositionOrigin: Rect.fromLTWH(0, 0, size.width, size.height / 2));
   }
 
   @override

@@ -69,7 +69,7 @@ class ShowSomethingWentWrongDialog {
                         top: 0,
                         bottom: 0,
 
-                        child: Center(child: Container(
+                        child: Center(child: SizedBox(
                             width: 130.w,
                             child: SvgPicture.asset(kSvgCloseButton, fit: BoxFit.cover)))),
                     Center(
@@ -137,7 +137,7 @@ class ShowSomethingWentWrongDialog {
                           top: 0,
                           bottom: 0,
 
-                          child: Center(child: Container(
+                          child: Center(child: SizedBox(
                               width: 130.w,
                               child: SvgPicture.asset(kSvgCloseButton, fit: BoxFit.cover)))),
                       Center(
