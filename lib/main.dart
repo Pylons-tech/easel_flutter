@@ -5,7 +5,6 @@ import 'package:easel_flutter/screens/tutorial_screen.dart';
 import 'package:easel_flutter/screens/welcome_screen/welcome_screen.dart';
 import 'package:easel_flutter/utils/constants.dart';
 import 'package:easel_flutter/utils/route_util.dart';
-import 'package:flutter/foundation.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:easel_flutter/utils/dependency_injection/dependency_injection_container.dart' as di;
 import 'package:easel_flutter/utils/easel_app_theme.dart';
@@ -21,9 +20,6 @@ void main() {
   PylonsWallet.setup(mode: PylonsMode.prod, host: 'easel');
   di.init();
 
-  if (kDebugMode) {
-    print("Size ${MediaQueryData.fromWindow(WidgetsBinding.instance.window).size.shortestSide}");
-  }
   isTablet = MediaQueryData.fromWindow(WidgetsBinding.instance.window).size.shortestSide >= TABLET_MIN_WIDTH;
 
   runApp(const MyApp());
