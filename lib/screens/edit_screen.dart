@@ -1,15 +1,18 @@
 import 'package:easel_flutter/easel_provider.dart';
-import 'package:easel_flutter/models/denom.dart';
 import 'package:easel_flutter/utils/amount_formatter.dart';
 import 'package:easel_flutter/utils/constants.dart';
 import 'package:easel_flutter/utils/easel_app_theme.dart';
 import 'package:easel_flutter/utils/space_utils.dart';
-import 'package:easel_flutter/widgets/background_widget.dart';
+import 'package:easel_flutter/widgets/easel_price_input_field.dart';
+import 'package:easel_flutter/widgets/easel_hashtag_input_field.dart';
 import 'package:easel_flutter/widgets/easel_text_field.dart';
-import 'package:easel_flutter/widgets/pylons_round_button.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
+
+import '../widgets/pylons_button.dart';
 
 class EditScreen extends StatefulWidget {
   final PageController controller;
@@ -39,194 +42,174 @@ class _EditScreenState extends State<EditScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Stack(
-        children: [
-          const Positioned(
-            bottom: 0,
-            right: 0,
-            child: BackgroundWidget(),
-          ),
-          SingleChildScrollView(
-            child: Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
-              child: Consumer<EaselProvider>(builder: (_, provider, __) {
-                return Form(
-                  key: _formKey,
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      EaselTextField(
-                        title: kNameAsArtistText,
-                        controller: provider.artistNameController,
-                        textCapitalization: TextCapitalization.sentences,
-                        validator: (value) {
-                          if (value!.isEmpty) return kEnterArtistNameText;
-                          return null;
-                        },
-                      ),
-                      const VerticalSpace(20),
-                      EaselTextField(
-                        title: kGiveNFTNameText,
-                        controller: provider.artNameController,
-                        textCapitalization: TextCapitalization.sentences,
-                        validator: (value) {
-                          if (value!.isEmpty) {
-                            return kEnterNFTNameText;
-                          }
-                          if (value.length <= kMinNFTName) {
-                            return "$kNameShouldHaveText $kMinNFTName $kCharactersOrMoreText";
-                          }
-                          return null;
-                        },
-                      ),
-                      const VerticalSpace(20),
-                      EaselTextField(
-                        title: kDescribeNFTText,
-                        noOfLines: 4,
-                        controller: provider.descriptionController,
-                        textCapitalization: TextCapitalization.sentences,
-                        inputFormatters: [LengthLimitingTextInputFormatter(kMaxDescription)],
-                        validator: (value) {
-                          if (value!.isEmpty) {
-                            return kEnterNFTDescriptionText;
-                          }
-                          if (value.length <= kMinDescription) {
-                            return "$kEnterMoreThanText $kMinDescription $kCharactersText";
-                          }
-                          return null;
-                        },
-                      ),
-                      const VerticalSpace(4),
-                      Text(
-                        "$kMaxDescription $kCharacterLimitText",
-                        style: Theme.of(context).textTheme.subtitle2!.copyWith(color: EaselAppTheme.kGrey, fontWeight: FontWeight.w600),
-                      ),
-                      const VerticalSpace(20),
-                      EaselTextField(
-                        key: ValueKey("${provider.selectedDenom.name}-amount"),
-                        title: kPriceText,
-                        keyboardType: TextInputType.number,
-                        inputFormatters: [FilteringTextInputFormatter.digitsOnly, LengthLimitingTextInputFormatter(kMaxPriceLength), provider.selectedDenom.getFormatter()],
-                        controller: provider.priceController,
-                        suffix: const _CurrencyDropDown(),
-                        validator: (value) {
-                          if (value!.isEmpty) {
-                            return kEnterPriceText;
-                          }
-
-                          if (double.parse(value.replaceAll(",", "")) < kMinValue) return "$kMinIsText $kMinValue";
-
-                          return null;
-                        },
-                      ),
-                      const VerticalSpace(20),
-                      EaselTextField(
-                        key: ValueKey(provider.selectedDenom.name),
-                        title: "$kNoOfEditionText ($kMaxText: $kMaxEdition)",
-                        keyboardType: TextInputType.number,
-                        inputFormatters: [
-                          FilteringTextInputFormatter.digitsOnly,
-                          LengthLimitingTextInputFormatter(5),
-                          AmountFormatter(
-                            maxDigits: 5,
-                          )
-                        ],
-                        controller: provider.noOfEditionController,
-                        validator: (value) {
-                          if (value!.isEmpty) {
-                            return kEnterEditionText;
-                          }
-                          if (int.parse(value.replaceAll(",", "")) < kMinValue) {
-                            return "$kMinIsText $kMinValue";
-                          }
-                          if (int.parse(value.replaceAll(",", "")) > kMaxEdition) {
-                            return "$kMaxIsTextText $kMaxEdition";
-                          }
-
-                          return null;
-                        },
-                      ),
-                      const VerticalSpace(20),
-                      EaselTextField(
-                        title: kRoyaltiesText,
-                        hint: kRoyaltyHintText,
-                        keyboardType: TextInputType.number,
-                        inputFormatters: [
-                          FilteringTextInputFormatter.digitsOnly,
-                          LengthLimitingTextInputFormatter(2),
-                          AmountFormatter(
-                            maxDigits: 2,
-                          )
-                        ],
-                        controller: provider.royaltyController,
-                        validator: (value) {
-                          if (value!.isEmpty) {
-                            return kEnterRoyaltyText;
-                          }
-                          if (int.parse(value) > kMaxRoyalty) {
-                            return "$kRoyaltyRangeText $kMinRoyalty-$kMaxRoyalty %";
-                          }
-                          return null;
-                        },
-                      ),
-                      const VerticalSpace(4),
-                      Text(
-                        "$kRoyaltyNoteText “$kMinRoyalty”",
-                        style: Theme.of(context).textTheme.subtitle2!.copyWith(color: EaselAppTheme.kGrey, fontWeight: FontWeight.w600),
-                      ),
-                      const VerticalSpace(20),
-                      Align(
-                        child: PylonsRoundButton(onPressed: () {
-                          FocusScope.of(context).unfocus();
-                          if (_formKey.currentState!.validate()) {
-                            widget.controller.nextPage(duration: const Duration(milliseconds: 300), curve: Curves.easeIn);
-                          }
-                        }),
-                      ),
-                      const VerticalSpace(20),
-                    ],
+      body: SingleChildScrollView(
+        child: Padding(
+          padding: EdgeInsets.symmetric(horizontal: 20.w, vertical: 15.h),
+          child: Consumer<EaselProvider>(builder: (_, provider, __) {
+            return Form(
+              key: _formKey,
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Align(
+                    alignment: Alignment.center,
+                    child: Text(kEditNoticeText,
+                        textAlign: TextAlign.center,
+                        style: Theme.of(context)
+                            .textTheme
+                            .bodyText1!
+                            .copyWith(fontSize: 14.sp, color: EaselAppTheme.kLightPurple, fontWeight: FontWeight.w400)),
                   ),
-                );
-              }),
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-}
+                  const VerticalSpace(20),
+                  EaselTextField(
+                    label: kGiveNFTNameText,
+                    hint: kHintNftName,
+                    controller: provider.artNameController,
+                    textCapitalization: TextCapitalization.sentences,
+                    validator: (value) {
+                      if (value!.isEmpty) {
+                        return kEnterNFTNameText;
+                      }
+                      if (value.length <= kMinNFTName) {
+                        return "$kNameShouldHaveText $kMinNFTName $kCharactersOrMoreText";
+                      }
+                      return null;
+                    },
+                  ),
+                  const VerticalSpace(20),
+                  EaselTextField(
+                    label: kNameAsArtistText,
+                    hint: kHintArtistName,
+                    controller: provider.artistNameController,
+                    textCapitalization: TextCapitalization.sentences,
+                    validator: (value) {
+                      if (value!.isEmpty) return kEnterArtistNameText;
+                      return null;
+                    },
+                  ),
+                  const VerticalSpace(20),
+                  EaselTextField(
+                    label: kDescribeNFTText,
+                    hint: kHintNftDesc,
+                    noOfLines: 5,
+                    controller: provider.descriptionController,
+                    textCapitalization: TextCapitalization.sentences,
+                    inputFormatters: [LengthLimitingTextInputFormatter(kMaxDescription)],
+                    validator: (value) {
+                      if (value!.isEmpty) {
+                        return kEnterNFTDescriptionText;
+                      }
+                      if (value.length <= kMinDescription) {
+                        return "$kEnterMoreThanText $kMinDescription $kCharactersText";
+                      }
+                      return null;
+                    },
+                  ),
+                  Text(
+                    "$kMaxDescription $kCharacterLimitText",
+                    style: TextStyle(color: EaselAppTheme.kLightPurple, fontSize: 14.sp, fontWeight: FontWeight.w800),
+                  ),
+                  const VerticalSpace(20),
+                  const EaselHashtagInputField(),
+                  const VerticalSpace(20),
+                  EaselTextField(
+                    key: ValueKey(provider.selectedDenom.name),
+                    label: kNoOfEditionText,
+                    hint: kHintNoEdition,
+                    keyboardType: TextInputType.number,
+                    inputFormatters: [
+                      FilteringTextInputFormatter.digitsOnly,
+                      LengthLimitingTextInputFormatter(5),
+                      AmountFormatter(
+                        maxDigits: 5,
+                      )
+                    ],
+                    controller: provider.noOfEditionController,
+                    validator: (value) {
+                      if (value!.isEmpty) {
+                        return kEnterEditionText;
+                      }
+                      if (int.parse(value.replaceAll(",", "")) < kMinValue) {
+                        return "$kMinIsText $kMinValue";
+                      }
+                      if (int.parse(value.replaceAll(",", "")) > kMaxEdition) {
+                        return "$kMaxIsTextText $kMaxEdition";
+                      }
 
-class _CurrencyDropDown extends StatelessWidget {
-  const _CurrencyDropDown({Key? key}) : super(key: key);
+                      return null;
+                    },
+                  ),
+                  Text(
+                    "${NumberFormat.decimalPattern('hi').format(kMaxEdition)} $kMaxText",
+                    style: TextStyle(color: EaselAppTheme.kLightPurple, fontSize: 14.sp, fontWeight: FontWeight.w800),
+                  ),
+                  const VerticalSpace(20),
+                  EaselTextField(
+                    label: kRoyaltiesText,
+                    hint: kRoyaltyHintText,
+                    keyboardType: TextInputType.number,
+                    inputFormatters: [
+                      FilteringTextInputFormatter.digitsOnly,
+                      LengthLimitingTextInputFormatter(2),
+                      AmountFormatter(
+                        maxDigits: 2,
+                      )
+                    ],
+                    controller: provider.royaltyController,
+                    validator: (value) {
+                      if (value!.isEmpty) {
+                        return kEnterRoyaltyText;
+                      }
+                      if (int.parse(value) > kMaxRoyalty) {
+                        return "$kRoyaltyRangeText $kMinRoyalty-$kMaxRoyalty %";
+                      }
+                      return null;
+                    },
+                  ),
+                  Text(
+                    "$kRoyaltyNoteText “$kMinRoyalty”.",
+                    style: TextStyle(color: EaselAppTheme.kLightPurple, fontWeight: FontWeight.w800, fontSize: 14.sp),
+                  ),
+                  const VerticalSpace(20),
+                  EaselPriceInputField(
+                    key: ValueKey("${provider.selectedDenom.name}-amount"),
+                    inputFormatters: [
+                      FilteringTextInputFormatter.digitsOnly,
+                      LengthLimitingTextInputFormatter(kMaxPriceLength),
+                      provider.selectedDenom.getFormatter()
+                    ],
+                    controller: provider.priceController,
+                    validator: (value) {
+                      if (value!.isEmpty) {
+                        return kEnterPriceText;
+                      }
 
-  @override
-  Widget build(BuildContext context) {
-    return Consumer<EaselProvider>(
-      builder: (_, provider, __) => DropdownButton<String>(
-        onTap: () {
-          FocusManager.instance.primaryFocus?.unfocus();
-        },
-        value: provider.selectedDenom.symbol,
-        icon: const Icon(Icons.keyboard_arrow_down, size: 16, color: EaselAppTheme.kBlue),
-        iconSize: 30,
-        elevation: 16,
-        underline: const SizedBox(),
-        focusColor: EaselAppTheme.kBlue,
-        dropdownColor: EaselAppTheme.kWhite,
-        style: const TextStyle(color: EaselAppTheme.kBlack, fontSize: 16, fontWeight: FontWeight.w500),
-        onChanged: (String? data) {
-          if (data != null) {
-            final value = Denom.availableDenoms.firstWhere((denom) => denom.symbol == data);
-            provider.priceController.clear();
-            provider.setSelectedDenom(value);
-          }
-        },
-        items: Denom.availableDenoms.map((Denom value) {
-          return DropdownMenuItem<String>(
-            value: value.symbol,
-            child: Text(value.name),
-          );
-        }).toList(),
+                      if (double.parse(value.replaceAll(",", "")) < kMinValue) return "$kMinIsText $kMinValue";
+
+                      return null;
+                    },
+                  ),
+                  const VerticalSpace(40),
+                  Align(
+                    alignment: Alignment.centerRight,
+                    child: PylonsButton(
+                      onPressed: () async {
+                        FocusScope.of(context).unfocus();
+                        if (_formKey.currentState!.validate()) {
+                          widget.controller.nextPage(duration: const Duration(milliseconds: 300), curve: Curves.easeIn);
+                        }
+                      },
+                      btnText: kContinue,
+                      showArrow: true,
+                      isBlue: false,
+                    ),
+                  ),
+                  const VerticalSpace(20),
+                ],
+              ),
+            );
+          }),
+        ),
       ),
     );
   }

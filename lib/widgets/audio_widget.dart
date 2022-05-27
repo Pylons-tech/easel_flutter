@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:just_audio/just_audio.dart';
 import 'package:audio_video_progress_bar/audio_video_progress_bar.dart';
 import 'package:flutter/material.dart';
@@ -48,30 +49,29 @@ class _AudioWidgetState extends State<AudioWidget> {
         final playerState = snapshot.data;
         final processingState = playerState?.processingState;
         final playing = playerState?.playing;
-        if (processingState == ProcessingState.loading ||
-            processingState == ProcessingState.buffering) {
+        if (processingState == ProcessingState.loading || processingState == ProcessingState.buffering) {
           return Container(
-            margin: const EdgeInsets.all(8.0),
-            width: 32.0,
-            height: 32.0,
+            margin: EdgeInsets.all(8.sp),
+            width: 32.sp,
+            height: 32.sp,
             child: const CircularProgressIndicator(),
           );
         } else if (playing != true) {
           return IconButton(
             icon: const Icon(Icons.play_arrow),
-            iconSize: 32.0,
+            iconSize: 32.sp,
             onPressed: _player.play,
           );
         } else if (processingState != ProcessingState.completed) {
           return IconButton(
             icon: const Icon(Icons.pause),
-            iconSize: 32.0,
+            iconSize: 32.sp,
             onPressed: _player.pause,
           );
         } else {
           return IconButton(
             icon: const Icon(Icons.replay),
-            iconSize: 32.0,
+            iconSize: 32.sp,
             onPressed: () => _player.seek(Duration.zero),
           );
         }
@@ -105,14 +105,14 @@ class _AudioWidgetState extends State<AudioWidget> {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.all(20.0),
+      padding: EdgeInsets.all(20.sp),
       child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          const SizedBox(height: 20),
           Container(
             child: _progressBar(),
           ),
-          const SizedBox(height: 20),
+          SizedBox(height: 20.sp),
           _playButton(),
         ],
       ),

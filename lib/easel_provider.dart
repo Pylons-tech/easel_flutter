@@ -39,7 +39,7 @@ class EaselProvider extends ChangeNotifier {
   String? _cookbookId;
   String _recipeId = "";
   var stripeAccountExists = false;
-  Denom _selectedDenom = Denom(name: kUSDText, symbol: kUsdSymbol);
+  Denom _selectedDenom = Denom.availableDenoms.first;
 
   File? get file => _file;
 
@@ -65,6 +65,7 @@ class EaselProvider extends ChangeNotifier {
   final noOfEditionController = TextEditingController();
   final priceController = TextEditingController();
   final royaltyController = TextEditingController();
+  final List<String> hashtagsList = [];
 
   String currentUsername = '';
 
@@ -77,7 +78,7 @@ class EaselProvider extends ChangeNotifier {
     _fileWidth = 0;
     _fileDuration = 0;
     _recipeId = "";
-    _selectedDenom = Denom(name: kUSDText, symbol: kUsdSymbol);
+    _selectedDenom = Denom.availableDenoms.first;
 
     artistNameController.clear();
     artNameController.clear();
@@ -85,6 +86,7 @@ class EaselProvider extends ChangeNotifier {
     noOfEditionController.clear();
     priceController.clear();
     royaltyController.clear();
+    hashtagsList.clear();
     notifyListeners();
   }
 
@@ -228,16 +230,25 @@ class EaselProvider extends ChangeNotifier {
               longs: [
                 LongParam(key: "Quantity", weightRanges: [
                   IntWeightRange(
-                      lower: Int64(int.parse(noOfEditionController.text.replaceAll(",", "").trim())), upper: Int64(int.parse(noOfEditionController.text.replaceAll(",", "").trim())), weight: Int64(1))
+                      lower: Int64(int.parse(noOfEditionController.text.replaceAll(",", "").trim())),
+                      upper: Int64(int.parse(noOfEditionController.text.replaceAll(",", "").trim())),
+                      weight: Int64(1))
                 ]),
-                LongParam(key: "Width", weightRanges: [IntWeightRange(lower: Int64(_fileWidth), upper: Int64(_fileWidth), weight: Int64(1))]),
-                LongParam(key: "Height", weightRanges: [IntWeightRange(lower: Int64(_fileHeight), upper: Int64(_fileHeight), weight: Int64(1))]),
-                LongParam(key: "Duration", weightRanges: [IntWeightRange(lower: Int64(_fileDuration), upper: Int64(_fileDuration), weight: Int64(1))]),
+                LongParam(key: "Width", weightRanges: [
+                  IntWeightRange(lower: Int64(_fileWidth), upper: Int64(_fileWidth), weight: Int64(1))
+                ]),
+                LongParam(key: "Height", weightRanges: [
+                  IntWeightRange(lower: Int64(_fileHeight), upper: Int64(_fileHeight), weight: Int64(1))
+                ]),
+                LongParam(key: "Duration", weightRanges: [
+                  IntWeightRange(lower: Int64(_fileDuration), upper: Int64(_fileDuration), weight: Int64(1))
+                ]),
               ],
               strings: [
                 StringParam(key: "Name", value: artNameController.text.trim()),
                 StringParam(key: "App_Type", value: "Easel"),
                 StringParam(key: "Description", value: descriptionController.text.trim()),
+                StringParam(key: "Hashtags", value: hashtagsList.join('#')),
                 StringParam(key: "NFT_Format", value: _nftFormat.format),
                 StringParam(key: "NFT_URL", value: "$ipfsDomain/${uploadResponse.data?.value?.cid ?? ""}"),
                 StringParam(key: "Creator", value: artistNameController.text.trim()),
@@ -278,7 +289,8 @@ class EaselProvider extends ChangeNotifier {
       cookbookId: _cookbookId ?? '',
       recipeId: _recipeId,
     );
-    Share.share("My Easel NFT\n\n$url", subject: 'My Easel NFT', sharePositionOrigin: Rect.fromLTWH(0, 0, size.width, size.height / 2));
+    Share.share("My Easel NFT\n\n$url",
+        subject: 'My Easel NFT', sharePositionOrigin: Rect.fromLTWH(0, 0, size.width, size.height / 2));
   }
 
   @override
@@ -306,7 +318,6 @@ class EaselProvider extends ChangeNotifier {
   /// true  || false (Stripe account exists and selected denom is not USD ) returns true
   /// false || false (Stripe account doesnt exists and selected denom is USD) return false
   /// false || true (Stripe account doesnt exists and selected denom is not  USD) return true
-
   Future<bool> shouldMintUSDOrNot() async {
     if (stripeAccountExists || _selectedDenom.symbol != kUsdSymbol) {
       return true;
@@ -317,7 +328,7 @@ class EaselProvider extends ChangeNotifier {
     ScaffoldMessenger.maybeOf(navigatorKey.currentState!.overlay!.context)?.hideCurrentSnackBar();
     ScaffoldMessenger.maybeOf(navigatorKey.currentState!.overlay!.context)!.showSnackBar(SnackBar(
       content: Text(
-        kStripeAccountDoesntExists,
+        kErrNoStripeAccount,
         textAlign: TextAlign.start,
         style: TextStyle(
           fontSize: 14.sp,

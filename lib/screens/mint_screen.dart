@@ -74,7 +74,7 @@ class MintScreen extends StatelessWidget {
                           thickness: 1.2,
                         ),
                         Text(
-                          kEditText,
+                          kNftDetailsText,
                           style: Theme.of(context).textTheme.bodyText2!.copyWith(
                                 fontSize: 18,
                               ),
@@ -147,7 +147,7 @@ class MintScreen extends StatelessWidget {
                                   duration: const Duration(milliseconds: 300),
                                   curve: Curves.easeIn);
                             },
-                            btnText: kMintText,
+                            btnText: kListText,
                             showArrow: true,
                           ),
                         ),
