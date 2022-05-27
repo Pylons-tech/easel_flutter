@@ -91,21 +91,21 @@ const kJunoText = 'Juno';
 
 /// ```Text constants
 const kPreviewNoticeText = 'The resolution & orientation of your NFT will remain fixed as seen in the grid.';
-const kEditNoticeText = 'Nothing can be changed once listed.';
+const kPriceNoticeText = 'You can remove an active listing or revise the price of your NFT in your Pylons wallet';
 const kNameAsArtistText = 'Your name as the artist';
 const kGiveNFTNameText = 'Give your NFT a name';
 const kEnterArtistNameText = 'Enter artist name';
 const kEnterNFTNameText = 'Enter NFT name';
 const kNameShouldHaveText = 'NFT name should have';
 const kCharactersOrMoreText = 'characters or more';
-const kDescribeNFTText = 'Describe your NFT';
+const kDescribeYourNftText = 'Describe your NFT';
 const kEnterNFTDescriptionText = 'Enter NFT description';
 const kPriceText = 'Price';
 const kEnterPriceText = 'Enter price';
 const kEnterEditionText = 'Enter number of editions';
 const kNoOfEditionText = 'Number of editions';
 const kEnterRoyaltyText = 'Enter royalty in percentage';
-const kRoyaltiesText = 'Royalties (%)';
+const kRoyaltiesText = 'Royalties';
 const kRoyaltyHintText = '5%';
 const kRoyaltyNoteText =
     'Percentage of all secondary market sales automatically distributed to the NFT creator.\nTo opt out set value to';
@@ -125,7 +125,7 @@ const kEaselDescriptionText =
     'Easel is a NFT minter that allows you to create NFTs from any mobile device!\n\nOnce you successfully upload an audio, video or image file, enter the required information and press “Publish”, your file is transformed into a NFT that is stored on the Pylons blockchain indefinitely!\n\nYou’ll be able to view your new NFT in the Easel folder located in your Pylons Wallet.';
 const kCreatedByText = 'Created by';
 const kNftDetailsText = 'NFT Details';
-const kEditText = 'Edit';
+const kDescribeText = 'Describe';
 const kSizeText = 'Size';
 const kDurationText = 'Duration';
 const kDateText = 'Date';
@@ -135,7 +135,8 @@ const kMintMoreText = 'Mint More';
 const kGoToWalletText = 'Go to Wallet';
 const kChooseNFTFormatText = 'Choose your NFT format';
 const kUploadNFTText = 'Upload NFT file';
-const kEditNFTText = 'Edit your NFT Details';
+const kDescribeNftText = 'Describe NFT';
+const kPriceNftText = 'Price NFT';
 const kUploadText = 'Upload';
 const kPreviewText = 'Preview';
 const kListText = 'List';
@@ -169,6 +170,7 @@ const kHintPrice = '10.87';
 const kHintHashtag = 'Type in';
 const kHashtagsText = 'Hashtags (optional)';
 const kAddText = 'Add';
+const kNetworkFeeWarnText = 'A network fee of 10% the listed price is required for all transactions that occur on-chain';
 
 const kRecipeCreated = 'Recipe created';
 const kErrProfileNotExist = 'profileDoesNotExist';

@@ -1,6 +1,7 @@
 import 'package:easel_flutter/easel_provider.dart';
-import 'package:easel_flutter/screens/edit_screen.dart';
+import 'package:easel_flutter/screens/describe_screen.dart';
 import 'package:easel_flutter/screens/mint_screen.dart';
+import 'package:easel_flutter/screens/price_screen.dart';
 import 'package:easel_flutter/screens/publish_screen.dart';
 import 'package:easel_flutter/utils/constants.dart';
 import 'package:easel_flutter/utils/easel_app_theme.dart';
@@ -24,16 +25,16 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
-  final int _numPages = 4;
+  final int _numPages = 5;
   final PageController _pageController = PageController(keepPage: true);
   final ValueNotifier<int> _currentPage = ValueNotifier(0);
-  static const _kPageEdit = 1;
+  static const _kPageList = 3;
 
-  final int _numSteps = 3;
+  final int _numSteps = 4;
   final ValueNotifier<int> _currentStep = ValueNotifier(0);
 
-  final List stepLabels = [kUploadText, kEditText, kListText];
-  final List pageTitles = [kUploadNFTText, kEditNFTText, '', ''];
+  final List stepLabels = [kUploadText, kDescribeText, kPriceText, kListText];
+  final List pageTitles = [kUploadNFTText, kDescribeNftText, kPriceNftText, '', ''];
 
   @override
   void initState() {
@@ -166,15 +167,12 @@ class _HomeScreenState extends State<HomeScreen> {
                   physics: const NeverScrollableScrollPhysics(),
                   onPageChanged: (int page) {
                     _currentPage.value = page;
-                    _currentStep.value = page < _kPageEdit
-                        ? 0
-                        : page == _kPageEdit
-                            ? 1
-                            : _numSteps - 1;
+                    _currentStep.value = page < _kPageList ? page : _numSteps - 1;
                   },
                   children: [
                     ChooseFormatScreen(controller: _pageController),
-                    EditScreen(controller: _pageController),
+                    DescribeScreen(controller: _pageController),
+                    PriceScreen(controller: _pageController),
                     MintScreen(controller: _pageController),
                     PublishScreen(controller: _pageController)
                   ],
