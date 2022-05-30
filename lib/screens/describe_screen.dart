@@ -23,6 +23,10 @@ class DescribeScreen extends StatefulWidget {
 class _DescribeScreenState extends State<DescribeScreen> {
   final _formKey = GlobalKey<FormState>();
 
+  String _artNameFieldError = '';
+  String _artistNameFieldError = '';
+  String _descriptionFieldError = '';
+
   @override
   void dispose() {
     _formKey.currentState?.dispose();
@@ -55,15 +59,32 @@ class _DescribeScreenState extends State<DescribeScreen> {
                     controller: provider.artNameController,
                     textCapitalization: TextCapitalization.sentences,
                     validator: (value) {
-                      if (value!.isEmpty) {
-                        return kEnterNFTNameText;
-                      }
-                      if (value.length <= kMinNFTName) {
-                        return "$kNameShouldHaveText $kMinNFTName $kCharactersOrMoreText";
-                      }
+                      setState(() {
+                        if (value!.isEmpty) {
+                          _artNameFieldError = kEnterNFTNameText;
+                          return;
+                        }
+                        if (value.length <= kMinNFTName) {
+                          _artNameFieldError = "$kNameShouldHaveText $kMinNFTName $kCharactersOrMoreText";
+                          return;
+                        }
+                        _artNameFieldError = '';
+                      });
                       return null;
                     },
                   ),
+                  _artNameFieldError.isNotEmpty
+                      ? Padding(
+                          padding: EdgeInsets.only(left: 10.w, right: 10.w, top: 2.h),
+                          child: Text(
+                            _artNameFieldError,
+                            style: TextStyle(
+                              fontSize: 12.sp,
+                              color: Colors.red,
+                            ),
+                          ),
+                        )
+                      : const SizedBox.shrink(),
                   VerticalSpace(20.h),
                   EaselTextField(
                     label: kNameAsArtistText,
@@ -71,10 +92,28 @@ class _DescribeScreenState extends State<DescribeScreen> {
                     controller: provider.artistNameController,
                     textCapitalization: TextCapitalization.sentences,
                     validator: (value) {
-                      if (value!.isEmpty) return kEnterArtistNameText;
+                      setState(() {
+                        if (value!.isEmpty) {
+                          _artistNameFieldError = kEnterArtistNameText;
+                        } else {
+                          _artistNameFieldError = '';
+                        }
+                      });
                       return null;
                     },
                   ),
+                  _artistNameFieldError.isNotEmpty
+                      ? Padding(
+                          padding: EdgeInsets.only(left: 10.w, right: 10.w, top: 2.h),
+                          child: Text(
+                            _artistNameFieldError,
+                            style: TextStyle(
+                              fontSize: 12.sp,
+                              color: Colors.red,
+                            ),
+                          ),
+                        )
+                      : const SizedBox.shrink(),
                   VerticalSpace(20.h),
                   EaselTextField(
                     label: kDescribeYourNftText,
@@ -84,15 +123,32 @@ class _DescribeScreenState extends State<DescribeScreen> {
                     textCapitalization: TextCapitalization.sentences,
                     inputFormatters: [LengthLimitingTextInputFormatter(kMaxDescription)],
                     validator: (value) {
-                      if (value!.isEmpty) {
-                        return kEnterNFTDescriptionText;
-                      }
-                      if (value.length <= kMinDescription) {
-                        return "$kEnterMoreThanText $kMinDescription $kCharactersText";
-                      }
+                      setState(() {
+                        if (value!.isEmpty) {
+                          _descriptionFieldError = kEnterNFTDescriptionText;
+                          return;
+                        }
+                        if (value.length <= kMinDescription) {
+                          _descriptionFieldError = "$kEnterMoreThanText $kMinDescription $kCharactersText";
+                          return;
+                        }
+                        _descriptionFieldError = '';
+                      });
                       return null;
                     },
                   ),
+                  _descriptionFieldError.isNotEmpty
+                      ? Padding(
+                          padding: EdgeInsets.only(left: 10.w, right: 10.w, top: 2.h),
+                          child: Text(
+                            _descriptionFieldError,
+                            style: TextStyle(
+                              fontSize: 12.sp,
+                              color: Colors.red,
+                            ),
+                          ),
+                        )
+                      : const SizedBox.shrink(),
                   Text(
                     "$kMaxDescription $kCharacterLimitText",
                     style: TextStyle(color: EaselAppTheme.kLightPurple, fontSize: 14.sp, fontWeight: FontWeight.w800),
@@ -106,7 +162,12 @@ class _DescribeScreenState extends State<DescribeScreen> {
                       onPressed: () async {
                         FocusScope.of(context).unfocus();
                         if (_formKey.currentState!.validate()) {
-                          widget.controller.nextPage(duration: const Duration(milliseconds: 300), curve: Curves.easeIn);
+                          if (_artNameFieldError.isEmpty &&
+                              _artistNameFieldError.isEmpty &&
+                              _descriptionFieldError.isEmpty) {
+                            widget.controller
+                                .nextPage(duration: const Duration(milliseconds: 300), curve: Curves.easeIn);
+                          }
                         }
                       },
                       btnText: kContinue,

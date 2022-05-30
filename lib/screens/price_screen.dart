@@ -25,6 +25,10 @@ class PriceScreen extends StatefulWidget {
 class _PriceScreenState extends State<PriceScreen> {
   final _formKey = GlobalKey<FormState>();
 
+  String _royaltiesFieldError = '';
+  String _noOfEditionsFieldError = '';
+  String _priceFieldError = '';
+
   @override
   void dispose() {
     _formKey.currentState?.dispose();
@@ -69,20 +73,36 @@ class _PriceScreenState extends State<PriceScreen> {
                     ],
                     controller: provider.priceController,
                     validator: (value) {
-                      if (value!.isEmpty) {
-                        return kEnterPriceText;
-                      }
-
-                      if (double.parse(value.replaceAll(",", "")) < kMinValue) return "$kMinIsText $kMinValue";
-
+                      setState(() {
+                        if (value!.isEmpty) {
+                          _priceFieldError = kEnterPriceText;
+                          return;
+                        }
+                        if (double.parse(value.replaceAll(",", "")) < kMinValue) {
+                          _priceFieldError = "$kMinIsText $kMinValue";
+                          return;
+                        }
+                        _priceFieldError = '';
+                      });
                       return null;
                     },
                   ),
+                  _priceFieldError.isNotEmpty
+                      ? Padding(
+                          padding: EdgeInsets.only(left: 10.w, right: 10.w, top: 2.h),
+                          child: Text(
+                            _priceFieldError,
+                            style: TextStyle(
+                              fontSize: 12.sp,
+                              color: Colors.red,
+                            ),
+                          ),
+                        )
+                      : const SizedBox.shrink(),
                   Text(
                     kNetworkFeeWarnText,
                     style: TextStyle(color: EaselAppTheme.kLightPurple, fontSize: 14.sp, fontWeight: FontWeight.w800),
                   ),
-
                   const VerticalSpace(20),
                   EaselTextField(
                     label: kRoyaltiesText,
@@ -97,20 +117,36 @@ class _PriceScreenState extends State<PriceScreen> {
                     ],
                     controller: provider.royaltyController,
                     validator: (value) {
-                      if (value!.isEmpty) {
-                        return kEnterRoyaltyText;
-                      }
-                      if (int.parse(value) > kMaxRoyalty) {
-                        return "$kRoyaltyRangeText $kMinRoyalty-$kMaxRoyalty %";
-                      }
+                      setState(() {
+                        if (value!.isEmpty) {
+                          _royaltiesFieldError = kEnterRoyaltyText;
+                          return;
+                        }
+                        if (int.parse(value) > kMaxRoyalty) {
+                          _royaltiesFieldError = "$kRoyaltyRangeText $kMinRoyalty-$kMaxRoyalty %";
+                          return;
+                        }
+                        _royaltiesFieldError = '';
+                      });
                       return null;
                     },
                   ),
+                  _royaltiesFieldError.isNotEmpty
+                      ? Padding(
+                          padding: EdgeInsets.only(left: 10.w, right: 10.w, top: 2.h),
+                          child: Text(
+                            _royaltiesFieldError,
+                            style: TextStyle(
+                              fontSize: 12.sp,
+                              color: Colors.red,
+                            ),
+                          ),
+                        )
+                      : const SizedBox.shrink(),
                   Text(
                     "$kRoyaltyNoteText “$kMinRoyalty”.",
                     style: TextStyle(color: EaselAppTheme.kLightPurple, fontWeight: FontWeight.w800, fontSize: 14.sp),
                   ),
-
                   VerticalSpace(20.h),
                   EaselTextField(
                     key: ValueKey(provider.selectedDenom.name),
@@ -126,25 +162,40 @@ class _PriceScreenState extends State<PriceScreen> {
                     ],
                     controller: provider.noOfEditionController,
                     validator: (value) {
-                      if (value!.isEmpty) {
-                        return kEnterEditionText;
-                      }
-                      if (int.parse(value.replaceAll(",", "")) < kMinValue) {
-                        return "$kMinIsText $kMinValue";
-                      }
-                      if (int.parse(value.replaceAll(",", "")) > kMaxEdition) {
-                        return "$kMaxIsTextText $kMaxEdition";
-                      }
-
+                      setState(() {
+                        if (value!.isEmpty) {
+                          _noOfEditionsFieldError = kEnterEditionText;
+                          return;
+                        }
+                        if (int.parse(value.replaceAll(",", "")) < kMinValue) {
+                          _noOfEditionsFieldError = "$kMinIsText $kMinValue";
+                          return;
+                        }
+                        if (int.parse(value.replaceAll(",", "")) > kMaxEdition) {
+                          _noOfEditionsFieldError = "$kMaxIsTextText $kMaxEdition";
+                          return;
+                        }
+                        _noOfEditionsFieldError = '';
+                      });
                       return null;
                     },
                   ),
+                  _noOfEditionsFieldError.isNotEmpty
+                      ? Padding(
+                          padding: EdgeInsets.only(left: 10.w, right: 10.w, top: 2.h),
+                          child: Text(
+                            _noOfEditionsFieldError,
+                            style: TextStyle(
+                              fontSize: 12.sp,
+                              color: Colors.red,
+                            ),
+                          ),
+                        )
+                      : const SizedBox.shrink(),
                   Text(
                     "${NumberFormat.decimalPattern('hi').format(kMaxEdition)} $kMaxText",
                     style: TextStyle(color: EaselAppTheme.kLightPurple, fontSize: 14.sp, fontWeight: FontWeight.w800),
                   ),
-
-
                   VerticalSpace(40.h),
                   Align(
                     alignment: Alignment.centerRight,
@@ -152,7 +203,12 @@ class _PriceScreenState extends State<PriceScreen> {
                       onPressed: () async {
                         FocusScope.of(context).unfocus();
                         if (_formKey.currentState!.validate()) {
-                          widget.controller.nextPage(duration: const Duration(milliseconds: 300), curve: Curves.easeIn);
+                          if (_royaltiesFieldError.isEmpty &&
+                              _noOfEditionsFieldError.isEmpty &&
+                              _priceFieldError.isEmpty) {
+                            widget.controller
+                                .nextPage(duration: const Duration(milliseconds: 300), curve: Curves.easeIn);
+                          }
                         }
                       },
                       btnText: kContinue,
