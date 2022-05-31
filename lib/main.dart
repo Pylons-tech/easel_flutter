@@ -1,6 +1,5 @@
 import 'package:easel_flutter/easel_provider.dart';
 import 'package:easel_flutter/screens/home_screen.dart';
-
 import 'package:easel_flutter/screens/splash_screen.dart';
 import 'package:easel_flutter/screens/tutorial_screen.dart';
 import 'package:easel_flutter/screens/welcome_screen/welcome_screen.dart';
@@ -14,13 +13,12 @@ import 'package:get_it/get_it.dart';
 import 'package:provider/provider.dart';
 import 'package:pylons_sdk/pylons_sdk.dart';
 
-
 bool isTablet = false;
+
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
   PylonsWallet.setup(mode: PylonsMode.prod, host: 'easel');
   di.init();
-
 
   isTablet = MediaQueryData.fromWindow(WidgetsBinding.instance.window).size.shortestSide >= TABLET_MIN_WIDTH;
 

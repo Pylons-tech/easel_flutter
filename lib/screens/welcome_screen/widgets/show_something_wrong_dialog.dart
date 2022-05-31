@@ -36,7 +36,7 @@ class ShowSomethingWentWrongDialog {
     return ClipPath(
       clipper: DialogClipper(),
       child: Container(
-        color: kDarkRed,
+        color: EaselAppTheme.kLightRed,
         padding: EdgeInsets.symmetric(horizontal: 0.05.sw),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -98,7 +98,7 @@ class ShowSomethingWentWrongDialog {
       child: ClipPath(
         clipper: DialogClipper(),
         child: Container(
-          color: kDarkRed,
+          color: EaselAppTheme.kLightRed,
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.stretch,
             mainAxisAlignment: MainAxisAlignment.center,
