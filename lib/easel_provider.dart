@@ -40,6 +40,7 @@ class EaselProvider extends ChangeNotifier {
   String _recipeId = "";
   var stripeAccountExists = false;
   Denom _selectedDenom = Denom.availableDenoms.first;
+  List<Denom> supportedDenomList = [];
 
   File? get file => _file;
 
@@ -230,19 +231,11 @@ class EaselProvider extends ChangeNotifier {
               longs: [
                 LongParam(key: "Quantity", weightRanges: [
                   IntWeightRange(
-                      lower: Int64(int.parse(noOfEditionController.text.replaceAll(",", "").trim())),
-                      upper: Int64(int.parse(noOfEditionController.text.replaceAll(",", "").trim())),
-                      weight: Int64(1))
+                      lower: Int64(int.parse(noOfEditionController.text.replaceAll(",", "").trim())), upper: Int64(int.parse(noOfEditionController.text.replaceAll(",", "").trim())), weight: Int64(1))
                 ]),
-                LongParam(key: "Width", weightRanges: [
-                  IntWeightRange(lower: Int64(_fileWidth), upper: Int64(_fileWidth), weight: Int64(1))
-                ]),
-                LongParam(key: "Height", weightRanges: [
-                  IntWeightRange(lower: Int64(_fileHeight), upper: Int64(_fileHeight), weight: Int64(1))
-                ]),
-                LongParam(key: "Duration", weightRanges: [
-                  IntWeightRange(lower: Int64(_fileDuration), upper: Int64(_fileDuration), weight: Int64(1))
-                ]),
+                LongParam(key: "Width", weightRanges: [IntWeightRange(lower: Int64(_fileWidth), upper: Int64(_fileWidth), weight: Int64(1))]),
+                LongParam(key: "Height", weightRanges: [IntWeightRange(lower: Int64(_fileHeight), upper: Int64(_fileHeight), weight: Int64(1))]),
+                LongParam(key: "Duration", weightRanges: [IntWeightRange(lower: Int64(_fileDuration), upper: Int64(_fileDuration), weight: Int64(1))]),
               ],
               strings: [
                 StringParam(key: "Name", value: artNameController.text.trim()),
@@ -289,8 +282,7 @@ class EaselProvider extends ChangeNotifier {
       cookbookId: _cookbookId ?? '',
       recipeId: _recipeId,
     );
-    Share.share("My Easel NFT\n\n$url",
-        subject: 'My Easel NFT', sharePositionOrigin: Rect.fromLTWH(0, 0, size.width, size.height / 2));
+    Share.share("My Easel NFT\n\n$url", subject: 'My Easel NFT', sharePositionOrigin: Rect.fromLTWH(0, 0, size.width, size.height / 2));
   }
 
   @override
@@ -309,6 +301,12 @@ class EaselProvider extends ChangeNotifier {
     if (sdkResponse.success) {
       currentUsername = sdkResponse.data.username;
       stripeAccountExists = sdkResponse.data.stripeExists;
+
+      supportedDenomList = Denom.availableDenoms.where((Denom e) => sdkResponse.data.supportedCoins.contains(e.symbol)).toList();
+
+      if (supportedDenomList.isNotEmpty) {
+        _selectedDenom = supportedDenomList.first;
+      }
     }
 
     return sdkResponse;
