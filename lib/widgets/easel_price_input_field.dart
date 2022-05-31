@@ -97,12 +97,12 @@ class _CurrencyDropDown extends StatelessWidget {
                         style: TextStyle(color: EaselAppTheme.kWhite, fontSize: 18.sp, fontWeight: FontWeight.w400),
                         onChanged: (String? data) {
                           if (data != null) {
-                            final value = Denom.availableDenoms.firstWhere((denom) => denom.symbol == data);
+                            final value = provider.supportedDenomList.firstWhere((denom) => denom.symbol == data);
                             provider.priceController.clear();
                             provider.setSelectedDenom(value);
                           }
                         },
-                        items: Denom.availableDenoms.map((Denom value) {
+                        items: provider.supportedDenomList.map((Denom value) {
                           return DropdownMenuItem<String>(
                             value: value.symbol,
                             child: Row(

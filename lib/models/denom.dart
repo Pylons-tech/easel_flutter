@@ -9,6 +9,11 @@ class Denom {
 
   Denom({required this.name, required this.symbol, required this.icon});
 
+  factory Denom.initial(){
+    return Denom(icon: '', name: '', symbol: '');
+  }
+
+
   static List<Denom> get availableDenoms => [
         Denom(name: kUSDText, symbol: kUsdSymbol, icon: kIconDenomUsd),
         Denom(name: kPylonText, symbol: kPylonSymbol, icon: kIconDenomPylon),
@@ -23,5 +28,10 @@ class Denom {
       return AmountFormatter(maxDigits: kMaxPriceLength, isDecimal: false);
     }
     return AmountFormatter(maxDigits: kMaxPriceLength, isDecimal: true);
+  }
+
+  @override
+  String toString() {
+    return 'Denom{name: $name, symbol: $symbol, icon: $icon}';
   }
 }
