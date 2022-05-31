@@ -170,7 +170,7 @@ const kHintPrice = '10.87';
 const kHintHashtag = 'Type in';
 const kHashtagsText = 'Hashtags (optional)';
 const kAddText = 'Add';
-const kNetworkFeeWarnText = 'A network fee of 10% the listed price is required for all transactions that occur on-chain';
+const kNetworkFeeWarnText = 'A network fee of 10% of the listed price is required for all transactions that occur on-chain';
 
 const kRecipeCreated = 'Recipe created';
 const kErrProfileNotExist = 'profileDoesNotExist';
