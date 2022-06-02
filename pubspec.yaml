@@ -50,7 +50,7 @@ dependencies:
 
   provider: ^6.0.1
 
-  pylons_sdk: ^0.1.0
+  pylons_sdk: ^0.1.1
 
   google_fonts: ^2.1.0
 
@@ -82,7 +82,7 @@ dependencies:
 
   dio: ^4.0.1
 
-  url_launcher: 6.0.12
+  url_launcher: 6.1.2
 
   focus_detector: ^2.0.1
 
