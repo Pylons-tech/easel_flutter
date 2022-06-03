@@ -137,6 +137,7 @@ class EaselProvider extends ChangeNotifier {
     if (_nftFormat.format == kAudioText || _nftFormat.format == kVideoText) {
       _fileDuration = info['durationMs'];
     }
+
   }
 
   void setSelectedDenom(Denom value) {
@@ -236,6 +237,7 @@ class EaselProvider extends ChangeNotifier {
                 LongParam(key: "Width", weightRanges: [IntWeightRange(lower: Int64(_fileWidth), upper: Int64(_fileWidth), weight: Int64(1))]),
                 LongParam(key: "Height", weightRanges: [IntWeightRange(lower: Int64(_fileHeight), upper: Int64(_fileHeight), weight: Int64(1))]),
                 LongParam(key: "Duration", weightRanges: [IntWeightRange(lower: Int64(_fileDuration), upper: Int64(_fileDuration), weight: Int64(1))]),
+
               ],
               strings: [
                 StringParam(key: "Name", value: artNameController.text.trim()),
@@ -245,6 +247,10 @@ class EaselProvider extends ChangeNotifier {
                 StringParam(key: "NFT_Format", value: _nftFormat.format),
                 StringParam(key: "NFT_URL", value: "$ipfsDomain/${uploadResponse.data?.value?.cid ?? ""}"),
                 StringParam(key: "Creator", value: artistNameController.text.trim()),
+
+
+                //Saving the size of an asset
+                StringParam(key: "Size", value: _fileSize.trim()),
               ],
               mutableStrings: [],
               transferFee: [Coin(denom: kPylonSymbol, amount: "1")],
