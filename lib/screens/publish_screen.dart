@@ -180,6 +180,7 @@ class _PublishScreenState extends State<PublishScreen> {
                                       fontSize: 14,
                                     ),
                           ),
+
                           Text(
                             "$kRoyaltyText: ${provider.royaltyController.text}%",
                             style:

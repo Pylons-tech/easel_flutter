@@ -164,7 +164,7 @@ const kUploadHintAll = 'GB Limit.\nOne file per upload.';
 const kHintNftName = 'Bird on Shoulder';
 const kHintArtistName = 'Sarah Jackson';
 const kHintNftDesc =
-    'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eimod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercita.';
+    'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eimod tempor incididunt ut labore et dolore magna aliquaQ. Ut enim ad minim veniam, quis nostrud exercita.';
 const kHintNoEdition = '100';
 const kHintPrice = '10.87';
 const kHintHashtag = 'Type in';
@@ -185,3 +185,18 @@ const kTryAgain = "Try again";
 const kAppNotInstalled = "Please download the Pylons app and create a username to publish a NFT in Easel.";
 const kPleaseTryAgain = "Something went wrong.\n Please try again.";
 const kCancel = "Cancel";
+
+
+/// Nft viewmodel key values
+const String kNameKey = "Name";
+const String kNftUrlKey = "NFT_URL";
+const String kNftFormatKey = "NFT_Format";
+const String kSizeKey = "Size";
+const String kDescriptionKey = "Description";
+const String kCreatorKey = "Creator";
+const String kAppTypeKey = "App_Type";
+const String kWidthKey = "Width";
+const String kHeightKey = "Height";
+const String kQuantityKey = "Quantity";
+const String kHashtagKey = "Hashtags";
+

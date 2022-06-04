@@ -229,22 +229,23 @@ class EaselProvider extends ChangeNotifier {
                 ])
               ],
               longs: [
-                LongParam(key: "Quantity", weightRanges: [
+                LongParam(key: kQuantityKey, weightRanges: [
                   IntWeightRange(
                       lower: Int64(int.parse(noOfEditionController.text.replaceAll(",", "").trim())), upper: Int64(int.parse(noOfEditionController.text.replaceAll(",", "").trim())), weight: Int64(1))
                 ]),
-                LongParam(key: "Width", weightRanges: [IntWeightRange(lower: Int64(_fileWidth), upper: Int64(_fileWidth), weight: Int64(1))]),
-                LongParam(key: "Height", weightRanges: [IntWeightRange(lower: Int64(_fileHeight), upper: Int64(_fileHeight), weight: Int64(1))]),
-                LongParam(key: "Duration", weightRanges: [IntWeightRange(lower: Int64(_fileDuration), upper: Int64(_fileDuration), weight: Int64(1))]),
+                LongParam(key: kWidthKey, weightRanges: [IntWeightRange(lower: Int64(_fileWidth), upper: Int64(_fileWidth), weight: Int64(1))]),
+                LongParam(key: kHeightKey, weightRanges: [IntWeightRange(lower: Int64(_fileHeight), upper: Int64(_fileHeight), weight: Int64(1))]),
+                LongParam(key: kDurationText, weightRanges: [IntWeightRange(lower: Int64(_fileDuration), upper: Int64(_fileDuration), weight: Int64(1))]),
               ],
               strings: [
-                StringParam(key: "Name", value: artNameController.text.trim()),
-                StringParam(key: "App_Type", value: "Easel"),
-                StringParam(key: "Description", value: descriptionController.text.trim()),
-                StringParam(key: "Hashtags", value: hashtagsList.join('#')),
-                StringParam(key: "NFT_Format", value: _nftFormat.format),
-                StringParam(key: "NFT_URL", value: "$ipfsDomain/${uploadResponse.data?.value?.cid ?? ""}"),
-                StringParam(key: "Creator", value: artistNameController.text.trim()),
+                StringParam(key: kNameKey, value: artNameController.text.trim()),
+                StringParam(key: kAppTypeKey, value: "Easel"),
+                StringParam(key: kDescriptionKey, value: descriptionController.text.trim()),
+                StringParam(key: kHashtagKey, value: hashtagsList.join('#')),
+                StringParam(key: kNftFormatKey, value: _nftFormat.format),
+                StringParam(key: kNftUrlKey, value: "$ipfsDomain/${uploadResponse.data?.value?.cid ?? ""}"),
+                StringParam(key: kCreatorKey, value: artistNameController.text.trim()),
+                StringParam(key: kSizeKey, value: _fileSize.trim()),
               ],
               mutableStrings: [],
               transferFee: [Coin(denom: kPylonSymbol, amount: "1")],
