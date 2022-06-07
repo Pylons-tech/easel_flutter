@@ -39,9 +39,9 @@ class MyApp extends StatelessWidget {
       ],
       child: ScreenUtilInit(
           minTextAdapt: true,
-          builder: (context,widget) => MaterialApp(
+          builder: () => MaterialApp(
                 builder: (context, widget) {
-                  ScreenUtil.init(context);
+                  ScreenUtil.setContext(context);
                   return MediaQuery(
                     data: MediaQuery.of(context).copyWith(textScaleFactor: 1.0),
                     child: widget!,
