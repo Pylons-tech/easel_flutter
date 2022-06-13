@@ -38,6 +38,20 @@ abstract class LocalDataSource {
 
 
 
+  /// This method will save the artist name
+  /// Input: [name] the name of the artist which the user want to save
+  /// Output: [bool] returns whether the operation is successful or not
+  Future<bool> saveArtistName(String name);
+
+
+
+
+  /// This method will get the artist name
+  /// Output: [String] returns whether the operation is successful or not
+  String getArtistName();
+
+
+
   /// This method will save the on boarding complete in the local datastore
   /// Output: [bool] returns whether the operation is successful or not
   Future<bool> saveOnBoardingComplete();
@@ -110,6 +124,19 @@ class LocalDataSourceImpl implements LocalDataSource {
   @override
   Future<bool> saveOnBoardingComplete() async {
     return await sharedPreferences.setBool(ONBOARDING_COMPLETE, true);
+  }
+
+  @override
+  String getArtistName() {
+    return  sharedPreferences.getString(kArtistName) ?? '';
+
+  }
+
+  @override
+  Future<bool> saveArtistName(String name) async {
+    await sharedPreferences.setString(kArtistName, name);
+    return true;
+
   }
 
 

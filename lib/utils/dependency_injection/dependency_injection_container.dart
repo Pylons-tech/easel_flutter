@@ -5,12 +5,12 @@ import 'package:dio/dio.dart';
 import 'package:easel_flutter/datasources/local_datasource.dart';
 import 'package:easel_flutter/datasources/remote_datasource.dart';
 import 'package:easel_flutter/easel_provider.dart';
-import 'package:easel_flutter/env.dart';
 import 'package:get_it/get_it.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-final sl = GetIt.instance;
+import '../../env.dart';
 
+final sl = GetIt.instance;
 void init() {
   _registerProviders();
   _registerLocalDataSources();

@@ -74,6 +74,7 @@ const double TABLET_MIN_WIDTH = 600;
 /// ````Reserved words, symbols, IDs etc
 const kCookbookId = 'cookbook_id';
 const kUsername = 'username';
+const kArtistName = 'artistName';
 
 const kPylonSymbol = 'upylon';
 const kUsdSymbol = 'ustripeusd';
