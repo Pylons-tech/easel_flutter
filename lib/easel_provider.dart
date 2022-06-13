@@ -170,11 +170,11 @@ class EaselProvider extends ChangeNotifier {
 
 
 
-   saveArtistName(name) {
+  void  saveArtistName(name) {
      localDataSource.saveArtistName(name);
   }
 
-  toCheckSavedArtistName(){
+  void toCheckSavedArtistName(){
     String savedArtistName = localDataSource.getArtistName();
 
     if(savedArtistName.isNotEmpty){
