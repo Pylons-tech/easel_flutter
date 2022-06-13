@@ -37,8 +37,9 @@ class _DescribeScreenState extends State<DescribeScreen> {
   void initState() {
     super.initState();
 
-    context.read<EaselProvider>().artistNameController.text = context.read<EaselProvider>().currentUsername;
-  }
+    context.read<EaselProvider>().toCheckSavedArtistName();
+
+     }
 
   @override
   Widget build(BuildContext context) {
@@ -165,6 +166,8 @@ class _DescribeScreenState extends State<DescribeScreen> {
                           if (_artNameFieldError.isEmpty &&
                               _artistNameFieldError.isEmpty &&
                               _descriptionFieldError.isEmpty) {
+
+                            context.read<EaselProvider>().saveArtistName(provider.artistNameController.text.trim());
                             widget.controller
                                 .nextPage(duration: const Duration(milliseconds: 300), curve: Curves.easeIn);
                           }

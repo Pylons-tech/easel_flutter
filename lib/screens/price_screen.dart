@@ -39,7 +39,6 @@ class _PriceScreenState extends State<PriceScreen> {
   void initState() {
     super.initState();
 
-    context.read<EaselProvider>().artistNameController.text = context.read<EaselProvider>().currentUsername;
   }
 
   @override
