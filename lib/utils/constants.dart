@@ -130,6 +130,7 @@ const kPreviewYourNFTText = 'Preview your NFT file';
 const kDescribeNftText = 'Describe NFT';
 const kPriceNftText = 'Price NFT';
 const kUploadText = 'Upload';
+const kEditText = 'Edit';
 const kPreviewText = 'Preview';
 const kListText = 'List';
 const kImageText = 'Image';
