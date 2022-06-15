@@ -31,6 +31,9 @@ const kTextFieldSingleLine = 'assets/images/text_field_single_line.png';
 const kTextFieldMultiLine = 'assets/images/text_field_multi_line.png';
 const kTextFieldButton = 'assets/images/text_field_button.png';
 const kPreviewGradient = 'assets/images/preview_gradient.png';
+const kUploadThumbnail = 'assets/images/svg/upload_thumbnail.svg';
+const kVideoThumbnailRectangle = 'assets/images/video_thumbnail_rectangle.png';
+const kFullScreenIcon = 'assets/images/svg/full_screen_icon.svg';
 const kAlertIcon = 'assets/images/svg/i_icon.svg';
 
 /// ```SVG assets
@@ -136,6 +139,7 @@ const kGoToWalletText = 'Go to Wallet';
 const kChooseNFTFormatText = 'Choose your NFT format';
 const kUploadNFTText = 'Upload NFT file';
 const kEditNFTText = 'Edit your NFT Details';
+const kPreviewYourNFTText = 'Preview your NFT file';
 const kUploadText = 'Upload';
 const kPreviewText = 'Preview';
 const kListText = 'List';
@@ -183,3 +187,8 @@ const kTryAgain = "Try again";
 const kAppNotInstalled = "Please download the Pylons app and create a username to publish a NFT in Easel.";
 const kPleaseTryAgain = "Something went wrong.\n Please try again.";
 const kCancel = "Cancel";
+const videoPlayerError = "Some Error Occurred while playing the video. Please try again later.";
+
+
+final List stepLabels = [kUploadText, kEditText, kListText];
+

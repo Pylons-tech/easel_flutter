@@ -2,12 +2,13 @@ import 'dart:async';
 import 'dart:developer';
 import 'dart:io';
 
-import 'package:easel_flutter/datasources/local_datasource.dart';
-import 'package:easel_flutter/datasources/remote_datasource.dart';
 import 'package:easel_flutter/main.dart';
 import 'package:easel_flutter/models/api_response.dart';
 import 'package:easel_flutter/models/denom.dart';
 import 'package:easel_flutter/models/nft_format.dart';
+import 'package:easel_flutter/services/datasources/local_datasource.dart';
+import 'package:easel_flutter/services/datasources/remote_datasource.dart';
+import 'package:easel_flutter/services/third_party_services/video_player_helper.dart';
 import 'package:easel_flutter/utils/constants.dart';
 import 'package:easel_flutter/utils/extension_util.dart';
 import 'package:easel_flutter/utils/file_utils.dart';
@@ -21,12 +22,14 @@ import 'package:pylons_sdk/pylons_sdk.dart';
 import 'package:pylons_sdk/src/features/models/sdk_ipc_response.dart';
 import 'package:share_plus/share_plus.dart';
 import 'package:media_info/media_info.dart';
+import 'package:video_player/video_player.dart';
 
 class EaselProvider extends ChangeNotifier {
   final LocalDataSource localDataSource;
   final RemoteDataSource remoteDataSource;
+  final VideoPlayerHelper videoPlayerHelper;
 
-  EaselProvider(this.localDataSource, this.remoteDataSource);
+  EaselProvider(this.localDataSource, this.remoteDataSource, this.videoPlayerHelper);
 
   File? _file;
   NftFormat _nftFormat = NftFormat.supportedFormats[0];
@@ -41,6 +44,15 @@ class EaselProvider extends ChangeNotifier {
   var stripeAccountExists = false;
   Denom _selectedDenom = Denom.availableDenoms.first;
   List<Denom> supportedDenomList = [];
+
+  File? _videoThumbnail;
+
+  File? get videoThumbnail => _videoThumbnail;
+
+  void setVideoThumbnail(File? file) {
+    _videoThumbnail = file;
+    notifyListeners();
+  }
 
   File? get file => _file;
 
@@ -69,6 +81,26 @@ class EaselProvider extends ChangeNotifier {
   final List<String> hashtagsList = [];
 
   String currentUsername = '';
+
+  late VideoPlayerController videoPlayerController;
+
+  bool _isVideoLoading = true;
+
+  bool get isVideoLoading => _isVideoLoading;
+
+  set isVideoLoading(bool value) {
+    _isVideoLoading = value;
+    notifyListeners();
+  }
+
+  String _videoLoadingError = "";
+
+  String get videoLoadingError => _videoLoadingError;
+
+  set videoLoadingError(String value) {
+    _videoLoadingError = value;
+    notifyListeners();
+  }
 
   initStore() {
     _file = null;
@@ -104,6 +136,43 @@ class EaselProvider extends ChangeNotifier {
       }
     }
     notifyListeners();
+  }
+
+  Future<void> delayLoading() async {
+    Future.delayed(const Duration(seconds: 3));
+    isVideoLoading = false;
+  }
+
+  /// VIDEO PLAYER FUNCTIONS
+  Future initializeVideoPlayer() async {
+    videoPlayerHelper.initializeVideoPlayer(file: _file!);
+    videoPlayerController = videoPlayerHelper.getVideoPlayerController();
+    delayLoading();
+    notifyListeners();
+
+    videoPlayerController.addListener(() {
+      if (videoPlayerController.value.hasError) {
+        videoLoadingError = videoPlayerController.value.errorDescription!;
+      }
+      notifyListeners();
+    });
+  }
+
+  void playVideo() {
+    videoPlayerHelper.playVideo();
+  }
+
+  void pauseVideo() {
+    videoPlayerHelper.pauseVideo();
+  }
+
+  void seekVideo(Duration position) {
+    videoPlayerHelper.seekToVideo(position: position);
+  }
+
+  void disposeVideoController() {
+    videoPlayerController.removeListener(() {});
+    videoPlayerHelper.destroyVideoPlayer();
   }
 
   Future<void> setFile(BuildContext context, PlatformFile selectedFile) async {

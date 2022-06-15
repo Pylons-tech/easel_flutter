@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:easel_flutter/easel_provider.dart';
 import 'package:easel_flutter/utils/constants.dart';
 import 'package:easel_flutter/utils/date_utils.dart';
@@ -65,7 +67,7 @@ class _PublishScreenState extends State<PublishScreen> {
                           ImageWidget(file: provider.file!)
                         ],
                         if (provider.nftFormat.format == kVideoText) ...[
-                          VideoWidget(file: provider.file!)
+                          VideoWidget(file: provider.file!, previewFlag: true,)
                         ],
                         if (provider.nftFormat.format == kAudioText) ...[
                           AudioWidget(file: provider.file!)

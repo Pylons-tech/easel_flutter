@@ -1,4 +1,6 @@
 import 'package:easel_flutter/easel_provider.dart';
+import 'package:easel_flutter/screens/custom_widgets/step_labels.dart';
+import 'package:easel_flutter/screens/custom_widgets/steps_indicator.dart';
 import 'package:easel_flutter/screens/edit_screen.dart';
 import 'package:easel_flutter/screens/mint_screen.dart';
 import 'package:easel_flutter/screens/publish_screen.dart';
@@ -32,7 +34,6 @@ class _HomeScreenState extends State<HomeScreen> {
   final int _numSteps = 3;
   final ValueNotifier<int> _currentStep = ValueNotifier(0);
 
-  final List stepLabels = [kUploadText, kEditText, kListText];
   final List pageTitles = [kUploadNFTText, kEditNFTText, '', ''];
 
   @override
@@ -54,34 +55,9 @@ class _HomeScreenState extends State<HomeScreen> {
           body: Column(
             children: [
               const VerticalSpace(20),
-              ValueListenableBuilder(
-                valueListenable: _currentStep,
-                builder: (_, int value, __) => StepsIndicator(
-                  selectedStep: _currentStep.value,
-                  nbSteps: _numSteps,
-                  lineLength: 0.68.sw / _numSteps,
-                  doneLineColor: EaselAppTheme.kDarkGreen,
-                  undoneLineColor: EaselAppTheme.kLightGrey,
-                  doneLineThickness: 1.5,
-                  undoneLineThickness: 1.5,
-                  unselectedStepColorIn: EaselAppTheme.kLightGrey,
-                  unselectedStepColorOut: EaselAppTheme.kLightGrey,
-                  doneStepColor: EaselAppTheme.kDarkGreen,
-                  selectedStepColorIn: EaselAppTheme.kDarkGreen,
-                  selectedStepColorOut: EaselAppTheme.kDarkGreen,
-                  enableLineAnimation: true,
-                  enableStepAnimation: true,
-                  lineLengthCustomStep: const [],
-                  doneStepWidget: Container(
-                      width: 12.w, height: 12.h, decoration: const BoxDecoration(color: EaselAppTheme.kDarkGreen)),
-                  unselectedStepWidget: Container(
-                      width: 12.w, height: 12.h, decoration: const BoxDecoration(color: EaselAppTheme.kLightGrey)),
-                  selectedStepWidget: Container(
-                      width: 12.w, height: 12.h, decoration: const BoxDecoration(color: EaselAppTheme.kDarkGreen)),
-                ),
-              ),
+              MyStepsIndicator(currentPage: _currentPage, currentStep: _currentStep),
               const VerticalSpace(5),
-              _stepLabel(),
+              StepLabels(currentPage: _currentPage, currentStep: _currentStep),
               const VerticalSpace(10),
               Stack(
                 alignment: Alignment.center,
@@ -99,8 +75,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                   },
                                   child: Text(
                                     kMintMoreText,
-                                    style: Theme.of(context).textTheme.bodyText1!.copyWith(
-                                        fontSize: 20.sp, color: EaselAppTheme.kBlue, fontWeight: FontWeight.w400),
+                                    style: Theme.of(context).textTheme.bodyText1!.copyWith(fontSize: 20.sp, color: EaselAppTheme.kBlue, fontWeight: FontWeight.w400),
                                   ),
                                 ),
                               )
@@ -109,8 +84,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                 child: IconButton(
                                   onPressed: () {
                                     ScaffoldMessenger.of(context).hideCurrentSnackBar();
-                                    _pageController.previousPage(
-                                        duration: const Duration(milliseconds: 300), curve: Curves.easeIn);
+                                    _pageController.previousPage(duration: const Duration(milliseconds: 300), curve: Curves.easeIn);
                                   },
                                   icon: const Icon(
                                     Icons.arrow_back_ios,
@@ -123,10 +97,7 @@ class _HomeScreenState extends State<HomeScreen> {
                     builder: (_, int currentPage, __) {
                       return Text(
                         pageTitles[_currentPage.value],
-                        style: Theme.of(context)
-                            .textTheme
-                            .bodyText1!
-                            .copyWith(fontSize: 18.sp, fontWeight: FontWeight.w400, color: EaselAppTheme.kDarkText),
+                        style: Theme.of(context).textTheme.bodyText1!.copyWith(fontSize: 18.sp, fontWeight: FontWeight.w400, color: EaselAppTheme.kDarkText),
                       );
                     },
                   ),
@@ -147,8 +118,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                   ),
                                   icon: Text(
                                     kGoToWalletText,
-                                    style: Theme.of(context).textTheme.bodyText1!.copyWith(
-                                        fontSize: 20.sp, color: EaselAppTheme.kBlue, fontWeight: FontWeight.w400),
+                                    style: Theme.of(context).textTheme.bodyText1!.copyWith(fontSize: 20.sp, color: EaselAppTheme.kBlue, fontWeight: FontWeight.w400),
                                   ),
                                 ),
                               )
@@ -187,36 +157,35 @@ class _HomeScreenState extends State<HomeScreen> {
     );
   }
 
-  Padding _stepLabel() {
-    return Padding(
-      padding: EdgeInsets.symmetric(horizontal: 0.1.sw),
-      child: Row(
-        children: List.generate(stepLabels.length, (index) {
-          return SizedBox(
-            width: (0.8.sw / stepLabels.length),
-            child: _buildStepLabel(index),
-          );
-        }),
-      ),
-    );
-  }
+// Padding _stepLabel() {
+//   return Padding(
+//     padding: EdgeInsets.symmetric(horizontal: 0.1.sw),
+//     child: Row(
+//       children: List.generate(stepLabels.length, (index) {
+//         return SizedBox(
+//           width: (0.8.sw / stepLabels.length),
+//           child: _buildStepLabel(index),
+//         );
+//       }),
+//     ),
+//   );
+// }
 
-  Widget _buildStepLabel(int index) {
-    return ValueListenableBuilder(
-      valueListenable: _currentPage,
-      builder: (_, int currentPage, __) => Row(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          Text(
-            stepLabels[index],
-            style: Theme.of(context).textTheme.bodyText2!.copyWith(
-                fontSize: 12.sp,
-                fontFamily: 'Inter',
-                fontWeight: FontWeight.w400,
-                color: _currentStep.value >= index ? EaselAppTheme.kDarkGreen : EaselAppTheme.kGrey),
-          ),
-        ],
-      ),
-    );
-  }
+// Widget _buildStepLabel(int index) {
+//   return ValueListenableBuilder(
+//     valueListenable: _currentPage,
+//     builder: (_, int currentPage, __) => Row(
+//       mainAxisAlignment: MainAxisAlignment.center,
+//       children: [
+//         Text(
+//           stepLabels[index],
+//           style: Theme.of(context)
+//               .textTheme
+//               .bodyText2!
+//               .copyWith(fontSize: 12.sp, fontFamily: 'Inter', fontWeight: FontWeight.w400, color: _currentStep.value >= index ? EaselAppTheme.kDarkGreen : EaselAppTheme.kGrey),
+//         ),
+//       ],
+//     ),
+//   );
+// }
 }

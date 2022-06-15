@@ -34,7 +34,7 @@ class MintScreen extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: [
                   if (provider.nftFormat.format == kImageText) ...[ImageWidget(file: provider.file!)],
-                  if (provider.nftFormat.format == kVideoText) ...[VideoWidget(file: provider.file!)],
+                  if (provider.nftFormat.format == kVideoText) ...[VideoWidget(file: provider.file!, previewFlag: true,)],
                   if (provider.nftFormat.format == k3dText) ...[
                     SizedBox(
                         height: MediaQuery.of(context).size.height * 0.3,
@@ -135,17 +135,14 @@ class MintScreen extends StatelessWidget {
                         Align(
                           child: PylonsButton(
                             onPressed: () async {
-                              bool isRecipeCreated =
-                                  await provider.createRecipe();
+                              bool isRecipeCreated = await provider.createRecipe();
                               // log("Recipe created: $isRecipeCreated");
 
                               if (!isRecipeCreated) {
                                 return;
                               }
 
-                              controller.nextPage(
-                                  duration: const Duration(milliseconds: 300),
-                                  curve: Curves.easeIn);
+                              controller.nextPage(duration: const Duration(milliseconds: 300), curve: Curves.easeIn);
                             },
                             btnText: kListText,
                             showArrow: true,
