@@ -12,8 +12,9 @@ import 'package:get_it/get_it.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:video_player/video_player.dart';
 
-final sl = GetIt.instance;
+import '../../env.dart';
 
+final sl = GetIt.instance;
 void init() {
   _registerProviders();
   _registerLocalDataSources();

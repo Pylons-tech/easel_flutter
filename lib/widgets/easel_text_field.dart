@@ -48,7 +48,7 @@ class EaselTextField extends StatelessWidget {
             ScreenResponsive(
               mobileScreen: (context) => Image.asset(
                 noOfLines == 1 ? kTextFieldSingleLine : kTextFieldMultiLine,
-                height: noOfLines == 1 ? 40.h : 136.h,
+                height: noOfLines == 1 ? 40.h : 120.h,
                 width: 1.sw,
                 fit: BoxFit.fill,
               ),
@@ -60,7 +60,7 @@ class EaselTextField extends StatelessWidget {
               ),
             ),
             SizedBox(
-              height: noOfLines == 1 ? (isTablet ? 32.h : 40.h) : (isTablet ? 110.h : 136.h),
+              height: noOfLines == 1 ? (isTablet ? 32.h : 40.h) : (isTablet ? 110.h : 120.h),
               child: Align(
                 alignment: Alignment.center,
                 child: TextFormField(
@@ -80,7 +80,7 @@ class EaselTextField extends StatelessWidget {
                     hintStyle: TextStyle(fontSize: noOfLines == 1 ? 18.sp : 15.sp, color: EaselAppTheme.kGrey),
                     border: const OutlineInputBorder(borderSide: BorderSide.none),
                     floatingLabelBehavior: FloatingLabelBehavior.always,
-                    contentPadding: EdgeInsets.fromLTRB(10.w, 10.h, 10.w, 0.h),
+                    contentPadding: EdgeInsets.fromLTRB(10.w, 0.h, 10.w, 0.h),
                   ),
                 ),
               ),
