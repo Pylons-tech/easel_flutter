@@ -144,7 +144,7 @@ class EaselProvider extends ChangeNotifier {
   }
 
   /// VIDEO PLAYER FUNCTIONS
-  Future initializeVideoPlayer() async {
+  void initializeVideoPlayer() async {
     videoPlayerHelper.initializeVideoPlayer(file: _file!);
     videoPlayerController = videoPlayerHelper.getVideoPlayerController();
     delayLoading();

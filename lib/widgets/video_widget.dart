@@ -56,6 +56,74 @@ class _VideoWidgetState extends State<VideoWidget> {
     }
   }
 
+  Widget _buildThumbnailButton() {
+    return Align(
+      alignment: Alignment.bottomLeft,
+      child: Padding(
+        padding: EdgeInsets.only(left: 20.h),
+        child: SizedBox(
+          height: 120.h,
+          width: 120.w,
+          child: InkWell(
+            onTap: () {
+              videoThumbnailPicked();
+            },
+            child: easelProvider.videoThumbnail != null
+                ? ClipPath(
+                    clipper: RightSmallBottomClipper(),
+                    child: Container(
+                        height: 60.h,
+                        width: 60.w,
+                        margin: EdgeInsets.only(left: 10.w),
+                        child: Image.file(
+                          easelProvider.videoThumbnail!,
+                          height: 60.h,
+                          width: 60.w,
+                          fit: BoxFit.fill,
+                        )),
+                  )
+                : SvgPicture.asset(kUploadThumbnail),
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildVideoFullScreenIcon() {
+    return Positioned(
+      right: 0,
+      bottom: 0,
+      child: ClipPath(
+        clipper: CustomTriangleClipper(),
+        child: InkWell(
+          onTap: () {
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                  builder: (context) => VideoWidgetFullScreen(
+                        file: widget.file,
+                        easelProvider: easelProvider,
+                      )),
+            );
+          },
+          child: Container(
+            width: 45.w,
+            height: 35.h,
+            color: EaselAppTheme.kLightRed,
+            child: Padding(
+              padding: EdgeInsets.fromLTRB(25.w, 18.w, 3.w, 3.h),
+              child: SvgPicture.asset(
+                kFullScreenIcon,
+                fit: BoxFit.fill,
+                alignment: Alignment.bottomRight,
+              ),
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return ChangeNotifierProvider<EaselProvider>.value(
@@ -109,79 +177,38 @@ class _VideoWidgetState extends State<VideoWidget> {
                   width: 280.w,
                   child: Column(
                     children: [
-                      ClipPath(
-                        // clipper: RightSmallBottomClipper(),
-                        child: SizedBox(
-                          height: 200.h,
-                          child: Stack(
-                            children: [
-                              easelProvider.isVideoLoading
-                                  ? const Center(
+                      SizedBox(
+                        height: 200.h,
+                        child: Stack(
+                          children: [
+                            VideoBuilder(
+                                onVideoLoading: (BuildContext context) => const Center(
                                       child: CircularProgressIndicator(
                                         strokeWidth: 2,
                                         valueColor: AlwaysStoppedAnimation<Color>(EaselAppTheme.kBlack),
                                       ),
-                                    )
-                                  : easelProvider.videoLoadingError.isNotEmpty
-                                      ? Center(
-                                          child: Padding(
-                                          padding: const EdgeInsets.all(10),
-                                          child: Text(
-                                            videoPlayerError,
-                                            style: TextStyle(fontSize: 18.sp, color: EaselAppTheme.kBlack),
+                                    ),
+                                onVideoHasError: (BuildContext context) => Center(
+                                        child: Padding(
+                                      padding: const EdgeInsets.all(10),
+                                      child: Text(
+                                        videoPlayerError,
+                                        style: TextStyle(fontSize: 18.sp, color: EaselAppTheme.kBlack),
+                                      ),
+                                    )),
+                                onVideoInitialized: (BuildContext context) => Center(
+                                      child: Stack(
+                                        children: [
+                                          AspectRatio(
+                                            aspectRatio: easelProvider.videoPlayerController.value.aspectRatio,
+                                            child: VideoPlayer(easelProvider.videoPlayerController),
                                           ),
-                                        ))
-                                      : easelProvider.videoPlayerController.value.isInitialized
-                                          ? Center(
-                                              child: Stack(
-                                                children: [
-                                                  AspectRatio(
-                                                    aspectRatio: easelProvider.videoPlayerController.value.aspectRatio,
-                                                    child: VideoPlayer(easelProvider.videoPlayerController),
-                                                  ),
-                                                  Positioned(
-                                                    right: 0,
-                                                    bottom: 0,
-                                                    child: ClipPath(
-                                                      clipper: CustomTriangleClipper(),
-                                                      child: InkWell(
-                                                        onTap: () {
-                                                          Navigator.push(
-                                                            context,
-                                                            MaterialPageRoute(
-                                                                builder: (context) => VideoWidgetFullScreen(
-                                                                      file: widget.file,
-                                                                      easelProvider: easelProvider,
-                                                                    )),
-                                                          );
-                                                        },
-                                                        child: Container(
-                                                          width: 45.w,
-                                                          height: 35.h,
-                                                          color: EaselAppTheme.kLightRed,
-                                                          child: Padding(
-                                                            padding: EdgeInsets.fromLTRB(25.w, 18.w, 3.w, 3.h),
-                                                            child: SvgPicture.asset(
-                                                              kFullScreenIcon,
-                                                              fit: BoxFit.fill,
-                                                              alignment: Alignment.bottomRight,
-                                                            ),
-                                                          ),
-                                                        ),
-                                                      ),
-                                                    ),
-                                                  ),
-                                                ],
-                                              ),
-                                            )
-                                          : const Center(
-                                              child: CircularProgressIndicator(
-                                                strokeWidth: 2,
-                                                valueColor: AlwaysStoppedAnimation<Color>(EaselAppTheme.kBlack),
-                                              ),
-                                            ),
-                            ],
-                          ),
+                                          _buildVideoFullScreenIcon(),
+                                        ],
+                                      ),
+                                    ),
+                                easelProvider: easelProvider),
+                          ],
                         ),
                       ),
                     ],
@@ -192,41 +219,10 @@ class _VideoWidgetState extends State<VideoWidget> {
                 ),
                 Padding(
                   padding: EdgeInsets.only(bottom: 70.h),
-
-                  ///Don't place const here, it will stop reflecting changes
-                  child: VideoProgressWidget(darkMode: false),
+                  child: VideoProgressWidget(darkMode: false, key: UniqueKey()),
                 ),
                 if (!widget.previewFlag) ...[
-                  Align(
-                    alignment: Alignment.bottomLeft,
-                    child: Padding(
-                      padding: EdgeInsets.only(left: 20.h),
-                      child: SizedBox(
-                        height: 120.h,
-                        width: 120.w,
-                        child: InkWell(
-                          onTap: () {
-                            videoThumbnailPicked();
-                          },
-                          child: easelProvider.videoThumbnail != null
-                              ? ClipPath(
-                                  clipper: RightSmallBottomClipper(),
-                                  child: Container(
-                                      height: 60.h,
-                                      width: 60.w,
-                                      margin: EdgeInsets.only(left: 10.w),
-                                      child: Image.file(
-                                        easelProvider.videoThumbnail!,
-                                        height: 60.h,
-                                        width: 60.w,
-                                        fit: BoxFit.fill,
-                                      )),
-                                )
-                              : SvgPicture.asset(kUploadThumbnail),
-                        ),
-                      ),
-                    ),
-                  ),
+                  _buildThumbnailButton(),
                 ],
               ],
             ),
@@ -237,5 +233,37 @@ class _VideoWidgetState extends State<VideoWidget> {
   @override
   void dispose() {
     super.dispose();
+  }
+}
+
+class VideoBuilder extends StatelessWidget {
+  final WidgetBuilder onVideoLoading;
+  final WidgetBuilder onVideoHasError;
+  final WidgetBuilder onVideoInitialized;
+  final EaselProvider easelProvider;
+
+  const VideoBuilder({
+    Key? key,
+    required this.onVideoLoading,
+    required this.onVideoHasError,
+    required this.onVideoInitialized,
+    required this.easelProvider,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    if (easelProvider.isVideoLoading) {
+      return onVideoLoading(context);
+    } else if (easelProvider.videoLoadingError.isNotEmpty) {
+      return onVideoHasError(context);
+    } else if (easelProvider.videoPlayerController.value.isInitialized) {
+      return onVideoInitialized(context);
+    }
+    return const Center(
+      child: CircularProgressIndicator(
+        strokeWidth: 2,
+        valueColor: AlwaysStoppedAnimation<Color>(EaselAppTheme.kBlack),
+      ),
+    );
   }
 }

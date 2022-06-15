@@ -6,7 +6,7 @@ import 'package:video_player/video_player.dart';
 abstract class VideoPlayerHelper {
   /// This method will be do the main heavy lifting and it will
   /// initialize the video player and make it ready to use
-  Future initializeVideoPlayer({required File file});
+  void initializeVideoPlayer({required File file});
 
   /// This method will be a listener to the positionStream which
   /// will listen to the current duration of the video being played
@@ -24,6 +24,7 @@ abstract class VideoPlayerHelper {
   /// This method will be responsible for seeking the Video when dragged forward of reverse
   Future<void> seekToVideo({required Duration position});
 
+  /// This will return the videoPlayerController instance
   VideoPlayerController getVideoPlayerController();
 }
 
@@ -34,7 +35,7 @@ class VideoPlayerHelperImp implements VideoPlayerHelper {
   VideoPlayerHelperImp(this.videoPlayerController);
 
   @override
-  Future initializeVideoPlayer({required File file}) async {
+  void initializeVideoPlayer({required File file}) async {
     videoPlayerController = VideoPlayerController.file(file)..initialize().then((value) => {});
   }
 

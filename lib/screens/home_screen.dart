@@ -12,7 +12,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:provider/provider.dart';
 import 'package:pylons_sdk/pylons_sdk.dart';
-import 'package:steps_indicator/steps_indicator.dart';
 
 import 'choose_format_screen.dart';
 

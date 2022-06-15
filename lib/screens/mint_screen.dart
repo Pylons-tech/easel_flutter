@@ -136,8 +136,6 @@ class MintScreen extends StatelessWidget {
                           child: PylonsButton(
                             onPressed: () async {
                               bool isRecipeCreated = await provider.createRecipe();
-                              // log("Recipe created: $isRecipeCreated");
-
                               if (!isRecipeCreated) {
                                 return;
                               }
