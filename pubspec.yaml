@@ -90,6 +90,9 @@ dependencies:
 
   bottom_drawer: ^0.0.5
 
+  flutter_image_compress: 1.1.0
+
+
 dev_dependencies:
   flutter_test:
     sdk: flutter

@@ -4,10 +4,12 @@ import 'dart:io';
 import 'package:easel_flutter/easel_provider.dart';
 import 'package:easel_flutter/models/nft_format.dart';
 import 'package:easel_flutter/screens/clippers/custom_triangle_clipper.dart';
+import 'package:easel_flutter/screens/clippers/small_bottom_corner_clipper.dart';
 import 'package:easel_flutter/utils/constants.dart';
 import 'package:easel_flutter/utils/easel_app_theme.dart';
 import 'package:easel_flutter/utils/file_utils.dart';
 import 'package:easel_flutter/utils/space_utils.dart';
+import 'package:easel_flutter/widgets/loading.dart';
 import 'package:easel_flutter/widgets/video_progress_widget.dart';
 import 'package:easel_flutter/widgets/video_widget_full_screen.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -47,7 +49,10 @@ class _VideoWidgetState extends State<VideoWidget> {
   void videoThumbnailPicked() async {
     final result = await FileUtils.pickFile(NftFormat.supportedFormats[0]);
     if (result != null) {
-      easelProvider.setVideoThumbnail(File(result.path!));
+      final loading = Loading().showLoading(message: kCompressingMessage);
+      final file = await FileUtils.compressAndGetFile(File(result.path!));
+      easelProvider.setVideoThumbnail(file);
+      loading.dismiss();
     }
   }
 
@@ -204,25 +209,19 @@ class _VideoWidgetState extends State<VideoWidget> {
                             videoThumbnailPicked();
                           },
                           child: easelProvider.videoThumbnail != null
-                              ? Container(
-                                  height: 60.h,
-                                  width: 60.w,
-                                  margin: EdgeInsets.only(left: 10.w),
-                                  decoration: const BoxDecoration(
-                                    image: DecorationImage(
-                                      image: ExactAssetImage(kVideoThumbnailRectangle),
-                                      fit: BoxFit.fill,
-                                    ),
-                                  ),
-                                  child: Padding(
-                                    padding: EdgeInsets.all(13.h),
-                                    child: Image.file(
-                                      easelProvider.videoThumbnail!,
+                              ? ClipPath(
+                                  clipper: RightSmallBottomClipper(),
+                                  child: Container(
                                       height: 60.h,
                                       width: 60.w,
-                                      fit: BoxFit.fill,
-                                    ),
-                                  ))
+                                      margin: EdgeInsets.only(left: 10.w),
+                                      child: Image.file(
+                                        easelProvider.videoThumbnail!,
+                                        height: 60.h,
+                                        width: 60.w,
+                                        fit: BoxFit.fill,
+                                      )),
+                                )
                               : SvgPicture.asset(kUploadThumbnail),
                         ),
                       ),

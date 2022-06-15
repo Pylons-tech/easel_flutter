@@ -262,11 +262,18 @@ class EaselProvider extends ChangeNotifier {
 
     _recipeId = localDataSource.autoGenerateEaselId();
 
-    final loading = Loading().showLoading(message: "Uploading ${_nftFormat.format}...");
-    final uploadResponse = await remoteDataSource.uploadFile(_file!);
+    ApiResponse thumbnailUploadResponse = ApiResponse.error(errorMessage: "");
+    if (videoThumbnail != null) {
+      final loading = Loading().showLoading(message: kUploadingThumbnailMessage);
+      thumbnailUploadResponse = await remoteDataSource.uploadFile(videoThumbnail!);
+      loading.dismiss();
+    }
+
+    final loading = Loading().showLoading(message: "$kUploadingMessage ${_nftFormat.format}...");
+    final fileUploadResponse = await remoteDataSource.uploadFile(_file!);
     loading.dismiss();
-    if (uploadResponse.status == Status.error) {
-      navigatorKey.currentState!.overlay!.context.show(message: uploadResponse.errorMessage ?? kErrUpload);
+    if (fileUploadResponse.status == Status.error) {
+      navigatorKey.currentState!.overlay!.context.show(message: fileUploadResponse.errorMessage ?? kErrUpload);
       return false;
     }
 
@@ -284,12 +291,12 @@ class EaselProvider extends ChangeNotifier {
           CoinInput(coins: [Coin(amount: price, denom: _selectedDenom.symbol)])
         ],
         itemInputs: [],
-        costPerBlock: Coin(denom: "upylon", amount: "0"),
+        costPerBlock: Coin(denom: kUpylon, amount: "0"),
         entries: EntriesList(coinOutputs: [], itemOutputs: [
           ItemOutput(
-              iD: "Easel_NFT",
+              iD: kEaselNFT,
               doubles: [
-                DoubleParam(key: "Residual", weightRanges: [
+                DoubleParam(key: kResidual, weightRanges: [
                   DoubleWeightRange(
                     lower: residual,
                     upper: residual,
@@ -298,22 +305,23 @@ class EaselProvider extends ChangeNotifier {
                 ])
               ],
               longs: [
-                LongParam(key: "Quantity", weightRanges: [
+                LongParam(key: kQuantity, weightRanges: [
                   IntWeightRange(
                       lower: Int64(int.parse(noOfEditionController.text.replaceAll(",", "").trim())), upper: Int64(int.parse(noOfEditionController.text.replaceAll(",", "").trim())), weight: Int64(1))
                 ]),
-                LongParam(key: "Width", weightRanges: [IntWeightRange(lower: Int64(_fileWidth), upper: Int64(_fileWidth), weight: Int64(1))]),
-                LongParam(key: "Height", weightRanges: [IntWeightRange(lower: Int64(_fileHeight), upper: Int64(_fileHeight), weight: Int64(1))]),
-                LongParam(key: "Duration", weightRanges: [IntWeightRange(lower: Int64(_fileDuration), upper: Int64(_fileDuration), weight: Int64(1))]),
+                LongParam(key: kWidth, weightRanges: [IntWeightRange(lower: Int64(_fileWidth), upper: Int64(_fileWidth), weight: Int64(1))]),
+                LongParam(key: kHeight, weightRanges: [IntWeightRange(lower: Int64(_fileHeight), upper: Int64(_fileHeight), weight: Int64(1))]),
+                LongParam(key: kDuration, weightRanges: [IntWeightRange(lower: Int64(_fileDuration), upper: Int64(_fileDuration), weight: Int64(1))]),
               ],
               strings: [
-                StringParam(key: "Name", value: artNameController.text.trim()),
-                StringParam(key: "App_Type", value: "Easel"),
-                StringParam(key: "Description", value: descriptionController.text.trim()),
-                StringParam(key: "Hashtags", value: hashtagsList.join('#')),
-                StringParam(key: "NFT_Format", value: _nftFormat.format),
-                StringParam(key: "NFT_URL", value: "$ipfsDomain/${uploadResponse.data?.value?.cid ?? ""}"),
-                StringParam(key: "Creator", value: artistNameController.text.trim()),
+                StringParam(key: kName, value: artNameController.text.trim()),
+                StringParam(key: kAppType, value: kEasel),
+                StringParam(key: kDescription, value: descriptionController.text.trim()),
+                StringParam(key: kHashtags, value: hashtagsList.join('#')),
+                StringParam(key: kNFTFormat, value: _nftFormat.format),
+                StringParam(key: kNFTURL, value: "$ipfsDomain/${fileUploadResponse.data?.value?.cid ?? ""}"),
+                StringParam(key: kThumbnailUrl, value: videoThumbnail != null ? "$ipfsDomain/${thumbnailUploadResponse.data?.value?.cid ?? ""}" : ""),
+                StringParam(key: kCreator, value: artistNameController.text.trim()),
               ],
               mutableStrings: [],
               transferFee: [Coin(denom: kPylonSymbol, amount: "1")],
@@ -323,13 +331,14 @@ class EaselProvider extends ChangeNotifier {
               quantity: Int64(int.parse(noOfEditionController.text.replaceAll(",", "").trim()))),
         ], itemModifyOutputs: []),
         outputs: [
-          WeightedOutputs(entryIDs: ["Easel_NFT"], weight: Int64(1))
+          WeightedOutputs(entryIDs: [kEaselNFT], weight: Int64(1))
         ],
         blockInterval: Int64(0),
         enabled: true,
-        extraInfo: "extraInfo");
+        extraInfo: kExtraInfo);
 
-    log("${recipe.toProto3Json()}");
+    log('RecipeResponse: ${recipe.toProto3Json()}');
+
     var response = await PylonsWallet.instance.txCreateRecipe(recipe, requestResponse: false);
 
     log('From App $response');

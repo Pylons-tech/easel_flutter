@@ -3,7 +3,9 @@ import 'dart:math';
 
 import 'package:easel_flutter/models/nft_format.dart';
 import 'package:file_picker/file_picker.dart';
+import 'package:flutter_image_compress/flutter_image_compress.dart';
 import 'package:path/path.dart' as p;
+import 'package:path_provider/path_provider.dart';
 
 import 'constants.dart';
 
@@ -43,6 +45,23 @@ class FileUtils {
     }
 
     return null;
+  }
+
+  // This function will take an image, compress it and returns a file
+  static Future<File?> compressAndGetFile(
+    File file,
+  ) async {
+    var tempDirectory = await getTemporaryDirectory();
+
+    var timeStamp = DateTime.now();
+
+    var result = await FlutterImageCompress.compressAndGetFile(
+      file.path,
+      '${tempDirectory.path}/$timeStamp.jpg',
+      quality: 50,
+    );
+
+    return result;
   }
 
   /// This function checks if a file path extension svg or not

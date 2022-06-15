@@ -157,35 +157,4 @@ class _HomeScreenState extends State<HomeScreen> {
     );
   }
 
-// Padding _stepLabel() {
-//   return Padding(
-//     padding: EdgeInsets.symmetric(horizontal: 0.1.sw),
-//     child: Row(
-//       children: List.generate(stepLabels.length, (index) {
-//         return SizedBox(
-//           width: (0.8.sw / stepLabels.length),
-//           child: _buildStepLabel(index),
-//         );
-//       }),
-//     ),
-//   );
-// }
-
-// Widget _buildStepLabel(int index) {
-//   return ValueListenableBuilder(
-//     valueListenable: _currentPage,
-//     builder: (_, int currentPage, __) => Row(
-//       mainAxisAlignment: MainAxisAlignment.center,
-//       children: [
-//         Text(
-//           stepLabels[index],
-//           style: Theme.of(context)
-//               .textTheme
-//               .bodyText2!
-//               .copyWith(fontSize: 12.sp, fontFamily: 'Inter', fontWeight: FontWeight.w400, color: _currentStep.value >= index ? EaselAppTheme.kDarkGreen : EaselAppTheme.kGrey),
-//         ),
-//       ],
-//     ),
-//   );
-// }
 }
