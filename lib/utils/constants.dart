@@ -1,20 +1,7 @@
 const List kTutorialItems = [
-  {
-    'header': 'Upload your NFT file',
-    'description': 'Choose the file you wish to mint into a NFT!',
-    'image': 'assets/images/tutorial1.png'
-  },
-  {
-    'header': 'Edit your NFT Details',
-    'description': 'Enter information describing your NFT including the price you wish to sell it for!',
-    'image': 'assets/images/tutorial2.png'
-  },
-  {
-    'header': 'Manage your NFT with the ',
-    'header1': 'Pylons app',
-    'description': 'You can store, collect & manage all your NFTs in the Pylons app!',
-    'image': 'assets/images/tutorial3.png'
-  },
+  {'header': 'Upload your NFT file', 'description': 'Choose the file you wish to mint into a NFT!', 'image': 'assets/images/tutorial1.png'},
+  {'header': 'Edit your NFT Details', 'description': 'Enter information describing your NFT including the price you wish to sell it for!', 'image': 'assets/images/tutorial2.png'},
+  {'header': 'Manage your NFT with the ', 'header1': 'Pylons app', 'description': 'You can store, collect & manage all your NFTs in the Pylons app!', 'image': 'assets/images/tutorial3.png'},
 ];
 
 /// ```PNG assets
@@ -49,6 +36,8 @@ const kSvgNftFormatImage = 'assets/images/svg/nft_format_image.svg';
 const kSvgNftFormatVideo = 'assets/images/svg/nft_format_video.svg';
 const kSvgNftFormat3d = 'assets/images/svg/nft_format_3d.svg';
 const kSvgNftFormatAudio = 'assets/images/svg/nft_format_audio.svg';
+const kUploadThumbnail = 'assets/images/svg/upload_thumbnail.svg';
+const kFullScreenIcon = 'assets/images/svg/full_screen_icon.svg';
 
 /// ```URL constants
 const ipfsDomain = 'https://ipfs.io/ipfs';
@@ -107,8 +96,7 @@ const kNoOfEditionText = 'Number of editions';
 const kEnterRoyaltyText = 'Enter royalty in percentage';
 const kRoyaltiesText = 'Royalties';
 const kRoyaltyHintText = '5%';
-const kRoyaltyNoteText =
-    'Percentage of all secondary market sales automatically distributed to the NFT creator.\nTo opt out set value to';
+const kRoyaltyNoteText = 'Percentage of all secondary market sales automatically distributed to the NFT creator.\nTo opt out set value to';
 const kRoyaltyRangeText = 'Allowed royalty is between';
 const kMinIsText = 'Minimum is';
 const kMaxIsTextText = 'Maximum is';
@@ -139,6 +127,9 @@ const kDescribeNftText = 'Describe NFT';
 const kPriceNftText = 'Price NFT';
 const kUploadText = 'Upload';
 const kPreviewText = 'Preview';
+const kEditText = 'Edit';
+
+const kPreviewNftFileText = 'Preview your NFT file';
 const kListText = 'List';
 const kImageText = 'Image';
 const kVideoText = 'Video';
@@ -153,8 +144,7 @@ const kWhyAppNeededDescSummary1 = 'Discover new NFTs, apps & adventures';
 const kWhyAppNeededDesc2 = 'It makes managing your crypto easy';
 const kWhyAppNeededDescSummary2 = 'No frills. No complexities. One wallet  address for all your crypto';
 const kWhyAppNeededDesc3 = 'You can always delete it if you’d like';
-const kWhyAppNeededDescSummary3 =
-    'No subscriptions. We don’t sell your information. We only charge a fee when you purchase a NFT';
+const kWhyAppNeededDescSummary3 = 'No subscriptions. We don’t sell your information. We only charge a fee when you purchase a NFT';
 const kPylonsAlreadyInstalled = 'Pylons already installed.';
 const kTapToSelect = 'Tap to Select';
 const kCloseText = 'Close';
@@ -163,8 +153,7 @@ const kUploadHint3 = '• One file per upload';
 const kUploadHintAll = 'GB Limit.\nOne file per upload.';
 const kHintNftName = 'Bird on Shoulder';
 const kHintArtistName = 'Sarah Jackson';
-const kHintNftDesc =
-    'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eimod tempor incididunt ut labore et dolore magna aliquaQ. Ut enim ad minim veniam, quis nostrud exercita.';
+const kHintNftDesc = 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eimod tempor incididunt ut labore et dolore magna aliquaQ. Ut enim ad minim veniam, quis nostrud exercita.';
 const kHintNoEdition = '100';
 const kHintPrice = '10.87';
 const kHintHashtag = 'Type in';
@@ -185,7 +174,7 @@ const kTryAgain = "Try again";
 const kAppNotInstalled = "Please download the Pylons app and create a username to publish a NFT in Easel.";
 const kPleaseTryAgain = "Something went wrong.\n Please try again.";
 const kCancel = "Cancel";
-
+const kChooseFifteenSecondsOfAudio = "Choose 15s highlight of your audio for preview";
 
 /// Nft viewmodel key values
 const String kNameKey = "Name";
@@ -200,3 +189,4 @@ const String kHeightKey = "Height";
 const String kQuantityKey = "Quantity";
 const String kHashtagKey = "Hashtags";
 
+final List stepLabels = [kUploadText, kEditText, kListText];

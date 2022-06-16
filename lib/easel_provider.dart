@@ -2,12 +2,13 @@ import 'dart:async';
 import 'dart:developer';
 import 'dart:io';
 
-import 'package:easel_flutter/datasources/local_datasource.dart';
-import 'package:easel_flutter/datasources/remote_datasource.dart';
+import 'package:easel_flutter/services/datasources/local_datasource.dart';
+import 'package:easel_flutter/services/datasources/remote_datasource.dart';
 import 'package:easel_flutter/main.dart';
 import 'package:easel_flutter/models/api_response.dart';
 import 'package:easel_flutter/models/denom.dart';
 import 'package:easel_flutter/models/nft_format.dart';
+import 'package:easel_flutter/services/third_party_services/audio_player_helper.dart';
 import 'package:easel_flutter/utils/constants.dart';
 import 'package:easel_flutter/utils/extension_util.dart';
 import 'package:easel_flutter/utils/file_utils.dart';
@@ -17,6 +18,7 @@ import 'package:fixnum/fixnum.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:just_audio/just_audio.dart';
 import 'package:pylons_sdk/pylons_sdk.dart';
 import 'package:pylons_sdk/src/features/models/sdk_ipc_response.dart';
 import 'package:share_plus/share_plus.dart';
@@ -25,8 +27,9 @@ import 'package:media_info/media_info.dart';
 class EaselProvider extends ChangeNotifier {
   final LocalDataSource localDataSource;
   final RemoteDataSource remoteDataSource;
+  final AudioPlayerHelper audioPlayerHelper;
 
-  EaselProvider(this.localDataSource, this.remoteDataSource);
+  EaselProvider(this.localDataSource, this.remoteDataSource, this.audioPlayerHelper);
 
   File? _file;
   NftFormat _nftFormat = NftFormat.supportedFormats[0];
@@ -60,6 +63,10 @@ class EaselProvider extends ChangeNotifier {
 
   Denom get selectedDenom => _selectedDenom;
 
+  File? _audioThumbnail;
+
+  File? get audioThumnail => _audioThumbnail;
+
   final artistNameController = TextEditingController();
   final artNameController = TextEditingController();
   final descriptionController = TextEditingController();
@@ -69,6 +76,9 @@ class EaselProvider extends ChangeNotifier {
   final List<String> hashtagsList = [];
 
   String currentUsername = '';
+
+  late ValueNotifier<ProgressBarState> audioProgressNotifier;
+  late ValueNotifier<ButtonState> buttonNotifier;
 
   initStore() {
     _file = null;
@@ -322,9 +332,6 @@ class EaselProvider extends ChangeNotifier {
       return true;
     }
 
-
-
-
     Completer<bool> stripeTryAgainCompleter = Completer<bool>();
 
     ScaffoldMessenger.maybeOf(navigatorKey.currentState!.overlay!.context)?.hideCurrentSnackBar();
@@ -346,13 +353,109 @@ class EaselProvider extends ChangeNotifier {
       ),
     ));
 
-
     await Future.delayed(const Duration(seconds: 1));
 
     PylonsWallet.instance.showStripe();
 
-
-
     return stripeTryAgainCompleter.future;
   }
+
+  Future initializeAudioPlayer() async {
+    audioProgressNotifier = ValueNotifier<ProgressBarState>(
+      ProgressBarState(
+        current: Duration.zero,
+        buffered: Duration.zero,
+        total: Duration.zero,
+      ),
+    );
+    buttonNotifier = ValueNotifier<ButtonState>(ButtonState.loading);
+
+    final bool isUrlLoaded = await audioPlayerHelper.setFile(file: _file!.path);
+
+    if (isUrlLoaded) {
+      audioPlayerHelper.playerStateStream().onData((playerState) {
+        final isPlaying = playerState.playing;
+        final processingState = playerState.processingState;
+
+        switch (processingState) {
+          case ProcessingState.idle:
+            audioPlayerHelper.setAudioSource(file: AudioSource.uri(Uri.parse("file://${_file!.path}")));
+            break;
+          case ProcessingState.loading:
+          case ProcessingState.buffering:
+            buttonNotifier.value = ButtonState.loading;
+            break;
+
+          case ProcessingState.ready:
+            if (!isPlaying) {
+              buttonNotifier.value = ButtonState.paused;
+              break;
+            }
+            buttonNotifier.value = ButtonState.playing;
+            break;
+
+          default:
+            audioPlayerHelper.seekAudio(position: Duration.zero);
+            audioPlayerHelper.pauseAudio();
+        }
+      });
+    }
+
+    audioPlayerHelper.positionStream().onData((position) {
+      final oldState = audioProgressNotifier.value;
+      audioProgressNotifier.value = ProgressBarState(
+        current: position,
+        buffered: oldState.buffered,
+        total: oldState.total,
+      );
+    });
+
+    audioPlayerHelper.bufferedPositionStream().onData((bufferedPosition) {
+      final oldState = audioProgressNotifier.value;
+      audioProgressNotifier.value = ProgressBarState(
+        current: oldState.current,
+        buffered: bufferedPosition,
+        total: oldState.total,
+      );
+    });
+
+    audioPlayerHelper.durationStream().onData((totalDuration) {
+      final oldState = audioProgressNotifier.value;
+      audioProgressNotifier.value = ProgressBarState(
+        current: oldState.current,
+        buffered: oldState.buffered,
+        total: totalDuration ?? Duration.zero,
+      );
+    });
+  }
+
+  void playAudio() {
+    audioPlayerHelper.playAudio();
+  }
+
+  void pauseAudio() {
+    audioPlayerHelper.pauseAudio();
+  }
+
+  void seekAudio(Duration position) {
+    audioPlayerHelper.seekAudio(position: position);
+  }
+
+  void disposeAudioController() {
+    audioPlayerHelper.destroyAudioPlayer();
+  }
 }
+
+class ProgressBarState {
+  ProgressBarState({
+    required this.current,
+    required this.buffered,
+    required this.total,
+  });
+
+  final Duration current;
+  final Duration buffered;
+  final Duration total;
+}
+
+enum ButtonState { paused, playing, loading }

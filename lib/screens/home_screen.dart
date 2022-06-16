@@ -14,6 +14,8 @@ import 'package:pylons_sdk/pylons_sdk.dart';
 import 'package:steps_indicator/steps_indicator.dart';
 
 import 'choose_format_screen.dart';
+import 'custom_widgets/step_labels.dart';
+import 'custom_widgets/steps_indicator.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({Key? key}) : super(key: key);
@@ -55,34 +57,9 @@ class _HomeScreenState extends State<HomeScreen> {
           body: Column(
             children: [
               const VerticalSpace(20),
-              ValueListenableBuilder(
-                valueListenable: _currentStep,
-                builder: (_, int value, __) => StepsIndicator(
-                  selectedStep: _currentStep.value,
-                  nbSteps: _numSteps,
-                  lineLength: 0.68.sw / _numSteps,
-                  doneLineColor: EaselAppTheme.kDarkGreen,
-                  undoneLineColor: EaselAppTheme.kLightGrey,
-                  doneLineThickness: 1.5,
-                  undoneLineThickness: 1.5,
-                  unselectedStepColorIn: EaselAppTheme.kLightGrey,
-                  unselectedStepColorOut: EaselAppTheme.kLightGrey,
-                  doneStepColor: EaselAppTheme.kDarkGreen,
-                  selectedStepColorIn: EaselAppTheme.kDarkGreen,
-                  selectedStepColorOut: EaselAppTheme.kDarkGreen,
-                  enableLineAnimation: true,
-                  enableStepAnimation: true,
-                  lineLengthCustomStep: const [],
-                  doneStepWidget: Container(
-                      width: 12.w, height: 12.h, decoration: const BoxDecoration(color: EaselAppTheme.kDarkGreen)),
-                  unselectedStepWidget: Container(
-                      width: 12.w, height: 12.h, decoration: const BoxDecoration(color: EaselAppTheme.kLightGrey)),
-                  selectedStepWidget: Container(
-                      width: 12.w, height: 12.h, decoration: const BoxDecoration(color: EaselAppTheme.kDarkGreen)),
-                ),
-              ),
+              MyStepsIndicator(currentPage: _currentPage, currentStep: _currentStep),
               const VerticalSpace(5),
-              _stepLabel(),
+              StepLabels(currentPage: _currentPage, currentStep: _currentStep),
               const VerticalSpace(10),
               Stack(
                 alignment: Alignment.center,

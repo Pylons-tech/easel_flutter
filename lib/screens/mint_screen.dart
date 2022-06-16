@@ -42,7 +42,7 @@ class MintScreen extends StatelessWidget {
                           file: provider.file!,
                         ))
                   ],
-                  if (provider.nftFormat.format == kAudioText) ...[AudioWidget(file: provider.file!)],
+                  if (provider.nftFormat.format == kAudioText) ...[AudioWidget(file: provider.file!,previewFlag: true,)],
                   const SizedBox(height: 10),
                   Padding(
                     padding: const EdgeInsets.symmetric(horizontal: 20),
