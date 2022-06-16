@@ -245,4 +245,3 @@ class _VideoWidgetState extends State<VideoWidget> {
     super.dispose();
   }
 }
-

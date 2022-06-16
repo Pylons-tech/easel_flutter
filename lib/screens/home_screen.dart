@@ -34,7 +34,7 @@ class _HomeScreenState extends State<HomeScreen> {
   final int _numSteps = 4;
   final ValueNotifier<int> _currentStep = ValueNotifier(0);
 
-  final List pageTitles = [kUploadNFTText, kEditNFTText, '', ''];
+  final List pageTitles = [kUploadNFTText, kDescribeNftText, kPriceNftText, kListNftText, ''];
 
   @override
   void initState() {
@@ -153,5 +153,4 @@ class _HomeScreenState extends State<HomeScreen> {
       ),
     );
   }
-
 }

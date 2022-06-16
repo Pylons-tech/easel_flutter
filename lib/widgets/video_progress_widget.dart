@@ -80,7 +80,7 @@ class VideoProgressWidget extends StatelessWidget {
                             ),
                           ],
                         ),
-                if (easelProvider.videoLoadingError.isNotEmpty)
+                if (easelProvider.videoLoadingError.isNotEmpty || easelProvider.isVideoLoading)
                   const SizedBox()
                 else
                   SizedBox(
