@@ -241,6 +241,7 @@ class _VideoWidgetState extends State<VideoWidget> {
 
   @override
   void dispose() {
+    easelProvider.disposeVideoController();
     super.dispose();
   }
 }
