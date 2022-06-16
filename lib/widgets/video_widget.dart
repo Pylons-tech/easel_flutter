@@ -107,14 +107,17 @@ class _VideoWidgetState extends State<VideoWidget> {
             );
           },
           child: Container(
-            width: 45.w,
-            height: 35.h,
+            width: 30.w,
+            height: 30.w,
+            alignment: Alignment.bottomRight,
             color: EaselAppTheme.kLightRed,
             child: Padding(
-              padding: EdgeInsets.fromLTRB(25.w, 18.w, 3.w, 3.h),
+              padding: EdgeInsets.all(5.w),
               child: SvgPicture.asset(
                 kFullScreenIcon,
                 fit: BoxFit.fill,
+                width: 8.w,
+                height: 8.w,
                 alignment: Alignment.bottomRight,
               ),
             ),
@@ -122,6 +125,10 @@ class _VideoWidgetState extends State<VideoWidget> {
         ),
       ),
     );
+  }
+
+  bool shouldShowThumbnailButtonOrStepsOrNot() {
+    return !widget.previewFlag;
   }
 
   @override
@@ -138,7 +145,7 @@ class _VideoWidgetState extends State<VideoWidget> {
             child: Column(
               children: [
                 SizedBox(height: MediaQuery.of(context).viewPadding.top + 20.h),
-                if (!widget.previewFlag) ...[
+                if (shouldShowThumbnailButtonOrStepsOrNot()) ...[
                   MyStepsIndicator(currentPage: _currentPage, currentStep: _currentStep),
                   VerticalSpace(5.h),
                   StepLabels(currentPage: _currentPage, currentStep: _currentStep),
@@ -219,9 +226,9 @@ class _VideoWidgetState extends State<VideoWidget> {
                 ),
                 Padding(
                   padding: EdgeInsets.only(bottom: 70.h),
-                  child: VideoProgressWidget(darkMode: false, key: UniqueKey()),
+                  child: VideoProgressWidget(darkMode: false,),
                 ),
-                if (!widget.previewFlag) ...[
+                if (shouldShowThumbnailButtonOrStepsOrNot()) ...[
                   _buildThumbnailButton(),
                 ],
               ],

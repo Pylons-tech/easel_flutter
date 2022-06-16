@@ -99,7 +99,7 @@ class VideoProgressWidget extends StatelessWidget {
                                   ),
                                 );
                               } else {
-                                return SizedBox(height: 22.h, width: 18.w, child: CircularProgressIndicator(strokeWidth: 2.w, color: darkMode ? EaselAppTheme.kWhite : EaselAppTheme.kBlack));
+                                return SizedBox(width: 15.w, child: CircularProgressIndicator(strokeWidth: 1.w, color: darkMode ? EaselAppTheme.kWhite : EaselAppTheme.kBlack));
                               }
                             }),
                         Text(
