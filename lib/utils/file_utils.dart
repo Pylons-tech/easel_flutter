@@ -29,7 +29,12 @@ class FileUtils {
         _type = FileType.video;
         break;
       case kAudioText:
-        _type = FileType.audio;
+        if (!Platform.isAndroid) {
+          _type = FileType.custom;
+          allowedExtensions = ['mp3', 'ogg', 'wav'];
+        } else {
+          _type = FileType.audio;
+        }
         break;
       default:
         _type = FileType.any;
