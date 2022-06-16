@@ -6,6 +6,7 @@ import 'package:easel_flutter/screens/tutorial_screen.dart';
 import 'package:easel_flutter/screens/welcome_screen/welcome_screen.dart';
 import 'package:easel_flutter/utils/constants.dart';
 import 'package:easel_flutter/utils/route_util.dart';
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:easel_flutter/utils/dependency_injection/dependency_injection_container.dart' as di;
 import 'package:easel_flutter/utils/easel_app_theme.dart';
@@ -16,14 +17,23 @@ import 'package:pylons_sdk/pylons_sdk.dart';
 
 bool isTablet = false;
 
-void main() {
+Future<void> main() async{
   WidgetsFlutterBinding.ensureInitialized();
+
+  await EasyLocalization.ensureInitialized();
+
   PylonsWallet.setup(mode: PylonsMode.prod, host: 'easel');
   di.init();
 
   isTablet = MediaQueryData.fromWindow(WidgetsBinding.instance.window).size.shortestSide >= TABLET_MIN_WIDTH;
 
-  runApp(const MyApp());
+  runApp(EasyLocalization(
+      supportedLocales: const [Locale('en'), Locale('ru')],
+      path: 'i18n',
+      fallbackLocale: const Locale('en'),
+      saveLocale: false,
+      useOnlyLangCode: true,
+      child:const MyApp()));
 }
 
 final navigatorKey = GlobalKey<NavigatorState>();
@@ -48,7 +58,11 @@ class MyApp extends StatelessWidget {
                     child: widget!,
                   );
                 },
-                title: 'Easel',
+            localizationsDelegates: context.localizationDelegates,
+            supportedLocales: context.supportedLocales,
+            locale: context.locale,
+
+            title: 'Easel',
                 navigatorKey: navigatorKey,
                 theme: EaselAppTheme.theme(context),
                 initialRoute: '/',
