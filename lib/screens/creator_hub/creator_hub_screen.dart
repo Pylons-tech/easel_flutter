@@ -3,7 +3,6 @@ import 'package:easel_flutter/utils/easel_app_theme.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:flutter_svg/flutter_svg.dart';
 
 class CreatorHubScreen extends StatefulWidget {
   const CreatorHubScreen({Key? key}) : super(key: key);
@@ -64,9 +63,9 @@ class _CreatorHubScreenState extends State<CreatorHubScreen> {
                 ),
                 SizedBox(height:20.h),
 
-                animatedContainer(title:"published (0)"),
+                animatedContainer(title:"publish_total".tr(args: ["0"])),
                 SizedBox(height:20.h),
-                animatedContainer(title:"draft (0)")
+                animatedContainer(title:"draft_total".tr(args: ["0"]))
 
               ],
             ),
@@ -114,7 +113,7 @@ class _CreatorHubScreenState extends State<CreatorHubScreen> {
                           child: SizedBox(
                             height: 20.h,
                             width: 20.w,
-                            child: Icon(Icons.add)
+                            child: const Icon(Icons.add)
                           ),
                         )
                       ],
@@ -133,10 +132,7 @@ class _CreatorHubScreenState extends State<CreatorHubScreen> {
                     SizedBox(
                       height: 10.h,
                     ),
-                    //  if (!collapsed && widget.name == 'Ownership') ...listOnwership else if (!collapsed && widget.name == 'NFT Detail') ...listDetails
-                    // else if (!collapsed && widget.name == 'History')
-                    //   ...listHistory
-                  ],
+                       ],
                 ),
               ),
             ),

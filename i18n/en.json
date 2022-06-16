@@ -2,5 +2,7 @@
   "creator_hub": "Creator Hub",
   "for_sale": "For Sale",
   "publish": "Published",
+  "publish_total": "Published ({})",
+  "draft_total": "Draft ({})",
   "draft": "Draft"
 }

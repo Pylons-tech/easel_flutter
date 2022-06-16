@@ -2,5 +2,7 @@
   "creator_hub": "автор центр",
   "for_sale": "Продается",
   "publish": "изданный",
+  "publish_total": "изданный ({})",
+  "draft_total": "проект ({})",
   "draft": "проект"
 }
