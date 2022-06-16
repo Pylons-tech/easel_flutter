@@ -91,7 +91,7 @@ class _VideoWidgetState extends State<VideoWidget> {
 
   Widget _buildVideoFullScreenIcon() {
     return Positioned(
-      right: 0,
+      right: -1,
       bottom: 0,
       child: ClipPath(
         clipper: CustomTriangleClipper(),
@@ -226,7 +226,9 @@ class _VideoWidgetState extends State<VideoWidget> {
                 ),
                 Padding(
                   padding: EdgeInsets.only(bottom: 70.h),
-                  child: VideoProgressWidget(darkMode: false,),
+                  child: VideoProgressWidget(
+                    darkMode: false,
+                  ),
                 ),
                 if (shouldShowThumbnailButtonOrStepsOrNot()) ...[
                   _buildThumbnailButton(),
