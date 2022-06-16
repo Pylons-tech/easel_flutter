@@ -47,6 +47,9 @@ const kWalletAndroidId = 'tech.pylons.wallet';
 const kWalletWebLink = 'https://wallet.pylons.tech';
 const kWalletDynamicLink = 'pylons.page.link';
 
+/// Loader message
+const kCompressingMessage = "Compressing Thumbnail";
+
 /// ```Number constants
 const kMinNFTName = 9;
 const kMinDescription = 20;

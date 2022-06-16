@@ -116,6 +116,11 @@ class EaselProvider extends ChangeNotifier {
     notifyListeners();
   }
 
+  void setVideoThumbnail(File? file) {
+    _audioThumbnail = file;
+    notifyListeners();
+  }
+
   Future<void> setFile(BuildContext context, PlatformFile selectedFile) async {
     _file = File(selectedFile.path!);
     _fileName = selectedFile.name;

@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:easel_flutter/easel_provider.dart';
 import 'package:easel_flutter/utils/constants.dart';
+import 'package:easel_flutter/widgets/audio_widget_full_screen.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:get_it/get_it.dart';
@@ -11,12 +12,15 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:rxdart/rxdart.dart';
 
+import '../models/nft_format.dart';
 import '../screens/clippers/custom_triangle_clipper.dart';
 import '../screens/clippers/small_bottom_corner_clipper.dart';
 import '../screens/custom_widgets/step_labels.dart';
 import '../screens/custom_widgets/steps_indicator.dart';
 import '../utils/easel_app_theme.dart';
+import '../utils/file_utils.dart';
 import '../utils/space_utils.dart';
+import 'loading.dart';
 
 class AudioWidget extends StatefulWidget {
   final File file;
@@ -39,7 +43,6 @@ class _AudioWidgetState extends State<AudioWidget> with WidgetsBindingObserver {
 
     super.initState();
   }
-
 
   @override
   Widget build(BuildContext context) {
@@ -91,28 +94,17 @@ class _AudioWidgetState extends State<AudioWidget> with WidgetsBindingObserver {
                   width: 300.0.w,
                   height: 150.0.h,
                   color: Colors.blue,
+                  child: easelProvider.audioThumnail != null
+                      ? Image.file(
+                          easelProvider.audioThumnail!,
+                          height: 60.h,
+                          width: 60.w,
+                          fit: BoxFit.contain,
+                        )
+                      : const SizedBox(),
                 ),
               ),
-              Positioned(
-                bottom: 0,
-                right: 0,
-                child: ClipPath(
-                  clipper: CustomTriangleClipper(),
-                  child: Container(
-                    width: 40.w,
-                    height: 40.w,
-                    color: Colors.red,
-                    alignment: Alignment.bottomRight,
-                    child: Padding(
-                      padding: EdgeInsets.all(6.0.w),
-                      child: SvgPicture.asset(
-                        kFullScreenIcon,
-                        alignment: Alignment.bottomRight,
-                      ),
-                    ),
-                  ),
-                ),
-              )
+              _buildAudioFullScreenIcon()
             ],
           ),
           SizedBox(
@@ -211,62 +203,59 @@ class _AudioWidgetState extends State<AudioWidget> with WidgetsBindingObserver {
           width: 120.w,
           child: InkWell(
             onTap: () {
-              // videoThumbnailPicked();
+              audioThumbnailPicker();
             },
-            child: easelProvider.audioThumnail != null
-                ? ClipPath(
-                    clipper: RightSmallBottomClipper(),
-                    child: Container(
-                        height: 60.h,
-                        width: 60.w,
-                        margin: EdgeInsets.only(left: 10.w),
-                        child: Image.file(
-                          easelProvider.audioThumnail!,
-                          height: 60.h,
-                          width: 60.w,
-                          fit: BoxFit.fill,
-                        )),
-                  )
-                : SvgPicture.asset(kUploadThumbnail),
+            child: SvgPicture.asset(kUploadThumbnail),
           ),
         ),
       ),
     );
   }
 
-  Widget _buildVideoFullScreenIcon() {
+  Widget _buildAudioFullScreenIcon() {
     return Positioned(
-      right: 0,
       bottom: 0,
-      child: ClipPath(
-        clipper: CustomTriangleClipper(),
-        child: InkWell(
-          onTap: () {
-            // Navigator.push(
-            //   context,
-            //   MaterialPageRoute(
-            //       builder: (context) => VideoWidgetFullScreen(
-            //         file: widget.file,
-            //         easelProvider: easelProvider,
-            //       )),
-            // );
-          },
-          child: Container(
-            width: 45.w,
-            height: 35.h,
-            color: EaselAppTheme.kLightRed,
-            child: Padding(
-              padding: EdgeInsets.fromLTRB(25.w, 18.w, 3.w, 3.h),
-              child: SvgPicture.asset(
-                kFullScreenIcon,
-                fit: BoxFit.fill,
-                alignment: Alignment.bottomRight,
+      right: 0,
+      child: InkWell(
+        onTap: () {
+          Navigator.of(context).push(PageRouteBuilder(
+            transitionDuration: const Duration(milliseconds: 500),
+            pageBuilder: (_, __, ___) => AudioWidgetFullScreen(
+              thumbnail: easelProvider.audioThumnail,
+            ),
+          ));
+        },
+        child: Hero(
+          tag: "preview_full_screen",
+          child: ClipPath(
+            clipper: CustomTriangleClipper(),
+            child: Container(
+              width: 40.w,
+              height: 40.w,
+              color: Colors.red,
+              alignment: Alignment.bottomRight,
+              child: Padding(
+                padding: EdgeInsets.all(6.0.w),
+                child: SvgPicture.asset(
+                  kFullScreenIcon,
+                  alignment: Alignment.bottomRight,
+                ),
               ),
             ),
           ),
         ),
       ),
     );
+  }
+
+  void audioThumbnailPicker() async {
+    final result = await FileUtils.pickFile(NftFormat.supportedFormats[0]);
+    if (result != null) {
+      final loading = Loading().showLoading(message: kCompressingMessage);
+      final file = await FileUtils.compressAndGetFile(File(result.path!));
+      easelProvider.setVideoThumbnail(file);
+      loading.dismiss();
+    }
   }
 }
 
