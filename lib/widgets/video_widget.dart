@@ -10,6 +10,7 @@ import 'package:easel_flutter/utils/easel_app_theme.dart';
 import 'package:easel_flutter/utils/file_utils.dart';
 import 'package:easel_flutter/utils/space_utils.dart';
 import 'package:easel_flutter/widgets/loading.dart';
+import 'package:easel_flutter/widgets/video_builder.dart';
 import 'package:easel_flutter/widgets/video_progress_widget.dart';
 import 'package:easel_flutter/widgets/video_widget_full_screen.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -241,39 +242,7 @@ class _VideoWidgetState extends State<VideoWidget> {
 
   @override
   void dispose() {
-    easelProvider.disposeVideoController();
     super.dispose();
   }
 }
 
-class VideoBuilder extends StatelessWidget {
-  final WidgetBuilder onVideoLoading;
-  final WidgetBuilder onVideoHasError;
-  final WidgetBuilder onVideoInitialized;
-  final EaselProvider easelProvider;
-
-  const VideoBuilder({
-    Key? key,
-    required this.onVideoLoading,
-    required this.onVideoHasError,
-    required this.onVideoInitialized,
-    required this.easelProvider,
-  }) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    if (easelProvider.isVideoLoading) {
-      return onVideoLoading(context);
-    } else if (easelProvider.videoLoadingError.isNotEmpty) {
-      return onVideoHasError(context);
-    } else if (easelProvider.videoPlayerController.value.isInitialized) {
-      return onVideoInitialized(context);
-    }
-    return const Center(
-      child: CircularProgressIndicator(
-        strokeWidth: 2,
-        valueColor: AlwaysStoppedAnimation<Color>(EaselAppTheme.kBlack),
-      ),
-    );
-  }
-}

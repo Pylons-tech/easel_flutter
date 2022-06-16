@@ -42,42 +42,44 @@ class VideoProgressWidget extends StatelessWidget {
                 if (easelProvider.videoLoadingError.isNotEmpty)
                   const SizedBox()
                 else
-                  Row(
-                    children: [
-                      if (easelProvider.isVideoLoading)
-                        SizedBox(height: 22.h, width: 22.h, child: CircularProgressIndicator(strokeWidth: 2.w, color: EaselAppTheme.kBlack))
-                      else if (easelProvider.videoPlayerController.value.isPlaying)
-                        InkWell(
-                          onTap: easelProvider.pauseVideo,
-                          child: Icon(
-                            Icons.pause,
-                            color: darkMode ? EaselAppTheme.kWhite : EaselAppTheme.kDarkBlue,
-                            size: 25.h,
-                          ),
-                        )
-                      else
-                        InkWell(
-                          onTap: easelProvider.playVideo,
-                          child: Icon(
-                            Icons.play_arrow,
-                            color: darkMode ? EaselAppTheme.kWhite : EaselAppTheme.kDarkBlue,
-                            size: 25.h,
-                          ),
+                  easelProvider.isVideoLoading
+                      ? const SizedBox()
+                      : Row(
+                          children: [
+                            if (easelProvider.isVideoLoading)
+                              SizedBox(height: 22.h, width: 22.h, child: CircularProgressIndicator(strokeWidth: 2.w, color: EaselAppTheme.kBlack))
+                            else if (easelProvider.videoPlayerController.value.isPlaying)
+                              InkWell(
+                                onTap: easelProvider.pauseVideo,
+                                child: Icon(
+                                  Icons.pause,
+                                  color: darkMode ? EaselAppTheme.kWhite : EaselAppTheme.kDarkBlue,
+                                  size: 25.h,
+                                ),
+                              )
+                            else
+                              InkWell(
+                                onTap: easelProvider.playVideo,
+                                child: Icon(
+                                  Icons.play_arrow,
+                                  color: darkMode ? EaselAppTheme.kWhite : EaselAppTheme.kDarkBlue,
+                                  size: 25.h,
+                                ),
+                              ),
+                            SizedBox(width: 10.w),
+                            Expanded(
+                              child: VideoProgressIndicator(
+                                easelProvider.videoPlayerController,
+                                allowScrubbing: true,
+                                colors: VideoProgressColors(
+                                  backgroundColor: darkMode ? EaselAppTheme.kWhite : EaselAppTheme.kBlack,
+                                  playedColor: EaselAppTheme.kLightRed,
+                                  bufferedColor: EaselAppTheme.kWhite.withOpacity(0.7),
+                                ),
+                              ),
+                            ),
+                          ],
                         ),
-                      SizedBox(width: 10.w),
-                      Expanded(
-                        child: VideoProgressIndicator(
-                          easelProvider.videoPlayerController,
-                          allowScrubbing: true,
-                          colors: VideoProgressColors(
-                            backgroundColor: darkMode ? EaselAppTheme.kWhite : EaselAppTheme.kBlack,
-                            playedColor: EaselAppTheme.kLightRed,
-                            bufferedColor: EaselAppTheme.kWhite.withOpacity(0.7),
-                          ),
-                        ),
-                      ),
-                    ],
-                  ),
                 if (easelProvider.videoLoadingError.isNotEmpty)
                   const SizedBox()
                 else
