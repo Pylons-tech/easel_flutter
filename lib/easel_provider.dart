@@ -191,7 +191,7 @@ class EaselProvider extends ChangeNotifier {
     final Map<String, dynamic> info;
     try {
       info = await _mediaInfo.getMediaInfo(file.path);
-    } on PlatformException catch (e) {
+    } on PlatformException {
       _fileWidth = 0;
       _fileHeight = 0;
       _fileDuration = 0;

@@ -1,5 +1,4 @@
 import 'dart:async';
-import 'dart:developer';
 import 'dart:io';
 
 import 'package:easel_flutter/easel_provider.dart';
@@ -236,7 +235,7 @@ class _VideoWidgetState extends State<VideoWidget> {
                 ),
                 Padding(
                   padding: EdgeInsets.only(bottom: 70.h),
-                  child: VideoProgressWidget(
+                  child: const VideoProgressWidget(
                     darkMode: false,
                   ),
                 ),

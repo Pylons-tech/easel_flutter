@@ -62,7 +62,7 @@ class VideoWidgetFullScreen extends StatelessWidget {
                         padding: EdgeInsets.only(bottom: 30.h),
 
                         ///Don't place const here, it will stop reflecting changes
-                        child: VideoProgressWidget(darkMode: true),
+                        child: const VideoProgressWidget(darkMode: true),
                       ),
                     ),
                   ),
