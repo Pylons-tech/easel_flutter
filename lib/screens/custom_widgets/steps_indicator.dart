@@ -13,7 +13,7 @@ class MyStepsIndicator extends StatelessWidget {
     required this.currentStep,
   }) : super(key: key);
 
-  final int _numSteps = 3;
+  final int _numSteps = 4;
 
   @override
   Widget build(BuildContext context) {

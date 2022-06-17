@@ -208,7 +208,7 @@ const kUploadingMessage = "Uploading";
 const kUploadingThumbnailMessage = "Uploading Thumbnail";
 const kLoadingMessage = "Loading...";
 
-final List stepLabels = [kUploadText, kEditText, kListText];
+final List stepLabels = [kUploadText, kEditText, kPriceText, kListText];
 
 
 /// Nft viewmodel key values

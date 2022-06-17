@@ -133,12 +133,19 @@ class _VideoWidgetState extends State<VideoWidget> {
     return !widget.previewFlag;
   }
 
+  stopVideoIfPlaying() {
+    if (easelProvider.videoPlayerController.value.isPlaying) {
+      easelProvider.videoPlayerController.pause();
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return ChangeNotifierProvider<EaselProvider>.value(
         value: easelProvider,
         child: WillPopScope(
           onWillPop: () async {
+            stopVideoIfPlaying();
             easelProvider.setVideoThumbnail(null);
             Navigator.pop(context);
             return true;
@@ -157,6 +164,7 @@ class _VideoWidgetState extends State<VideoWidget> {
                     children: [
                       IconButton(
                         onPressed: () {
+                          stopVideoIfPlaying();
                           easelProvider.setVideoThumbnail(null);
                           Navigator.pop(context);
                         },
