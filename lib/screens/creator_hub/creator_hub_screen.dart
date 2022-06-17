@@ -37,9 +37,9 @@ class _CreatorHubScreenState extends State<CreatorHubScreen> {
                           Navigator.of(context).pushNamed(RouteUtil.ROUTE_HOME);
 
                         },
-                        child: const Icon(
+                        child:  Icon(
                           Icons.add,
-                          size: 30,
+                          size: 30.h,
                           color: EaselAppTheme.kBlack,
                         ),
                       ),
