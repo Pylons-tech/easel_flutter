@@ -154,9 +154,9 @@ class _CreatorHubScreenState extends State<CreatorHubScreen> {
           contentPadding: EdgeInsets.symmetric(vertical: 8.h, horizontal: 15.w),
           tileColor: EaselAppTheme.kWhite,
           leading: SizedBox(
-            height: 45.w,
-            width: 45.w,
-            child: const Image(image: AssetImage("d")),
+            height: 40.h,
+            width: 40.h,
+            child: const Image(image: AssetImage(kDummyImg, ),fit: BoxFit.fill,),
           ),
           title: Text(
             "NFT name",
@@ -166,7 +166,12 @@ class _CreatorHubScreenState extends State<CreatorHubScreen> {
             "draft".tr(),
             style: titleStyle.copyWith(color: EaselAppTheme.kLightRed, fontSize: 13.sp),
           ),
-          trailing: SvgPicture.asset(kSvgMoreOption)),
+          trailing: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              SvgPicture.asset(kSvgMoreOption),
+            ],
+          )),
     );
   }
 

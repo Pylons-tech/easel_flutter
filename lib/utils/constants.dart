@@ -50,6 +50,7 @@ const kSvgNftFormatVideo = 'assets/images/svg/nft_format_video.svg';
 const kSvgNftFormat3d = 'assets/images/svg/nft_format_3d.svg';
 const kSvgNftFormatAudio = 'assets/images/svg/nft_format_audio.svg';
 const kSvgMoreOption = 'assets/images/svg/more_options.svg';
+const kDummyImg = 'assets/images/svg/dummy_img.png';
 
 /// ```URL constants
 const ipfsDomain = 'https://ipfs.io/ipfs';
