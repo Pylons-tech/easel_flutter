@@ -125,7 +125,6 @@ class _CreatorHubScreenState extends State<CreatorHubScreen> {
                             CustomPaint(size: Size(10.w, 10.h), painter: DiagonalLinePainter()),
                           ],
                         ),
-                        // else if (!collapsed && widget.name == 'NFT Detail') ...listDetails
                       ],
                     ),
                     SizedBox(
