@@ -1,12 +1,14 @@
 import 'dart:async';
 
 import 'package:easel_flutter/screens/creator_hub/creator_hub_view_model.dart';
+import 'package:easel_flutter/utils/constants.dart';
 import 'package:easel_flutter/utils/easel_app_theme.dart';
 import 'package:easel_flutter/utils/route_util.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:provider/provider.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 
 class CreatorHubScreen extends StatefulWidget {
   const CreatorHubScreen({Key? key}) : super(key: key);
@@ -27,6 +29,8 @@ class _CreatorHubScreenState extends State<CreatorHubScreen> {
   }
 
   TextStyle titleStyle = TextStyle(fontSize: 18.sp, fontWeight: FontWeight.w800, color: EaselAppTheme.kBlack);
+  TextStyle digitTextStyle = TextStyle(fontSize: 20.sp, fontWeight: FontWeight.w800, color: EaselAppTheme.kWhite);
+
 
   @override
   Widget build(BuildContext context) {
@@ -94,47 +98,52 @@ class _CreatorHubScreenState extends State<CreatorHubScreen> {
             child: Align(
               alignment: Alignment.topLeft,
               child: SingleChildScrollView(
-                child: Stack(
-                  alignment: AlignmentDirectional.bottomStart,
+                child: Column(
                   children: [
-                    Row(
+                    Stack(
+                      alignment: AlignmentDirectional.bottomStart,
                       children: [
-                        SizedBox(
-                          width: 120.w,
-                          height: 23.h,
-                          child: Text(
-                            title,
-                            maxLines: 1,
-                            style: titleStyle.copyWith(fontSize: 15.sp),
-                          ),
+                        Row(
+                          children: [
+                            SizedBox(
+                              width: 120.w,
+                              height: 23.h,
+                              child: Text(
+                                title,
+                                maxLines: 1,
+                                style: titleStyle.copyWith(fontSize: 15.sp),
+                              ),
+                            ),
+                            SizedBox(
+                              width: 20.w,
+                            ),
+                            GestureDetector(
+                              behavior: HitTestBehavior.translucent,
+                              onTap: () {
+                                setState(() {
+                                  collapsed = !collapsed;
+                                });
+                              },
+                              child: SizedBox(height: 20.h, width: 20.w, child: const Icon(Icons.add)),
+                            )
+                          ],
                         ),
-                        SizedBox(
-                          width: 20.w,
+                        Wrap(
+                          children: [
+                            Container(
+                              width: 120.w,
+                              height: 10.h,
+                              decoration: const BoxDecoration(border: Border(bottom: BorderSide(color: EaselAppTheme.kBlack, width: 2))),
+                            ),
+                            CustomPaint(size: Size(10.w, 10.h), painter: DiagonalLinePainter()),
+                          ],
                         ),
-                        GestureDetector(
-                          behavior: HitTestBehavior.translucent,
-                          onTap: () {
-                            setState(() {
-                              collapsed = !collapsed;
-                            });
-                          },
-                          child: SizedBox(height: 20.h, width: 20.w, child: const Icon(Icons.add)),
-                        )
-                      ],
-                    ),
-                    Wrap(
-                      children: [
-                        Container(
-                          width: 120.w,
-                          height: 10.h,
-                          decoration: const BoxDecoration(border: Border(bottom: BorderSide(color: EaselAppTheme.kBlack, width: 2))),
-                        ),
-                        CustomPaint(size: Size(10.w, 10.h), painter: DiagonalLinePainter()),
                       ],
                     ),
                     SizedBox(
                       height: 10.h,
                     ),
+                    collapsed ? const SizedBox() : buildListTile(),
                   ],
                 ),
               ),
@@ -142,6 +151,35 @@ class _CreatorHubScreenState extends State<CreatorHubScreen> {
           ),
         ],
       ),
+    );
+  }
+
+  Widget buildListTile() {
+    return Container(
+      decoration: BoxDecoration(color: Colors.white, boxShadow: [
+        BoxShadow(
+          color: Colors.black.withOpacity(0.3),
+          offset: const Offset(0.0, 4.0),
+          blurRadius: 10.0,
+        ),
+      ]),
+      child: ListTile(
+          contentPadding: EdgeInsets.symmetric(vertical: 8.h, horizontal: 15.w),
+          tileColor: EaselAppTheme.kWhite,
+          leading: SizedBox(
+            height: 45.w,
+            width: 45.w,
+            child: const Image(image: AssetImage("d")),
+          ),
+          title: Text(
+            "NFT name",
+            style: titleStyle,
+          ),
+          subtitle: Text(
+            "draft".tr(),
+            style: titleStyle.copyWith(color: EaselAppTheme.kLightRed, fontSize: 13.sp),
+          ),
+          trailing: SvgPicture.asset(kSvgMoreOption)),
     );
   }
 
@@ -164,7 +202,7 @@ class _CreatorHubScreenState extends State<CreatorHubScreen> {
               ),
               Text(
                 "-",
-                style: TextStyle(color: EaselAppTheme.kWhite, fontWeight: FontWeight.w400, fontSize: 12.sp),
+                style: digitTextStyle,
               )
             ],
           ),
