@@ -1,8 +1,12 @@
+import 'dart:async';
+
+import 'package:easel_flutter/screens/creator_hub/creator_hub_view_model.dart';
 import 'package:easel_flutter/utils/easel_app_theme.dart';
 import 'package:easel_flutter/utils/route_util.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:provider/provider.dart';
 
 class CreatorHubScreen extends StatefulWidget {
   const CreatorHubScreen({Key? key}) : super(key: key);
@@ -14,7 +18,16 @@ class CreatorHubScreen extends StatefulWidget {
 class _CreatorHubScreenState extends State<CreatorHubScreen> {
   bool collapsed = true;
 
+  @override
+  void initState() {
+    scheduleMicrotask(() {
+      Provider.of<CreatorHubViewModel>(context, listen: false).getRecipesList();
+    });
+    super.initState();
+  }
+
   TextStyle titleStyle = TextStyle(fontSize: 18.sp, fontWeight: FontWeight.w800, color: EaselAppTheme.kBlack);
+
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -30,14 +43,13 @@ class _CreatorHubScreenState extends State<CreatorHubScreen> {
                   alignment: AlignmentDirectional.center,
                   children: [
                     Text("creator_hub".tr(), style: titleStyle),
-                     Align(
+                    Align(
                       alignment: Alignment.topRight,
                       child: InkWell(
-                        onTap: (){
+                        onTap: () {
                           Navigator.of(context).pushNamed(RouteUtil.ROUTE_HOME);
-
                         },
-                        child:  Icon(
+                        child: Icon(
                           Icons.add,
                           size: 30.h,
                           color: EaselAppTheme.kBlack,

@@ -76,7 +76,12 @@ dependencies:
   audio_video_progress_bar: ^0.10.0
   model_viewer_plus: 1.1.2
 
-# used for bitmap manipulation, needed for svg to png conversion
+  dartz: ^0.10.0
+
+  internet_connection_checker: ^0.0.1+4
+
+
+  # used for bitmap manipulation, needed for svg to png conversion
 #  bitmap: ^0.1.2
 
   path_provider: ^2.0.6

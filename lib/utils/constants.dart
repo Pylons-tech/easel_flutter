@@ -201,3 +201,10 @@ const String kHeightKey = "Height";
 const String kQuantityKey = "Quantity";
 const String kHashtagKey = "Hashtags";
 
+
+
+
+const String kNoInternet = 'No internet';
+const String kRecipeNotFound = 'Recipe not found';
+const String kCookBookNotFound = 'Cookbook not found';
+

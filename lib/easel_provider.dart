@@ -84,6 +84,7 @@ class EaselProvider extends ChangeNotifier {
     artistNameController.clear();
     artNameController.clear();
     descriptionController.clear();
+    descriptionController.clear();
     noOfEditionController.clear();
     priceController.clear();
     royaltyController.clear();
@@ -168,27 +169,23 @@ class EaselProvider extends ChangeNotifier {
     return false;
   }
 
-
-
-  void  saveArtistName(name) {
-     localDataSource.saveArtistName(name);
+  void saveArtistName(name) {
+    localDataSource.saveArtistName(name);
   }
 
-  void toCheckSavedArtistName(){
+  void toCheckSavedArtistName() {
     String savedArtistName = localDataSource.getArtistName();
 
-    if(savedArtistName.isNotEmpty){
+    if (savedArtistName.isNotEmpty) {
       artistNameController.text = savedArtistName;
       return;
     }
-   artistNameController.text = currentUsername;
-
+    artistNameController.text = currentUsername;
   }
 
   /// sends a createRecipe Tx message to the wallet
   /// return true or false depending on the response from the wallet app
   Future<bool> createRecipe() async {
-
     if (!await shouldMintUSDOrNot()) {
       return false;
     }
@@ -340,9 +337,6 @@ class EaselProvider extends ChangeNotifier {
       return true;
     }
 
-
-
-
     Completer<bool> stripeTryAgainCompleter = Completer<bool>();
 
     ScaffoldMessenger.maybeOf(navigatorKey.currentState!.overlay!.context)?.hideCurrentSnackBar();
@@ -364,12 +358,9 @@ class EaselProvider extends ChangeNotifier {
       ),
     ));
 
-
     await Future.delayed(const Duration(seconds: 1));
 
     PylonsWallet.instance.showStripe();
-
-
 
     return stripeTryAgainCompleter.future;
   }
