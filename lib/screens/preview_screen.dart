@@ -1,4 +1,5 @@
 import 'package:easel_flutter/easel_provider.dart';
+import 'package:easel_flutter/screens/creator_hub/creator_hub_view_model.dart';
 import 'package:easel_flutter/utils/constants.dart';
 import 'package:easel_flutter/widgets/audio_widget.dart';
 import 'package:easel_flutter/widgets/image_widget.dart';
@@ -7,6 +8,7 @@ import 'package:easel_flutter/widgets/pylons_button.dart';
 import 'package:easel_flutter/widgets/video_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:get_it/get_it.dart';
 import 'package:provider/provider.dart';
 
 import '../utils/easel_app_theme.dart';
@@ -21,8 +23,12 @@ class PreviewScreen extends StatefulWidget {
 }
 
 class _PreviewScreenState extends State<PreviewScreen> {
+
+
   @override
   Widget build(BuildContext context) {
+
+    CreatorHubViewModel  creatorHubViewModel = GetIt.I.get<CreatorHubViewModel>();
     return Scaffold(
       body: Consumer<EaselProvider>(
         builder: (_, provider, __) => Stack(
@@ -46,6 +52,7 @@ class _PreviewScreenState extends State<PreviewScreen> {
                     padding: EdgeInsets.only(left: 10.sp),
                     child: IconButton(
                       onPressed: () {
+                        creatorHubViewModel.saveDraft(provider.file);
                         Navigator.of(context).pop();
                       },
                       icon: const Icon(
