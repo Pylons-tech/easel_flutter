@@ -178,6 +178,7 @@ const kAppNotInstalled = "Please download the Pylons app and create a username t
 const kPleaseTryAgain = "Something went wrong.\n Please try again.";
 const kCancel = "Cancel";
 const kChooseFifteenSecondsOfAudio = "Choose 15s highlight of your audio for preview";
+const kUploadingThumbnailMessage = "Uploading Thumbnail";
 
 /// Nft viewmodel key values
 const String kNameKey = "Name";
@@ -191,5 +192,6 @@ const String kWidthKey = "Width";
 const String kHeightKey = "Height";
 const String kQuantityKey = "Quantity";
 const String kHashtagKey = "Hashtags";
+const kThumbnailUrl = "Thumbnail_URL";
 
 final List stepLabels = [kUploadText, kEditText, kListText];

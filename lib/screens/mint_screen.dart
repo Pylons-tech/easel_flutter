@@ -42,7 +42,12 @@ class MintScreen extends StatelessWidget {
                           file: provider.file!,
                         ))
                   ],
-                  if (provider.nftFormat.format == kAudioText) ...[AudioWidget(file: provider.file!,previewFlag: true,)],
+                  if (provider.nftFormat.format == kAudioText) ...[
+                    AudioWidget(
+                      file: provider.file!,
+                      previewFlag: false,
+                    )
+                  ],
                   const SizedBox(height: 10),
                   Padding(
                     padding: const EdgeInsets.symmetric(horizontal: 20),
@@ -135,17 +140,14 @@ class MintScreen extends StatelessWidget {
                         Align(
                           child: PylonsButton(
                             onPressed: () async {
-                              bool isRecipeCreated =
-                                  await provider.createRecipe();
+                              bool isRecipeCreated = await provider.createRecipe();
                               // log("Recipe created: $isRecipeCreated");
 
                               if (!isRecipeCreated) {
                                 return;
                               }
 
-                              controller.nextPage(
-                                  duration: const Duration(milliseconds: 300),
-                                  curve: Curves.easeIn);
+                              controller.nextPage(duration: const Duration(milliseconds: 300), curve: Curves.easeIn);
                             },
                             btnText: kListText,
                             showArrow: true,

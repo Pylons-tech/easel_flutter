@@ -116,7 +116,7 @@ class EaselProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-  void setVideoThumbnail(File? file) {
+  void setAudioThumbnail(File? file) {
     _audioThumbnail = file;
     notifyListeners();
   }
@@ -208,6 +208,14 @@ class EaselProvider extends ChangeNotifier {
 
     _recipeId = localDataSource.autoGenerateEaselId();
 
+    ApiResponse audioThumbnailUploadResponse = ApiResponse.error(errorMessage: "");
+    if (audioThumnail != null) {
+      final loading = Loading().showLoading(message: kUploadingThumbnailMessage);
+      audioThumbnailUploadResponse = await remoteDataSource.uploadFile(audioThumnail!);
+      setAudioThumbnail(null);
+      loading.dismiss();
+    }
+
     final loading = Loading().showLoading(message: "Uploading ${_nftFormat.format}...");
     final uploadResponse = await remoteDataSource.uploadFile(_file!);
     loading.dismiss();
@@ -259,6 +267,7 @@ class EaselProvider extends ChangeNotifier {
                 StringParam(key: kHashtagKey, value: hashtagsList.join('#')),
                 StringParam(key: kNftFormatKey, value: _nftFormat.format),
                 StringParam(key: kNftUrlKey, value: "$ipfsDomain/${uploadResponse.data?.value?.cid ?? ""}"),
+                StringParam(key: kThumbnailUrl, value: audioThumnail != null ? "$ipfsDomain/${audioThumbnailUploadResponse.data?.value?.cid ?? ""}" : ""),
                 StringParam(key: kCreatorKey, value: artistNameController.text.trim()),
                 StringParam(key: kSizeKey, value: _fileSize.trim()),
               ],
