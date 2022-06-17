@@ -34,14 +34,12 @@ class SplashScreen extends StatelessWidget {
             alignment: Alignment.center,
             child: PylonsButton(
               onPressed: () {
-                Navigator.of(context).pushNamed(RouteUtil.ROUTE_CREATOR_HUB);
-
-                // var onBoardingComplete = GetIt.I.get<LocalDataSource>().getOnBoardingComplete();
-                // if (onBoardingComplete) {
-                //   Navigator.of(context).pushNamed(RouteUtil.ROUTE_WELCOME);
-                //   return;
-                // }
-                // Navigator.of(context).pushNamed(RouteUtil.ROUTE_TUTORIAL);
+                var onBoardingComplete = GetIt.I.get<LocalDataSource>().getOnBoardingComplete();
+                if (onBoardingComplete) {
+                  Navigator.of(context).pushNamed(RouteUtil.ROUTE_WELCOME);
+                  return;
+                }
+                Navigator.of(context).pushNamed(RouteUtil.ROUTE_TUTORIAL);
               },
               btnText: kGetStarted,
             ),
