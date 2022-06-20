@@ -38,6 +38,8 @@ const kSvgNftFormat3d = 'assets/images/svg/nft_format_3d.svg';
 const kSvgNftFormatAudio = 'assets/images/svg/nft_format_audio.svg';
 const kUploadThumbnail = 'assets/images/svg/upload_thumbnail.svg';
 const kFullScreenIcon = 'assets/images/svg/full_screen_icon.svg';
+const kSvgMoreOption = 'assets/images/svg/more_options.svg';
+const kDummyImg = 'assets/images/svg/dummy_img.png';
 
 /// ```URL constants
 const ipfsDomain = 'https://ipfs.io/ipfs';
@@ -66,6 +68,7 @@ const double TABLET_MIN_WIDTH = 600;
 /// ````Reserved words, symbols, IDs etc
 const kCookbookId = 'cookbook_id';
 const kUsername = 'username';
+const kArtistName = 'artistName';
 
 const kPylonSymbol = 'upylon';
 const kUsdSymbol = 'ustripeusd';

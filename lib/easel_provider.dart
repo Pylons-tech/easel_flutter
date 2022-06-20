@@ -183,9 +183,27 @@ class EaselProvider extends ChangeNotifier {
     return false;
   }
 
+
+
+  void  saveArtistName(name) {
+     localDataSource.saveArtistName(name);
+  }
+
+  void toCheckSavedArtistName(){
+    String savedArtistName = localDataSource.getArtistName();
+
+    if(savedArtistName.isNotEmpty){
+      artistNameController.text = savedArtistName;
+      return;
+    }
+   artistNameController.text = currentUsername;
+
+  }
+
   /// sends a createRecipe Tx message to the wallet
   /// return true or false depending on the response from the wallet app
   Future<bool> createRecipe() async {
+
     if (!await shouldMintUSDOrNot()) {
       return false;
     }
