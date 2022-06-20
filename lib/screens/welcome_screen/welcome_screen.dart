@@ -82,7 +82,7 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
         milliseconds: 500,
       ));
 
-      navigatorKey.currentState!.pushReplacementNamed(RouteUtil.ROUTE_HOME);
+      navigatorKey.currentState!.pushReplacementNamed(RouteUtil.ROUTE_CREATOR_HUB);
 
       return;
     }

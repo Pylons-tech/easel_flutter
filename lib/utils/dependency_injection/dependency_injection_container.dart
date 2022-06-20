@@ -5,6 +5,7 @@ import 'package:dio/dio.dart';
 import 'package:easel_flutter/datasources/local_datasource.dart';
 import 'package:easel_flutter/datasources/remote_datasource.dart';
 import 'package:easel_flutter/easel_provider.dart';
+import 'package:easel_flutter/screens/creator_hub/creator_hub_view_model.dart';
 import 'package:get_it/get_it.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -49,4 +50,6 @@ void _registerLocalDataSources() {
 
 void _registerProviders() {
   sl.registerLazySingleton<EaselProvider>(() => EaselProvider(sl(), sl()));
+  sl.registerLazySingleton<CreatorHubViewModel>(() => CreatorHubViewModel(sl(), sl()));
+
 }
