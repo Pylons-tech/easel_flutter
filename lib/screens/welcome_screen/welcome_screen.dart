@@ -28,7 +28,6 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: <Widget>[
-          // SizedBox(height: 0.2.sh),
           Align(
             alignment: Alignment.topLeft,
             child: Text(
