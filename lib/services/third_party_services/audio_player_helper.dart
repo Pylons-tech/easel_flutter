@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:io';
 
 import 'package:just_audio/just_audio.dart';
 
@@ -12,7 +13,7 @@ abstract class AudioPlayerHelper {
   ///This method works as an initializer for Audio Player,
   ///It will take file path as input
   ///It will load the specific file for further operations like [Play], [Pause], [Resume]
-  Future<void> setAudioSource({required AudioSource file});
+  Future<void> setAudioSource({required File file});
 
   /// This method will be a listener to the playerStateStream
   /// which will listen the audio stream being player
@@ -102,8 +103,8 @@ class AudioPlayerHelperImpl implements AudioPlayerHelper {
   }
 
   @override
-  Future<void> setAudioSource({required AudioSource file}) async {
-    await audioPlayer.setAudioSource(file, preload: true);
+  Future<void> setAudioSource({required File file}) async {
+    await audioPlayer.setFilePath(file.path, preload: false);
     await audioPlayer.load();
   }
 }

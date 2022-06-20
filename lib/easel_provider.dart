@@ -407,7 +407,6 @@ class EaselProvider extends ChangeNotifier {
 
         switch (processingState) {
           case ProcessingState.idle:
-            audioPlayerHelper.setAudioSource(file: AudioSource.uri(Uri.parse("file://${_file!.path}")));
             break;
           case ProcessingState.loading:
           case ProcessingState.buffering:

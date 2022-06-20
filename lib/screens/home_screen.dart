@@ -72,8 +72,9 @@ class _HomeScreenState extends State<HomeScreen> {
                             ? Consumer<EaselProvider>(
                                 builder: (_, provider, __) => TextButton(
                                   onPressed: () {
-                                    provider.initStore();
                                     _pageController.jumpToPage(_pageController.initialPage);
+                                    provider.initStore();
+
                                   },
                                   child: Text(
                                     kMintMoreText,
