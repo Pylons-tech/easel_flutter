@@ -56,7 +56,10 @@ class CreatorHubViewModel extends ChangeNotifier {
     final loading = Loading().showLoading(message: kPleaseWait);
 
     final cookBookId = getCookbookIdFromLocalDatasource();
-    if (cookBookId == null) return;
+    if (cookBookId == null) {
+      loading.dismiss();
+      return;
+    }
 
     final recipesListEither = await repository.getRecipesBasedOnCookBookId(cookBookId: cookBookId);
 

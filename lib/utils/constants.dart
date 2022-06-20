@@ -51,6 +51,9 @@ const kSvgNftFormat3d = 'assets/images/svg/nft_format_3d.svg';
 const kSvgNftFormatAudio = 'assets/images/svg/nft_format_audio.svg';
 const kSvgMoreOption = 'assets/images/svg/more_options.svg';
 
+const kSvgPylonsLogo = 'assets/images/svg/pylons_logo.svg';
+const kSvgViewIcon= 'assets/images/svg/view_icon.svg';
+
 /// ```URL constants
 const ipfsDomain = 'https://ipfs.io/ipfs';
 const kPlayStoreUrl = 'https://play.google.com/store/apps/details?id=tech.pylons.wallet';
@@ -214,6 +217,11 @@ const String kHashtagKey = "Hashtags";
 const String kNoInternet = 'No internet';
 const String kRecipeNotFound = 'Recipe not found';
 const String kCookBookNotFound = 'Cookbook not found';
+
+
+
+const String kViewOnIPFS = 'View On IPFS';
+const String kViewOnPylons = 'View On Pylons';
 
 
 //NFT STRINGS KEYS
