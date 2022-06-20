@@ -1,21 +1,15 @@
 import 'dart:io';
 import 'dart:ui';
-
 import 'package:easel_flutter/easel_provider.dart';
 import 'package:easel_flutter/utils/constants.dart';
-import 'package:easel_flutter/widgets/audio_widget_full_screen.dart';
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:get_it/get_it.dart';
-import 'package:just_audio/just_audio.dart';
 import 'package:audio_video_progress_bar/audio_video_progress_bar.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:rxdart/rxdart.dart';
-
 import '../models/nft_format.dart';
-import '../screens/clippers/custom_triangle_clipper.dart';
-import '../screens/clippers/small_bottom_corner_clipper.dart';
 import '../screens/custom_widgets/step_labels.dart';
 import '../screens/custom_widgets/steps_indicator.dart';
 import '../utils/easel_app_theme.dart';
@@ -101,27 +95,6 @@ class _AudioWidgetState extends State<AudioWidget> with WidgetsBindingObserver {
                   SizedBox(
                     height: 50.0.h,
                   ),
-                  // Stack(
-                  //   children: [
-                  //     ClipPath(
-                  //       clipper: RightSmallBottomClipper(),
-                  //       child: Container(
-                  //         width: 300.0.w,
-                  //         height: 150.0.h,
-                  //         color: Colors.blue,
-                  //         child: easelProvider.audioThumnail != null
-                  //             ? Image.file(
-                  //                 easelProvider.audioThumnail!,
-                  //                 height: 60.h,
-                  //                 width: 60.w,
-                  //                 fit: BoxFit.contain,
-                  //               )
-                  //             : const SizedBox(),
-                  //       ),
-                  //     ),
-                  //     _buildAudioFullScreenIcon()
-                  //   ],
-                  // ),
                   SizedBox(
                     height: 150.0.h,
                   ),
@@ -228,46 +201,10 @@ class _AudioWidgetState extends State<AudioWidget> with WidgetsBindingObserver {
     );
   }
 
-  Widget _buildAudioFullScreenIcon() {
-    return Positioned(
-      bottom: 0,
-      right: 0,
-      child: InkWell(
-        onTap: () {
-          Navigator.of(context).push(PageRouteBuilder(
-            transitionDuration: const Duration(milliseconds: 500),
-            pageBuilder: (_, __, ___) => AudioWidgetFullScreen(
-              thumbnail: easelProvider.audioThumnail,
-            ),
-          ));
-        },
-        child: Hero(
-          tag: "preview_full_screen",
-          child: ClipPath(
-            clipper: CustomTriangleClipper(),
-            child: Container(
-              width: 40.w,
-              height: 40.w,
-              color: Colors.red,
-              alignment: Alignment.bottomRight,
-              child: Padding(
-                padding: EdgeInsets.all(6.0.w),
-                child: SvgPicture.asset(
-                  kFullScreenIcon,
-                  alignment: Alignment.bottomRight,
-                ),
-              ),
-            ),
-          ),
-        ),
-      ),
-    );
-  }
-
   void audioThumbnailPicker() async {
     final result = await FileUtils.pickFile(NftFormat.supportedFormats[0]);
     if (result != null) {
-      final loading = Loading().showLoading(message: kCompressingMessage);
+      final loading = Loading().showLoading(message: "compressing_thumbnail".tr());
       final file = await FileUtils.compressAndGetFile(File(result.path!));
       easelProvider.setAudioThumbnail(file);
       loading.dismiss();

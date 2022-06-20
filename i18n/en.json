@@ -4,5 +4,13 @@
   "publish": "Published",
   "publish_total": "Published ({})",
   "draft_total": "Draft ({})",
-  "draft": "Draft"
+  "draft": "Draft",
+  "upload_your_nft_file": "Upload your NFT file",
+  "pick_the_file": "Choose the file you wish to mint into a NFT!",
+  "edit_your_nft": "Edit your NFT Details",
+  "enter_information_describing_your_nft": "Enter information describing your NFT including the price you wish to sell it for!",
+  "manage_your_nft": "Manage your NFT with the ",
+  "pylons_app": "Pylons app",
+  "you_can_collect_manage_your_nft": "You can store, collect & manage all your NFTs in the Pylons app!",
+  "compressing_thumbnail": "Compressing Thumbnail"
 }

@@ -9,24 +9,26 @@ abstract class AudioPlayerHelper {
   ///Returns true if Url is loaded otherwise false
   Future<bool> setFile({required String file});
 
-  ///This method works as an intializer for Audio Player,
+  ///This method works as an initializer for Audio Player,
+  ///It will take file path as input
+  ///It will load the specific file for further operations like [Play], [Pause], [Resume]
   Future<void> setAudioSource({required AudioSource file});
 
   /// This method will be a listener to the playerStateStream
   /// which will listen the audio stream being player
-  StreamSubscription<PlayerState> playerStateStream();
+  Stream<PlayerState> playerStateStream();
 
   /// This method will be a listener to the positionStream which
   /// will listen to the current DurationPosition of the audio track
-  StreamSubscription<Duration> positionStream();
+  Stream<Duration> positionStream();
 
   /// This method will be a listener to the bufferedPositionStream which
   /// will listen to the duration position where the audio is being buffered
-  StreamSubscription<Duration> bufferedPositionStream();
+  Stream<Duration> bufferedPositionStream();
 
   /// This method will be a listener to the durationStream which
   /// will listen to the DurationStream being player
-  StreamSubscription<Duration?> durationStream();
+  Stream<Duration?> durationStream();
 
   /// This method will be responsible for destroying the audio player instances from the memory
   void destroyAudioPlayer();
@@ -38,6 +40,8 @@ abstract class AudioPlayerHelper {
   Future<void> playAudio();
 
   /// This method will be responsible for seeking the audio when dragged forward of reverse
+  /// It will take [Position] of the audio
+  /// This method will seek the audio to specific [Position] given in parameters
   Future<void> seekAudio({required Duration position});
 }
 
@@ -58,23 +62,23 @@ class AudioPlayerHelperImpl implements AudioPlayerHelper {
   }
 
   @override
-  StreamSubscription<PlayerState> playerStateStream() {
-    return audioPlayer.playerStateStream.listen((playerState) {});
+  Stream<PlayerState> playerStateStream() {
+    return audioPlayer.playerStateStream;
   }
 
   @override
-  StreamSubscription<Duration> positionStream() {
-    return audioPlayer.positionStream.listen((position) {});
+  Stream<Duration> positionStream() {
+    return audioPlayer.positionStream;
   }
 
   @override
-  StreamSubscription<Duration> bufferedPositionStream() {
-    return audioPlayer.bufferedPositionStream.listen((bufferedPosition) {});
+  Stream<Duration> bufferedPositionStream() {
+    return audioPlayer.bufferedPositionStream;
   }
 
   @override
-  StreamSubscription<Duration?> durationStream() {
-    return audioPlayer.durationStream.listen((totalDuration) {});
+  Stream<Duration?> durationStream() {
+    return audioPlayer.durationStream;
   }
 
   @override

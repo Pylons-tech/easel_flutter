@@ -1,7 +1,9 @@
-const List kTutorialItems = [
-  {'header': 'Upload your NFT file', 'description': 'Choose the file you wish to mint into a NFT!', 'image': 'assets/images/tutorial1.png'},
-  {'header': 'Edit your NFT Details', 'description': 'Enter information describing your NFT including the price you wish to sell it for!', 'image': 'assets/images/tutorial2.png'},
-  {'header': 'Manage your NFT with the ', 'header1': 'Pylons app', 'description': 'You can store, collect & manage all your NFTs in the Pylons app!', 'image': 'assets/images/tutorial3.png'},
+import 'package:easy_localization/easy_localization.dart';
+
+List kTutorialItems = [
+  {'header': 'upload_your_nft_file'.tr(), 'description': 'pick_the_file'.tr(), 'image': 'assets/images/tutorial1.png'},
+  {'header': 'edit_your_nft'.tr(), 'description': 'enter_information_describing_your_nft'.tr(), 'image': 'assets/images/tutorial2.png'},
+  {'header': 'manage_your_nft'.tr(), 'header1': 'pylons_app'.tr(), 'description': 'you_can_collect_manage_your_nft'.tr(), 'image': 'assets/images/tutorial3.png'},
 ];
 
 /// ```PNG assets
@@ -48,9 +50,6 @@ const kWalletIOSId = 'xyz.pylons.wallet';
 const kWalletAndroidId = 'tech.pylons.wallet';
 const kWalletWebLink = 'https://wallet.pylons.tech';
 const kWalletDynamicLink = 'pylons.page.link';
-
-/// Loader message
-const kCompressingMessage = "Compressing Thumbnail";
 
 /// ```Number constants
 const kMinNFTName = 9;
@@ -198,3 +197,10 @@ const String kHashtagKey = "Hashtags";
 const kThumbnailUrl = "Thumbnail_URL";
 
 final List stepLabels = [kUploadText, kEditText, kListText];
+
+/// Supported Formats
+
+const mp3 = "mp3";
+const ogg = "ogg";
+const wav = "wav";
+const aac = "aac";

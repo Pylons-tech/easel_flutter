@@ -183,27 +183,23 @@ class EaselProvider extends ChangeNotifier {
     return false;
   }
 
-
-
-  void  saveArtistName(name) {
-     localDataSource.saveArtistName(name);
+  void saveArtistName(name) {
+    localDataSource.saveArtistName(name);
   }
 
-  void toCheckSavedArtistName(){
+  void toCheckSavedArtistName() {
     String savedArtistName = localDataSource.getArtistName();
 
-    if(savedArtistName.isNotEmpty){
+    if (savedArtistName.isNotEmpty) {
       artistNameController.text = savedArtistName;
       return;
     }
-   artistNameController.text = currentUsername;
-
+    artistNameController.text = currentUsername;
   }
 
   /// sends a createRecipe Tx message to the wallet
   /// return true or false depending on the response from the wallet app
   Future<bool> createRecipe() async {
-
     if (!await shouldMintUSDOrNot()) {
       return false;
     }
@@ -405,7 +401,7 @@ class EaselProvider extends ChangeNotifier {
     final bool isUrlLoaded = await audioPlayerHelper.setFile(file: _file!.path);
 
     if (isUrlLoaded) {
-      audioPlayerHelper.playerStateStream().onData((playerState) {
+      audioPlayerHelper.playerStateStream().listen((event) {}).onData((playerState) {
         final isPlaying = playerState.playing;
         final processingState = playerState.processingState;
 
@@ -433,7 +429,7 @@ class EaselProvider extends ChangeNotifier {
       });
     }
 
-    audioPlayerHelper.positionStream().onData((position) {
+    audioPlayerHelper.positionStream().listen((event) {}).onData((position) {
       final oldState = audioProgressNotifier.value;
       audioProgressNotifier.value = ProgressBarState(
         current: position,
@@ -442,7 +438,7 @@ class EaselProvider extends ChangeNotifier {
       );
     });
 
-    audioPlayerHelper.bufferedPositionStream().onData((bufferedPosition) {
+    audioPlayerHelper.bufferedPositionStream().listen((event) {}).onData((bufferedPosition) {
       final oldState = audioProgressNotifier.value;
       audioProgressNotifier.value = ProgressBarState(
         current: oldState.current,
@@ -451,7 +447,7 @@ class EaselProvider extends ChangeNotifier {
       );
     });
 
-    audioPlayerHelper.durationStream().onData((totalDuration) {
+    audioPlayerHelper.durationStream().listen((event) {}).onData((totalDuration) {
       final oldState = audioProgressNotifier.value;
       audioProgressNotifier.value = ProgressBarState(
         current: oldState.current,

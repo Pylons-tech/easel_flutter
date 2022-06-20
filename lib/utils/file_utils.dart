@@ -33,7 +33,7 @@ class FileUtils {
       case kAudioText:
         if (!Platform.isAndroid) {
           _type = FileType.custom;
-          allowedExtensions = ['mp3', 'ogg', 'wav'];
+          allowedExtensions = [mp3, ogg, wav, aac];
         } else {
           _type = FileType.audio;
         }

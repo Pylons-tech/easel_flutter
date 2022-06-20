@@ -44,7 +44,7 @@ dependencies:
 
 
   # file_picker plugin is used so we can pick single/multiple files with extension filtering support.
-#  with this plugin, we can filter the file extension(not just images) we want users to pick.
+  #  with this plugin, we can filter the file extension(not just images) we want users to pick.
   file_picker: ^4.5.0
 
   path: ^1.8.0
@@ -72,14 +72,14 @@ dependencies:
   media_info: ^0.9.0
 
   video_player: ^2.2.18
-  just_audio: ^0.9.24
+  just_audio: 0.9.24
   audio_video_progress_bar: ^0.10.0
   model_viewer_plus: 1.1.2
 
   flutter_image_compress: ^1.1.0
 
-# used for bitmap manipulation, needed for svg to png conversion
-#  bitmap: ^0.1.2
+  # used for bitmap manipulation, needed for svg to png conversion
+  #  bitmap: ^0.1.2
 
   path_provider: ^2.0.6
 
@@ -139,18 +139,18 @@ flutter:
   # in this "flutter" section. Each entry in this list should have a
   # "family" key with the font family name, and a "fonts" key with a
   # list giving the asset and other descriptors for the font. For
-#  fonts:
-#    - family: Inter
-#      fonts:
-#        - asset: assets/fonts/Inter-Black.ttf
-#        - asset: assets/fonts/Inter-Bold.ttf
-#        - asset: assets/fonts/Inter-ExtraBold.ttf
-#        - asset: assets/fonts/Inter-ExtraLight.ttf
-#        - asset: assets/fonts/Inter-Light.ttf
-#        - asset: assets/fonts/Inter-Medium.ttf
-#        - asset: assets/fonts/Inter-Regular.ttf
-#        - asset: assets/fonts/Inter-SemiBold.ttf
-#        - asset: assets/fonts/Inter-Thin.ttf
+  #  fonts:
+  #    - family: Inter
+  #      fonts:
+  #        - asset: assets/fonts/Inter-Black.ttf
+  #        - asset: assets/fonts/Inter-Bold.ttf
+  #        - asset: assets/fonts/Inter-ExtraBold.ttf
+  #        - asset: assets/fonts/Inter-ExtraLight.ttf
+  #        - asset: assets/fonts/Inter-Light.ttf
+  #        - asset: assets/fonts/Inter-Medium.ttf
+  #        - asset: assets/fonts/Inter-Regular.ttf
+  #        - asset: assets/fonts/Inter-SemiBold.ttf
+  #        - asset: assets/fonts/Inter-Thin.ttf
   # For details regarding fonts from package dependencies,
   # see https://flutter.dev/custom-fonts/#from-packages
 
