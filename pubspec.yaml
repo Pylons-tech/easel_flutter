@@ -101,6 +101,9 @@ dependencies:
   shimmer_animation: ^2.1.0+1
 
 
+  flutter_image_compress: 1.1.0
+
+
 dev_dependencies:
   flutter_test:
     sdk: flutter

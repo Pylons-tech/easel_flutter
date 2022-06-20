@@ -26,8 +26,8 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
         body: Padding(
       padding: EdgeInsets.symmetric(horizontal: 30.w),
       child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
         children: <Widget>[
-          SizedBox(height: 0.2.sh),
           Align(
             alignment: Alignment.topLeft,
             child: Text(
@@ -35,12 +35,12 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
               style: Theme.of(context).textTheme.bodyText1!.copyWith(color: EaselAppTheme.kDarkText, fontSize: 24.sp, fontWeight: FontWeight.w800),
             ),
           ),
-          SizedBox(height: 60.h),
+          SizedBox(height: 50.h),
           Text(
             kEaselDescriptionText,
             style: Theme.of(context).textTheme.bodyText1!.copyWith(color: EaselAppTheme.kDarkText, fontSize: 16.sp, fontWeight: FontWeight.w400),
           ),
-          SizedBox(height: 60.h),
+          SizedBox(height: 50.h),
           Container(
             alignment: Alignment.topLeft,
             child: PylonsButton(

@@ -52,7 +52,7 @@ class MyApp extends StatelessWidget {
       ],
       child: ScreenUtilInit(
           minTextAdapt: true,
-          builder: (context,widget) => MaterialApp(
+          builder: (BuildContext context, child) => MaterialApp(
                 builder: (context, widget) {
                   ScreenUtil.init(context);
                   return MediaQuery(

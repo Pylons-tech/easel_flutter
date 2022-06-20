@@ -1,4 +1,5 @@
 import 'package:easel_flutter/main.dart';
+import 'package:easel_flutter/utils/constants.dart';
 import 'package:easel_flutter/utils/space_utils.dart';
 import 'package:flutter/material.dart';
 
@@ -9,7 +10,7 @@ class Loading {
     navigatorKey.currentState!.pop();
   }
 
-  Loading showLoading({String message = "Loading..."}) {
+  Loading showLoading({String message = kLoadingMessage}) {
     showDialog(
       context: navigatorKey.currentState!.overlay!.context,
       barrierDismissible: true,
