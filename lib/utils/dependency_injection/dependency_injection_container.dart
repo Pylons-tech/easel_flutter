@@ -4,6 +4,7 @@ import 'dart:io';
 import 'package:dio/dio.dart';
 
 import 'package:easel_flutter/easel_provider.dart';
+import 'package:easel_flutter/screens/creator_hub/creator_hub_view_model.dart';
 import 'package:easel_flutter/env.dart';
 import 'package:easel_flutter/services/datasources/local_datasource.dart';
 import 'package:easel_flutter/services/datasources/remote_datasource.dart';
@@ -24,7 +25,8 @@ void init() {
 }
 
 void _registerExternalDependencies() {
-  sl.registerSingletonAsync<SharedPreferences>(() => SharedPreferences.getInstance());
+  sl.registerSingletonAsync<SharedPreferences>(
+      () => SharedPreferences.getInstance());
 
   log(apiKey); //your nft.storage api key
   sl.registerLazySingleton<Dio>(
@@ -37,12 +39,14 @@ void _registerExternalDependencies() {
           }),
     ),
   );
+}
 
   sl.registerFactory<VideoPlayerController>(() => VideoPlayerController.file(File('')));
 }
 
 void _registerRemoteDataSources() {
-  sl.registerLazySingleton<RemoteDataSource>(() => RemoteDataSourceImpl(sl<Dio>()));
+  sl.registerLazySingleton<RemoteDataSource>(
+      () => RemoteDataSourceImpl(sl<Dio>()));
 }
 
 void _registerLocalDataSources() {
@@ -50,7 +54,9 @@ void _registerLocalDataSources() {
 }
 
 void _registerProviders() {
-  sl.registerLazySingleton<EaselProvider>(() => EaselProvider(sl(), sl(), sl()));
+  sl.registerLazySingleton<EaselProvider>(() => EaselProvider(sl(), sl()));
+  sl.registerLazySingleton<CreatorHubViewModel>(() => CreatorHubViewModel(sl(), sl()));
+
 }
 
 void _registerServices() {
