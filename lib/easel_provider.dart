@@ -29,7 +29,7 @@ class EaselProvider extends ChangeNotifier {
   final RemoteDataSource remoteDataSource;
   final VideoPlayerHelper videoPlayerHelper;
 
-  EaselProvider(this.localDataSource, this.remoteDataSource, this.videoPlayerHelper);
+  EaselProvider({required this.localDataSource,required this.remoteDataSource,required this.videoPlayerHelper});
 
   File? _file;
   NftFormat _nftFormat = NftFormat.supportedFormats[0];

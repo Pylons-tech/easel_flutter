@@ -43,16 +43,16 @@ void _registerExternalDependencies() {
 }
 
 void _registerRemoteDataSources() {
-  sl.registerLazySingleton<RemoteDataSource>(() => RemoteDataSourceImpl(sl<Dio>()));
+  sl.registerLazySingleton<RemoteDataSource>(() => RemoteDataSourceImpl(httpClient: sl<Dio>()));
 }
 
 void _registerLocalDataSources() {
-  sl.registerLazySingleton<LocalDataSource>(() => LocalDataSourceImpl(sl()));
+  sl.registerLazySingleton<LocalDataSource>(() => LocalDataSourceImpl(sharedPreferences: sl()));
 }
 
 void _registerProviders() {
-  sl.registerLazySingleton<EaselProvider>(() => EaselProvider(sl(), sl(), sl()));
-  sl.registerLazySingleton<CreatorHubViewModel>(() => CreatorHubViewModel(sl(), sl()));
+  sl.registerLazySingleton<EaselProvider>(() => EaselProvider(remoteDataSource: sl(), videoPlayerHelper: sl(), localDataSource: sl()));
+  sl.registerLazySingleton<CreatorHubViewModel>(() => CreatorHubViewModel(localDataSource: sl(), remoteDataSource: sl()));
 }
 
 void _registerServices() {
