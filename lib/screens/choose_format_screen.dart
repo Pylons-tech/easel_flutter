@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:easel_flutter/easel_provider.dart';
 import 'package:easel_flutter/models/nft_format.dart';
+import 'package:easel_flutter/screens/creator_hub/creator_hub_view_model.dart';
 import 'package:easel_flutter/screens/preview_screen.dart';
 import 'package:easel_flutter/utils/constants.dart';
 import 'package:easel_flutter/utils/easel_app_theme.dart';
@@ -11,6 +12,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:flutter_svg_provider/flutter_svg_provider.dart' as svg_provider;
+import 'package:get_it/get_it.dart';
 import 'package:provider/provider.dart';
 
 import '../utils/file_utils.dart';
@@ -40,6 +42,8 @@ class _ChooseFormatScreenState extends State<ChooseFormatScreen> {
       provider.resolveNftFormat(context, result.extension!);
       if (FileUtils.getFileSizeInGB(File(result.path!).lengthSync()) <= kFileSizeLimitInGB) {
         await provider.setFile(context, result);
+        GetIt.I.get<CreatorHubViewModel>().saveDraft(provider.file);
+
         Navigator.push(
           context,
           MaterialPageRoute(builder: (context) => PreviewScreen(controller: widget.controller)),

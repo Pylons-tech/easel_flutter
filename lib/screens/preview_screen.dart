@@ -52,7 +52,6 @@ class _PreviewScreenState extends State<PreviewScreen> {
                     padding: EdgeInsets.only(left: 10.sp),
                     child: IconButton(
                       onPressed: () {
-                        creatorHubViewModel.saveDraft(provider.file);
                         Navigator.of(context).pop();
                       },
                       icon: const Icon(

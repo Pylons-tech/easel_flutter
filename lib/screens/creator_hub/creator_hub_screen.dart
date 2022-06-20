@@ -275,11 +275,9 @@ class _CreatorHubScreenState extends State<CreatorHubScreen> {
                             clipper: bottomSheetClipper(),
 
                             child: Container(
-                              height: 230.h,
                              color: EaselAppTheme.kWhite ,
-                             padding: EdgeInsets.symmetric(horizontal:30.w, vertical: 40.h),
-                             child: Column(
-                               mainAxisAlignment: MainAxisAlignment.center,
+                             padding: EdgeInsets.symmetric(horizontal:30.w, vertical: 30.h),
+                             child: Wrap(
                                children: [
                                  moreOptionTile(title: "publish", svg: kSvgPublish),
                                  const Divider(color: EaselAppTheme.kGrey,),
