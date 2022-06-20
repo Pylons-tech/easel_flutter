@@ -2,7 +2,10 @@ import 'dart:developer';
 
 import 'package:easel_flutter/datasources/local_datasource.dart';
 import 'package:easel_flutter/datasources/remote_datasource.dart';
+import 'package:easel_flutter/models/nft.dart';
 import 'package:easel_flutter/repository/repository.dart';
+import 'package:easel_flutter/utils/constants.dart';
+import 'package:easel_flutter/widgets/loading.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:pylons_sdk/pylons_sdk.dart';
 
@@ -23,28 +26,57 @@ class CreatorHubViewModel extends ChangeNotifier {
     notifyListeners();
   }
 
-  final List<Recipe> _publishedRecipesList = [];
+  bool _publishCollapse = true;
 
-  List<Recipe> get publishedRecipesList => _publishedRecipesList;
+  bool get publishCollapse => _publishCollapse;
+
+  set publishCollapse(bool value) {
+    _publishCollapse = value;
+    notifyListeners();
+  }
+
+  bool _draftCollapse = true;
+
+  bool get draftCollapse => _draftCollapse;
+
+  set draftCollapse(bool value) {
+    _draftCollapse = value;
+    notifyListeners();
+  }
+
+  final List<NFT> _publishedNFTsList = [];
+
+  List<NFT> get publishedNFTsList => _publishedNFTsList;
 
   String? getCookbookIdFromLocalDatasource() {
     return localDataSource.getCookbookId();
   }
 
-  getRecipesList() async {
+  void getRecipesList() async {
+    final loading = Loading().showLoading(message: kPleaseWait);
+
     final cookBookId = getCookbookIdFromLocalDatasource();
     if (cookBookId == null) return;
 
     final recipesListEither = await repository.getRecipesBasedOnCookBookId(cookBookId: cookBookId);
 
     if (recipesListEither.isLeft()) {
+      loading.dismiss();
       return;
     }
 
-    final recipesList = recipesListEither.toOption();
+    final recipesList = recipesListEither.getOrElse(() => []);
+    _publishedNFTsList.clear();
+    if (recipesList.isNotEmpty) {
+      for (final recipe in recipesList) {
+        final nft = NFT.fromRecipe(recipe);
+        _publishedNFTsList.add(nft);
+      }
+    }
 
-    publishedRecipesList.addAll(recipesList as List<Recipe>);
+    publishedRecipeLength = publishedNFTsList.length;
+    loading.dismiss();
 
-    log('recipesLength: ${publishedRecipesList.length}');
+    log('recipesLength: $publishedRecipesLength');
   }
 }

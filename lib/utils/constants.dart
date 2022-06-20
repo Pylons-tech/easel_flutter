@@ -71,6 +71,10 @@ const kFileSizeLimitInGB = 32;
 const kMaxPriceLength = 14;
 const kSecInMillis = 1000;
 const double TABLET_MIN_WIDTH = 600;
+const int kNumberOfSeconds = 1000;
+const int kSixtySeconds = 60;
+const double kPrecision = 100000000000000000;
+
 
 /// ````Reserved words, symbols, IDs etc
 const kCookbookId = 'cookbook_id';
@@ -90,6 +94,8 @@ const kAtomText = 'Atom';
 const kEurText = 'EEur';
 const kAgoricText = 'Agoric';
 const kJunoText = 'Juno';
+const kNone = 'None';
+const kPleaseWait = 'Please Wait';
 
 /// ```Text constants
 const kPreviewNoticeText = 'The resolution & orientation of your NFT will remain fixed as seen in the grid.';
@@ -209,3 +215,37 @@ const String kNoInternet = 'No internet';
 const String kRecipeNotFound = 'Recipe not found';
 const String kCookBookNotFound = 'Cookbook not found';
 
+
+//NFT STRINGS KEYS
+const kResidual = "Residual";
+const kQuantity = "Quantity";
+const kWidth = "Width";
+const kHeight = "Height";
+const kName = "Name";
+const kAppType = "App_Type";
+const kDescription = "Description";
+const kNFTFormat = "NFT_Format";
+const kNFTURL = "NFT_URL";
+const kCreator = "Creator";
+const kThumbnailUrl = "Thumbnail_URL";
+const kEasel = "Easel";
+const kEaselNFT = "Easel_NFT";
+const kUpylon = "upylon";
+const kExtraInfo= "extraInfo";
+
+const String kNftFormat = "NFT_Format";
+const String kDuration = "Duration";
+const kHashtags = "Hashtags";
+
+
+/// Currency ABRR
+const String kEmoneyAbb = "EEUR";
+const String kAGoricAbb = "run";
+const String kPYLN_ABBREVATION = 'PYLN';
+const String kStripeUSD_ABR = 'USD';
+const String kAgoricAbr = "RUN";
+const String kAtomAbr = "ATOM";
+const String kLunaAbr = "Luna";
+const String kEthereumAbr = "ETH";
+const String kEthereumSymbol = "weth-wei";
+const String kDefault = 'Default';
