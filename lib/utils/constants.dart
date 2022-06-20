@@ -196,6 +196,7 @@ const kTryAgain = "Try again";
 const kAppNotInstalled = "Please download the Pylons app and create a username to publish a NFT in Easel.";
 const kPleaseTryAgain = "Something went wrong.\n Please try again.";
 const kCancel = "Cancel";
+const String videoPlayerNetworkError = 'Unable to play the video right now. Please check your internet connection and try again.';
 
 
 /// Nft viewmodel key values

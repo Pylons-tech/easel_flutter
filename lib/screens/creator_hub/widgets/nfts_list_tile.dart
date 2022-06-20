@@ -1,11 +1,15 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:easel_flutter/models/nft.dart';
+import 'package:easel_flutter/screens/creator_hub/widgets/video_placeholder.dart';
 import 'package:easel_flutter/utils/constants.dart';
 import 'package:easel_flutter/utils/easel_app_theme.dart';
+import 'package:easel_flutter/utils/enums.dart';
 import 'package:easel_flutter/widgets/clippers/bottom_sheet_clipper.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:shimmer_animation/shimmer_animation.dart';
 
 class NFTsListTile extends StatelessWidget {
   final NFT publishedNFT;
@@ -28,13 +32,31 @@ class NFTsListTile extends StatelessWidget {
           child: Row(
             children: [
               SizedBox(
-                height: 45.w,
-                width: 45.w,
-                child: SvgPicture.asset(
-                  kAlertIcon,
-                  color: EaselAppTheme.kBlack,
-                ),
-              ),
+                  height: 35.w,
+                  width: 35.w,
+                  child: LeadingBuilder(
+                    onImage: (context) => CachedNetworkImage(
+                      errorWidget: (context, url, error) => Align(
+                        child: SvgPicture.asset(
+                          kSvgNftFormatImage,
+                          color: EaselAppTheme.kBlack,
+                        ),
+                      ),
+                      placeholder: (context, url) => Shimmer(color: EaselAppTheme.cardBackground, child: const SizedBox.expand()),
+                      imageUrl: publishedNFT.url,
+                      fit: BoxFit.cover,
+                    ),
+                    onVideo: (context) => VideoPlaceHolder(nftUrl: publishedNFT.url, nftName: publishedNFT.name, thumbnailUrl: publishedNFT.thumbnailUrl),
+                    onAudio: (context) => SvgPicture.asset(
+                      kSvgNftFormatAudio,
+                      color: EaselAppTheme.kBlack,
+                    ),
+                    on3D: (context) => SvgPicture.asset(
+                      kSvgNftFormat3d,
+                      color: EaselAppTheme.kBlack,
+                    ),
+                    assetType: publishedNFT.assetType,
+                  )),
               SizedBox(
                 width: 10.w,
               ),
@@ -44,14 +66,14 @@ class NFTsListTile extends StatelessWidget {
                   children: [
                     Text(
                       publishedNFT.name,
-                      style: EaselAppTheme.titleStyle,
+                      style: EaselAppTheme.titleStyle.copyWith(fontSize: 16.sp),
                     ),
                     SizedBox(
                       height: 6.h,
                     ),
                     Text(
                       "publish".tr(),
-                      style: EaselAppTheme.titleStyle.copyWith(color: EaselAppTheme.kLightRed, fontSize: 13.sp),
+                      style: EaselAppTheme.titleStyle.copyWith(color: EaselAppTheme.kDarkGreen, fontSize: 13.sp),
                     ),
                   ],
                 ),
@@ -109,5 +131,34 @@ class NFTsListTile extends StatelessWidget {
             ),
           );
         });
+  }
+}
+
+class LeadingBuilder extends StatelessWidget {
+  final WidgetBuilder onImage;
+  final WidgetBuilder onVideo;
+  final WidgetBuilder onAudio;
+  final WidgetBuilder on3D;
+  final AssetType assetType;
+
+  const LeadingBuilder({
+    Key? key,
+    required this.onImage,
+    required this.onVideo,
+    required this.onAudio,
+    required this.on3D,
+    required this.assetType,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    switch (assetType) {
+      case AssetType.Audio:
+        return onAudio(context);
+      case AssetType.Image:
+        return onImage(context);
+      case AssetType.Video:
+        return onVideo(context);
+    }
   }
 }
