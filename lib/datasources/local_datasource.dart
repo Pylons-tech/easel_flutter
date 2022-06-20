@@ -47,6 +47,10 @@ abstract class LocalDataSource {
   /// Input: [Draft] the draft that will will be saved in database
   /// Output: [bool] returns whether the operation is successful or not
   Future<bool> saveDraft(Draft draft);
+
+  /// This method will get the drafts List from the local database
+  /// Output: [List] returns  the List of drafts
+  Future<List<Draft>> getDrafts();
 }
 
 class LocalDataSourceImpl implements LocalDataSource {
@@ -123,5 +127,16 @@ class LocalDataSourceImpl implements LocalDataSource {
     await draftDao.insertDraft(draft);
 
     return true;
+  }
+
+  @override
+  Future<List<Draft>> getDrafts() async{
+
+    final database = await $FloorAppDatabase.databaseBuilder('app_database.db').build();
+
+    final draftDao = database.draftDao;
+
+   return await draftDao.findAllDrafts();
+
   }
 }

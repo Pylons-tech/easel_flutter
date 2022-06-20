@@ -1,5 +1,6 @@
 import 'package:easel_flutter/easel_provider.dart';
 import 'package:easel_flutter/screens/creator_hub/creator_hub_screen.dart';
+import 'package:easel_flutter/screens/creator_hub/creator_hub_view_model.dart';
 import 'package:easel_flutter/screens/home_screen.dart';
 import 'package:easel_flutter/screens/splash_screen.dart';
 import 'package:easel_flutter/screens/tutorial_screen.dart';
@@ -47,6 +48,8 @@ class MyApp extends StatelessWidget {
     return MultiProvider(
       providers: [
         ChangeNotifierProvider(create: (_) => GetIt.I.get<EaselProvider>()),
+        ChangeNotifierProvider(create: (_) => GetIt.I.get<CreatorHubViewModel>()),
+
       ],
       child: ScreenUtilInit(
           minTextAdapt: true,

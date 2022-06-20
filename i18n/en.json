@@ -4,5 +4,9 @@
   "publish": "Published",
   "publish_total": "Published ({})",
   "draft_total": "Draft ({})",
-  "draft": "Draft"
+  "draft": "Draft",
+  "publish": "Publish",
+  "delete": "Delete",
+  "view": "View On IFPS"
+
 }

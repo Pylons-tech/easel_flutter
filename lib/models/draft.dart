@@ -5,6 +5,6 @@ class Draft {
   @primaryKey
   final int? id;
 
-  final String imageString;
+   String imageString;
   Draft(this.id, this.imageString);
 }

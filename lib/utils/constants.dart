@@ -50,6 +50,10 @@ const kSvgNftFormatVideo = 'assets/images/svg/nft_format_video.svg';
 const kSvgNftFormat3d = 'assets/images/svg/nft_format_3d.svg';
 const kSvgNftFormatAudio = 'assets/images/svg/nft_format_audio.svg';
 const kSvgMoreOption = 'assets/images/svg/more_options.svg';
+const kSvgPublish = 'assets/images/svg/publish.svg';
+const kSvgDelete = 'assets/images/svg/delete.svg';
+const kSvgView = 'assets/images/svg/view.svg';
+
 const kDummyImg = 'assets/images/svg/dummy_img.png';
 
 /// ```URL constants
