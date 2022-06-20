@@ -1,4 +1,3 @@
-import 'dart:convert';
 import 'dart:io';
 
 import 'package:easel_flutter/datasources/local_datasource.dart';
@@ -10,8 +9,6 @@ import 'package:easel_flutter/utils/constants.dart';
 import 'package:easel_flutter/utils/extension_util.dart';
 import 'package:easel_flutter/widgets/loading.dart';
 import 'package:flutter/cupertino.dart';
-import 'package:path/path.dart';
-import 'package:path_provider/path_provider.dart';
 
 class CreatorHubViewModel extends ChangeNotifier {
   final LocalDataSource localDataSource;
@@ -40,18 +37,17 @@ class CreatorHubViewModel extends ChangeNotifier {
   }
 
   getDraftsList() async {
+
+    final loading = Loading().showLoading(message: "Uploading ...");
+
     draftList = await localDataSource.getDrafts();
+
+    loading.dismiss();
 
     notifyListeners();
   }
 
   saveDraft(File? file) async {
-    // ///put it into your application documents directory:
-    // String path = "";
-    // await getApplicationDocumentsDirectory().then((value) => path = value.path);
-    // final fileName = basename(file!.path);
-    //
-    // final File copyFile = await file.copy('$path/$fileName');
 
     final loading = Loading().showLoading(message: "Uploading ...");
     final uploadResponse = await remoteDataSource.uploadFile(file!);

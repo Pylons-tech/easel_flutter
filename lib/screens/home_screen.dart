@@ -8,6 +8,7 @@ import 'package:easel_flutter/utils/constants.dart';
 import 'package:easel_flutter/utils/easel_app_theme.dart';
 import 'package:easel_flutter/utils/screen_responsive.dart';
 import 'package:easel_flutter/utils/space_utils.dart';
+import 'package:easel_flutter/widgets/loading.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get_it/get_it.dart';
@@ -52,6 +53,9 @@ class _HomeScreenState extends State<HomeScreen> {
   Widget build(BuildContext context) {
     return WillPopScope(
       onWillPop: ()async{
+
+        await  GetIt.I.get<CreatorHubViewModel>().getDraftsList();
+
 
         return true;
       },
@@ -115,9 +119,15 @@ class _HomeScreenState extends State<HomeScreen> {
                               : Padding(
                                   padding: EdgeInsets.only(left: 10.sp),
                                   child: IconButton(
-                                    onPressed: () {
+                                    onPressed: () async {
                                       ScaffoldMessenger.of(context).hideCurrentSnackBar();
-                                      GetIt.I.get<CreatorHubViewModel>().getDraftsList();
+
+                                      await GetIt.I.get<CreatorHubViewModel>().getDraftsList();
+
+                                      if(_currentPage.value==0){
+                                        Navigator.pop(context,);
+                                        return;
+                                      }
                                       _pageController.previousPage(
                                           duration: const Duration(milliseconds: 300), curve: Curves.easeIn);
                                     },
