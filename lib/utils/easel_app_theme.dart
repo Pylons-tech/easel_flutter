@@ -22,6 +22,9 @@ class EaselAppTheme {
   static const Color kDarkGreen = Color(0xFF3A8977);
   static const Color kYellow = Color(0xFFF3BA2F);
   static const Color kLightRed = Color(0xFFEF4421);
+  static const Color kBgWhite = Color(0xFFE5E5E5);
+
+
 
   static ThemeData theme(BuildContext context) => ThemeData(
         backgroundColor: kWhite,

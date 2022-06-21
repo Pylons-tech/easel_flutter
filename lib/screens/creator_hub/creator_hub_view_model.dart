@@ -38,7 +38,7 @@ class CreatorHubViewModel extends ChangeNotifier {
 
   getDraftsList() async {
 
-    final loading = Loading().showLoading(message: "Uploading ...");
+    final loading = Loading().showLoading(message: "loading ...");
 
     draftList = await localDataSource.getDrafts();
 

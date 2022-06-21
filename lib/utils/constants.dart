@@ -17,6 +17,8 @@ const List kTutorialItems = [
   },
 ];
 
+const String kUniversalFontFamily = "UniversalSans";
+
 /// ```PNG assets
 const kShareIcon = 'assets/images/share_ic.png';
 const kSaveIcon = 'assets/images/save_ic.png';

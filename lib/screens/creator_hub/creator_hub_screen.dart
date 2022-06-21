@@ -28,8 +28,8 @@ class _CreatorHubScreenState extends State<CreatorHubScreen> {
     super.initState();
   }
 
-  TextStyle titleStyle = TextStyle(fontSize: 18.sp, fontWeight: FontWeight.w800, color: EaselAppTheme.kBlack);
-  TextStyle digitTextStyle = TextStyle(fontSize: 20.sp, fontWeight: FontWeight.w800, color: EaselAppTheme.kWhite);
+  TextStyle titleStyle = TextStyle(fontSize: 18.sp, fontWeight: FontWeight.w800, color: EaselAppTheme.kBlack, fontFamily:  kUniversalFontFamily,);
+  TextStyle digitTextStyle = TextStyle(fontSize: 20.sp, fontWeight: FontWeight.w800, color: EaselAppTheme.kWhite, fontFamily:  kUniversalFontFamily,);
 
   @override
   Widget build(BuildContext context) {
@@ -38,6 +38,7 @@ class _CreatorHubScreenState extends State<CreatorHubScreen> {
           color: EaselAppTheme.kWhite,
           child: SafeArea(
               child: Scaffold(
+                backgroundColor: EaselAppTheme.kBgWhite,
             body: Padding(
               padding: EdgeInsets.only(left: 25.w, right: 25.w, top: 30.h),
               child: Column(
@@ -239,14 +240,17 @@ class _CreatorHubScreenState extends State<CreatorHubScreen> {
               ),
               Expanded(
                 child: Column(
+
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
                       "NFT name",
                       style: titleStyle,
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
                     ),
                     SizedBox(
-                      height: 6.h,
+                      height: 11.h,
                     ),
                     Text(
                       "draft".tr(),
@@ -283,7 +287,7 @@ class _CreatorHubScreenState extends State<CreatorHubScreen> {
             children: [
               Text(
                 title,
-                style: TextStyle(color: EaselAppTheme.kWhite, fontWeight: FontWeight.w400, fontSize: 12.sp),
+                style: TextStyle(color: EaselAppTheme.kWhite, fontWeight: FontWeight.w400, fontFamily:  kUniversalFontFamily, fontSize: 12.sp),
               ),
               SizedBox(
                 height: 10.h,
