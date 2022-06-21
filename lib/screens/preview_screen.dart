@@ -23,6 +23,7 @@ class PreviewScreen extends StatefulWidget {
 
 class _PreviewScreenState extends State<PreviewScreen> {
   final navigatorKey = GlobalKey<NavigatorState>();
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -53,13 +54,17 @@ class _PreviewScreenState extends State<PreviewScreen> {
                 alignment: Alignment.bottomRight,
                 child: PylonsButton(
                     onPressed: () {
-                      if(provider.audioThumnail!=null){
+                      if (provider.nftFormat.format == kAudioText) {
+                        if (provider.audioThumnail != null) {
+                          widget.controller.nextPage(duration: const Duration(milliseconds: 10), curve: Curves.easeIn);
+                          Navigator.of(context).pop();
+                        } else {
+                          context.show(message: kErrAddAudioThumbnil);
+                        }
+                      } else {
                         widget.controller.nextPage(duration: const Duration(milliseconds: 10), curve: Curves.easeIn);
                         Navigator.of(context).pop();
-                      }else{
-                        context.show(message: kErrAddAudioThumbnil );
                       }
-
                     },
                     btnText: kContinue,
                     isBlue: false,
