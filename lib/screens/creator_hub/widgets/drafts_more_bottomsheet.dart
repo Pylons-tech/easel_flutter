@@ -17,7 +17,7 @@ class DraftsMoreBottomSheet  extends StatelessWidget {
       clipper: BottomSheetClipper(),
 
       child: Container(
-        color: EaselAppTheme.kWhite,
+        color: EaselAppTheme.kLightGrey02,
         padding: EdgeInsets.symmetric(horizontal: 30.w, vertical: 30.h),
         child: Wrap(
           children: [
@@ -37,7 +37,7 @@ class DraftsMoreBottomSheet  extends StatelessWidget {
   }
 }
 Widget  moreOptionTile({required String title, required String svg}){
-  TextStyle titleStyle = TextStyle(fontSize: 18.sp, fontWeight: FontWeight.w800, color: EaselAppTheme.kBlack);
+  TextStyle titleStyle = TextStyle(fontSize: 18.sp, fontWeight: FontWeight.w800,fontFamily:  kUniversalFontFamily,  color: EaselAppTheme.kBlack);
 
   return Padding(
     padding:  EdgeInsets.symmetric(vertical: 8.h),
@@ -55,14 +55,15 @@ Widget  moreOptionTile({required String title, required String svg}){
 
 class BottomSheetClipper extends CustomClipper<Path> {
   BottomSheetClipper();
+
   @override
   Path getClip(Size size) {
     final path = Path();
     path.moveTo(0, size.height);
-    path.lineTo(0, size.height *0.1);
-    path.lineTo(size.width*0.07, 0);
-    path.lineTo(size.width*0.93, 0);
-    path.lineTo(size.width, size.height*0.1);
+    path.lineTo(0, size.height *0.08.h);
+    path.lineTo(size.width*0.05.w, 0);
+    path.lineTo(size.width*0.95.w, 0);
+    path.lineTo(size.width, size.height*0.08.h);
     path.lineTo(size.width , size.height);
     path.lineTo(0, size.height);
 

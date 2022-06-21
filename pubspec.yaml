@@ -138,18 +138,19 @@ flutter:
   # in this "flutter" section. Each entry in this list should have a
   # "family" key with the font family name, and a "fonts" key with a
   # list giving the asset and other descriptors for the font. For
-#  fonts:
-#    - family: Inter
-#      fonts:
-#        - asset: assets/fonts/Inter-Black.ttf
-#        - asset: assets/fonts/Inter-Bold.ttf
-#        - asset: assets/fonts/Inter-ExtraBold.ttf
-#        - asset: assets/fonts/Inter-ExtraLight.ttf
-#        - asset: assets/fonts/Inter-Light.ttf
-#        - asset: assets/fonts/Inter-Medium.ttf
-#        - asset: assets/fonts/Inter-Regular.ttf
-#        - asset: assets/fonts/Inter-SemiBold.ttf
-#        - asset: assets/fonts/Inter-Thin.ttf
+  fonts:
+    - family: UniversalSans
+      fonts:
+        - asset: assets/fonts/UniversalSans-300.ttf
+          weight: 300
+        - asset: assets/fonts/UniversalSans-400.ttf
+          weight: 400
+        - asset: assets/fonts/UniversalSans-500.ttf
+          weight: 500
+        - asset: assets/fonts/UniversalSans-600.ttf
+          weight: 600
+        - asset: assets/fonts/UniversalSans-750.ttf
+          weight: 700
   # For details regarding fonts from package dependencies,
   # see https://flutter.dev/custom-fonts/#from-packages
 

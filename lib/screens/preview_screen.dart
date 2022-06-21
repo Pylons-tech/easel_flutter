@@ -1,4 +1,5 @@
 import 'package:easel_flutter/easel_provider.dart';
+import 'package:easel_flutter/screens/creator_hub/creator_hub_view_model.dart';
 import 'package:easel_flutter/utils/constants.dart';
 import 'package:easel_flutter/widgets/audio_widget.dart';
 import 'package:easel_flutter/widgets/image_widget.dart';
@@ -7,6 +8,7 @@ import 'package:easel_flutter/widgets/pylons_button.dart';
 import 'package:easel_flutter/widgets/video_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:get_it/get_it.dart';
 import 'package:provider/provider.dart';
 
 import '../utils/easel_app_theme.dart';
@@ -63,7 +65,9 @@ class _PreviewScreenState extends State<PreviewScreen> {
               child: Align(
                 alignment: Alignment.bottomRight,
                 child: PylonsButton(
-                    onPressed: () {
+                    onPressed: () async{
+                      await  GetIt.I.get<CreatorHubViewModel>().saveDraft(provider.file);
+
                       widget.controller.nextPage(duration: const Duration(milliseconds: 10), curve: Curves.easeIn);
                       Navigator.of(context).pop();
                     },

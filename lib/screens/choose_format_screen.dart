@@ -42,7 +42,6 @@ class _ChooseFormatScreenState extends State<ChooseFormatScreen> {
       provider.resolveNftFormat(context, result.extension!);
       if (FileUtils.getFileSizeInGB(File(result.path!).lengthSync()) <= kFileSizeLimitInGB) {
         await provider.setFile(context, result);
-       await  GetIt.I.get<CreatorHubViewModel>().saveDraft(provider.file);
 
         Navigator.push(
           context,
