@@ -53,9 +53,10 @@ class _CreatorHubScreenState extends State<CreatorHubScreen> {
   Widget build(BuildContext context) {
     return Consumer(builder: (context, CreatorHubViewModel viewModel, child) {
       return Container(
-          color: EaselAppTheme.kWhite,
+          color: EaselAppTheme.kBgColor,
           child: SafeArea(
               child: Scaffold(
+            backgroundColor: EaselAppTheme.kBgColor,
             body: Padding(
               padding: EdgeInsets.only(left: 25.w, right: 25.w, top: 30.h),
               child: Column(
@@ -97,9 +98,16 @@ class _CreatorHubScreenState extends State<CreatorHubScreen> {
                     ],
                   ),
                   SizedBox(height: 30.h),
-                  publishedNFTsContainer(title: "publish_total".tr(args: [viewModel.publishedRecipesLength.toString()]), viewModel: viewModel),
-                  SizedBox(height: 20.h),
-                  draftNFTsContainer(title: "draft_total".tr(args: ["0"]), viewModel: viewModel)
+                  Expanded(
+                    child: ListView(
+                      primary: false,
+                      children: [
+                        publishedNFTsContainer(title: "publish_total".tr(args: [viewModel.publishedRecipesLength.toString()]), viewModel: viewModel),
+                        SizedBox(height: 20.h),
+                        draftNFTsContainer(title: "draft_total".tr(args: ["0"]), viewModel: viewModel)
+                      ],
+                    ),
+                  )
                 ],
               ),
             ),
@@ -132,7 +140,7 @@ class _CreatorHubScreenState extends State<CreatorHubScreen> {
                   onTap: () {
                     viewModel.publishCollapse = !viewModel.publishCollapse;
                   },
-                  child: SizedBox(height: 20.h, width: 20.w, child: Icon(viewModel.publishCollapse ? Icons.add : Icons.remove)),
+                  child: SizedBox(height: 25.h, width: 25.w, child: Icon(viewModel.publishCollapse ? Icons.add : Icons.remove)),
                 )
               ],
             ),
@@ -223,6 +231,7 @@ class _CreatorHubScreenState extends State<CreatorHubScreen> {
   Widget _buildPublishedNFTsListView({required CreatorHubViewModel viewModel}) {
     return ListView.builder(
         shrinkWrap: true,
+        physics: const NeverScrollableScrollPhysics(),
         itemCount: viewModel.publishedNFTsList.length,
         itemBuilder: (context, index) {
           final nft = viewModel.publishedNFTsList[index];

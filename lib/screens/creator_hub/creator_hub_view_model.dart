@@ -1,20 +1,19 @@
 import 'dart:developer';
 
-import 'package:easel_flutter/datasources/local_datasource.dart';
-import 'package:easel_flutter/datasources/remote_datasource.dart';
 import 'package:easel_flutter/models/nft.dart';
 import 'package:easel_flutter/repository/repository.dart';
+import 'package:easel_flutter/services/datasources/local_datasource.dart';
+import 'package:easel_flutter/services/datasources/remote_datasource.dart';
 import 'package:easel_flutter/utils/constants.dart';
 import 'package:easel_flutter/widgets/loading.dart';
 import 'package:flutter/cupertino.dart';
-import 'package:pylons_sdk/pylons_sdk.dart';
 
 class CreatorHubViewModel extends ChangeNotifier {
   final LocalDataSource localDataSource;
   final RemoteDataSource remoteDataSource;
   Repository repository;
 
-  CreatorHubViewModel(this.localDataSource, this.remoteDataSource, this.repository);
+  CreatorHubViewModel({required this.localDataSource, required this.remoteDataSource, required this.repository});
 
   int _publishedRecipesLength = 0;
 
@@ -71,8 +70,10 @@ class CreatorHubViewModel extends ChangeNotifier {
     final recipesList = recipesListEither.getOrElse(() => []);
     _publishedNFTsList.clear();
     if (recipesList.isNotEmpty) {
+      log('Here is thumbnail: ${recipesList.last.toProto3Json()}');
       for (final recipe in recipesList) {
         final nft = NFT.fromRecipe(recipe);
+
         _publishedNFTsList.add(nft);
       }
     }

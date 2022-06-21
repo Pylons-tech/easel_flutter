@@ -1,7 +1,9 @@
 import 'package:easel_flutter/easel_provider.dart';
+import 'package:easel_flutter/models/nft.dart';
 import 'package:easel_flutter/screens/creator_hub/creator_hub_screen.dart';
 import 'package:easel_flutter/screens/creator_hub/creator_hub_view_model.dart';
 import 'package:easel_flutter/screens/home_screen.dart';
+import 'package:easel_flutter/screens/preview_nft/preview_nft_full_screen.dart';
 import 'package:easel_flutter/screens/splash_screen.dart';
 import 'package:easel_flutter/screens/tutorial_screen.dart';
 import 'package:easel_flutter/screens/welcome_screen/welcome_screen.dart';
@@ -73,7 +75,7 @@ class MyApp extends StatelessWidget {
                   RouteUtil.ROUTE_TUTORIAL: (context) => const TutorialScreen(),
                   RouteUtil.ROUTE_WELCOME: (context) => const WelcomeScreen(),
                   RouteUtil.ROUTE_CREATOR_HUB: (context) => const CreatorHubScreen(),
-
+                  RouteUtil.ROUTE_PREVIEW_NFT_FULL_SCREEN: (context) => PreviewNFTFullScreen(),
                   RouteUtil.ROUTE_HOME: (context) => const HomeScreen(),
                 },
               )),

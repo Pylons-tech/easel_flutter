@@ -42,7 +42,7 @@ class _VideoWidgetState extends State<VideoWidget> {
   @override
   void initState() {
     scheduleMicrotask(() {
-      easelProvider.initializeVideoPlayer();
+      easelProvider.initializeVideoPlayerWithFile();
     });
     super.initState();
   }
@@ -235,9 +235,7 @@ class _VideoWidgetState extends State<VideoWidget> {
                 ),
                 Padding(
                   padding: EdgeInsets.only(bottom: 70.h),
-                  child: const VideoProgressWidget(
-                    darkMode: false,
-                  ),
+                  child: VideoProgressWidget(darkMode: false, isForFile: true),
                 ),
                 if (shouldShowThumbnailButtonOrStepsOrNot()) ...[
                   _buildThumbnailButton(),

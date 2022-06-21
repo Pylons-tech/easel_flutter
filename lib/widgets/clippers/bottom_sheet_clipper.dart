@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 class BottomSheetClipper extends CustomClipper<Path> {
   BottomSheetClipper();
@@ -7,10 +8,10 @@ class BottomSheetClipper extends CustomClipper<Path> {
   Path getClip(Size size) {
     final path = Path();
     path.moveTo(0, size.height);
-    path.lineTo(0, size.height * 0.12);
-    path.lineTo(size.width * 0.07, 0);
-    path.lineTo(size.width * 0.93, 0);
-    path.lineTo(size.width, size.height * 0.12);
+    path.lineTo(0, size.height * 0.08.h);
+    path.lineTo(size.width * 0.05, 0);
+    path.lineTo(size.width * 0.95, 0);
+    path.lineTo(size.width, size.height * 0.08.h);
     path.lineTo(size.width, size.height);
     path.lineTo(0, size.height);
 

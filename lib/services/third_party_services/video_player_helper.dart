@@ -6,7 +6,11 @@ import 'package:video_player/video_player.dart';
 abstract class VideoPlayerHelper {
   /// This method will be do the main heavy lifting and it will
   /// initialize the video player and make it ready to use
-  void initializeVideoPlayer({required File file});
+  void initializeVideoPlayerWithFile({required File file});
+
+  /// This method will be do the main heavy lifting and it will
+  /// initialize the video player and make it ready to use
+  void initializeVideoPlayerWithUrl({required String videoUrl});
 
   /// This method will be a listener to the positionStream which
   /// will listen to the current duration of the video being played
@@ -35,8 +39,13 @@ class VideoPlayerHelperImp implements VideoPlayerHelper {
   VideoPlayerHelperImp(this.videoPlayerController);
 
   @override
-  void initializeVideoPlayer({required File file}) async {
+  void initializeVideoPlayerWithFile({required File file}) async {
     videoPlayerController = VideoPlayerController.file(file)..initialize().then((value) => {});
+  }
+
+  @override
+  void initializeVideoPlayerWithUrl({required String videoUrl}) async {
+    videoPlayerController = VideoPlayerController.network(videoUrl)..initialize().then((value) => {});
   }
 
   @override

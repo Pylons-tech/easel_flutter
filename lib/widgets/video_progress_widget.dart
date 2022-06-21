@@ -9,8 +9,9 @@ import 'package:video_player/video_player.dart';
 
 class VideoProgressWidget extends StatelessWidget {
   final bool darkMode;
+  final bool isForFile;
 
-  const VideoProgressWidget({Key? key, required this.darkMode}) : super(key: key);
+  const VideoProgressWidget({Key? key, required this.darkMode, required this.isForFile}) : super(key: key);
 
   String _getDuration(Duration duration) {
     String twoDigits(int n) => n.toString().padLeft(2, "0");
@@ -104,8 +105,9 @@ class VideoProgressWidget extends StatelessWidget {
                                 return SizedBox(width: 15.w, child: CircularProgressIndicator(strokeWidth: 1.w, color: darkMode ? EaselAppTheme.kWhite : EaselAppTheme.kBlack));
                               }
                             }),
+
                         Text(
-                          formatDuration(easelProvider.fileDuration ~/ kSecInMillis),
+                         isForFile ? formatDuration(easelProvider.fileDuration ~/ kSecInMillis) : easelProvider.publishedNFTClicked.duration,
                           style: TextStyle(color: darkMode ? EaselAppTheme.kWhite : EaselAppTheme.kBlack),
                         ),
                       ],

@@ -1,14 +1,18 @@
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:easel_flutter/easel_provider.dart';
 import 'package:easel_flutter/models/nft.dart';
 import 'package:easel_flutter/screens/creator_hub/widgets/video_placeholder.dart';
 import 'package:easel_flutter/utils/constants.dart';
 import 'package:easel_flutter/utils/easel_app_theme.dart';
 import 'package:easel_flutter/utils/enums.dart';
+import 'package:easel_flutter/utils/file_utils.dart';
+import 'package:easel_flutter/utils/route_util.dart';
 import 'package:easel_flutter/widgets/clippers/bottom_sheet_clipper.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:get_it/get_it.dart';
 import 'package:shimmer_animation/shimmer_animation.dart';
 
 class NFTsListTile extends StatelessWidget {
@@ -16,11 +20,13 @@ class NFTsListTile extends StatelessWidget {
 
   const NFTsListTile({Key? key, required this.publishedNFT}) : super(key: key);
 
+  EaselProvider get _easelProvider => GetIt.I.get();
+
   @override
   Widget build(BuildContext context) {
     return Container(
         margin: EdgeInsets.symmetric(vertical: 5.h, horizontal: 3.w),
-        decoration: BoxDecoration(color: Colors.white, boxShadow: [
+        decoration: BoxDecoration(color: EaselAppTheme.kWhite, boxShadow: [
           BoxShadow(
             color: Colors.black.withOpacity(0.3),
             offset: const Offset(0.0, 1.0),
@@ -66,6 +72,8 @@ class NFTsListTile extends StatelessWidget {
                   children: [
                     Text(
                       publishedNFT.name,
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
                       style: EaselAppTheme.titleStyle.copyWith(fontSize: 16.sp),
                     ),
                     SizedBox(
@@ -82,7 +90,7 @@ class NFTsListTile extends StatelessWidget {
                 width: 10.w,
               ),
               InkWell(
-                onTap: () => _buildPublishedBottomSheet(context: context),
+                onTap: () => _buildPublishedBottomSheet(context: context, nft: publishedNFT),
                 child: SizedBox(
                   height: 25.w,
                   width: 25.w,
@@ -94,39 +102,60 @@ class NFTsListTile extends StatelessWidget {
         ));
   }
 
-  _buildPublishedBottomSheet({required BuildContext context}) {
+  navigateToPreviewScreen({required BuildContext context, required NFT nft}) {
+    _easelProvider.setPublishedNFTClicked(nft);
+    Navigator.of(context).pushReplacementNamed(RouteUtil.ROUTE_PREVIEW_NFT_FULL_SCREEN);
+  }
+
+  onViewOnPylonsPressed({required NFT nft}) async {
+    String url = FileUtils.generateEaselLink(
+      cookbookId: nft.cookbookID,
+      recipeId: nft.recipeID,
+    );
+
+    await FileUtils.launchMyUrl(url: url);
+  }
+
+  Widget moreOptionTile({required String title, required String svg, required Function onPressed}) {
+    return Padding(
+      padding: EdgeInsets.symmetric(vertical: 8.h),
+      child: InkWell(
+        onTap: () {
+          onPressed();
+        },
+        child: Row(
+          children: [SvgPicture.asset(svg), SizedBox(width: 30.w), Text(title.tr(), style: EaselAppTheme.titleStyle.copyWith(fontSize: 16.sp))],
+        ),
+      ),
+    );
+  }
+
+  _buildPublishedBottomSheet({required BuildContext context, required NFT nft}) {
     return showModalBottomSheet(
         backgroundColor: Colors.transparent,
         context: context,
         builder: (BuildContext context) {
           return ClipPath(
             clipper: BottomSheetClipper(),
-            child: SafeArea(
-              child: Container(
-                color: EaselAppTheme.kWhite,
-                padding: EdgeInsets.symmetric(horizontal: 20.w),
-                child: Wrap(
-                  children: [
-                    ListTile(
-                      contentPadding: EdgeInsets.only(top: 10.h),
-                      leading: SvgPicture.asset(kSvgViewIcon),
-                      title: Text(
-                        kViewOnIPFS,
-                        style: EaselAppTheme.titleStyle.copyWith(fontSize: 15.sp),
-                      ),
-                    ),
-                    Divider(
-                      thickness: 1.h,
-                    ),
-                    ListTile(
-                      leading: SvgPicture.asset(kSvgPylonsLogo),
-                      title: Text(
-                        kViewOnPylons,
-                        style: EaselAppTheme.titleStyle.copyWith(fontSize: 15.sp),
-                      ),
-                    ),
-                  ],
-                ),
+            child: Container(
+              color: EaselAppTheme.kBgColor,
+              padding: EdgeInsets.symmetric(horizontal: 30.w, vertical: 30.h),
+              child: Wrap(
+                children: [
+                  moreOptionTile(
+                      onPressed: () {
+                        navigateToPreviewScreen(context: context, nft: nft);
+                      },
+                      title: kViewOnIPFS,
+                      svg: kSvgViewIcon),
+                  Divider(thickness: 1.h),
+                  moreOptionTile(
+                      onPressed: () {
+                        onViewOnPylonsPressed(nft: nft);
+                      },
+                      title: kViewOnPylons,
+                      svg: kSvgPylonsLogo),
+                ],
               ),
             ),
           );

@@ -18,7 +18,6 @@ class VideoPlaceHolder extends StatelessWidget {
     required this.thumbnailUrl,
   }) : super(key: key);
 
-
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -31,30 +30,21 @@ class VideoPlaceHolder extends StatelessWidget {
                         color: EaselAppTheme.cardBackground,
                         child: const SizedBox.expand(),
                       ),
-                  errorWidget: (context, url, error) => Align(
-                        child: Container(
-                          width: 35.w,
-                          height: 35.h,
-                          decoration: BoxDecoration(color: EaselAppTheme.kWhite.withOpacity(0.5), shape: BoxShape.circle),
-                          child: SvgPicture.asset(
-                            kSvgNftFormatVideo,
-                            color: EaselAppTheme.kBlack,
-                          ),
-                        ),
-                      ),
+                  errorWidget: (context, url, error) => Align(child: Container(color: EaselAppTheme.kWhite)),
                   imageUrl: thumbnailUrl,
                   fit: BoxFit.cover)),
           Align(
             child: Container(
-              width: 35.w,
-              height: 35.h,
+              width: 25.w,
+              height: 25.h,
               decoration: BoxDecoration(color: EaselAppTheme.kWhite.withOpacity(0.5), shape: BoxShape.circle),
-              child: SvgPicture.asset(
-                kSvgNftFormatVideo,
+              child: Image.asset(
+                kVideoIcon,
                 color: EaselAppTheme.kBlack,
               ),
             ),
           ),
+
         ],
       ),
     );

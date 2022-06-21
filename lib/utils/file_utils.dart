@@ -1,11 +1,13 @@
 import 'dart:io';
 import 'dart:math';
+import 'dart:developer' as dev;
 
 import 'package:easel_flutter/models/nft_format.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter_image_compress/flutter_image_compress.dart';
 import 'package:path/path.dart' as p;
 import 'package:path_provider/path_provider.dart';
+import 'package:url_launcher/url_launcher_string.dart';
 
 import 'constants.dart';
 
@@ -33,11 +35,9 @@ class FileUtils {
       case kAudioText:
         if (Platform.isAndroid) {
           _type = FileType.audio;
-           }
-        else{
+        } else {
           _type = FileType.custom;
           allowedExtensions = ['mp3', 'ogg', 'wav'];
-
         }
 
         break;
@@ -105,5 +105,14 @@ class FileUtils {
 
   static String generateEaselLink({required String recipeId, required String cookbookId}) {
     return "$kWalletWebLink/?action=purchase_nft&recipe_id=$recipeId&cookbook_id=$cookbookId";
+  }
+
+  static Future<void> launchMyUrl({required String url}) async {
+    final canLaunch = await canLaunchUrlString(url);
+    if (canLaunch) {
+      launchUrlString(url, mode: LaunchMode.externalApplication);
+    } else {
+      throw (kCannotLaunchThisUrl);
+    }
   }
 }

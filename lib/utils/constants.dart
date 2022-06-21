@@ -41,6 +41,7 @@ const kSvgNftFormat3d = 'assets/images/svg/nft_format_3d.svg';
 const kSvgNftFormatAudio = 'assets/images/svg/nft_format_audio.svg';
 const kSvgMoreOption = 'assets/images/svg/more_options.svg';
 const kDummyImg = 'assets/images/svg/dummy_img.png';
+const kVideoIcon = 'assets/images/video_icon.png';
 
 const kSvgPylonsLogo = 'assets/images/svg/pylons_logo.svg';
 const kSvgViewIcon= 'assets/images/svg/view_icon.svg';
@@ -90,6 +91,7 @@ const kAgoricText = 'Agoric';
 const kJunoText = 'Juno';
 const kNone = 'None';
 const kPleaseWait = 'Please Wait';
+const kBack = 'Back';
 
 /// ```Text constants
 const kPreviewNoticeText = 'The resolution & orientation of your NFT will remain fixed as seen in the grid.';
@@ -191,6 +193,7 @@ const kPleaseTryAgain = "Something went wrong.\n Please try again.";
 const kCancel = "Cancel";
 const String videoPlayerNetworkError = 'Unable to play the video right now. Please check your internet connection and try again.';
 const videoPlayerError = "Some Error Occurred while playing the video. Please try again later.";
+const kCannotLaunchThisUrl = "Cannot launch this URL";
 
 //NFT STRINGS KEYS
 const kResidual = "Residual";
@@ -249,26 +252,8 @@ const String kViewOnIPFS = 'View On IPFS';
 const String kViewOnPylons = 'View On Pylons';
 
 
-//NFT STRINGS KEYS
-const kResidual = "Residual";
-const kQuantity = "Quantity";
-const kWidth = "Width";
-const kHeight = "Height";
-const kName = "Name";
-const kAppType = "App_Type";
-const kDescription = "Description";
-const kNFTFormat = "NFT_Format";
-const kNFTURL = "NFT_URL";
-const kCreator = "Creator";
-const kThumbnailUrl = "Thumbnail_URL";
-const kEasel = "Easel";
-const kEaselNFT = "Easel_NFT";
-const kUpylon = "upylon";
-const kExtraInfo= "extraInfo";
-
 const String kNftFormat = "NFT_Format";
-const String kDuration = "Duration";
-const kHashtags = "Hashtags";
+
 
 
 /// Currency ABRR

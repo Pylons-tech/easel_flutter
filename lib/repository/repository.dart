@@ -1,8 +1,9 @@
 import 'dart:developer';
 
 import 'package:dartz/dartz.dart';
-import 'package:easel_flutter/datasources/local_datasource.dart';
-import 'package:easel_flutter/datasources/remote_datasource.dart';
+import 'package:easel_flutter/services/datasources/local_datasource.dart';
+import 'package:easel_flutter/services/datasources/remote_datasource.dart';
+
 import 'package:easel_flutter/services/third_party_services/network_info.dart';
 import 'package:easel_flutter/utils/constants.dart';
 import 'package:easel_flutter/utils/failure/failure.dart';
