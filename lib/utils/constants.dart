@@ -1,5 +1,5 @@
 const List kTutorialItems = [
-  {'header': 'Upload your NFT file', 'description': 'Choose the file you wish to mint into a NFT!', 'image': 'assets/images/tutorial1.png'},
+  {'header': 'Upload your NFT file', 'description': 'Choose the file you want to upload to draft your NFT', 'image': 'assets/images/tutorial1.png'},
   {'header': 'Edit your NFT Details', 'description': 'Enter information describing your NFT including the price you wish to sell it for!', 'image': 'assets/images/tutorial2.png'},
   {'header': 'Manage your NFT with the ', 'header1': 'Pylons app', 'description': 'You can store, collect & manage all your NFTs in the Pylons app!', 'image': 'assets/images/tutorial3.png'},
 ];
