@@ -75,7 +75,7 @@ class LocalDataSourceImpl implements LocalDataSource {
 
 
 
-  LocalDataSourceImpl(this.sharedPreferences);
+  LocalDataSourceImpl({required this.sharedPreferences});
 
   /// gets cookbookId from local storage
   ///return String or null

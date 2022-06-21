@@ -1,4 +1,4 @@
-import 'package:easel_flutter/datasources/local_datasource.dart';
+import 'package:easel_flutter/services/datasources/local_datasource.dart';
 import 'package:easel_flutter/utils/route_util.dart';
 import 'package:easel_flutter/utils/screen_responsive.dart';
 import 'package:flutter/material.dart';
