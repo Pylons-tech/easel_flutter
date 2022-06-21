@@ -146,8 +146,7 @@ class MintScreen extends StatelessWidget {
                               if (!isRecipeCreated) {
                                 return;
                               }
-                              provider.pauseAudio();
-                              provider.seekAudio(Duration.zero);
+                              provider.disposeAudioController();
                               controller.nextPage(duration: const Duration(milliseconds: 300), curve: Curves.easeIn);
                             },
                             btnText: kListText,

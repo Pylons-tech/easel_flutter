@@ -179,6 +179,7 @@ class _AudioWidgetState extends State<AudioWidget> with WidgetsBindingObserver {
   void dispose() {
     easelProvider.pauseAudio();
     easelProvider.seekAudio(Duration.zero);
+    easelProvider.disposeAudioController();
     super.dispose();
   }
 

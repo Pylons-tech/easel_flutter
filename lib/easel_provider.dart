@@ -401,12 +401,13 @@ class EaselProvider extends ChangeNotifier {
     final bool isUrlLoaded = await audioPlayerHelper.setFile(file: _file!.path);
 
     if (isUrlLoaded) {
-      audioPlayerHelper.playerStateStream().listen((event) {}).onData((playerState) {
+      audioPlayerHelper.playerStateStream().listen((event) {}).onData((playerState) async {
         final isPlaying = playerState.playing;
         final processingState = playerState.processingState;
 
         switch (processingState) {
           case ProcessingState.idle:
+            await audioPlayerHelper.setFile(file: _file!.path);
             break;
           case ProcessingState.loading:
           case ProcessingState.buffering:
