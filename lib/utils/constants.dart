@@ -135,6 +135,7 @@ const kDateText = 'Date';
 const kRoyaltyText = 'Royalty';
 const kPreview3dModelText = 'Click here to preview\nyour selected 3D Model';
 const kMintMoreText = 'Mint More';
+const kGotoDashboard = 'Go to Dashboard';
 const kGoToWalletText = 'Go to Wallet';
 const kChooseNFTFormatText = 'Choose your NFT format';
 const kUploadNFTText = 'Upload NFT file';

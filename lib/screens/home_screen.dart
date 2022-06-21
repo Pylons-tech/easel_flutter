@@ -7,6 +7,7 @@ import 'package:easel_flutter/screens/price_screen.dart';
 import 'package:easel_flutter/screens/publish_screen.dart';
 import 'package:easel_flutter/utils/constants.dart';
 import 'package:easel_flutter/utils/easel_app_theme.dart';
+import 'package:easel_flutter/utils/route_util.dart';
 import 'package:easel_flutter/utils/screen_responsive.dart';
 import 'package:easel_flutter/utils/space_utils.dart';
 import 'package:flutter/material.dart';
@@ -46,6 +47,10 @@ class _HomeScreenState extends State<HomeScreen> {
     super.dispose();
   }
 
+  gotoDashBoard() {
+    Navigator.of(context).pushNamedAndRemoveUntil((RouteUtil.ROUTE_CREATOR_HUB), (route) => false);
+  }
+
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -71,10 +76,10 @@ class _HomeScreenState extends State<HomeScreen> {
                                 builder: (_, provider, __) => TextButton(
                                   onPressed: () {
                                     provider.initStore();
-                                    _pageController.jumpToPage(_pageController.initialPage);
+                                    gotoDashBoard();
                                   },
                                   child: Text(
-                                    kMintMoreText,
+                                    kGotoDashboard,
                                     style: Theme.of(context).textTheme.bodyText1!.copyWith(fontSize: 20.sp, color: EaselAppTheme.kBlue, fontWeight: FontWeight.w400),
                                   ),
                                 ),
