@@ -34,7 +34,10 @@ class _AudioWidgetState extends State<AudioWidget> with WidgetsBindingObserver {
 
   @override
   initState() {
-    easelProvider.initializeAudioPlayer();
+    if (!easelProvider.isInitialized)
+      {
+        easelProvider.initializeAudioPlayer();
+      }
 
     super.initState();
   }
@@ -110,14 +113,14 @@ class _AudioWidgetState extends State<AudioWidget> with WidgetsBindingObserver {
                               builder: (_, value, __) {
                                 switch (value) {
                                   case ButtonState.loading:
-                                    return SizedBox(height: 22.h, width: 22.h, child: CircularProgressIndicator(strokeWidth: 2.w, color: Colors.black));
+                                    return SizedBox(height: 35.h, width: 22.h, child: CircularProgressIndicator(strokeWidth: 2.w, color: Colors.black));
                                   case ButtonState.paused:
                                     return InkWell(
                                       onTap: viewModel.playAudio,
                                       child: Icon(
                                         Icons.play_arrow,
                                         color: EaselAppTheme.kDarkBlue,
-                                        size: 22.h,
+                                        size: 35.h,
                                       ),
                                     );
 
@@ -127,7 +130,7 @@ class _AudioWidgetState extends State<AudioWidget> with WidgetsBindingObserver {
                                       child: Icon(
                                         Icons.pause,
                                         color: EaselAppTheme.kDarkBlue,
-                                        size: 22.h,
+                                        size: 35.h,
                                       ),
                                     );
                                 }
@@ -150,8 +153,8 @@ class _AudioWidgetState extends State<AudioWidget> with WidgetsBindingObserver {
                                     total: value.total,
                                     // timeLabelLocation: viewModel.collapsed ? TimeLabelLocation.none : TimeLabelLocation.below,
                                     timeLabelTextStyle: TextStyle(color: EaselAppTheme.kDartGrey, fontWeight: FontWeight.w800, fontSize: 9.sp),
-                                    thumbRadius: 6.h,
-                                    timeLabelPadding: 2.h,
+                                    thumbRadius: 10.h,
+                                    timeLabelPadding: 3.h,
                                     onSeek: viewModel.seekAudio,
                                   ),
                                 );
@@ -177,8 +180,6 @@ class _AudioWidgetState extends State<AudioWidget> with WidgetsBindingObserver {
 
   @override
   void dispose() {
-    easelProvider.pauseAudio();
-    easelProvider.seekAudio(Duration.zero);
     easelProvider.disposeAudioController();
     super.dispose();
   }

@@ -1,7 +1,6 @@
 import 'dart:async';
 import 'dart:developer';
 import 'dart:io';
-
 import 'package:easel_flutter/services/datasources/local_datasource.dart';
 import 'package:easel_flutter/services/datasources/remote_datasource.dart';
 import 'package:easel_flutter/main.dart';
@@ -66,6 +65,16 @@ class EaselProvider extends ChangeNotifier {
   File? _audioThumbnail;
 
   File? get audioThumnail => _audioThumbnail;
+
+  bool _isInitialized = false;
+
+   bool get isInitialized => _isInitialized;
+
+  set setIsInitialized(bool value) {
+    _isInitialized = value;
+    notifyListeners();
+  }
+
 
   final artistNameController = TextEditingController();
   final artNameController = TextEditingController();
@@ -225,12 +234,14 @@ class EaselProvider extends ChangeNotifier {
     ApiResponse audioThumbnailUploadResponse = ApiResponse.error(errorMessage: "");
     if (audioThumnail != null) {
       final loading = Loading().showLoading(message: kUploadingThumbnailMessage);
+
       audioThumbnailUploadResponse = await remoteDataSource.uploadFile(audioThumnail!);
       setAudioThumbnail(null);
       loading.dismiss();
     }
-
+    audioPlayerHelper.pauseAudio();
     final loading = Loading().showLoading(message: "Uploading ${_nftFormat.format}...");
+  if(_file!.existsSync()){
     final uploadResponse = await remoteDataSource.uploadFile(_file!);
     loading.dismiss();
     if (uploadResponse.status == Status.error) {
@@ -312,6 +323,11 @@ class EaselProvider extends ChangeNotifier {
       navigatorKey.currentState!.overlay!.context.show(message: "$kErrRecipe ${response.error}");
       return false;
     }
+  }else{
+    loading.dismiss();
+    navigatorKey.currentState!.overlay!.context.show(message: kErrPickFileFetch );
+    return false;
+  }
   }
 
   bool isDifferentUserName(String savedUserName) => (currentUsername.isNotEmpty && savedUserName != currentUsername);
@@ -398,9 +414,9 @@ class EaselProvider extends ChangeNotifier {
     );
     buttonNotifier = ValueNotifier<ButtonState>(ButtonState.loading);
 
-    final bool isUrlLoaded = await audioPlayerHelper.setFile(file: _file!.path);
+    setIsInitialized = await audioPlayerHelper.setFile(file: _file!.path);
 
-    if (isUrlLoaded) {
+    if (isInitialized) {
       audioPlayerHelper.playerStateStream().listen((event) {}).onData((playerState) async {
         final isPlaying = playerState.playing;
         final processingState = playerState.processingState;
@@ -428,7 +444,6 @@ class EaselProvider extends ChangeNotifier {
         }
       });
     }
-
     audioPlayerHelper.positionStream().listen((event) {}).onData((position) {
       final oldState = audioProgressNotifier.value;
       audioProgressNotifier.value = ProgressBarState(
@@ -446,7 +461,6 @@ class EaselProvider extends ChangeNotifier {
         total: oldState.total,
       );
     });
-
     audioPlayerHelper.durationStream().listen((event) {}).onData((totalDuration) {
       final oldState = audioProgressNotifier.value;
       audioProgressNotifier.value = ProgressBarState(

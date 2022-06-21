@@ -54,7 +54,7 @@ class AudioPlayerHelperImpl implements AudioPlayerHelper {
   @override
   Future<bool> setFile({required String file}) async {
     try {
-      await audioPlayer.setFilePath(file, preload: false);
+      await audioPlayer.setFilePath(file);
       await audioPlayer.load();
       return true;
     } catch (e) {
@@ -84,8 +84,14 @@ class AudioPlayerHelperImpl implements AudioPlayerHelper {
 
   @override
   void destroyAudioPlayer() {
-    audioPlayer.pause();
     audioPlayer.seek(Duration.zero);
+
+    if(audioPlayer.playing){
+      audioPlayer.pause();
+
+
+    }
+
   }
 
   @override

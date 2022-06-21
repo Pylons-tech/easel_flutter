@@ -1,5 +1,6 @@
 import 'package:easel_flutter/easel_provider.dart';
 import 'package:easel_flutter/utils/constants.dart';
+import 'package:easel_flutter/utils/extension_util.dart';
 import 'package:easel_flutter/widgets/audio_widget.dart';
 import 'package:easel_flutter/widgets/image_widget.dart';
 import 'package:easel_flutter/widgets/model_viewer.dart';
@@ -21,6 +22,7 @@ class PreviewScreen extends StatefulWidget {
 }
 
 class _PreviewScreenState extends State<PreviewScreen> {
+  final navigatorKey = GlobalKey<NavigatorState>();
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -51,8 +53,13 @@ class _PreviewScreenState extends State<PreviewScreen> {
                 alignment: Alignment.bottomRight,
                 child: PylonsButton(
                     onPressed: () {
-                      widget.controller.nextPage(duration: const Duration(milliseconds: 10), curve: Curves.easeIn);
-                      Navigator.of(context).pop();
+                      if(provider.audioThumnail!=null){
+                        widget.controller.nextPage(duration: const Duration(milliseconds: 10), curve: Curves.easeIn);
+                        Navigator.of(context).pop();
+                      }else{
+                        context.show(message: kErrAddAudioThumbnil );
+                      }
+
                     },
                     btnText: kContinue,
                     isBlue: false,
