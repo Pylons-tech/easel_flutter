@@ -268,7 +268,7 @@ class _CreatorHubScreenState extends State<CreatorHubScreen> {
                       backgroundColor: Colors.transparent,
                         context: context,
                         builder: (BuildContext bc) {
-                          return const DraftsMoreBottomSheet();
+                          return  DraftsMoreBottomSheet(draft: draft,);
                         });
                   },
                   child: SvgPicture.asset(kSvgMoreOption))

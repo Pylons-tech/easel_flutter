@@ -59,4 +59,9 @@ class CreatorHubViewModel extends ChangeNotifier {
     Draft draft = Draft(null, "$ipfsDomain/${uploadResponse.data?.value?.cid}");
     localDataSource.saveDraft(draft);
   }
+
+  deleteDraft(int? id ) async {
+
+    localDataSource.deleteDraft(id!);
+  }
 }

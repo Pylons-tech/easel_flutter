@@ -51,6 +51,11 @@ abstract class LocalDataSource {
   /// This method will get the drafts List from the local database
   /// Output: [List] returns  the List of drafts
   Future<List<Draft>> getDrafts();
+
+  /// This method will delete draft from the local database
+  /// Input: [id] the id of the draft which the user wants to delete
+  /// Output: [bool] returns whether the operation is successful or not
+  Future<void> deleteDraft(int id);
 }
 
 class LocalDataSourceImpl implements LocalDataSource {
@@ -136,7 +141,18 @@ class LocalDataSourceImpl implements LocalDataSource {
 
     final draftDao = database.draftDao;
 
-   return await draftDao.findAllDrafts();
+    return await draftDao.findAllDrafts();
+
+  }
+
+  @override
+  Future<void> deleteDraft(int id) async{
+
+    final database = await $FloorAppDatabase.databaseBuilder('app_database.db').build();
+
+    final draftDao = database.draftDao;
+
+    return await draftDao.delete(id);
 
   }
 }
