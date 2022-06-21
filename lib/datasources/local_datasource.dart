@@ -63,7 +63,10 @@ class LocalDataSourceImpl implements LocalDataSource {
 
   final SharedPreferences sharedPreferences;
 
-  LocalDataSourceImpl(this.sharedPreferences);
+  final AppDatabase database;
+
+
+  LocalDataSourceImpl(this.sharedPreferences, this.database);
 
   /// gets cookbookId from local storage
   ///return String or null
@@ -125,10 +128,8 @@ class LocalDataSourceImpl implements LocalDataSource {
 
   @override
   Future<bool> saveDraft(Draft draft) async {
-    final database = await $FloorAppDatabase.databaseBuilder('app_database.db').build();
 
     final draftDao = database.draftDao;
-
     await draftDao.insertDraft(draft);
 
     return true;
@@ -136,8 +137,6 @@ class LocalDataSourceImpl implements LocalDataSource {
 
   @override
   Future<List<Draft>> getDrafts() async{
-
-    final database = await $FloorAppDatabase.databaseBuilder('app_database.db').build();
 
     final draftDao = database.draftDao;
 
@@ -147,8 +146,6 @@ class LocalDataSourceImpl implements LocalDataSource {
 
   @override
   Future<void> deleteDraft(int id) async{
-
-    final database = await $FloorAppDatabase.databaseBuilder('app_database.db').build();
 
     final draftDao = database.draftDao;
 

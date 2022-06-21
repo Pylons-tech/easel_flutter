@@ -54,6 +54,8 @@ Widget  moreOptionTile({required String title, required String svg, required Fun
     child: InkWell(
       onTap: (){
 
+        onPressed();
+
       },
       child: Row(
         children: [

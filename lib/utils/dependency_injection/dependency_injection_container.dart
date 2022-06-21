@@ -2,6 +2,7 @@ import 'dart:developer';
 import 'dart:io';
 
 import 'package:dio/dio.dart';
+import 'package:easel_flutter/datasources/database.dart';
 import 'package:easel_flutter/datasources/local_datasource.dart';
 import 'package:easel_flutter/datasources/remote_datasource.dart';
 import 'package:easel_flutter/easel_provider.dart';
@@ -36,6 +37,10 @@ void _registerExternalDependencies() {
       ),
     ),
   );
+
+  sl.registerSingletonAsync<AppDatabase>(
+          () => $FloorAppDatabase.databaseBuilder('app_database.db').build());
+
 }
 
 
@@ -45,7 +50,7 @@ void _registerRemoteDataSources() {
 }
 
 void _registerLocalDataSources() {
-  sl.registerLazySingleton<LocalDataSource>(() => LocalDataSourceImpl(sl()));
+  sl.registerLazySingleton<LocalDataSource>(() => LocalDataSourceImpl(sl(), sl()));
 }
 
 void _registerProviders() {

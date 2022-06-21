@@ -61,7 +61,10 @@ class CreatorHubViewModel extends ChangeNotifier {
   }
 
   deleteDraft(int? id ) async {
+    final loading = Loading().showLoading(message: "Deleting ...");
 
-    localDataSource.deleteDraft(id!);
+    await  localDataSource.deleteDraft(id!);
+
+    loading.dismiss();
   }
 }
