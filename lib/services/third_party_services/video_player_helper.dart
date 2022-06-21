@@ -22,9 +22,11 @@ abstract class VideoPlayerHelper {
   Future<void> playVideo();
 
   /// This method will be responsible for seeking the Video when dragged forward of reverse
+  /// Input: [Duration] this will take the new position of the seekbar and will update it
   Future<void> seekToVideo({required Duration position});
 
-  /// This will be used to handle the play pause of the video and its playersStream
+  /// This will get the Video Player Controller which will be used to handle the play pause of the video and its playersStream
+  /// Output: [VideoPlayerController] returns VideoPlayerController
   VideoPlayerController getVideoPlayerController();
 }
 

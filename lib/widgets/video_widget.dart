@@ -235,9 +235,7 @@ class _VideoWidgetState extends State<VideoWidget> {
                 ),
                 Padding(
                   padding: EdgeInsets.only(bottom: 70.h),
-                  child: const VideoProgressWidget(
-                    darkMode: false,
-                  ),
+                  child: const VideoProgressWidget(darkMode: false),
                 ),
                 if (shouldShowThumbnailButtonOrStepsOrNot()) ...[
                   _buildThumbnailButton(),
