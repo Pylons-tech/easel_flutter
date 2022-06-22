@@ -14,7 +14,7 @@ import 'package:easel_flutter/services/third_party_services/video_player_helper.
 import 'package:easel_flutter/utils/constants.dart';
 import 'package:easel_flutter/utils/enums.dart';
 import 'package:easel_flutter/utils/extension_util.dart';
-import 'package:easel_flutter/utils/file_utils.dart';
+import 'package:easel_flutter/utils/file_utils_helper.dart';
 import 'package:easel_flutter/widgets/loading.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:fixnum/fixnum.dart';

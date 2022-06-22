@@ -13,7 +13,7 @@ abstract class VideoPlayerHelper {
   void initializeVideoPlayerWithUrl({required String videoUrl});
 
   /// This method is used to listen to the Position stream of the video player
-  /// Output : [StreamSubscription<Duration>] it will be a Stream for the realtime position
+  /// Output : [Duration] it will be a Stream for the realtime position
   /// duration on the video progress seekbar
   Stream<Duration?> positionStream();
 

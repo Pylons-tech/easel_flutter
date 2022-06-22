@@ -2,6 +2,7 @@ import 'dart:io';
 import 'dart:math';
 
 import 'package:easel_flutter/models/nft_format.dart';
+import 'package:easy_localization/easy_localization.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter_image_compress/flutter_image_compress.dart';
 import 'package:path/path.dart' as p;
@@ -18,17 +19,17 @@ abstract class FileUtilsHelper {
 
   /// This function takes the file and returns a compressed version of that file
   /// Input: [file] it takes the file that needs to be compressed
-  /// returns [Future<File?>] returns the compressed file
+  /// Output: [File] returns the compressed file
   Future<File?> compressAndGetFile(File file);
 
   /// This function checks if a file path extension svg or not
   /// Input: [filePath] the file path
-  /// Output: [True] if the filepath has svg extension and [False] otherwise
-  bool isSvgFile(String? filePath);
+  /// Output: [true] if the filepath has svg extension and [false] otherwise
+  bool isSvgFile(String filePath);
 
   /// This function checks if a file path extension svg or not
   /// Input: [filePath] the path of the file
-  /// Output: [True] if the filepath has svg extension and [False] otherwise
+  /// Output: [true] if the filepath has svg extension and [false] otherwise
   String getExtension(String fileName);
 
   /// This function is used to get the file size in GBs
@@ -103,11 +104,7 @@ class FileUtilsHelperImpl implements FileUtilsHelper {
   }
 
   @override
-  bool isSvgFile(String? filePath) {
-    if (filePath == null) {
-      return false;
-    }
-
+  bool isSvgFile(String filePath) {
     final extension = p.extension(filePath);
     return extension == ".svg";
   }
@@ -124,7 +121,6 @@ class FileUtilsHelperImpl implements FileUtilsHelper {
 
   @override
   String getFileSizeString({required int fileLength, int precision = 2}) {
-    const suffixes = ["B", "KB", "MB", "GB", "TB"];
     var i = (log(fileLength) / log(1024)).floor();
     return ((fileLength / pow(1024, i)).toStringAsFixed(precision)) + suffixes[i];
   }
@@ -140,7 +136,7 @@ class FileUtilsHelperImpl implements FileUtilsHelper {
     if (canLaunch) {
       launchUrlString(url, mode: LaunchMode.externalApplication);
     } else {
-      throw (kCannotLaunchThisUrl);
+      throw ("cannot_launch_url".tr());
     }
   }
 }

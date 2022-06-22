@@ -72,6 +72,11 @@ const int kFileCompressQuality = 50;
 
 const double kPrecision = 100000000000000000;
 
+
+
+const suffixes = ["B", "KB", "MB", "GB", "TB"];
+
+
 /// ````Reserved words, symbols, IDs etc
 const kCookbookId = 'cookbook_id';
 const kUsername = 'username';
