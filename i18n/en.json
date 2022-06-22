@@ -7,6 +7,9 @@
   "draft": "Draft",
   "publish": "Publish",
   "delete": "Delete",
-  "view": "View On IFPS"
+  "view": "View On IFPS",
+  "delete_error": "Failed to delete draft",
+  "save_error": "Failed to save draft"
+
 
 }

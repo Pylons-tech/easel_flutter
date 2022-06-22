@@ -1,14 +1,12 @@
 import 'package:easel_flutter/easel_provider.dart';
 import 'package:easel_flutter/screens/creator_hub/creator_hub_view_model.dart';
 import 'package:easel_flutter/screens/describe_screen.dart';
-import 'package:easel_flutter/screens/mint_screen.dart';
-import 'package:easel_flutter/screens/price_screen.dart';
 import 'package:easel_flutter/screens/publish_screen.dart';
 import 'package:easel_flutter/utils/constants.dart';
 import 'package:easel_flutter/utils/easel_app_theme.dart';
 import 'package:easel_flutter/utils/screen_responsive.dart';
 import 'package:easel_flutter/utils/space_utils.dart';
-import 'package:easel_flutter/widgets/loading.dart';
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get_it/get_it.dart';
@@ -19,6 +17,7 @@ import 'package:steps_indicator/steps_indicator.dart';
 import 'choose_format_screen.dart';
 
 class HomeScreen extends StatefulWidget {
+
   const HomeScreen({Key? key}) : super(key: key);
 
   @override
@@ -28,16 +27,17 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
-  final int _numPages = 5;
-  final PageController _pageController = PageController(keepPage: true);
+  final int _numPages = 3;
+  final PageController _pageController = PageController(keepPage: true, );
   final ValueNotifier<int> _currentPage = ValueNotifier(0);
   static const _kPageList = 3;
 
-  final int _numSteps = 4;
+  final int _numSteps = 3;
   final ValueNotifier<int> _currentStep = ValueNotifier(0);
 
-  final List stepLabels = [kUploadText, kDescribeText, kPriceText, kListText];
-  final List pageTitles = [kUploadNFTText, kDescribeNftText, kPriceNftText, '', ''];
+  final List stepLabels = ["upload",  "draft", "publish"];
+
+  final List pageTitles = [kUploadNFTText, kDetailNftText,  ''];
 
   @override
   void initState() {
@@ -190,8 +190,6 @@ class _HomeScreenState extends State<HomeScreen> {
                     children: [
                       ChooseFormatScreen(controller: _pageController),
                       DescribeScreen(controller: _pageController),
-                      PriceScreen(controller: _pageController),
-                      MintScreen(controller: _pageController),
                       PublishScreen(controller: _pageController)
                     ],
                   ),
@@ -225,7 +223,7 @@ class _HomeScreenState extends State<HomeScreen> {
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
           Text(
-            stepLabels[index],
+            stepLabels[index].toString().tr(),
             style: Theme.of(context).textTheme.bodyText2!.copyWith(
                 fontSize: 12.sp,
                 fontFamily: 'Inter',

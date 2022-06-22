@@ -2,6 +2,7 @@ import 'package:easel_flutter/datasources/database.dart';
 import 'package:easel_flutter/models/draft.dart';
 import 'package:easel_flutter/utils/constants.dart';
 import 'package:easel_flutter/utils/date_utils.dart';
+import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 abstract class LocalDataSource {
@@ -49,13 +50,13 @@ abstract class LocalDataSource {
   Future<bool> saveDraft(Draft draft);
 
   /// This method will get the drafts List from the local database
-  /// Output: [List] returns  the List of drafts
+  /// Output: [List][Draft] returns  the drafts list
   Future<List<Draft>> getDrafts();
 
   /// This method will delete draft from the local database
   /// Input: [id] the id of the draft which the user wants to delete
   /// Output: [bool] returns whether the operation is successful or not
-  Future<void> deleteDraft(int id);
+  Future<bool> deleteDraft(int id);
 }
 
 class LocalDataSourceImpl implements LocalDataSource {
@@ -64,7 +65,6 @@ class LocalDataSourceImpl implements LocalDataSource {
   final SharedPreferences sharedPreferences;
 
   final AppDatabase database;
-
 
   LocalDataSourceImpl(this.sharedPreferences, this.database);
 
@@ -128,28 +128,32 @@ class LocalDataSourceImpl implements LocalDataSource {
 
   @override
   Future<bool> saveDraft(Draft draft) async {
+    try {
+      await database.draftDao.insertDraft(draft);
+      return true;
+    } catch (e) {
+      debugPrint('An error occured $e');
 
-    final draftDao = database.draftDao;
-    await draftDao.insertDraft(draft);
-
-    return true;
+      return false;
+    }
   }
 
   @override
-  Future<List<Draft>> getDrafts() async{
+  Future<List<Draft>> getDrafts() async {
 
-    final draftDao = database.draftDao;
-
-    return await draftDao.findAllDrafts();
-
+    return await database.draftDao.findAllDrafts();
   }
 
   @override
-  Future<void> deleteDraft(int id) async{
+  Future<bool> deleteDraft(int id) async {
+    try {
+      await database.draftDao.delete(id);
 
-    final draftDao = database.draftDao;
+      return true;
+    } catch (e) {
+      debugPrint('An error occured $e');
 
-    return await draftDao.delete(id);
-
+      return false;
+    }
   }
 }

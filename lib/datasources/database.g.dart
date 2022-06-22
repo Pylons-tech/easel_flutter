@@ -66,7 +66,7 @@ class _$AppDatabase extends AppDatabase {
   Future<sqflite.Database> open(String path, List<Migration> migrations,
       [Callback? callback]) async {
     final databaseOptions = sqflite.OpenDatabaseOptions(
-      version: 1,
+      version: 2,
       onConfigure: (database) async {
         await database.execute('PRAGMA foreign_keys = ON');
         await callback?.onConfigure?.call(database);
@@ -82,7 +82,7 @@ class _$AppDatabase extends AppDatabase {
       },
       onCreate: (database, version) async {
         await database.execute(
-            'CREATE TABLE IF NOT EXISTS `draft` (`id` INTEGER NOT NULL, `imageString` TEXT NOT NULL, PRIMARY KEY (`id`))');
+            'CREATE TABLE IF NOT EXISTS `draft` (`id` INTEGER, `imageString` TEXT NOT NULL, PRIMARY KEY (`id`))');
 
         await callback?.onCreate?.call(database, version);
       },
@@ -118,16 +118,16 @@ class _$DraftDao extends DraftDao {
 
   @override
   Future<List<Draft>> findAllDrafts() async {
-    return _queryAdapter.queryList('SELECT * FROM draft',
+    return _queryAdapter.queryList('SELECT * FROM Draft',
         mapper: (Map<String, Object?> row) =>
-            Draft(row['id'] as int, row['imageString'] as String));
+            Draft(row['id'] as int?, row['imageString'] as String));
   }
 
   @override
   Stream<Draft?> findDraftById(int id) {
-    return _queryAdapter.queryStream('SELECT * FROM drafts WHERE id = ?1',
+    return _queryAdapter.queryStream('SELECT * FROM Draft WHERE id = ?1',
         mapper: (Map<String, Object?> row) =>
-            Draft(row['id'] as int, row['imageString'] as String),
+            Draft(row['id'] as int?, row['imageString'] as String),
         arguments: [id],
         queryableName: 'draft',
         isView: false);
@@ -136,11 +136,11 @@ class _$DraftDao extends DraftDao {
   @override
   Future<void> delete(int id) async {
     await _queryAdapter
-        .queryNoReturn('DELETE FROM drafts WHERE id = ?1', arguments: [id]);
+        .queryNoReturn('DELETE FROM Draft WHERE id = ?1', arguments: [id]);
   }
 
   @override
-  Future<void> insertDraft(Draft drafts) async {
-    await _draftInsertionAdapter.insert(drafts, OnConflictStrategy.abort);
+  Future<void> insertDraft(Draft draft) async {
+    await _draftInsertionAdapter.insert(draft, OnConflictStrategy.abort);
   }
 }

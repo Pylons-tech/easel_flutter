@@ -7,7 +7,7 @@ import 'package:sqflite/sqflite.dart' as sqflite;
 
 part 'database.g.dart'; // the generated code will be there
 
-@Database(version: 1, entities: [Draft])
+@Database(version: 2, entities: [Draft])
 abstract class AppDatabase extends FloorDatabase {
   DraftDao get draftDao;
 }
