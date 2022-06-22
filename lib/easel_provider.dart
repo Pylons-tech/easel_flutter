@@ -33,12 +33,14 @@ class EaselProvider extends ChangeNotifier {
   final RemoteDataSource remoteDataSource;
   final VideoPlayerHelper videoPlayerHelper;
   final AudioPlayerHelper audioPlayerHelper;
+  final FileUtilsHelper fileUtilsHelper;
 
   EaselProvider({
     required this.localDataSource,
     required this.remoteDataSource,
     required this.videoPlayerHelper,
     required this.audioPlayerHelper,
+    required this.fileUtilsHelper,
   });
 
   File? _file;
@@ -61,6 +63,15 @@ class EaselProvider extends ChangeNotifier {
 
   void setPublishedNFTClicked(NFT nft) {
     _publishedNFTClicked = nft;
+    notifyListeners();
+  }
+
+  String _publishedNFTDuration = "";
+
+  String get publishedNFTDuration => _publishedNFTDuration;
+
+  void setPublishedNFTDuration(String duration) {
+    _publishedNFTDuration = duration;
     notifyListeners();
   }
 
@@ -144,6 +155,12 @@ class EaselProvider extends ChangeNotifier {
     royaltyController.clear();
     hashtagsList.clear();
     notifyListeners();
+  }
+
+  void stopVideoIfPlaying() {
+    if (videoPlayerController.value.isPlaying) {
+      videoPlayerController.pause();
+    }
   }
 
   Future<void> setFormat(BuildContext context, NftFormat format) async {
@@ -313,8 +330,8 @@ class EaselProvider extends ChangeNotifier {
   Future<void> setFile(BuildContext context, PlatformFile selectedFile) async {
     _file = File(selectedFile.path!);
     _fileName = selectedFile.name;
-    _fileSize = FileUtils.getFileSizeString(fileLength: _file!.lengthSync());
-    _fileExtension = FileUtils.getExtension(_fileName);
+    _fileSize = fileUtilsHelper.getFileSizeString(fileLength: _file!.lengthSync());
+    _fileExtension = fileUtilsHelper.getExtension(_fileName);
     await _getMetadata(_file!);
     notifyListeners();
   }
@@ -332,6 +349,8 @@ class EaselProvider extends ChangeNotifier {
       _fileDuration = 0;
       return;
     }
+
+    log('Information: ${info.toString()}');
 
     if (_nftFormat.format == kImageText || _nftFormat.format == kVideoText) {
       _fileWidth = info['width'];
@@ -507,11 +526,21 @@ class EaselProvider extends ChangeNotifier {
   bool isDifferentUserName(String savedUserName) => (currentUsername.isNotEmpty && savedUserName != currentUsername);
 
   Future<void> shareNFT(Size size) async {
-    String url = FileUtils.generateEaselLink(
+    String url = fileUtilsHelper.generateEaselLink(
       cookbookId: _cookbookId ?? '',
       recipeId: _recipeId,
     );
-    Share.share("My Easel NFT\n\n$url", subject: 'My Easel NFT', sharePositionOrigin: Rect.fromLTWH(0, 0, size.width, size.height / 2));
+    Share.share("$kMyEaselNFT\n\n$url", subject: kMyEaselNFT, sharePositionOrigin: Rect.fromLTWH(0, 0, size.width, size.height / 2));
+  }
+
+  void onVideoThumbnailPicked() async {
+    final result = await fileUtilsHelper.pickFile(NftFormat.supportedFormats[0]);
+    if (result != null) {
+      final loading = Loading().showLoading(message: kCompressingMessage);
+      final file = await fileUtilsHelper.compressAndGetFile(File(result.path!));
+      setVideoThumbnail(file);
+      loading.dismiss();
+    }
   }
 
   @override

@@ -3,12 +3,13 @@ import 'package:flutter_test/flutter_test.dart';
 
 void main() {
   test('should create dynamic link for purchase', () {
+    FileUtilsHelperImpl fileUtilsHelperImpl = FileUtilsHelperImpl();
     String recipeId = "testRecipe";
     String cookbookId = "cookbookId";
 
     String expectedDynamicLink = 'https://wallet.pylons.tech/?action=purchase_nft&recipe_id=$recipeId&cookbook_id=$cookbookId';
 
-    var dynamicLink = FileUtils.generateEaselLink(recipeId: recipeId, cookbookId: cookbookId);
+    var dynamicLink = fileUtilsHelperImpl.generateEaselLink(recipeId: recipeId, cookbookId: cookbookId);
     expect(expectedDynamicLink, dynamicLink);
   });
 }

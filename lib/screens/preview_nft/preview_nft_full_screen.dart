@@ -35,8 +35,8 @@ class _PreviewNFTFullScreenState extends State<PreviewNFTFullScreen> {
       if (easelProvider.videoPlayerController.value.isPlaying) {
         easelProvider.videoPlayerController.pause();
       }
-      easelProvider.videoLoadingError = '';
     }
+    easelProvider.videoLoadingError = '';
 
     Navigator.pop(context);
   }

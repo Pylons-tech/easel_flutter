@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:easel_flutter/easel_provider.dart';
 import 'package:easel_flutter/utils/constants.dart';
 import 'package:easel_flutter/utils/easel_app_theme.dart';
@@ -105,9 +107,8 @@ class VideoProgressWidget extends StatelessWidget {
                                 return SizedBox(width: 15.w, child: CircularProgressIndicator(strokeWidth: 1.w, color: darkMode ? EaselAppTheme.kWhite : EaselAppTheme.kBlack));
                               }
                             }),
-
                         Text(
-                         isForFile ? formatDuration(easelProvider.fileDuration ~/ kSecInMillis) : easelProvider.publishedNFTClicked.duration,
+                          isForFile ? formatDuration(easelProvider.fileDuration ~/ kSecInMillis) : easelProvider.publishedNFTDuration,
                           style: TextStyle(color: darkMode ? EaselAppTheme.kWhite : EaselAppTheme.kBlack),
                         ),
                       ],

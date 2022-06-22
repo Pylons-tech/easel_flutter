@@ -4,17 +4,18 @@ import 'package:video_player/video_player.dart';
 
 /// Abstract Class for providing Video player
 abstract class VideoPlayerHelper {
-  /// This method will be do the main heavy lifting and it will
-  /// initialize the video player and make it ready to use
+  /// This method is used to initialize the Video player with local directory file
+  /// Input : [file] the local video file from directory which needs to be played
   void initializeVideoPlayerWithFile({required File file});
 
-  /// This method will be do the main heavy lifting and it will
-  /// initialize the video player and make it ready to use
+  /// This method is used to initialize the Video player with network URL of the Video
+  /// Input : [videoUrl] the Network URL of the video which needs to be played
   void initializeVideoPlayerWithUrl({required String videoUrl});
 
-  /// This method will be a listener to the positionStream which
-  /// will listen to the current duration of the video being played
-  StreamSubscription<Duration?> positionStream();
+  /// This method is used to listen to the Position stream of the video player
+  /// Output : [StreamSubscription<Duration>] it will be a Stream for the realtime position
+  /// duration on the video progress seekbar
+  Stream<Duration?> positionStream();
 
   /// This method will be responsible for destroying the video player instances from the memory
   void destroyVideoPlayer();
@@ -28,7 +29,9 @@ abstract class VideoPlayerHelper {
   /// This method will be responsible for seeking the Video when dragged forward of reverse
   Future<void> seekToVideo({required Duration position});
 
-  /// This will return the videoPlayerController instance
+  /// This method will return the current initialized instance of the video player which
+  /// Output:  [VideoPlayerController] which will be used to control action bar of video progress widget eventually
+  ///
   VideoPlayerController getVideoPlayerController();
 }
 
@@ -49,8 +52,8 @@ class VideoPlayerHelperImp implements VideoPlayerHelper {
   }
 
   @override
-  StreamSubscription<Duration?> positionStream() {
-    return Stream.fromFuture(videoPlayerController.position).listen((event) {});
+  Stream<Duration?> positionStream() {
+    return Stream.fromFuture(videoPlayerController.position);
   }
 
   @override

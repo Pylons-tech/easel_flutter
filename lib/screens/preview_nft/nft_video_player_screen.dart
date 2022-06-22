@@ -11,7 +11,6 @@ import 'package:video_player/video_player.dart';
 import 'package:flutter/material.dart';
 
 class NFTVideoPlayerScreen extends StatelessWidget {
-
   const NFTVideoPlayerScreen({Key? key}) : super(key: key);
 
   @override
@@ -24,13 +23,13 @@ class NFTVideoPlayerScreen extends StatelessWidget {
             children: [
               VideoBuilder(
                   onVideoLoading: (BuildContext context) => const Center(
-                    child: CircularProgressIndicator(
-                      strokeWidth: 2,
-                      valueColor: AlwaysStoppedAnimation<Color>(EaselAppTheme.kWhite),
-                    ),
-                  ),
+                        child: CircularProgressIndicator(
+                          strokeWidth: 2,
+                          valueColor: AlwaysStoppedAnimation<Color>(EaselAppTheme.kWhite),
+                        ),
+                      ),
                   onVideoHasError: (BuildContext context) => Center(
-                      child: Padding(
+                          child: Padding(
                         padding: const EdgeInsets.all(10),
                         child: Text(
                           videoPlayerError,
@@ -38,11 +37,11 @@ class NFTVideoPlayerScreen extends StatelessWidget {
                         ),
                       )),
                   onVideoInitialized: (BuildContext context) => Center(
-                    child: AspectRatio(
-                      aspectRatio: viewModel.videoPlayerController.value.aspectRatio,
-                      child: VideoPlayer(viewModel.videoPlayerController),
-                    ),
-                  ),
+                        child: AspectRatio(
+                          aspectRatio: viewModel.videoPlayerController.value.aspectRatio,
+                          child: VideoPlayer(viewModel.videoPlayerController),
+                        ),
+                      ),
                   easelProvider: viewModel),
               Column(
                 mainAxisAlignment: MainAxisAlignment.end,
@@ -57,7 +56,7 @@ class NFTVideoPlayerScreen extends StatelessWidget {
                         color: Colors.black.withOpacity(0.3),
                         child: Padding(
                           padding: EdgeInsets.only(bottom: 30.h),
-                          child: VideoProgressWidget(darkMode: true, isForFile: true),
+                          child: const VideoProgressWidget(darkMode: true, isForFile: false),
                         ),
                       ),
                     ),

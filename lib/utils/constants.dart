@@ -44,7 +44,7 @@ const kDummyImg = 'assets/images/svg/dummy_img.png';
 const kVideoIcon = 'assets/images/video_icon.png';
 
 const kSvgPylonsLogo = 'assets/images/svg/pylons_logo.svg';
-const kSvgViewIcon= 'assets/images/svg/view_icon.svg';
+const kSvgViewIcon = 'assets/images/svg/view_icon.svg';
 
 /// ```URL constants
 const ipfsDomain = 'https://ipfs.io/ipfs';
@@ -68,8 +68,9 @@ const kSecInMillis = 1000;
 const double TABLET_MIN_WIDTH = 600;
 const int kNumberOfSeconds = 1000;
 const int kSixtySeconds = 60;
-const double kPrecision = 100000000000000000;
+const int kFileCompressQuality = 50;
 
+const double kPrecision = 100000000000000000;
 
 /// ````Reserved words, symbols, IDs etc
 const kCookbookId = 'cookbook_id';
@@ -184,6 +185,7 @@ const kErrProfileNotExist = 'profileDoesNotExist';
 const kErrProfileFetch = 'Error occurred while fetching wallet profile';
 const kErrUpload = 'Upload error occurred';
 const kErrFileNotPicked = 'Pick a file';
+const kErrFileCouldNotUploaded = 'could not be uploaded';
 const kErrUnsupportedFormat = 'Unsupported format';
 const kErrFileMetaParse = 'Error occurred while parsing the chosen media file:';
 const kErrRecipe = 'Recipe error :';
@@ -215,7 +217,6 @@ const kUpylon = "upylon";
 const kExtraInfo = "extraInfo";
 const kDuration = "Duration";
 
-
 const kThumbnailFileName = "temp.jpg";
 
 //Loader Messages
@@ -225,7 +226,8 @@ const kUploadingThumbnailMessage = "Uploading Thumbnail";
 const kLoadingMessage = "Loading...";
 
 final List stepLabels = [kUploadText, kEditText, kPriceText, kListText];
-
+final List<String> imageAllowedExtsAndroid = ["png", "jpg", "jpeg", "svg", "heif"];
+final List<String> audioAllowedExtsAndroid = ['mp3', 'ogg', 'wav'];
 
 /// Nft viewmodel key values
 const String kNameKey = "Name";
@@ -240,22 +242,11 @@ const String kHeightKey = "Height";
 const String kQuantityKey = "Quantity";
 const String kHashtagKey = "Hashtags";
 
-
-
-
 const String kNoInternet = 'No internet';
 const String kRecipeNotFound = 'Recipe not found';
 const String kCookBookNotFound = 'Cookbook not found';
 
-
-
-const String kViewOnIPFS = 'View On IPFS';
-const String kViewOnPylons = 'View On Pylons';
-
-
 const String kNftFormat = "NFT_Format";
-
-
 
 /// Currency ABRR
 const String kEmoneyAbb = "EEUR";
@@ -268,3 +259,5 @@ const String kLunaAbr = "Luna";
 const String kEthereumAbr = "ETH";
 const String kEthereumSymbol = "weth-wei";
 const String kDefault = 'Default';
+
+const String kMyEaselNFT = 'My Easel NFT';

@@ -47,8 +47,17 @@ class _HomeScreenState extends State<HomeScreen> {
     super.dispose();
   }
 
-  gotoDashBoard() {
+  void gotoDashBoard() {
     Navigator.of(context).pushNamedAndRemoveUntil((RouteUtil.ROUTE_CREATOR_HUB), (route) => false);
+  }
+
+  void onMainScreenBackPressed() {
+    if (_currentPage.value == 0) {
+      Navigator.pop(context);
+    } else {
+      ScaffoldMessenger.of(context).hideCurrentSnackBar();
+      _pageController.previousPage(duration: const Duration(milliseconds: 300), curve: Curves.easeIn);
+    }
   }
 
   @override
@@ -88,8 +97,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                 padding: EdgeInsets.only(left: 10.sp),
                                 child: IconButton(
                                   onPressed: () {
-                                    ScaffoldMessenger.of(context).hideCurrentSnackBar();
-                                    _pageController.previousPage(duration: const Duration(milliseconds: 300), curve: Curves.easeIn);
+                                    onMainScreenBackPressed();
                                   },
                                   icon: const Icon(
                                     Icons.arrow_back_ios,

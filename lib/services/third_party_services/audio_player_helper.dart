@@ -4,28 +4,29 @@ import 'package:just_audio/just_audio.dart';
 
 /// Abstract Class for providing audio player
 abstract class AudioPlayerHelper {
-  ///This method works as an intializer for Audio Player,
-  ///It will allow us to pass the url for the Audio
-  ///Returns true if Url is loaded otherwise false
+
+  /// This method is used to initialize the Audio player
+  /// Input : [url] for the network video to be player via Audio Player
+  /// Output : [Future<bool>] this boolean future represents whether the player is initialized successfully or not
   Future<bool> setUrl({required String url});
 
-  /// This method will be a listener to the playerStateStream
-  /// which will listen the audio stream being player
+  /// This method is used to listen to the playing stream of the audio player
+  /// Output : [StreamSubscription<PlayerState>] it will be a Stream for the playing audio
   StreamSubscription<PlayerState> playerStateStream();
 
-  /// This method will be a listener to the positionStream which
-  /// will listen to the current DurationPosition of the audio track
+  /// This method is used to listen to the Position stream of the audio player
+  /// Output : [StreamSubscription<Duration>] it will be a Stream for the realtime position on the audio seekbar
   StreamSubscription<Duration> positionStream();
 
-  /// This method will be a listener to the bufferedPositionStream which
-  /// will listen to the duration position where the audio is being buffered
+  /// This method is used to listen to the Buffered Position stream of the audio player
+  /// Output : [StreamSubscription<Duration>] it will be a Stream for the realtime Buffered position on the audio seekbar
   StreamSubscription<Duration> bufferedPositionStream();
 
-  /// This method will be a listener to the durationStream which
-  /// will listen to the DurationStream being player
+  /// This method is used to listen to the Duration stream of the audio player
+  /// Output : [StreamSubscription<Duration>] it will be a Stream for the realtime Duration of the audio seekbar
   StreamSubscription<Duration?> durationStream();
 
-  /// This method will be responsible for destroying the audio player instances from the memory
+  /// This method is used to destroy the audio player instances from the memory
   void destroyAudioPlayer();
 
   /// This method will be responsible for Pausing the Audio

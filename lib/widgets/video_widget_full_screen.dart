@@ -27,13 +27,13 @@ class VideoWidgetFullScreen extends StatelessWidget {
           children: [
             VideoBuilder(
                 onVideoLoading: (BuildContext context) => const Center(
-                  child: CircularProgressIndicator(
-                    strokeWidth: 2,
-                    valueColor: AlwaysStoppedAnimation<Color>(EaselAppTheme.kBlack),
-                  ),
-                ),
+                      child: CircularProgressIndicator(
+                        strokeWidth: 2,
+                        valueColor: AlwaysStoppedAnimation<Color>(EaselAppTheme.kBlack),
+                      ),
+                    ),
                 onVideoHasError: (BuildContext context) => Center(
-                    child: Padding(
+                        child: Padding(
                       padding: const EdgeInsets.all(10),
                       child: Text(
                         videoPlayerError,
@@ -41,11 +41,11 @@ class VideoWidgetFullScreen extends StatelessWidget {
                       ),
                     )),
                 onVideoInitialized: (BuildContext context) => Center(
-                  child: AspectRatio(
-                    aspectRatio: easelProvider.videoPlayerController.value.aspectRatio,
-                    child: VideoPlayer(easelProvider.videoPlayerController),
-                  ),
-                ),
+                      child: AspectRatio(
+                        aspectRatio: easelProvider.videoPlayerController.value.aspectRatio,
+                        child: VideoPlayer(easelProvider.videoPlayerController),
+                      ),
+                    ),
                 easelProvider: easelProvider),
             Column(
               mainAxisAlignment: MainAxisAlignment.end,
@@ -60,8 +60,6 @@ class VideoWidgetFullScreen extends StatelessWidget {
                       color: Colors.black.withOpacity(0.3),
                       child: Padding(
                         padding: EdgeInsets.only(bottom: 30.h),
-
-                        ///Don't place const here, it will stop reflecting changes
                         child: const VideoProgressWidget(darkMode: true, isForFile: false),
                       ),
                     ),
