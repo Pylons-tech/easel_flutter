@@ -1,5 +1,4 @@
 import 'package:easel_flutter/easel_provider.dart';
-import 'package:easel_flutter/models/nft.dart';
 import 'package:easel_flutter/screens/creator_hub/creator_hub_screen.dart';
 import 'package:easel_flutter/screens/creator_hub/creator_hub_view_model.dart';
 import 'package:easel_flutter/screens/home_screen.dart';

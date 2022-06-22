@@ -1,5 +1,4 @@
 import 'package:cached_network_image/cached_network_image.dart';
-import 'package:easel_flutter/models/nft.dart';
 import 'package:easel_flutter/utils/screen_size_util.dart';
 import 'package:easy_localization/src/public_ext.dart';
 import 'package:flutter/material.dart';
