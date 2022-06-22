@@ -229,14 +229,15 @@ class EaselProvider extends ChangeNotifier {
     videoPlayerHelper.destroyVideoPlayer();
   }
 
-  bool isUrlLoaded=false;
+  bool isUrlLoaded = false;
 
+  late StreamSubscription playerStateSubscription;
 
-  late StreamSubscription playerStateSubscription ;
-  late StreamSubscription positionStreamSubscription ;
-  late StreamSubscription bufferPositionSubscription ;
+  late StreamSubscription positionStreamSubscription;
+
+  late StreamSubscription bufferPositionSubscription;
+
   late StreamSubscription durationStreamSubscription;
-
 
   Future initializeAudioPlayer({required publishedNFTUrl}) async {
     audioProgressNotifier = ValueNotifier<ProgressBarState>(
@@ -251,7 +252,7 @@ class EaselProvider extends ChangeNotifier {
     isUrlLoaded = await audioPlayerHelper.setUrl(url: publishedNFTUrl);
 
     if (isUrlLoaded) {
-      playerStateSubscription  = audioPlayerHelper.playerStateStream().listen((playerState) {
+      playerStateSubscription = audioPlayerHelper.playerStateStream().listen((playerState) {
         final isPlaying = playerState.playing;
         final processingState = playerState.processingState;
 
@@ -276,7 +277,7 @@ class EaselProvider extends ChangeNotifier {
       });
     }
 
-    positionStreamSubscription  = audioPlayerHelper.positionStream().listen((position) {
+    positionStreamSubscription = audioPlayerHelper.positionStream().listen((position) {
       final oldState = audioProgressNotifier.value;
       audioProgressNotifier.value = ProgressBarState(
         current: position,
@@ -285,7 +286,7 @@ class EaselProvider extends ChangeNotifier {
       );
     });
 
-    bufferPositionSubscription  = audioPlayerHelper.bufferedPositionStream().listen((bufferedPosition) {
+    bufferPositionSubscription = audioPlayerHelper.bufferedPositionStream().listen((bufferedPosition) {
       final oldState = audioProgressNotifier.value;
       audioProgressNotifier.value = ProgressBarState(
         current: oldState.current,
@@ -318,7 +319,6 @@ class EaselProvider extends ChangeNotifier {
 
   void disposeAudioController() {
     if (isUrlLoaded) {
-
       playerStateSubscription.cancel();
       bufferPositionSubscription.cancel();
       durationStreamSubscription.cancel();
@@ -551,12 +551,12 @@ class EaselProvider extends ChangeNotifier {
 
   void onVideoThumbnailPicked() async {
     final result = await fileUtilsHelper.pickFile(NftFormat.supportedFormats[0]);
-    if (result != null) {
-      final loading = Loading().showLoading(message: kCompressingMessage);
-      final file = await fileUtilsHelper.compressAndGetFile(File(result.path!));
-      setVideoThumbnail(file);
-      loading.dismiss();
-    }
+
+    if (result == null) return;
+    final loading = Loading().showLoading(message: kCompressingMessage);
+    final file = await fileUtilsHelper.compressAndGetFile(File(result.path!));
+    setVideoThumbnail(file);
+    loading.dismiss();
   }
 
   @override

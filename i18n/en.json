@@ -7,5 +7,7 @@
   "draft": "Draft",
   "update_failed": "Upload Failed",
   "view_on_ipfs": "View On IPFS",
-  "view_on_pylons": "View On Pylons"
+  "view_on_pylons": "View On Pylons",
+  "go_to_dashboard": "Go to Dashboard",
+  "go_to_wallet": "Go to Wallet"
 }
