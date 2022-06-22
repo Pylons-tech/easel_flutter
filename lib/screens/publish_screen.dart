@@ -21,10 +21,6 @@ class PublishScreen extends StatefulWidget {
 }
 
 class _PublishScreenState extends State<PublishScreen> {
-  final List<String> detailInfo = const ['Contract Address', 'Token ID', 'Token Standard', 'Blockchain', 'Metadata', 'Permission'];
-
-  final List<String> sampleData = const ['0x495f...7b5e', '8416676683197945...', 'ERC-1155', 'Ethereum', 'Centralized', 'Exclusive'];
-
   late EaselProvider provider;
 
   @override
@@ -48,13 +44,13 @@ class _PublishScreenState extends State<PublishScreen> {
                     Stack(
                       children: [
                         if (provider.nftFormat.format == kImageText) ...[ImageWidget(file: provider.file!)],
-                        if (provider.nftFormat.format == kVideoText) ...[VideoWidget(file: provider.file!)],
-                        if (provider.nftFormat.format == kAudioText) ...[
-                          AudioWidget(
+                        if (provider.nftFormat.format == kVideoText) ...[
+                          VideoWidget(
                             file: provider.file!,
-                            previewFlag: false,
+                            previewFlag: true,
                           )
                         ],
+                        if (provider.nftFormat.format == kAudioText) ...[AudioWidget(file: provider.file!)],
                         Positioned(
                             top: 60,
                             right: 10,

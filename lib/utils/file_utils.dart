@@ -52,6 +52,23 @@ class FileUtils {
     return null;
   }
 
+  // This function will take an image, compress it and returns a file
+  static Future<File?> compressAndGetFile(
+    File file,
+  ) async {
+    var tempDirectory = await getTemporaryDirectory();
+
+    var timeStamp = DateTime.now();
+
+    var result = await FlutterImageCompress.compressAndGetFile(
+      file.path,
+      '${tempDirectory.path}/$timeStamp.jpg',
+      quality: 50,
+    );
+
+    return result;
+  }
+
   /// This function checks if a file path extension svg or not
   /// input [filePath] the file path
   ///

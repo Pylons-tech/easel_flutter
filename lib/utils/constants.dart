@@ -20,6 +20,9 @@ const kTextFieldSingleLine = 'assets/images/text_field_single_line.png';
 const kTextFieldMultiLine = 'assets/images/text_field_multi_line.png';
 const kTextFieldButton = 'assets/images/text_field_button.png';
 const kPreviewGradient = 'assets/images/preview_gradient.png';
+const kUploadThumbnail = 'assets/images/svg/upload_thumbnail.svg';
+const kVideoThumbnailRectangle = 'assets/images/video_thumbnail_rectangle.png';
+const kFullScreenIcon = 'assets/images/svg/full_screen_icon.svg';
 const kAlertIcon = 'assets/images/svg/i_icon.svg';
 
 /// ```SVG assets
@@ -38,8 +41,6 @@ const kSvgNftFormatImage = 'assets/images/svg/nft_format_image.svg';
 const kSvgNftFormatVideo = 'assets/images/svg/nft_format_video.svg';
 const kSvgNftFormat3d = 'assets/images/svg/nft_format_3d.svg';
 const kSvgNftFormatAudio = 'assets/images/svg/nft_format_audio.svg';
-const kUploadThumbnail = 'assets/images/svg/upload_thumbnail.svg';
-const kFullScreenIcon = 'assets/images/svg/full_screen_icon.svg';
 const kSvgMoreOption = 'assets/images/svg/more_options.svg';
 const kDummyImg = 'assets/images/svg/dummy_img.png';
 
@@ -128,13 +129,15 @@ const kMintMoreText = 'Mint More';
 const kGoToWalletText = 'Go to Wallet';
 const kChooseNFTFormatText = 'Choose your NFT format';
 const kUploadNFTText = 'Upload NFT file';
+const kEditNFTText = 'Edit your NFT Details';
+const kPreviewYourNFTText = 'Preview your NFT file';
 const kDescribeNftText = 'Describe NFT';
 const kPriceNftText = 'Price NFT';
+const kListNftText = 'List NFT';
+const kPublishNftText = 'Publish NFT';
 const kUploadText = 'Upload';
-const kPreviewText = 'Preview';
 const kEditText = 'Edit';
-
-const kPreviewNftFileText = 'Preview your NFT file';
+const kPreviewText = 'Preview';
 const kListText = 'List';
 const kImageText = 'Image';
 const kVideoText = 'Video';
@@ -183,6 +186,38 @@ const kPleaseTryAgain = "Something went wrong.\n Please try again.";
 const kCancel = "Cancel";
 const kChooseFifteenSecondsOfAudio = "Choose 15s highlight of your audio for preview";
 const kUploadingThumbnailMessage = "Uploading Thumbnail";
+const videoPlayerError = "Some Error Occurred while playing the video. Please try again later.";
+
+//NFT STRINGS KEYS
+const kResidual = "Residual";
+const kQuantity = "Quantity";
+const kWidth = "Width";
+const kHeight = "Height";
+const kName = "Name";
+const kAppType = "App_Type";
+const kDescription = "Description";
+const kHashtags = "Hashtags";
+const kNFTFormat = "NFT_Format";
+const kNFTURL = "NFT_URL";
+const kCreator = "Creator";
+const kThumbnailUrl = "Thumbnail_URL";
+const kEasel = "Easel";
+const kEaselNFT = "Easel_NFT";
+const kUpylon = "upylon";
+const kExtraInfo = "extraInfo";
+const kDuration = "Duration";
+
+
+const kThumbnailFileName = "temp.jpg";
+
+//Loader Messages
+const kCompressingMessage = "Compressing Thumbnail";
+const kUploadingMessage = "Uploading";
+const kUploadingThumbnailMessage = "Uploading Thumbnail";
+const kLoadingMessage = "Loading...";
+
+final List stepLabels = [kUploadText, kEditText, kPriceText, kListText];
+
 
 /// Nft viewmodel key values
 const String kNameKey = "Name";
@@ -196,9 +231,6 @@ const String kWidthKey = "Width";
 const String kHeightKey = "Height";
 const String kQuantityKey = "Quantity";
 const String kHashtagKey = "Hashtags";
-const kThumbnailUrl = "Thumbnail_URL";
-
-final List stepLabels = [kUploadText, kEditText, kListText];
 
 /// Supported Formats
 

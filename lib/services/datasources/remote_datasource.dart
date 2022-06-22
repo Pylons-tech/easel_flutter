@@ -12,7 +12,7 @@ abstract class RemoteDataSource {
 class RemoteDataSourceImpl implements RemoteDataSource {
   final Dio httpClient;
 
-  RemoteDataSourceImpl(this.httpClient);
+  RemoteDataSourceImpl({required this.httpClient});
 
   @override
   Future<ApiResponse<StorageResponseModel>> uploadFile(File file) {

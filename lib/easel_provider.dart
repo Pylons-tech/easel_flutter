@@ -1,13 +1,14 @@
 import 'dart:async';
 import 'dart:developer';
 import 'dart:io';
-import 'package:easel_flutter/services/datasources/local_datasource.dart';
-import 'package:easel_flutter/services/datasources/remote_datasource.dart';
+
 import 'package:easel_flutter/main.dart';
 import 'package:easel_flutter/models/api_response.dart';
 import 'package:easel_flutter/models/denom.dart';
 import 'package:easel_flutter/models/nft_format.dart';
-import 'package:easel_flutter/services/third_party_services/audio_player_helper.dart';
+import 'package:easel_flutter/services/datasources/local_datasource.dart';
+import 'package:easel_flutter/services/datasources/remote_datasource.dart';
+import 'package:easel_flutter/services/third_party_services/video_player_helper.dart';
 import 'package:easel_flutter/utils/constants.dart';
 import 'package:easel_flutter/utils/extension_util.dart';
 import 'package:easel_flutter/utils/file_utils.dart';
@@ -22,13 +23,15 @@ import 'package:pylons_sdk/pylons_sdk.dart';
 import 'package:pylons_sdk/src/features/models/sdk_ipc_response.dart';
 import 'package:share_plus/share_plus.dart';
 import 'package:media_info/media_info.dart';
+import 'package:video_player/video_player.dart';
 
 class EaselProvider extends ChangeNotifier {
   final LocalDataSource localDataSource;
   final RemoteDataSource remoteDataSource;
+  final VideoPlayerHelper videoPlayerHelper;
   final AudioPlayerHelper audioPlayerHelper;
 
-  EaselProvider(this.localDataSource, this.remoteDataSource, this.audioPlayerHelper);
+  EaselProvider({required this.localDataSource,required this.remoteDataSource,required this.videoPlayerHelper,required this.audioPlayerHelper});
 
   File? _file;
   NftFormat _nftFormat = NftFormat.supportedFormats[0];
@@ -43,6 +46,15 @@ class EaselProvider extends ChangeNotifier {
   var stripeAccountExists = false;
   Denom _selectedDenom = Denom.availableDenoms.first;
   List<Denom> supportedDenomList = [];
+
+  File? _videoThumbnail;
+
+  File? get videoThumbnail => _videoThumbnail;
+
+  void setVideoThumbnail(File? file) {
+    _videoThumbnail = file;
+    notifyListeners();
+  }
 
   File? get file => _file;
 
@@ -86,6 +98,26 @@ class EaselProvider extends ChangeNotifier {
 
   String currentUsername = '';
 
+  late VideoPlayerController videoPlayerController;
+
+  bool _isVideoLoading = true;
+
+  bool get isVideoLoading => _isVideoLoading;
+
+  set isVideoLoading(bool value) {
+    _isVideoLoading = value;
+    notifyListeners();
+  }
+
+  String _videoLoadingError = "";
+
+  String get videoLoadingError => _videoLoadingError;
+
+  set videoLoadingError(String value) {
+    _videoLoadingError = value;
+    notifyListeners();
+  }
+
   late ValueNotifier<ProgressBarState> audioProgressNotifier;
   late ValueNotifier<ButtonState> buttonNotifier;
 
@@ -125,6 +157,43 @@ class EaselProvider extends ChangeNotifier {
     notifyListeners();
   }
 
+  Future<void> delayLoading() async {
+    Future.delayed(const Duration(seconds: 3));
+    isVideoLoading = false;
+  }
+
+  /// VIDEO PLAYER FUNCTIONS
+  void initializeVideoPlayer() async {
+    videoPlayerHelper.initializeVideoPlayer(file: _file!);
+    videoPlayerController = videoPlayerHelper.getVideoPlayerController();
+    delayLoading();
+    notifyListeners();
+
+    videoPlayerController.addListener(() {
+      if (videoPlayerController.value.hasError) {
+        videoLoadingError = videoPlayerController.value.errorDescription!;
+      }
+      notifyListeners();
+    });
+  }
+
+  void playVideo() {
+    videoPlayerHelper.playVideo();
+  }
+
+  void pauseVideo() {
+    videoPlayerHelper.pauseVideo();
+  }
+
+  void seekVideo(Duration position) {
+    videoPlayerHelper.seekToVideo(position: position);
+  }
+
+  void disposeVideoController() {
+    videoPlayerController.removeListener(() {});
+    videoPlayerHelper.destroyVideoPlayer();
+  }
+
   void setAudioThumbnail(File? file) {
     _audioThumbnail = file;
     notifyListeners();
@@ -146,7 +215,7 @@ class EaselProvider extends ChangeNotifier {
     final Map<String, dynamic> info;
     try {
       info = await _mediaInfo.getMediaInfo(file.path);
-    } on PlatformException catch (e) {
+    } on PlatformException {
       _fileWidth = 0;
       _fileHeight = 0;
       _fileDuration = 0;
@@ -243,9 +312,19 @@ class EaselProvider extends ChangeNotifier {
     final loading = Loading().showLoading(message: "Uploading ${_nftFormat.format}...");
   if(_file!.existsSync()){
     final uploadResponse = await remoteDataSource.uploadFile(_file!);
+    ApiResponse thumbnailUploadResponse = ApiResponse.error(errorMessage: "");
+    if (videoThumbnail != null) {
+      final loading = Loading().showLoading(message: kUploadingThumbnailMessage);
+      thumbnailUploadResponse = await remoteDataSource.uploadFile(videoThumbnail!);
+      setVideoThumbnail(null);
+      loading.dismiss();
+    }
+
+    final loading = Loading().showLoading(message: "$kUploadingMessage ${_nftFormat.format}...");
+    final fileUploadResponse = await remoteDataSource.uploadFile(_file!);
     loading.dismiss();
-    if (uploadResponse.status == Status.error) {
-      navigatorKey.currentState!.overlay!.context.show(message: uploadResponse.errorMessage ?? kErrUpload);
+    if (fileUploadResponse.status == Status.error) {
+      navigatorKey.currentState!.overlay!.context.show(message: fileUploadResponse.errorMessage ?? kErrUpload);
       return false;
     }
 
@@ -263,12 +342,12 @@ class EaselProvider extends ChangeNotifier {
           CoinInput(coins: [Coin(amount: price, denom: _selectedDenom.symbol)])
         ],
         itemInputs: [],
-        costPerBlock: Coin(denom: "upylon", amount: "0"),
+        costPerBlock: Coin(denom: kUpylon, amount: "0"),
         entries: EntriesList(coinOutputs: [], itemOutputs: [
           ItemOutput(
-              iD: "Easel_NFT",
+              iD: kEaselNFT,
               doubles: [
-                DoubleParam(key: "Residual", weightRanges: [
+                DoubleParam(key: kResidual, weightRanges: [
                   DoubleWeightRange(
                     lower: residual,
                     upper: residual,
@@ -277,24 +356,23 @@ class EaselProvider extends ChangeNotifier {
                 ])
               ],
               longs: [
-                LongParam(key: kQuantityKey, weightRanges: [
+                LongParam(key: kQuantity, weightRanges: [
                   IntWeightRange(
                       lower: Int64(int.parse(noOfEditionController.text.replaceAll(",", "").trim())), upper: Int64(int.parse(noOfEditionController.text.replaceAll(",", "").trim())), weight: Int64(1))
                 ]),
-                LongParam(key: kWidthKey, weightRanges: [IntWeightRange(lower: Int64(_fileWidth), upper: Int64(_fileWidth), weight: Int64(1))]),
-                LongParam(key: kHeightKey, weightRanges: [IntWeightRange(lower: Int64(_fileHeight), upper: Int64(_fileHeight), weight: Int64(1))]),
-                LongParam(key: kDurationText, weightRanges: [IntWeightRange(lower: Int64(_fileDuration), upper: Int64(_fileDuration), weight: Int64(1))]),
+                LongParam(key: kWidth, weightRanges: [IntWeightRange(lower: Int64(_fileWidth), upper: Int64(_fileWidth), weight: Int64(1))]),
+                LongParam(key: kHeight, weightRanges: [IntWeightRange(lower: Int64(_fileHeight), upper: Int64(_fileHeight), weight: Int64(1))]),
+                LongParam(key: kDuration, weightRanges: [IntWeightRange(lower: Int64(_fileDuration), upper: Int64(_fileDuration), weight: Int64(1))]),
               ],
               strings: [
-                StringParam(key: kNameKey, value: artNameController.text.trim()),
-                StringParam(key: kAppTypeKey, value: "Easel"),
-                StringParam(key: kDescriptionKey, value: descriptionController.text.trim()),
-                StringParam(key: kHashtagKey, value: hashtagsList.join('#')),
-                StringParam(key: kNftFormatKey, value: _nftFormat.format),
-                StringParam(key: kNftUrlKey, value: "$ipfsDomain/${uploadResponse.data?.value?.cid ?? ""}"),
-                StringParam(key: kThumbnailUrl, value: audioThumnail != null ? "$ipfsDomain/${audioThumbnailUploadResponse.data?.value?.cid ?? ""}" : ""),
-                StringParam(key: kCreatorKey, value: artistNameController.text.trim()),
-                StringParam(key: kSizeKey, value: _fileSize.trim()),
+                StringParam(key: kName, value: artNameController.text.trim()),
+                StringParam(key: kAppType, value: kEasel),
+                StringParam(key: kDescription, value: descriptionController.text.trim()),
+                StringParam(key: kHashtags, value: hashtagsList.join('#')),
+                StringParam(key: kNFTFormat, value: _nftFormat.format),
+                StringParam(key: kNFTURL, value: "$ipfsDomain/${fileUploadResponse.data?.value?.cid ?? ""}"),
+                StringParam(key: kThumbnailUrl, value: videoThumbnail != null ? "$ipfsDomain/${thumbnailUploadResponse.data?.value?.cid ?? ""}" : ""),
+                StringParam(key: kCreator, value: artistNameController.text.trim()),
               ],
               mutableStrings: [],
               transferFee: [Coin(denom: kPylonSymbol, amount: "1")],
@@ -304,13 +382,14 @@ class EaselProvider extends ChangeNotifier {
               quantity: Int64(int.parse(noOfEditionController.text.replaceAll(",", "").trim()))),
         ], itemModifyOutputs: []),
         outputs: [
-          WeightedOutputs(entryIDs: ["Easel_NFT"], weight: Int64(1))
+          WeightedOutputs(entryIDs: [kEaselNFT], weight: Int64(1))
         ],
         blockInterval: Int64(0),
         enabled: true,
-        extraInfo: "extraInfo");
+        extraInfo: kExtraInfo);
 
-    log("${recipe.toProto3Json()}");
+    log('RecipeResponse: ${recipe.toProto3Json()}');
+
     var response = await PylonsWallet.instance.txCreateRecipe(recipe, requestResponse: false);
 
     log('From App $response');

@@ -5,7 +5,7 @@ class RightSmallBottomClipper extends CustomClipper<Path> {
   Path getClip(Size size) {
     final Path path = Path()
       ..lineTo(0, size.height)
-      ..lineTo(size.width - (size.width * 0.1), size.height)
+      ..lineTo(size.width - (size.width * 0.2), size.height)
       ..lineTo(size.width, size.height - (size.height * 0.2))
       ..lineTo(size.width, 0)
       ..close();

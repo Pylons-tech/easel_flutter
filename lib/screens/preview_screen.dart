@@ -22,8 +22,6 @@ class PreviewScreen extends StatefulWidget {
 }
 
 class _PreviewScreenState extends State<PreviewScreen> {
-  final navigatorKey = GlobalKey<NavigatorState>();
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -33,6 +31,7 @@ class _PreviewScreenState extends State<PreviewScreen> {
             buildPreviewWidget(provider),
             Column(children: [
               SizedBox(height: MediaQuery.of(context).viewPadding.top + 20.h),
+
               Align(
                 alignment: Alignment.centerLeft,
                 child: Padding(
@@ -82,7 +81,7 @@ class _PreviewScreenState extends State<PreviewScreen> {
       case kImageText:
         return ImageWidget(file: provider.file!);
       case kVideoText:
-        return VideoWidget(file: provider.file!);
+        return VideoWidget(file: provider.file!, previewFlag: false,);
       case k3dText:
         return Model3dViewer(file: provider.file!);
       case kAudioText:
@@ -93,35 +92,4 @@ class _PreviewScreenState extends State<PreviewScreen> {
     }
     return const SizedBox.shrink();
   }
-}
-
-class RightSmallBottomClipper extends CustomClipper<Path> {
-  @override
-  Path getClip(Size size) {
-    final Path path = Path()
-      ..lineTo(0, size.height)
-      ..lineTo(size.width - (size.width * 0.2), size.height)
-      ..lineTo(size.width, size.height - (size.height * 0.2))
-      ..lineTo(size.width, 0)
-      ..close();
-    return path;
-  }
-
-  @override
-  bool shouldReclip(covariant CustomClipper<Path> oldClipper) => false;
-}
-
-class TopLeftClipper extends CustomClipper<Path> {
-  @override
-  Path getClip(Size size) {
-    final Path path = Path()
-      ..lineTo(0, size.width)
-      ..lineTo(0, size.height)
-      ..lineTo(size.width, 0)
-      ..close();
-    return path;
-  }
-
-  @override
-  bool shouldReclip(covariant CustomClipper<Path> oldClipper) => false;
 }

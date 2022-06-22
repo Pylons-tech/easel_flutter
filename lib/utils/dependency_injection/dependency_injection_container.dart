@@ -4,24 +4,25 @@ import 'dart:io';
 import 'package:dio/dio.dart';
 import 'package:easel_flutter/easel_provider.dart';
 import 'package:easel_flutter/screens/creator_hub/creator_hub_view_model.dart';
+import 'package:easel_flutter/env.dart';
+import 'package:easel_flutter/services/datasources/local_datasource.dart';
+import 'package:easel_flutter/services/datasources/remote_datasource.dart';
+import 'package:easel_flutter/services/third_party_services/video_player_helper.dart';
 import 'package:get_it/get_it.dart';
 import 'package:just_audio/just_audio.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:video_player/video_player.dart';
 
 import '../../env.dart';
-
-import '../../services/datasources/local_datasource.dart';
-import '../../services/datasources/remote_datasource.dart';
-import '../../services/third_party_services/audio_player_helper.dart';
 
 final sl = GetIt.instance;
 
 void init() {
-  _registerServices();
   _registerProviders();
   _registerLocalDataSources();
   _registerRemoteDataSources();
   _registerExternalDependencies();
+  _registerServices();
 }
 
 void _registerExternalDependencies() {
@@ -41,16 +42,24 @@ void _registerExternalDependencies() {
 
   sl.registerLazySingleton<AudioPlayer>(() => AudioPlayer());
 }
+  sl.registerFactory<VideoPlayerController>(() => VideoPlayerController.file(File('')));
+}
 
 void _registerRemoteDataSources() {
-  sl.registerLazySingleton<RemoteDataSource>(() => RemoteDataSourceImpl(sl<Dio>()));
+  sl.registerLazySingleton<RemoteDataSource>(() => RemoteDataSourceImpl(httpClient: sl<Dio>()));
 }
 
 void _registerLocalDataSources() {
-  sl.registerLazySingleton<LocalDataSource>(() => LocalDataSourceImpl(sl()));
+  sl.registerLazySingleton<LocalDataSource>(() => LocalDataSourceImpl(sharedPreferences: sl()));
 }
 
 void _registerProviders() {
+  sl.registerLazySingleton<EaselProvider>(() => EaselProvider(remoteDataSource: sl(), videoPlayerHelper: sl(), localDataSource: sl()));
+  sl.registerLazySingleton<CreatorHubViewModel>(() => CreatorHubViewModel(localDataSource: sl(), remoteDataSource: sl()));
+}
+
+void _registerServices() {
+  sl.registerFactory<VideoPlayerHelper>(() => VideoPlayerHelperImp(sl()));
   sl.registerLazySingleton<EaselProvider>(() => EaselProvider(sl(), sl(), sl()));
 }
 
