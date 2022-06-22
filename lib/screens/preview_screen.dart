@@ -87,7 +87,7 @@ class _PreviewScreenState extends State<PreviewScreen> {
       case kAudioText:
         return AudioWidget(
           file: provider.file!,
-          previewFlag: true,
+          previewFlag: false,
         );
     }
     return const SizedBox.shrink();

@@ -207,17 +207,14 @@ const kUpylon = "upylon";
 const kExtraInfo = "extraInfo";
 const kDuration = "Duration";
 
-
 const kThumbnailFileName = "temp.jpg";
 
 //Loader Messages
 const kCompressingMessage = "Compressing Thumbnail";
 const kUploadingMessage = "Uploading";
-const kUploadingThumbnailMessage = "Uploading Thumbnail";
 const kLoadingMessage = "Loading...";
 
 final List stepLabels = [kUploadText, kEditText, kPriceText, kListText];
-
 
 /// Nft viewmodel key values
 const String kNameKey = "Name";

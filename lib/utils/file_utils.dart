@@ -104,20 +104,4 @@ class FileUtils {
     return "$kWalletWebLink/?action=purchase_nft&recipe_id=$recipeId&cookbook_id=$cookbookId";
   }
 
-  // This function will take an image, compress it and returns a file
-  static Future<File?> compressAndGetFile(
-    File file,
-  ) async {
-    var tempDirectory = await getTemporaryDirectory();
-
-    var timeStamp = DateTime.now();
-
-    var result = await FlutterImageCompress.compressAndGetFile(
-      file.path,
-      '${tempDirectory.path}/$timeStamp.jpg',
-      quality: 50,
-    );
-
-    return result;
-  }
 }

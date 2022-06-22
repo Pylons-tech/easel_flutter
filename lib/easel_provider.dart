@@ -8,6 +8,7 @@ import 'package:easel_flutter/models/denom.dart';
 import 'package:easel_flutter/models/nft_format.dart';
 import 'package:easel_flutter/services/datasources/local_datasource.dart';
 import 'package:easel_flutter/services/datasources/remote_datasource.dart';
+import 'package:easel_flutter/services/third_party_services/audio_player_helper.dart';
 import 'package:easel_flutter/services/third_party_services/video_player_helper.dart';
 import 'package:easel_flutter/utils/constants.dart';
 import 'package:easel_flutter/utils/extension_util.dart';
@@ -31,7 +32,7 @@ class EaselProvider extends ChangeNotifier {
   final VideoPlayerHelper videoPlayerHelper;
   final AudioPlayerHelper audioPlayerHelper;
 
-  EaselProvider({required this.localDataSource,required this.remoteDataSource,required this.videoPlayerHelper,required this.audioPlayerHelper});
+  EaselProvider({required this.localDataSource, required this.remoteDataSource, required this.videoPlayerHelper, required this.audioPlayerHelper});
 
   File? _file;
   NftFormat _nftFormat = NftFormat.supportedFormats[0];
@@ -80,13 +81,12 @@ class EaselProvider extends ChangeNotifier {
 
   bool _isInitialized = false;
 
-   bool get isInitialized => _isInitialized;
+  bool get isInitialized => _isInitialized;
 
   set setIsInitialized(bool value) {
     _isInitialized = value;
     notifyListeners();
   }
-
 
   final artistNameController = TextEditingController();
   final artNameController = TextEditingController();
@@ -221,6 +221,7 @@ class EaselProvider extends ChangeNotifier {
       _fileDuration = 0;
       return;
     }
+    log("INFORMATION ${info.toString()}");
 
     if (_nftFormat.format == kImageText || _nftFormat.format == kVideoText) {
       _fileWidth = info['width'];
@@ -300,113 +301,120 @@ class EaselProvider extends ChangeNotifier {
 
     _recipeId = localDataSource.autoGenerateEaselId();
 
-    ApiResponse audioThumbnailUploadResponse = ApiResponse.error(errorMessage: "");
-    if (audioThumnail != null) {
-      final loading = Loading().showLoading(message: kUploadingThumbnailMessage);
+    if (_file!.existsSync()) {
+      ApiResponse audioThumbnailUploadResponse = ApiResponse.error(errorMessage: "");
+      if (audioThumnail != null) {
+        final loading = Loading().showLoading(message: kUploadingThumbnailMessage);
 
-      audioThumbnailUploadResponse = await remoteDataSource.uploadFile(audioThumnail!);
+        audioThumbnailUploadResponse = await remoteDataSource.uploadFile(audioThumnail!);
+
+        loading.dismiss();
+      }
+      audioPlayerHelper.pauseAudio();
+
+      ApiResponse thumbnailUploadResponse = ApiResponse.error(errorMessage: "");
+      if (videoThumbnail != null) {
+        final loading = Loading().showLoading(message: kUploadingThumbnailMessage);
+        thumbnailUploadResponse = await remoteDataSource.uploadFile(videoThumbnail!);
+        setVideoThumbnail(null);
+        loading.dismiss();
+      }
+
+      final loading = Loading().showLoading(message: "$kUploadingMessage ${_nftFormat.format}...");
+      final fileUploadResponse = await remoteDataSource.uploadFile(_file!);
       setAudioThumbnail(null);
       loading.dismiss();
-    }
-    audioPlayerHelper.pauseAudio();
-    final loading = Loading().showLoading(message: "Uploading ${_nftFormat.format}...");
-  if(_file!.existsSync()){
-    final uploadResponse = await remoteDataSource.uploadFile(_file!);
-    ApiResponse thumbnailUploadResponse = ApiResponse.error(errorMessage: "");
-    if (videoThumbnail != null) {
-      final loading = Loading().showLoading(message: kUploadingThumbnailMessage);
-      thumbnailUploadResponse = await remoteDataSource.uploadFile(videoThumbnail!);
-      setVideoThumbnail(null);
-      loading.dismiss();
-    }
+      if (fileUploadResponse.status == Status.error) {
+        navigatorKey.currentState!.overlay!.context.show(message: fileUploadResponse.errorMessage ?? kErrUpload);
+        return false;
+      }
 
-    final loading = Loading().showLoading(message: "$kUploadingMessage ${_nftFormat.format}...");
-    final fileUploadResponse = await remoteDataSource.uploadFile(_file!);
-    loading.dismiss();
-    if (fileUploadResponse.status == Status.error) {
-      navigatorKey.currentState!.overlay!.context.show(message: fileUploadResponse.errorMessage ?? kErrUpload);
-      return false;
-    }
+      String residual = DecString.decStringFromDouble(double.parse(royaltyController.text.trim()));
 
-    String residual = DecString.decStringFromDouble(double.parse(royaltyController.text.trim()));
+      String price = (double.parse(priceController.text.replaceAll(",", "").trim()) * 1000000).toStringAsFixed(0);
+      var recipe = Recipe(
+          cookbookID: _cookbookId,
+          iD: _recipeId,
+          nodeVersion: "v0.1.0",
+          name: artNameController.text.trim(),
+          description: descriptionController.text.trim(),
+          version: "v0.1.0",
+          coinInputs: [
+            CoinInput(coins: [Coin(amount: price, denom: _selectedDenom.symbol)])
+          ],
+          itemInputs: [],
+          costPerBlock: Coin(denom: kUpylon, amount: "0"),
+          entries: EntriesList(coinOutputs: [], itemOutputs: [
+            ItemOutput(
+                iD: kEaselNFT,
+                doubles: [
+                  DoubleParam(key: kResidual, weightRanges: [
+                    DoubleWeightRange(
+                      lower: residual,
+                      upper: residual,
+                      weight: Int64(1),
+                    )
+                  ])
+                ],
+                longs: [
+                  LongParam(key: kQuantity, weightRanges: [
+                    IntWeightRange(
+                        lower: Int64(int.parse(noOfEditionController.text.replaceAll(",", "").trim())),
+                        upper: Int64(int.parse(noOfEditionController.text.replaceAll(",", "").trim())),
+                        weight: Int64(1))
+                  ]),
+                  LongParam(key: kWidth, weightRanges: [IntWeightRange(lower: Int64(_fileWidth), upper: Int64(_fileWidth), weight: Int64(1))]),
+                  LongParam(key: kHeight, weightRanges: [IntWeightRange(lower: Int64(_fileHeight), upper: Int64(_fileHeight), weight: Int64(1))]),
+                  LongParam(key: kDuration, weightRanges: [IntWeightRange(lower: Int64(_fileDuration), upper: Int64(_fileDuration), weight: Int64(1))]),
+                ],
+                strings: [
+                  StringParam(key: kName, value: artNameController.text.trim()),
+                  StringParam(key: kAppType, value: kEasel),
+                  StringParam(key: kDescription, value: descriptionController.text.trim()),
+                  StringParam(key: kHashtags, value: hashtagsList.join('#')),
+                  StringParam(key: kNFTFormat, value: _nftFormat.format),
+                  StringParam(key: kNFTURL, value: "$ipfsDomain/${fileUploadResponse.data?.value?.cid ?? ""}"),
+                  StringParam(
+                      key: kThumbnailUrl,
+                      value: videoThumbnail != null
+                          ? "$ipfsDomain/${thumbnailUploadResponse.data?.value?.cid ?? ""}"
+                          : audioThumnail != null
+                              ? "$ipfsDomain/${audioThumbnailUploadResponse.data?.value?.cid ?? ""}"
+                              : ""),
+                  StringParam(key: kCreator, value: artistNameController.text.trim()),
+                ],
+                mutableStrings: [],
+                transferFee: [Coin(denom: kPylonSymbol, amount: "1")],
+                tradePercentage: DecString.decStringFromDouble(double.parse(royaltyController.text.trim())),
+                tradeable: true,
+                amountMinted: Int64(0),
+                quantity: Int64(int.parse(noOfEditionController.text.replaceAll(",", "").trim()))),
+          ], itemModifyOutputs: []),
+          outputs: [
+            WeightedOutputs(entryIDs: [kEaselNFT], weight: Int64(1))
+          ],
+          blockInterval: Int64(0),
+          enabled: true,
+          extraInfo: kExtraInfo);
 
-    String price = (double.parse(priceController.text.replaceAll(",", "").trim()) * 1000000).toStringAsFixed(0);
-    var recipe = Recipe(
-        cookbookID: _cookbookId,
-        iD: _recipeId,
-        nodeVersion: "v0.1.0",
-        name: artNameController.text.trim(),
-        description: descriptionController.text.trim(),
-        version: "v0.1.0",
-        coinInputs: [
-          CoinInput(coins: [Coin(amount: price, denom: _selectedDenom.symbol)])
-        ],
-        itemInputs: [],
-        costPerBlock: Coin(denom: kUpylon, amount: "0"),
-        entries: EntriesList(coinOutputs: [], itemOutputs: [
-          ItemOutput(
-              iD: kEaselNFT,
-              doubles: [
-                DoubleParam(key: kResidual, weightRanges: [
-                  DoubleWeightRange(
-                    lower: residual,
-                    upper: residual,
-                    weight: Int64(1),
-                  )
-                ])
-              ],
-              longs: [
-                LongParam(key: kQuantity, weightRanges: [
-                  IntWeightRange(
-                      lower: Int64(int.parse(noOfEditionController.text.replaceAll(",", "").trim())), upper: Int64(int.parse(noOfEditionController.text.replaceAll(",", "").trim())), weight: Int64(1))
-                ]),
-                LongParam(key: kWidth, weightRanges: [IntWeightRange(lower: Int64(_fileWidth), upper: Int64(_fileWidth), weight: Int64(1))]),
-                LongParam(key: kHeight, weightRanges: [IntWeightRange(lower: Int64(_fileHeight), upper: Int64(_fileHeight), weight: Int64(1))]),
-                LongParam(key: kDuration, weightRanges: [IntWeightRange(lower: Int64(_fileDuration), upper: Int64(_fileDuration), weight: Int64(1))]),
-              ],
-              strings: [
-                StringParam(key: kName, value: artNameController.text.trim()),
-                StringParam(key: kAppType, value: kEasel),
-                StringParam(key: kDescription, value: descriptionController.text.trim()),
-                StringParam(key: kHashtags, value: hashtagsList.join('#')),
-                StringParam(key: kNFTFormat, value: _nftFormat.format),
-                StringParam(key: kNFTURL, value: "$ipfsDomain/${fileUploadResponse.data?.value?.cid ?? ""}"),
-                StringParam(key: kThumbnailUrl, value: videoThumbnail != null ? "$ipfsDomain/${thumbnailUploadResponse.data?.value?.cid ?? ""}" : ""),
-                StringParam(key: kCreator, value: artistNameController.text.trim()),
-              ],
-              mutableStrings: [],
-              transferFee: [Coin(denom: kPylonSymbol, amount: "1")],
-              tradePercentage: DecString.decStringFromDouble(double.parse(royaltyController.text.trim())),
-              tradeable: true,
-              amountMinted: Int64(0),
-              quantity: Int64(int.parse(noOfEditionController.text.replaceAll(",", "").trim()))),
-        ], itemModifyOutputs: []),
-        outputs: [
-          WeightedOutputs(entryIDs: [kEaselNFT], weight: Int64(1))
-        ],
-        blockInterval: Int64(0),
-        enabled: true,
-        extraInfo: kExtraInfo);
+      log('RecipeResponse: ${recipe.toProto3Json()}');
 
-    log('RecipeResponse: ${recipe.toProto3Json()}');
+      var response = await PylonsWallet.instance.txCreateRecipe(recipe, requestResponse: false);
 
-    var response = await PylonsWallet.instance.txCreateRecipe(recipe, requestResponse: false);
+      log('From App $response');
 
-    log('From App $response');
-
-    if (response.success) {
-      navigatorKey.currentState!.overlay!.context.show(message: kRecipeCreated);
-      log("${response.data}");
-      return true;
+      if (response.success) {
+        navigatorKey.currentState!.overlay!.context.show(message: kRecipeCreated);
+        log("${response.data}");
+        return true;
+      } else {
+        navigatorKey.currentState!.overlay!.context.show(message: "$kErrRecipe ${response.error}");
+        return false;
+      }
     } else {
-      navigatorKey.currentState!.overlay!.context.show(message: "$kErrRecipe ${response.error}");
+      navigatorKey.currentState!.overlay!.context.show(message: kErrPickFileFetch);
       return false;
     }
-  }else{
-    loading.dismiss();
-    navigatorKey.currentState!.overlay!.context.show(message: kErrPickFileFetch );
-    return false;
-  }
   }
 
   bool isDifferentUserName(String savedUserName) => (currentUsername.isNotEmpty && savedUserName != currentUsername);

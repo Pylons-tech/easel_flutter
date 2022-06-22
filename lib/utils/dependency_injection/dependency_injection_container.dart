@@ -14,6 +14,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:video_player/video_player.dart';
 
 import '../../env.dart';
+import '../../services/third_party_services/audio_player_helper.dart';
 
 final sl = GetIt.instance;
 
@@ -41,7 +42,7 @@ void _registerExternalDependencies() {
   );
 
   sl.registerLazySingleton<AudioPlayer>(() => AudioPlayer());
-}
+
   sl.registerFactory<VideoPlayerController>(() => VideoPlayerController.file(File('')));
 }
 
@@ -54,16 +55,11 @@ void _registerLocalDataSources() {
 }
 
 void _registerProviders() {
-  sl.registerLazySingleton<EaselProvider>(() => EaselProvider(remoteDataSource: sl(), videoPlayerHelper: sl(), localDataSource: sl()));
+  sl.registerLazySingleton<EaselProvider>(() => EaselProvider(remoteDataSource: sl(), videoPlayerHelper: sl(), localDataSource: sl(), audioPlayerHelper: sl()));
   sl.registerLazySingleton<CreatorHubViewModel>(() => CreatorHubViewModel(localDataSource: sl(), remoteDataSource: sl()));
 }
 
 void _registerServices() {
   sl.registerFactory<VideoPlayerHelper>(() => VideoPlayerHelperImp(sl()));
-  sl.registerLazySingleton<EaselProvider>(() => EaselProvider(sl(), sl(), sl()));
-}
-
-void _registerServices() {
   sl.registerLazySingleton<AudioPlayerHelper>(() => AudioPlayerHelperImpl(sl()));
-  sl.registerLazySingleton<CreatorHubViewModel>(() => CreatorHubViewModel(sl(), sl()));
 }

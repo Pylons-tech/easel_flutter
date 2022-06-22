@@ -45,7 +45,7 @@ class MintScreen extends StatelessWidget {
                   if (provider.nftFormat.format == kAudioText) ...[
                     AudioWidget(
                       file: provider.file!,
-                      previewFlag: false,
+                      previewFlag: true,
                     )
                   ],
                   const SizedBox(height: 10),

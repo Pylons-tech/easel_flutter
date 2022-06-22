@@ -1,3 +1,4 @@
+import 'dart:developer';
 import 'dart:io';
 import 'dart:ui';
 import 'package:easel_flutter/easel_provider.dart';
@@ -34,10 +35,10 @@ class _AudioWidgetState extends State<AudioWidget> with WidgetsBindingObserver {
 
   @override
   initState() {
-    if (!easelProvider.isInitialized)
-      {
-        easelProvider.initializeAudioPlayer();
-      }
+    log("bool: ${widget.previewFlag}");
+    if (!easelProvider.isInitialized) {
+      easelProvider.initializeAudioPlayer();
+    }
 
     super.initState();
   }
@@ -61,7 +62,7 @@ class _AudioWidgetState extends State<AudioWidget> with WidgetsBindingObserver {
                   SizedBox(
                     height: 15.0.h,
                   ),
-                  if (widget.previewFlag) ...[
+                  if (shouldShowThumbnailButtonOrStepsOrNot()) ...[
                     MyStepsIndicator(currentPage: _currentPage, currentStep: _currentStep),
                     VerticalSpace(5.h),
                     StepLabels(currentPage: _currentPage, currentStep: _currentStep),
@@ -81,8 +82,8 @@ class _AudioWidgetState extends State<AudioWidget> with WidgetsBindingObserver {
                           ),
                         ),
                         Text(
-                          kPreviewNftFileText,
-                          key: const Key(kPreviewNftFileText),
+                          kPreviewYourNFTText,
+                          key: const Key(kPreviewYourNFTText),
                           style: Theme.of(context).textTheme.bodyText1!.copyWith(
                                 fontSize: 18.sp,
                                 fontWeight: FontWeight.w600,
@@ -166,7 +167,7 @@ class _AudioWidgetState extends State<AudioWidget> with WidgetsBindingObserver {
                   SizedBox(
                     height: 90.0.h,
                   ),
-                  if (widget.previewFlag) ...[
+                  if (shouldShowThumbnailButtonOrStepsOrNot()) ...[
                     _buildThumbnailButton(),
                   ],
                 ],
@@ -176,6 +177,10 @@ class _AudioWidgetState extends State<AudioWidget> with WidgetsBindingObserver {
         );
       }),
     );
+  }
+
+  bool shouldShowThumbnailButtonOrStepsOrNot() {
+    return !widget.previewFlag;
   }
 
   @override

@@ -50,7 +50,12 @@ class _PublishScreenState extends State<PublishScreen> {
                             previewFlag: true,
                           )
                         ],
-                        if (provider.nftFormat.format == kAudioText) ...[AudioWidget(file: provider.file!)],
+                        if (provider.nftFormat.format == kAudioText) ...[
+                          AudioWidget(
+                            file: provider.file!,
+                            previewFlag: true,
+                          )
+                        ],
                         Positioned(
                             top: 60,
                             right: 10,
