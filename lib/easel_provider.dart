@@ -229,6 +229,15 @@ class EaselProvider extends ChangeNotifier {
     videoPlayerHelper.destroyVideoPlayer();
   }
 
+  bool isUrlLoaded=false;
+
+
+  late StreamSubscription playerStateSubscription ;
+  late StreamSubscription positionStreamSubscription ;
+  late StreamSubscription bufferPositionSubscription ;
+  late StreamSubscription durationStreamSubscription;
+
+
   Future initializeAudioPlayer({required publishedNFTUrl}) async {
     audioProgressNotifier = ValueNotifier<ProgressBarState>(
       ProgressBarState(
@@ -239,10 +248,10 @@ class EaselProvider extends ChangeNotifier {
     );
     buttonNotifier = ValueNotifier<ButtonState>(ButtonState.loading);
 
-    final bool isUrlLoaded = await audioPlayerHelper.setUrl(url: publishedNFTUrl);
+    isUrlLoaded = await audioPlayerHelper.setUrl(url: publishedNFTUrl);
 
     if (isUrlLoaded) {
-      audioPlayerHelper.playerStateStream().onData((playerState) {
+      playerStateSubscription  = audioPlayerHelper.playerStateStream().listen((playerState) {
         final isPlaying = playerState.playing;
         final processingState = playerState.processingState;
 
@@ -267,7 +276,7 @@ class EaselProvider extends ChangeNotifier {
       });
     }
 
-    audioPlayerHelper.positionStream().onData((position) {
+    positionStreamSubscription  = audioPlayerHelper.positionStream().listen((position) {
       final oldState = audioProgressNotifier.value;
       audioProgressNotifier.value = ProgressBarState(
         current: position,
@@ -276,7 +285,7 @@ class EaselProvider extends ChangeNotifier {
       );
     });
 
-    audioPlayerHelper.bufferedPositionStream().onData((bufferedPosition) {
+    bufferPositionSubscription  = audioPlayerHelper.bufferedPositionStream().listen((bufferedPosition) {
       final oldState = audioProgressNotifier.value;
       audioProgressNotifier.value = ProgressBarState(
         current: oldState.current,
@@ -285,7 +294,7 @@ class EaselProvider extends ChangeNotifier {
       );
     });
 
-    audioPlayerHelper.durationStream().onData((totalDuration) {
+    durationStreamSubscription = audioPlayerHelper.durationStream().listen((totalDuration) {
       final oldState = audioProgressNotifier.value;
       audioProgressNotifier.value = ProgressBarState(
         current: oldState.current,
@@ -308,6 +317,13 @@ class EaselProvider extends ChangeNotifier {
   }
 
   void disposeAudioController() {
+    if (isUrlLoaded) {
+
+      playerStateSubscription.cancel();
+      bufferPositionSubscription.cancel();
+      durationStreamSubscription.cancel();
+      positionStreamSubscription.cancel();
+    }
     audioPlayerHelper.destroyAudioPlayer();
   }
 

@@ -4,27 +4,26 @@ import 'package:just_audio/just_audio.dart';
 
 /// Abstract Class for providing audio player
 abstract class AudioPlayerHelper {
-
   /// This method is used to initialize the Audio player
   /// Input : [url] for the network video to be player via Audio Player
   /// Output : [Future<bool>] this boolean future represents whether the player is initialized successfully or not
   Future<bool> setUrl({required String url});
 
   /// This method is used to listen to the playing stream of the audio player
-  /// Output : [StreamSubscription<PlayerState>] it will be a Stream for the playing audio
-  StreamSubscription<PlayerState> playerStateStream();
+  /// Output : [Stream<PlayerState>] it will be a Stream for the playing audio
+  Stream<PlayerState> playerStateStream();
 
   /// This method is used to listen to the Position stream of the audio player
-  /// Output : [StreamSubscription<Duration>] it will be a Stream for the realtime position on the audio seekbar
-  StreamSubscription<Duration> positionStream();
+  /// Output : [Stream<Duration>] it will be a Stream for the realtime position on the audio seekbar
+  Stream<Duration> positionStream();
 
   /// This method is used to listen to the Buffered Position stream of the audio player
-  /// Output : [StreamSubscription<Duration>] it will be a Stream for the realtime Buffered position on the audio seekbar
-  StreamSubscription<Duration> bufferedPositionStream();
+  /// Output : [Stream<Duration>] it will be a Stream for the realtime Buffered position on the audio seekbar
+  Stream<Duration> bufferedPositionStream();
 
   /// This method is used to listen to the Duration stream of the audio player
-  /// Output : [StreamSubscription<Duration>] it will be a Stream for the realtime Duration of the audio seekbar
-  StreamSubscription<Duration?> durationStream();
+  /// Output : [Stream<Duration>] it will be a Stream for the realtime Duration of the audio seekbar
+  Stream<Duration?> durationStream();
 
   /// This method is used to destroy the audio player instances from the memory
   void destroyAudioPlayer();
@@ -56,23 +55,23 @@ class AudioPlayerHelperImpl implements AudioPlayerHelper {
   }
 
   @override
-  StreamSubscription<PlayerState> playerStateStream() {
-    return audioPlayer.playerStateStream.listen((playerState) {});
+  Stream<PlayerState> playerStateStream() {
+    return audioPlayer.playerStateStream;
   }
 
   @override
-  StreamSubscription<Duration> positionStream() {
-    return audioPlayer.positionStream.listen((position) {});
+  Stream<Duration> positionStream() {
+    return audioPlayer.positionStream;
   }
 
   @override
-  StreamSubscription<Duration> bufferedPositionStream() {
-    return audioPlayer.bufferedPositionStream.listen((bufferedPosition) {});
+  Stream<Duration> bufferedPositionStream() {
+    return audioPlayer.bufferedPositionStream;
   }
 
   @override
-  StreamSubscription<Duration?> durationStream() {
-    return audioPlayer.durationStream.listen((totalDuration) {});
+  Stream<Duration?> durationStream() {
+    return audioPlayer.durationStream;
   }
 
   @override
