@@ -6,39 +6,60 @@ import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 abstract class LocalDataSource {
+
+
+
   /// This method will get the already created cookbook from the local database
   /// Output: [String] if the cookbook already exists return cookbook else return null
   String? getCookbookId();
+
 
   /// This method will generate the cookbook id for the easel app
   /// Output: [String] the id of the cookbook which will contains all the NFTs.
   Future<String> autoGenerateCookbookId();
 
+
   /// This method will generate easel Id for the NFT
   /// Output: [String] the id of the NFT that is going to be added in the recipe
   String autoGenerateEaselId();
+
+
 
   /// This method will save the username of the cookbook generator
   /// Input: [username] the username of the user who created the cookbook
   /// Output: [bool] returns whether the operation is successful or not
   Future<bool> saveCookBookGeneratorUsername(String username);
 
+
+
+
   /// This method will get the username of the cookbook generator
   /// Output: [String] returns whether the operation is successful or not
   String getCookBookGeneratorUsername();
+
+
+
 
   /// This method will save the artist name
   /// Input: [name] the name of the artist which the user want to save
   /// Output: [bool] returns whether the operation is successful or not
   Future<bool> saveArtistName(String name);
 
+
+
+
   /// This method will get the artist name
   /// Output: [String] returns whether the operation is successful or not
   String getArtistName();
 
+
+
   /// This method will save the on boarding complete in the local datastore
   /// Output: [bool] returns whether the operation is successful or not
   Future<bool> saveOnBoardingComplete();
+
+
+
 
   /// This method will get the on boarding status from the local datastore
   /// Output: [bool] returns whether the operation is successful or not
@@ -71,14 +92,16 @@ class LocalDataSourceImpl implements LocalDataSource {
   /// gets cookbookId from local storage
   ///return String or null
   @override
-  String? getCookbookId() {
+  String? getCookbookId(){
     return sharedPreferences.getString(kCookbookId);
   }
 
   /// auto generates cookbookID string and saves into local storage
   /// returns cookbookId
   @override
-  Future<String> autoGenerateCookbookId() async {
+  Future<String> autoGenerateCookbookId() async{
+
+
     String cookbookId = "Easel_CookBook_auto_cookbook_${getFullDateTime()}";
 
     await sharedPreferences.setString(kCookbookId, cookbookId);
@@ -102,12 +125,12 @@ class LocalDataSourceImpl implements LocalDataSource {
 
   @override
   String getCookBookGeneratorUsername() {
-    return sharedPreferences.getString(kUsername) ?? '';
+    return  sharedPreferences.getString(kUsername) ?? '';
   }
 
   @override
   bool getOnBoardingComplete() {
-    return sharedPreferences.getBool(ONBOARDING_COMPLETE) ?? false;
+    return  sharedPreferences.getBool(ONBOARDING_COMPLETE) ?? false;
   }
 
   @override
@@ -117,7 +140,8 @@ class LocalDataSourceImpl implements LocalDataSource {
 
   @override
   String getArtistName() {
-    return sharedPreferences.getString(kArtistName) ?? '';
+    return  sharedPreferences.getString(kArtistName) ?? '';
+
   }
 
   @override

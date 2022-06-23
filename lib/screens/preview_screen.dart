@@ -34,18 +34,9 @@ class _PreviewScreenState extends State<PreviewScreen> {
         builder: (_, provider, __) => Stack(
           children: [
             buildPreviewWidget(provider),
-            Image.asset(kPreviewGradient, width: 1.sw, fit: BoxFit.fill),
             Column(children: [
               SizedBox(height: MediaQuery.of(context).viewPadding.top + 20.h),
-              Align(
-                alignment: Alignment.center,
-                child: Text(kPreviewNoticeText,
-                    textAlign: TextAlign.center,
-                    style: Theme.of(context)
-                        .textTheme
-                        .bodyText2!
-                        .copyWith(color: EaselAppTheme.kLightPurple, fontSize: 15.sp, fontWeight: FontWeight.w600)),
-              ),
+
               Align(
                 alignment: Alignment.centerLeft,
                 child: Padding(
@@ -88,7 +79,7 @@ class _PreviewScreenState extends State<PreviewScreen> {
       case kImageText:
         return ImageWidget(file: provider.file!);
       case kVideoText:
-        return VideoWidget(file: provider.file!);
+        return VideoWidget(file: provider.file!, previewFlag: false,);
       case k3dText:
         return Model3dViewer(file: provider.file!);
       case kAudioText:
