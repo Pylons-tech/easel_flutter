@@ -60,7 +60,7 @@ class VideoWidgetFullScreen extends StatelessWidget {
                       color: Colors.black.withOpacity(0.3),
                       child: Padding(
                         padding: EdgeInsets.only(bottom: 30.h),
-                        child: const VideoProgressWidget(darkMode: true),
+                        child: const VideoProgressWidget(darkMode: true, isForFile: false),
                       ),
                     ),
                   ),

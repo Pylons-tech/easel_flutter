@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 class EaselAppTheme {
   static const Color kWhite = Color(0xFFFFFFFF);
+  static const Color kBgColor = Color.fromRGBO(242, 239, 234, 1);
   static const Color kGrey = Color(0xFF8D8C8C);
   static const Color kLightGrey = Color(0xFFC4C4C4);
   static const Color kLightGrey02 = Color(0xFFF2EFEA);
@@ -24,6 +26,8 @@ class EaselAppTheme {
   static const Color kYellow = Color(0xFFF3BA2F);
   static const Color kLightRed = Color(0xFFEF4421);
 
+  static const String universalSansFamily = "UniversalSans";
+
   static ThemeData theme(BuildContext context) => ThemeData(
         backgroundColor: kWhite,
         primaryColor: kWhite,
@@ -34,4 +38,17 @@ class EaselAppTheme {
 
   static Color cardBackground = const Color(0xFFC4C4C4).withOpacity(0.2);
   static Color cardBackgroundSelected = const Color(0x801212C4).withOpacity(0.2);
+
+  static TextStyle titleStyle = TextStyle(
+    fontSize: 18.sp,
+    fontWeight: FontWeight.w800,
+    color: EaselAppTheme.kBlack,
+    fontFamily: universalSansFamily,
+  );
+  static TextStyle digitTextStyle = TextStyle(
+    fontSize: 20.sp,
+    fontWeight: FontWeight.w800,
+    color: EaselAppTheme.kWhite,
+    fontFamily: universalSansFamily,
+  );
 }

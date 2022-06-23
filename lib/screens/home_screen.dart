@@ -7,8 +7,10 @@ import 'package:easel_flutter/screens/price_screen.dart';
 import 'package:easel_flutter/screens/publish_screen.dart';
 import 'package:easel_flutter/utils/constants.dart';
 import 'package:easel_flutter/utils/easel_app_theme.dart';
+import 'package:easel_flutter/utils/route_util.dart';
 import 'package:easel_flutter/utils/screen_responsive.dart';
 import 'package:easel_flutter/utils/space_utils.dart';
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:provider/provider.dart';
@@ -46,6 +48,19 @@ class _HomeScreenState extends State<HomeScreen> {
     super.dispose();
   }
 
+  void gotoDashBoard() {
+    Navigator.of(context).pushNamedAndRemoveUntil((RouteUtil.ROUTE_CREATOR_HUB), (route) => false);
+  }
+
+  void onMainScreenBackPressed() {
+    if (_currentPage.value == 0) {
+      Navigator.pop(context);
+      return;
+    }
+    ScaffoldMessenger.of(context).hideCurrentSnackBar();
+    _pageController.previousPage(duration: const Duration(milliseconds: 300), curve: Curves.easeIn);
+  }
+
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -71,10 +86,10 @@ class _HomeScreenState extends State<HomeScreen> {
                                 builder: (_, provider, __) => TextButton(
                                   onPressed: () {
                                     provider.initStore();
-                                    _pageController.jumpToPage(_pageController.initialPage);
+                                    gotoDashBoard();
                                   },
                                   child: Text(
-                                    kMintMoreText,
+                                    "go_to_dashboard".tr(),
                                     style: Theme.of(context).textTheme.bodyText1!.copyWith(fontSize: 20.sp, color: EaselAppTheme.kBlue, fontWeight: FontWeight.w400),
                                   ),
                                 ),
@@ -83,8 +98,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                 padding: EdgeInsets.only(left: 10.sp),
                                 child: IconButton(
                                   onPressed: () {
-                                    ScaffoldMessenger.of(context).hideCurrentSnackBar();
-                                    _pageController.previousPage(duration: const Duration(milliseconds: 300), curve: Curves.easeIn);
+                                    onMainScreenBackPressed();
                                   },
                                   icon: const Icon(
                                     Icons.arrow_back_ios,
@@ -117,7 +131,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                     size: 18,
                                   ),
                                   icon: Text(
-                                    kGoToWalletText,
+                                    "go_to_wallet".tr(),
                                     style: Theme.of(context).textTheme.bodyText1!.copyWith(fontSize: 20.sp, color: EaselAppTheme.kBlue, fontWeight: FontWeight.w400),
                                   ),
                                 ),
