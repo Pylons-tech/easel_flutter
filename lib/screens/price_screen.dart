@@ -1,10 +1,12 @@
 import 'package:easel_flutter/easel_provider.dart';
+import 'package:easel_flutter/screens/custom_widgets/clipped_button.dart';
 import 'package:easel_flutter/utils/amount_formatter.dart';
 import 'package:easel_flutter/utils/constants.dart';
 import 'package:easel_flutter/utils/easel_app_theme.dart';
 import 'package:easel_flutter/utils/space_utils.dart';
 import 'package:easel_flutter/widgets/easel_price_input_field.dart';
 import 'package:easel_flutter/widgets/easel_text_field.dart';
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -53,41 +55,74 @@ class _PriceScreenState extends State<PriceScreen> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Align(
-                    alignment: Alignment.center,
-                    child: Text(kPriceNoticeText,
-                        textAlign: TextAlign.center,
-                        style: Theme.of(context)
-                            .textTheme
-                            .bodyText1!
-                            .copyWith(fontSize: 14.sp, color: EaselAppTheme.kLightPurple, fontWeight: FontWeight.w400)),
+                  Text("is_this_free".tr(),
+                style: TextStyle(fontSize: 18.sp, fontWeight: FontWeight.w500),
                   ),
-                  VerticalSpace(20.h),
-                  EaselPriceInputField(
-                    key: ValueKey("${provider.selectedDenom.name}-amount"),
-                    inputFormatters: [
-                      FilteringTextInputFormatter.digitsOnly,
-                      LengthLimitingTextInputFormatter(kMaxPriceLength),
-                      provider.selectedDenom.getFormatter()
-                    ],
-                    controller: provider.priceController,
-                    validator: (value) {
-                      setState(() {
-                        if (value!.isEmpty) {
-                          _priceFieldError = kEnterPriceText;
-                          return;
-                        }
-                        if (double.parse(value.replaceAll(",", "")) < kMinValue) {
-                          _priceFieldError = "$kMinIsText $kMinValue";
-                          return;
-                        }
-                        _priceFieldError = '';
-                      });
-                      return null;
-                    },
+                  SizedBox(
+                    height: 10.h,
                   ),
-                  _priceFieldError.isNotEmpty
-                      ? Padding(
+                  SizedBox(
+                    width: MediaQuery.of(context).size.width*0.75,
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children:[
+                          Expanded(
+                            child: CustomPaintButton(
+                            title: "yes".tr(),
+                            bgColor: provider.isFree ?EaselAppTheme.kBlue :EaselAppTheme.kWhite,
+                            textColor: provider.isFree ?EaselAppTheme.kWhite :EaselAppTheme.kLightBlackText,
+                            onPressed: () async {
+                              provider.changeIsFreeStatus(true);
+
+                            }, cuttingHeight: 13.h,isShadow: false,),
+                          ),
+                          SizedBox(
+                            width: 30.w,
+                          ),
+                          Expanded(
+                            child: CustomPaintButton(
+                            title: "no".tr(),
+                              bgColor: provider.isFree ? EaselAppTheme.kWhite : EaselAppTheme.kBlue ,
+                              textColor: provider.isFree ?EaselAppTheme.kLightBlackText : EaselAppTheme.kWhite ,
+                              onPressed: () async {
+                            provider.changeIsFreeStatus(false);
+                            }, cuttingHeight: 13.h,isShadow: false,),
+                          ),
+                        ]
+
+                    ),
+                  ),
+                  Visibility(
+                    visible: !provider.isFree,
+                    child: Column(
+                      children: [
+
+                        VerticalSpace(20.h),
+                        EaselPriceInputField(
+                          key: ValueKey("${provider.selectedDenom.name}-amount"),
+                          inputFormatters: [
+                            FilteringTextInputFormatter.digitsOnly,
+                            LengthLimitingTextInputFormatter(kMaxPriceLength),
+                            provider.selectedDenom.getFormatter()
+                          ],
+                          controller: provider.priceController,
+                          validator: (value) {
+                            setState(() {
+                              if (value!.isEmpty) {
+                                _priceFieldError = kEnterPriceText;
+                                return;
+                              }
+                              if (double.parse(value.replaceAll(",", "")) < kMinValue) {
+                                _priceFieldError = "$kMinIsText $kMinValue";
+                                return;
+                              }
+                              _priceFieldError = '';
+                            });
+                            return null;
+                          },
+                        ),
+                        _priceFieldError.isNotEmpty
+                            ? Padding(
                           padding: EdgeInsets.only(left: 10.w, right: 10.w, top: 2.h),
                           child: Text(
                             _priceFieldError,
@@ -97,41 +132,41 @@ class _PriceScreenState extends State<PriceScreen> {
                             ),
                           ),
                         )
-                      : const SizedBox.shrink(),
-                  Text(
-                    kNetworkFeeWarnText,
-                    style: TextStyle(color: EaselAppTheme.kLightPurple, fontSize: 14.sp, fontWeight: FontWeight.w800),
-                  ),
-                  const VerticalSpace(20),
-                  EaselTextField(
-                    label: kRoyaltiesText,
-                    hint: kRoyaltyHintText,
-                    keyboardType: TextInputType.number,
-                    inputFormatters: [
-                      FilteringTextInputFormatter.digitsOnly,
-                      LengthLimitingTextInputFormatter(2),
-                      AmountFormatter(
-                        maxDigits: 2,
-                      )
-                    ],
-                    controller: provider.royaltyController,
-                    validator: (value) {
-                      setState(() {
-                        if (value!.isEmpty) {
-                          _royaltiesFieldError = kEnterRoyaltyText;
-                          return;
-                        }
-                        if (int.parse(value) > kMaxRoyalty) {
-                          _royaltiesFieldError = "$kRoyaltyRangeText $kMinRoyalty-$kMaxRoyalty %";
-                          return;
-                        }
-                        _royaltiesFieldError = '';
-                      });
-                      return null;
-                    },
-                  ),
-                  _royaltiesFieldError.isNotEmpty
-                      ? Padding(
+                            : const SizedBox.shrink(),
+                        Text(
+                          kNetworkFeeWarnText,
+                          style: TextStyle(color: EaselAppTheme.kLightPurple, fontSize: 14.sp, fontWeight: FontWeight.w800),
+                        ),
+                        const VerticalSpace(20),
+                        EaselTextField(
+                          label: kRoyaltiesText,
+                          hint: kRoyaltyHintText,
+                          keyboardType: TextInputType.number,
+                          inputFormatters: [
+                            FilteringTextInputFormatter.digitsOnly,
+                            LengthLimitingTextInputFormatter(2),
+                            AmountFormatter(
+                              maxDigits: 2,
+                            )
+                          ],
+                          controller: provider.royaltyController,
+                          validator: (value) {
+                            setState(() {
+                              if (value!.isEmpty) {
+                                _royaltiesFieldError = kEnterRoyaltyText;
+                                return;
+                              }
+                              if (int.parse(value) > kMaxRoyalty) {
+                                _royaltiesFieldError = "$kRoyaltyRangeText $kMinRoyalty-$kMaxRoyalty %";
+                                return;
+                              }
+                              _royaltiesFieldError = '';
+                            });
+                            return null;
+                          },
+                        ),
+                        _royaltiesFieldError.isNotEmpty
+                            ? Padding(
                           padding: EdgeInsets.only(left: 10.w, right: 10.w, top: 2.h),
                           child: Text(
                             _royaltiesFieldError,
@@ -141,11 +176,16 @@ class _PriceScreenState extends State<PriceScreen> {
                             ),
                           ),
                         )
-                      : const SizedBox.shrink(),
-                  Text(
-                    "$kRoyaltyNoteText “$kMinRoyalty”.",
-                    style: TextStyle(color: EaselAppTheme.kLightPurple, fontWeight: FontWeight.w800, fontSize: 14.sp),
+                            : const SizedBox.shrink(),
+                        Text(
+                          "$kRoyaltyNoteText “$kMinRoyalty”.",
+                          style: TextStyle(color: EaselAppTheme.kLightPurple, fontWeight: FontWeight.w800, fontSize: 14.sp),
+                        ),
+                      ],
+                    ),
                   ),
+
+
                   VerticalSpace(20.h),
                   EaselTextField(
                     key: ValueKey(provider.selectedDenom.name),

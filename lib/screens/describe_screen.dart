@@ -1,4 +1,5 @@
 import 'package:easel_flutter/easel_provider.dart';
+import 'package:easel_flutter/screens/custom_widgets/initial_draft_detail_dialog.dart';
 import 'package:easel_flutter/utils/constants.dart';
 import 'package:easel_flutter/utils/easel_app_theme.dart';
 import 'package:easel_flutter/utils/space_utils.dart';
@@ -38,13 +39,21 @@ class _DescribeScreenState extends State<DescribeScreen> {
     super.initState();
 
     context.read<EaselProvider>().toCheckSavedArtistName();
+    WidgetsBinding.instance.addPostFrameCallback((_) async {
+      await showDialog<String>(
+          context: context,
+          builder: (BuildContext context) =>  DraftDetailDialog());
 
+
+    });
      }
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: SingleChildScrollView(
+    return  Scaffold(
+      body:
+
+      SingleChildScrollView(
         child: Padding(
           padding: EdgeInsets.symmetric(horizontal: 20.w, vertical: 15.h),
           child: Consumer<EaselProvider>(builder: (_, provider, __) {

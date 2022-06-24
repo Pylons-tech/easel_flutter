@@ -58,7 +58,7 @@ class _PreviewScreenState extends State<PreviewScreen> {
                 alignment: Alignment.bottomRight,
                 child: PylonsButton(
                     onPressed: () async{
-                      await  GetIt.I.get<CreatorHubViewModel>().saveDraft(provider.file);
+                      // await  GetIt.I.get<CreatorHubViewModel>().saveDraft(provider.file);
 
                       widget.controller.nextPage(duration: const Duration(milliseconds: 10), curve: Curves.easeIn);
                       Navigator.of(context).pop();

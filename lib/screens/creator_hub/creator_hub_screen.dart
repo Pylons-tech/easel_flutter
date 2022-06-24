@@ -52,7 +52,7 @@ class _CreatorHubScreenState extends State<CreatorHubScreen> {
                         alignment: Alignment.topRight,
                         child: InkWell(
                           onTap: () {
-                            Navigator.of(context).pushNamed(RouteUtil.ROUTE_HOME, arguments: [0]);
+                            Navigator.of(context).pushNamed(RouteUtil.ROUTE_HOME,);
                           },
                           child: Icon(
                             Icons.add,

@@ -9,7 +9,15 @@
   "delete": "Delete",
   "view": "View On IFPS",
   "delete_error": "Failed to delete draft",
-  "save_error": "Failed to save draft"
+  "save_error": "Failed to save draft",
+  "upload": "upload",
+  "upload_to_ipfs": "Upload to IPFS",
+  "content_id":"Content ID",
+  "tx_receipt":"TX receipt",
+  "close":"Close",
+  "is_this_free" : "Is this a free drop?",
+  "yes": "Yes",
+  "no": "No"
 
 
 }

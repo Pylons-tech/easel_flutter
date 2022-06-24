@@ -26,7 +26,7 @@ class DraftsMoreBottomSheet extends StatelessWidget {
           children: [
             moreOptionTile(title: "publish", svg: kSvgPublish, onPressed: () {
               Navigator.of(context).pop();
-              Navigator.of(context).pushNamed(RouteUtil.ROUTE_HOME, arguments: [1]);
+              Navigator.of(context).pushNamed(RouteUtil.ROUTE_HOME );
 
             }),
             const Divider(

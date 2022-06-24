@@ -31,6 +31,8 @@ class EaselProvider extends ChangeNotifier {
 
   EaselProvider({required this.localDataSource,required this.remoteDataSource,required this.videoPlayerHelper});
 
+ late bool isFree = true;
+
   File? _file;
   NftFormat _nftFormat = NftFormat.supportedFormats[0];
   String _fileName = "";
@@ -54,6 +56,11 @@ class EaselProvider extends ChangeNotifier {
     notifyListeners();
   }
 
+  void changeIsFreeStatus(bool val){
+    isFree=val;
+    notifyListeners();
+
+  }
   File? get file => _file;
 
   NftFormat get nftFormat => _nftFormat;
