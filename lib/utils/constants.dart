@@ -106,7 +106,7 @@ const kNoOfEditionText = 'Number of editions';
 const kEnterRoyaltyText = 'Enter royalty in percentage';
 const kRoyaltiesText = 'Royalties';
 const kRoyaltyHintText = '5%';
-const kRoyaltyNoteText = 'Percentage of all secondary market sales automatically distributed to the NFT creator.\nTo opt out set value to';
+const kRoyaltyNoteText = 'Percentage of all secondary market sales automatically distributed to the NFT creator';
 const kRoyaltyRangeText = 'Allowed royalty is between';
 const kMinIsText = 'Minimum is';
 const kMaxIsTextText = 'Maximum is';
@@ -132,13 +132,14 @@ const kPreview3dModelText = 'Click here to preview\nyour selected 3D Model';
 const kMintMoreText = 'Mint More';
 const kGoToWalletText = 'Go to Wallet';
 const kChooseNFTFormatText = 'Choose your NFT format';
-const kUploadNFTText = 'Upload NFT file';
+const kSelectNFTText = 'Select NFT file';
 const kDetailNftText = 'NFT Details';
+
 const kEditNFTText = 'Edit your NFT Details';
 const kPreviewYourNFTText = 'Preview your NFT file';
-const kDescribeNftText = 'Describe NFT';
-const kPriceNftText = 'Price NFT';
+const kPriceNftText = 'NFT Pricing';
 const kListNftText = 'List NFT';
+
 const kPublishNftText = 'Publish NFT';
 const kUploadText = 'Upload';
 const kEditText = 'Edit';
@@ -233,3 +234,9 @@ const String kHeightKey = "Height";
 const String kQuantityKey = "Quantity";
 const String kHashtagKey = "Hashtags";
 
+const String kNone = "None";
+const String kNftFormat = "NFT_Format";
+const double kPrecision = 100000000000000000;
+const String kEthereumSymbol = "weth-wei";
+const int kNumberOfSeconds = 1000;
+const int kSixtySeconds = 60;

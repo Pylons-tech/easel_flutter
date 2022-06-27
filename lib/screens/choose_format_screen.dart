@@ -158,7 +158,7 @@ class _CardWidget extends StatelessWidget {
           child: Container(
               width: 0.4.sw,
               height: 0.4.sw,
-              padding: EdgeInsets.symmetric(horizontal: 0.05.sw, vertical: 4.5.h),
+              padding: EdgeInsets.symmetric(horizontal: 0.02.sw, vertical: 4.5.h),
               decoration: BoxDecoration(color: NftFormat.supportedFormats[typeIdx].color),
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,

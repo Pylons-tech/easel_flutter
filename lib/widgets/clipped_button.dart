@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 
-class CustomPaintButton extends StatelessWidget {
+class ClippedButton extends StatelessWidget {
 
   final VoidCallback onPressed;
   final String title;
@@ -11,7 +11,7 @@ class CustomPaintButton extends StatelessWidget {
   final double cuttingHeight;
    bool? isShadow= true;
 
-   CustomPaintButton({Key? key, required this.onPressed, required this.title, required this.bgColor, required this.textColor,required this.cuttingHeight, this.isShadow= true}) : super(key: key);
+  ClippedButton({Key? key, required this.onPressed, required this.title, required this.bgColor, required this.textColor,required this.cuttingHeight, this.isShadow= true}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -26,8 +26,7 @@ class CustomPaintButton extends StatelessWidget {
           clipper: ButtonClipper(cuttingHeight: cuttingHeight),
           child: Container(
             color: bgColor,
-            height: 20.h,
-            // width: 200.w,
+            height: 32.h,
             child: Center(
                 child: Text(
                   title,
@@ -40,8 +39,7 @@ class CustomPaintButton extends StatelessWidget {
         clipper: ButtonClipper(cuttingHeight: cuttingHeight),
         child: Container(
           color: bgColor,
-          height: 35.h,
-          // width: 200.w,
+          height: 30.h,
           child: Center(
               child: Text(
                 title,

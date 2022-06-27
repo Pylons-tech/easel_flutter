@@ -31,7 +31,7 @@ class EaselProvider extends ChangeNotifier {
 
   EaselProvider({required this.localDataSource,required this.remoteDataSource,required this.videoPlayerHelper});
 
- late bool isFree = true;
+ late bool isFreeDrop = true;
 
   File? _file;
   NftFormat _nftFormat = NftFormat.supportedFormats[0];
@@ -56,11 +56,6 @@ class EaselProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-  void changeIsFreeStatus(bool val){
-    isFree=val;
-    notifyListeners();
-
-  }
   File? get file => _file;
 
   NftFormat get nftFormat => _nftFormat;
@@ -128,6 +123,12 @@ class EaselProvider extends ChangeNotifier {
     royaltyController.clear();
     hashtagsList.clear();
     notifyListeners();
+  }
+
+  void updateIsFreeDropStatus(bool val){
+    isFreeDrop=val;
+    notifyListeners();
+
   }
 
   Future<void> setFormat(BuildContext context, NftFormat format) async {

@@ -1,11 +1,9 @@
 
 import 'dart:ui';
-
-import 'package:cached_network_image/cached_network_image.dart';
 import 'package:easel_flutter/main.dart';
 import 'package:easel_flutter/screens/clippers/right_triangle_clipper.dart' as clipper;
 import 'package:easel_flutter/screens/clippers/right_triangle_clipper.dart';
-import 'package:easel_flutter/screens/custom_widgets/clipped_button.dart';
+import 'package:easel_flutter/widgets/clipped_button.dart';
 import 'package:easel_flutter/utils/easel_app_theme.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
@@ -85,18 +83,18 @@ class _PayNowWidgetState extends State<DraftDetailDialog> {
                     title: "upload_to_ipfs".tr(),
                   ),
                   SizedBox(
-                    height: 3.h,
+                    height: 5.h,
                   ),
                   buildRow(
                     subtitle: "x5909yTEo90",
                     title: "content_id".tr(),
                   ),
                   SizedBox(
-                    height: 3.h,
+                    height: 5.h,
                   ),
 
                   buildRow(
-                    subtitle:"View on IPFS",
+                    subtitle:"view".tr(),
                     title: "tx_receipt".tr(),
                   ),
                   SizedBox(
@@ -106,7 +104,7 @@ class _PayNowWidgetState extends State<DraftDetailDialog> {
                   SizedBox(
                     height: 45.h,
                     width:isTablet? 120.w: 150.w,
-                    child: CustomPaintButton(
+                    child: ClippedButton(
                         title: "close".tr(),
                         bgColor: Colors.white.withOpacity(0.2),
                         textColor: EaselAppTheme.kWhite,
@@ -139,7 +137,7 @@ class _PayNowWidgetState extends State<DraftDetailDialog> {
               padding: EdgeInsets.only(right:5.w,),
               child: Text(
                 subtitle,
-                style: subtitle== "view_on_ipfs".tr()? _rowTitleTextStyle.copyWith(color:EaselAppTheme.kLightPurple ): _rowTitleTextStyle,
+                style: subtitle== "view".tr()? _rowTitleTextStyle.copyWith(color:EaselAppTheme.kLightPurple ): _rowTitleTextStyle,
               ),
             ))
       ],
