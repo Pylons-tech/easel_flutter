@@ -107,12 +107,12 @@ class EaselProvider extends ChangeNotifier {
 
   String? get cookbookId => _cookbookId;
 
-  TextEditingController? artistNameController = TextEditingController();
-  TextEditingController? artNameController = TextEditingController();
-  TextEditingController? descriptionController = TextEditingController();
-  TextEditingController? noOfEditionController = TextEditingController();
-  TextEditingController? priceController = TextEditingController();
-  TextEditingController? royaltyController = TextEditingController();
+  TextEditingController artistNameController = TextEditingController();
+  TextEditingController artNameController = TextEditingController();
+  TextEditingController descriptionController = TextEditingController();
+  TextEditingController noOfEditionController = TextEditingController();
+  TextEditingController priceController = TextEditingController();
+  TextEditingController royaltyController = TextEditingController();
   File? _audioThumbnail;
 
   File? get audioThumbnail => _audioThumbnail;
@@ -164,21 +164,31 @@ class EaselProvider extends ChangeNotifier {
     _recipeId = "";
     _selectedDenom = Denom.availableDenoms.first;
 
-    artistNameController?.clear();
-    artNameController?.clear();
-    descriptionController?.clear();
-    noOfEditionController?.clear();
-    priceController?.clear();
-    royaltyController?.clear();
+    artistNameController.clear();
+    artNameController.clear();
+    descriptionController.clear();
+    noOfEditionController.clear();
+    priceController.clear();
+    royaltyController.clear();
     hashtagsList.clear();
     notifyListeners();
   }
 
-  bool isFreeDrop=false;
-  void updateIsFreeDropStatus(bool val){
-    isFreeDrop=val;
+  void initilizeTextEditingControllerWithEmptyValues() {
+    artistNameController.text = '';
+    artNameController.text = '';
+    descriptionController.text = '';
+    noOfEditionController.text = '';
+    priceController.text = '';
+    royaltyController.text = '';
     notifyListeners();
+  }
 
+  bool isFreeDrop = false;
+
+  void updateIsFreeDropStatus(bool val) {
+    isFreeDrop = val;
+    notifyListeners();
   }
 
   void stopVideoIfPlaying() {
@@ -419,7 +429,7 @@ class EaselProvider extends ChangeNotifier {
         iD: _cookbookId,
         name: "Easel Cookbook",
         description: "Cookbook for Easel NFT",
-        developer: artistNameController?.text,
+        developer: artistNameController.text,
         version: "v0.0.1",
         supportEmail: "easel@pylons.tech",
         enabled: true);
@@ -442,10 +452,10 @@ class EaselProvider extends ChangeNotifier {
     String savedArtistName = localDataSource.getArtistName();
 
     if (savedArtistName.isNotEmpty) {
-      artistNameController?.text = savedArtistName;
+      artistNameController.text = savedArtistName;
       return;
     }
-    artistNameController?.text = currentUsername;
+    artistNameController.text = currentUsername;
   }
 
   /// sends a createRecipe Tx message to the wallet
@@ -502,67 +512,75 @@ class EaselProvider extends ChangeNotifier {
         return false;
       }
 
-    String residual = DecString.decStringFromDouble(double.parse(royaltyController!.text.trim()));
+      String residual = DecString.decStringFromDouble(double.parse(royaltyController.text.trim()));
 
-    String price = (double.parse(priceController!.text.replaceAll(",", "").trim()) * 1000000).toStringAsFixed(0);
-    var recipe = Recipe(
-        cookbookID: _cookbookId,
-        iD: _recipeId,
-        nodeVersion: "v0.1.0",
-        name: artNameController?.text.trim(),
-        description: descriptionController?.text.trim(),
-        version: "v0.1.0",
-        coinInputs: [
-          CoinInput(coins: [Coin(amount: price, denom: _selectedDenom.symbol)])
-        ],
-        itemInputs: [],
-        costPerBlock: Coin(denom: kUpylon, amount: "0"),
-        entries: EntriesList(coinOutputs: [], itemOutputs: [
-          ItemOutput(
-              iD: kEaselNFT,
-              doubles: [
-                DoubleParam(key: kResidual, weightRanges: [
-                  DoubleWeightRange(
-                    lower: residual,
-                    upper: residual,
-                    weight: Int64(1),
-                  )
-                ])
-              ],
-              longs: [
-                LongParam(key: kQuantity, weightRanges: [
-                  IntWeightRange(
-                      lower: Int64(int.parse(noOfEditionController!.text.replaceAll(",", "").trim())), upper: Int64(int.parse(noOfEditionController!.text.replaceAll(",", "").trim())), weight: Int64(1))
-                ]),
-                LongParam(key: kWidth, weightRanges: [IntWeightRange(lower: Int64(_fileWidth), upper: Int64(_fileWidth), weight: Int64(1))]),
-                LongParam(key: kHeight, weightRanges: [IntWeightRange(lower: Int64(_fileHeight), upper: Int64(_fileHeight), weight: Int64(1))]),
-                LongParam(key: kDuration, weightRanges: [IntWeightRange(lower: Int64(_fileDuration), upper: Int64(_fileDuration), weight: Int64(1))]),
-              ],
-              strings: [
-                StringParam(key: kName, value: artNameController!.text.trim()),
-                StringParam(key: kAppType, value: kEasel),
-                StringParam(key: kDescription, value: descriptionController!.text.trim()),
-                StringParam(key: kHashtags, value: hashtagsList.join('#')),
-                StringParam(key: kNFTFormat, value: _nftFormat.format),
-                StringParam(key: kNFTURL, value: "$ipfsDomain/${fileUploadResponse.data?.value?.cid ?? ""}"),
-                StringParam(key: kThumbnailUrl, value: videoThumbnail != null ? "$ipfsDomain/${thumbnailUploadResponse.data?.value?.cid ?? ""}" : ""),
-                StringParam(key: kCreator, value: artistNameController!.text.trim()),
-              ],
-              mutableStrings: [],
-              transferFee: [Coin(denom: kPylonSymbol, amount: "1")],
-              tradePercentage: DecString.decStringFromDouble(double.parse(royaltyController!.text.trim())),
-              tradeable: true,
-              amountMinted: Int64(0),
-              quantity: Int64(int.parse(noOfEditionController!.text.replaceAll(",", "").trim()))),
-        ], itemModifyOutputs: []),
-        outputs: [
-          WeightedOutputs(entryIDs: [kEaselNFT], weight: Int64(1))
-        ],
-        blockInterval: Int64(0),
-        enabled: true,
-        extraInfo: kExtraInfo);
+      String price = (double.parse(priceController.text.replaceAll(",", "").trim()) * 1000000).toStringAsFixed(0);
+      var recipe = Recipe(
+          cookbookID: _cookbookId,
+          iD: _recipeId,
+          nodeVersion: "v0.1.0",
+          name: artNameController.text.trim(),
+          description: descriptionController.text.trim(),
+          version: "v0.1.0",
+          coinInputs: [
+            CoinInput(coins: [Coin(amount: price, denom: _selectedDenom.symbol)])
+          ],
+          itemInputs: [],
+          costPerBlock: Coin(denom: kUpylon, amount: "0"),
+          entries: EntriesList(coinOutputs: [], itemOutputs: [
+            ItemOutput(
+                iD: kEaselNFT,
+                doubles: [
+                  DoubleParam(key: kResidual, weightRanges: [
+                    DoubleWeightRange(
+                      lower: residual,
+                      upper: residual,
+                      weight: Int64(1),
+                    )
+                  ])
+                ],
+                longs: [
+                  LongParam(key: kQuantity, weightRanges: [
+                    IntWeightRange(
+                        lower: Int64(int.parse(noOfEditionController.text.replaceAll(",", "").trim())),
+                        upper: Int64(int.parse(noOfEditionController.text.replaceAll(",", "").trim())),
+                        weight: Int64(1))
+                  ]),
+                  LongParam(key: kWidth, weightRanges: [IntWeightRange(lower: Int64(_fileWidth), upper: Int64(_fileWidth), weight: Int64(1))]),
+                  LongParam(key: kHeight, weightRanges: [IntWeightRange(lower: Int64(_fileHeight), upper: Int64(_fileHeight), weight: Int64(1))]),
+                  LongParam(key: kDuration, weightRanges: [IntWeightRange(lower: Int64(_fileDuration), upper: Int64(_fileDuration), weight: Int64(1))]),
+                ],
+                strings: [
+                  StringParam(key: kName, value: artNameController.text.trim()),
+                  StringParam(key: kAppType, value: kEasel),
+                  StringParam(key: kDescription, value: descriptionController.text.trim()),
+                  StringParam(key: kHashtags, value: hashtagsList.join('#')),
+                  StringParam(key: kNFTFormat, value: _nftFormat.format),
+                  StringParam(key: kNFTURL, value: "$ipfsDomain/${fileUploadResponse.data?.value?.cid ?? ""}"),
+                  StringParam(
+                      key: kThumbnailUrl,
+                      value: videoThumbnail != null
+                          ? "$ipfsDomain/${thumbnailUploadResponse.data?.value?.cid ?? ""}"
+                          : audioThumbnail != null
+                              ? "$ipfsDomain/${audioThumbnailUploadResponse.data?.value?.cid ?? ""}"
+                              : ""),
+                  StringParam(key: kCreator, value: artistNameController.text.trim()),
+                ],
+                mutableStrings: [],
+                transferFee: [Coin(denom: kPylonSymbol, amount: "1")],
+                tradePercentage: DecString.decStringFromDouble(double.parse(royaltyController.text.trim())),
+                tradeable: true,
+                amountMinted: Int64(0),
+                quantity: Int64(int.parse(noOfEditionController.text.replaceAll(",", "").trim()))),
+          ], itemModifyOutputs: []),
+          outputs: [
+            WeightedOutputs(entryIDs: [kEaselNFT], weight: Int64(1))
+          ],
+          blockInterval: Int64(0),
+          enabled: true,
+          extraInfo: kExtraInfo);
 
-    log('RecipeResponse: ${recipe.toProto3Json()}');
+      log('RecipeResponse: ${recipe.toProto3Json()}');
 
       var response = await PylonsWallet.instance.txCreateRecipe(recipe, requestResponse: false);
 
@@ -605,11 +623,11 @@ class EaselProvider extends ChangeNotifier {
 
   @override
   void dispose() {
-    artistNameController?.dispose();
-    artNameController?.dispose();
-    descriptionController?.dispose();
-    noOfEditionController?.dispose();
-    royaltyController?.dispose();
+    artistNameController.dispose();
+    artNameController.dispose();
+    descriptionController.dispose();
+    noOfEditionController.dispose();
+    royaltyController.dispose();
     super.dispose();
   }
 
