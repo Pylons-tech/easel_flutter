@@ -113,6 +113,25 @@ class EaselProvider extends ChangeNotifier {
   TextEditingController? noOfEditionController = TextEditingController();
   TextEditingController? priceController = TextEditingController();
   TextEditingController? royaltyController = TextEditingController();
+  File? _audioThumbnail;
+
+  File? get audioThumbnail => _audioThumbnail;
+
+  bool _isInitialized = false;
+
+  bool get isInitialized => _isInitialized;
+
+  set setIsInitialized(bool value) {
+    _isInitialized = value;
+    notifyListeners();
+  }
+
+  final artistNameController = TextEditingController();
+  final artNameController = TextEditingController();
+  final descriptionController = TextEditingController();
+  final noOfEditionController = TextEditingController();
+  final priceController = TextEditingController();
+  final royaltyController = TextEditingController();
   final List<String> hashtagsList = [];
 
   String currentUsername = '';
@@ -238,6 +257,11 @@ class EaselProvider extends ChangeNotifier {
   void disposeVideoController() {
     videoPlayerController.removeListener(() {});
     videoPlayerHelper.destroyVideoPlayer();
+  }
+
+  void setAudioThumbnail(File? file) {
+    _audioThumbnail = file;
+    notifyListeners();
   }
 
   bool isUrlLoaded = false;
@@ -377,8 +401,6 @@ class EaselProvider extends ChangeNotifier {
       return;
     }
 
-    log('Information: ${info.toString()}');
-
     if (_nftFormat.format == kImageText || _nftFormat.format == kVideoText) {
       _fileWidth = info['width'];
       _fileHeight = info['height'];
@@ -458,21 +480,33 @@ class EaselProvider extends ChangeNotifier {
 
     _recipeId = localDataSource.autoGenerateEaselId();
 
-    ApiResponse thumbnailUploadResponse = ApiResponse.error(errorMessage: "");
-    if (videoThumbnail != null) {
-      final loading = Loading().showLoading(message: kUploadingThumbnailMessage);
-      thumbnailUploadResponse = await remoteDataSource.uploadFile(videoThumbnail!);
+    if (_file!.existsSync()) {
+      ApiResponse audioThumbnailUploadResponse = ApiResponse.error(errorMessage: "");
+      if (audioThumbnail != null) {
+        final loading = Loading().showLoading(message: kUploadingThumbnailMessage);
 
+        audioThumbnailUploadResponse = await remoteDataSource.uploadFile(audioThumbnail!);
+
+        loading.dismiss();
+      }
+      audioPlayerHelper.pauseAudio();
+
+      ApiResponse thumbnailUploadResponse = ApiResponse.error(errorMessage: "");
+      if (videoThumbnail != null) {
+        final loading = Loading().showLoading(message: kUploadingThumbnailMessage);
+        thumbnailUploadResponse = await remoteDataSource.uploadFile(videoThumbnail!);
+        setVideoThumbnail(null);
+        loading.dismiss();
+      }
+
+      final loading = Loading().showLoading(message: "$kUploadingMessage ${_nftFormat.format}...");
+      final fileUploadResponse = await remoteDataSource.uploadFile(_file!);
+      setAudioThumbnail(null);
       loading.dismiss();
-    }
-
-    final loading = Loading().showLoading(message: "$kUploadingMessage ${_nftFormat.format}...");
-    final fileUploadResponse = await remoteDataSource.uploadFile(_file!);
-    loading.dismiss();
-    if (fileUploadResponse.status == Status.error) {
-      navigatorKey.currentState!.overlay!.context.show(message: fileUploadResponse.errorMessage ?? kErrUpload);
-      return false;
-    }
+      if (fileUploadResponse.status == Status.error) {
+        navigatorKey.currentState!.overlay!.context.show(message: fileUploadResponse.errorMessage ?? kErrUpload);
+        return false;
+      }
 
     String residual = DecString.decStringFromDouble(double.parse(royaltyController!.text.trim()));
 
@@ -536,16 +570,21 @@ class EaselProvider extends ChangeNotifier {
 
     log('RecipeResponse: ${recipe.toProto3Json()}');
 
-    var response = await PylonsWallet.instance.txCreateRecipe(recipe, requestResponse: false);
+      var response = await PylonsWallet.instance.txCreateRecipe(recipe, requestResponse: false);
 
-    log('From App $response');
+      log('From App $response');
+      setVideoThumbnail(null);
 
-    if (response.success) {
-      navigatorKey.currentState!.overlay!.context.show(message: kRecipeCreated);
-      log("${response.data}");
-      return true;
+      if (response.success) {
+        navigatorKey.currentState!.overlay!.context.show(message: kRecipeCreated);
+        log("${response.data}");
+        return true;
+      } else {
+        navigatorKey.currentState!.overlay!.context.show(message: "$kErrRecipe ${response.error}");
+        return false;
+      }
     } else {
-      navigatorKey.currentState!.overlay!.context.show(message: "$kErrRecipe ${response.error}");
+      navigatorKey.currentState!.overlay!.context.show(message: kErrPickFileFetch);
       return false;
     }
   }
@@ -632,6 +671,73 @@ class EaselProvider extends ChangeNotifier {
     PylonsWallet.instance.showStripe();
 
     return stripeTryAgainCompleter.future;
+  }
+
+  Future initializeAudioPlayerForFile() async {
+    audioProgressNotifier = ValueNotifier<ProgressBarState>(
+      ProgressBarState(
+        current: Duration.zero,
+        buffered: Duration.zero,
+        total: Duration.zero,
+      ),
+    );
+    buttonNotifier = ValueNotifier<ButtonState>(ButtonState.loading);
+
+    setIsInitialized = await audioPlayerHelper.setFile(file: _file!.path);
+
+    if (isInitialized) {
+      audioPlayerHelper.playerStateStream().listen((event) {}).onData((playerState) async {
+        final isPlaying = playerState.playing;
+        final processingState = playerState.processingState;
+
+        switch (processingState) {
+          case ProcessingState.idle:
+            await audioPlayerHelper.setFile(file: _file!.path);
+            break;
+          case ProcessingState.loading:
+          case ProcessingState.buffering:
+            buttonNotifier.value = ButtonState.loading;
+            break;
+
+          case ProcessingState.ready:
+            if (!isPlaying) {
+              buttonNotifier.value = ButtonState.paused;
+              break;
+            }
+            buttonNotifier.value = ButtonState.playing;
+            break;
+
+          default:
+            audioPlayerHelper.seekAudio(position: Duration.zero);
+            audioPlayerHelper.pauseAudio();
+        }
+      });
+    }
+    audioPlayerHelper.positionStream().listen((event) {}).onData((position) {
+      final oldState = audioProgressNotifier.value;
+      audioProgressNotifier.value = ProgressBarState(
+        current: position,
+        buffered: oldState.buffered,
+        total: oldState.total,
+      );
+    });
+
+    audioPlayerHelper.bufferedPositionStream().listen((event) {}).onData((bufferedPosition) {
+      final oldState = audioProgressNotifier.value;
+      audioProgressNotifier.value = ProgressBarState(
+        current: oldState.current,
+        buffered: bufferedPosition,
+        total: oldState.total,
+      );
+    });
+    audioPlayerHelper.durationStream().listen((event) {}).onData((totalDuration) {
+      final oldState = audioProgressNotifier.value;
+      audioProgressNotifier.value = ProgressBarState(
+        current: oldState.current,
+        buffered: oldState.buffered,
+        total: totalDuration ?? Duration.zero,
+      );
+    });
   }
 }
 

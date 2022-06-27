@@ -73,6 +73,7 @@ class _ChooseFormatScreenState extends State<ChooseFormatScreen> {
         children: [
           Column(
             children: [
+
               Align(
                 alignment: Alignment.center,
                 child: Text("$kFileSizeLimitInGB$kUploadHintAll",

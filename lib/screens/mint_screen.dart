@@ -42,7 +42,12 @@ class MintScreen extends StatelessWidget {
                           file: provider.file!,
                         ))
                   ],
-                  if (provider.nftFormat.format == kAudioText) ...[AudioWidget(file: provider.file!)],
+                  if (provider.nftFormat.format == kAudioText) ...[
+                    AudioWidget(
+                      file: provider.file!,
+                      previewFlag: true,
+                    )
+                  ],
                   const SizedBox(height: 10),
                   Padding(
                     padding: const EdgeInsets.symmetric(horizontal: 20),
@@ -139,7 +144,7 @@ class MintScreen extends StatelessWidget {
                               if (!isRecipeCreated) {
                                 return;
                               }
-
+                              provider.disposeAudioController();
                               controller.nextPage(duration: const Duration(milliseconds: 300), curve: Curves.easeIn);
                             },
                             btnText: kListText,
