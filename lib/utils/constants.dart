@@ -1,23 +1,8 @@
 const List kTutorialItems = [
-  {
-    'header': 'Upload your NFT file',
-    'description': 'Choose the file you wish to mint into a NFT!',
-    'image': 'assets/images/tutorial1.png'
-  },
-  {
-    'header': 'Edit your NFT Details',
-    'description': 'Enter information describing your NFT including the price you wish to sell it for!',
-    'image': 'assets/images/tutorial2.png'
-  },
-  {
-    'header': 'Manage your NFT with the ',
-    'header1': 'Pylons app',
-    'description': 'You can store, collect & manage all your NFTs in the Pylons app!',
-    'image': 'assets/images/tutorial3.png'
-  },
+  {'header': 'Upload your NFT file', 'description': 'Choose the file you want to upload to draft your NFT', 'image': 'assets/images/tutorial1.png'},
+  {'header': 'Edit your NFT Details', 'description': 'Enter information describing your NFT including the price you wish to sell it for!', 'image': 'assets/images/tutorial2.png'},
+  {'header': 'Manage your NFT with the ', 'header1': 'Pylons app', 'description': 'You can store, collect & manage all your NFTs in the Pylons app!', 'image': 'assets/images/tutorial3.png'},
 ];
-
-const String kUniversalFontFamily = "UniversalSans";
 
 /// ```PNG assets
 const kShareIcon = 'assets/images/share_ic.png';
@@ -60,6 +45,10 @@ const kSvgDelete = 'assets/images/svg/delete.svg';
 const kSvgView = 'assets/images/svg/view.svg';
 
 const kDummyImg = 'assets/images/svg/dummy_img.png';
+const kVideoIcon = 'assets/images/video_icon.png';
+
+const kSvgPylonsLogo = 'assets/images/svg/pylons_logo.svg';
+const kSvgViewIcon = 'assets/images/svg/view_icon.svg';
 
 /// ```URL constants
 const ipfsDomain = 'https://ipfs.io/ipfs';
@@ -81,6 +70,16 @@ const kFileSizeLimitInGB = 32;
 const kMaxPriceLength = 14;
 const kSecInMillis = 1000;
 const double TABLET_MIN_WIDTH = 600;
+const int kNumberOfSeconds = 1000;
+const int kSixtySeconds = 60;
+const int kFileCompressQuality = 50;
+
+const double kPrecision = 100000000000000000;
+
+
+
+const suffixes = ["B", "KB", "MB", "GB", "TB"];
+
 
 /// ````Reserved words, symbols, IDs etc
 const kCookbookId = 'cookbook_id';
@@ -100,6 +99,9 @@ const kAtomText = 'Atom';
 const kEurText = 'EEur';
 const kAgoricText = 'Agoric';
 const kJunoText = 'Juno';
+const kNone = 'None';
+const kPleaseWait = 'Please Wait';
+const kBack = 'Back';
 
 /// ```Text constants
 const kPreviewNoticeText = 'The resolution & orientation of your NFT will remain fixed as seen in the grid.';
@@ -157,6 +159,7 @@ const kSelectNFTText = 'Select NFT file';
 const kDetailNftText = 'NFT Details';
 const kPriceNftText = 'NFT Pricing';
 const kUploadText = 'Upload';
+const kEditText = 'Edit';
 const kPreviewText = 'Preview';
 const kListText = 'List';
 const kImageText = 'Image';
@@ -181,8 +184,7 @@ const kUploadHint3 = '• One file per upload';
 const kUploadHintAll = 'GB Limit.\nOne file per upload.';
 const kHintNftName = 'Bird on Shoulder';
 const kHintArtistName = 'Sarah Jackson';
-const kHintNftDesc =
-    'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eimod tempor incididunt ut labore et dolore magna aliquaQ. Ut enim ad minim veniam, quis nostrud exercita.';
+const kHintNftDesc = 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eimod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercita.';
 const kHintNoEdition = '100';
 const kHintPrice = '10.87';
 const kHintHashtag = 'Type in';
@@ -203,10 +205,28 @@ const kTryAgain = "Try again";
 const kAppNotInstalled = "Please download the Pylons app and create a username to publish a NFT in Easel.";
 const kPleaseTryAgain = "Something went wrong.\n Please try again.";
 const kCancel = "Cancel";
+const String videoPlayerNetworkError = 'Unable to play the video right now. Please check your internet connection and try again.';
 const videoPlayerError = "Some Error Occurred while playing the video. Please try again later.";
+const kCannotLaunchThisUrl = "Cannot launch this URL";
+
+//NFT STRINGS KEYS
+const kResidual = "Residual";
+const kQuantity = "Quantity";
+const kWidth = "Width";
+const kHeight = "Height";
+const kName = "Name";
+const kAppType = "App_Type";
+const kDescription = "Description";
+const kHashtags = "Hashtags";
+const kNFTFormat = "NFT_Format";
+const kNFTURL = "NFT_URL";
+const kCreator = "Creator";
+const kThumbnailUrl = "Thumbnail_URL";
+const kEasel = "Easel";
+const kEaselNFT = "Easel_NFT";
+const kUpylon = "upylon";
 const kExtraInfo = "extraInfo";
 const kDuration = "Duration";
-
 
 const kThumbnailFileName = "temp.jpg";
 
@@ -218,6 +238,8 @@ const kLoadingMessage = "Loading...";
 
 final List stepLabels = ["upload", "draft", "publish"];
 
+final List<String> imageAllowedExtsAndroid = ["png", "jpg", "jpeg", "svg", "heif"];
+final List<String> audioAllowedExtsAndroid = ['mp3', 'ogg', 'wav'];
 
 /// Nft viewmodel key values
 const String kNameKey = "Name";
@@ -232,29 +254,22 @@ const String kHeightKey = "Height";
 const String kQuantityKey = "Quantity";
 const String kHashtagKey = "Hashtags";
 
+const String kNoInternet = 'No internet';
+const String kRecipeNotFound = 'Recipe not found';
+const String kCookBookNotFound = 'Cookbook not found';
 
-/// NFT Key Strings
-const kResidual = "Residual";
-const kQuantity = "Quantity";
-const kWidth = "Width";
-const kHeight = "Height";
-const kName = "Name";
-const kAppType = "App_Type";
-const kDescription = "Description";
-const kNFTFormat = "NFT_Format";
-const kNFTURL = "NFT_URL";
-const kCreator = "Creator";
-const kThumbnailUrl = "Thumbnail_URL";
-const kEasel = "Easel";
-const kEaselNFT = "Easel_NFT";
-const kUpylon = "upylon";
-const String kNone = "None";
 const String kNftFormat = "NFT_Format";
-const kHashtags = "Hashtags";
+
+/// Currency ABRR
+const String kEmoneyAbb = "EEUR";
+const String kAGoricAbb = "run";
+const String kPYLN_ABBREVATION = 'PYLN';
+const String kStripeUSD_ABR = 'USD';
+const String kAgoricAbr = "RUN";
+const String kAtomAbr = "ATOM";
+const String kLunaAbr = "Luna";
+const String kEthereumAbr = "ETH";
 const String kEthereumSymbol = "weth-wei";
+const String kDefault = 'Default';
 
-
-
-const int kNumberOfSeconds = 1000;
-const int kSixtySeconds = 60;
-const double kPrecision = 100000000000000000;
+const String kMyEaselNFT = 'My Easel NFT';

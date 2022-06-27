@@ -17,7 +17,12 @@
   "close":"Close",
   "is_this_free" : "Is this a free drop?",
   "yes": "Yes",
-  "no": "No"
+  "no": "No",
 
+  "update_failed": "Upload Failed",
+  "view_on_pylons": "View On Pylons",
+  "go_to_dashboard": "Go to Dashboard",
+  "go_to_wallet": "Go to Wallet",
+  "cannot_launch_url": "Cannot launch this URL"
 
 }

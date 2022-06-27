@@ -5,19 +5,23 @@ import 'dart:io';
 import 'package:easel_flutter/main.dart';
 import 'package:easel_flutter/models/api_response.dart';
 import 'package:easel_flutter/models/denom.dart';
+import 'package:easel_flutter/models/nft.dart';
 import 'package:easel_flutter/models/nft_format.dart';
 import 'package:easel_flutter/services/datasources/local_datasource.dart';
 import 'package:easel_flutter/services/datasources/remote_datasource.dart';
+import 'package:easel_flutter/services/third_party_services/audio_player_helper.dart';
 import 'package:easel_flutter/services/third_party_services/video_player_helper.dart';
 import 'package:easel_flutter/utils/constants.dart';
+import 'package:easel_flutter/utils/enums.dart';
 import 'package:easel_flutter/utils/extension_util.dart';
-import 'package:easel_flutter/utils/file_utils.dart';
+import 'package:easel_flutter/utils/file_utils_helper.dart';
 import 'package:easel_flutter/widgets/loading.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:fixnum/fixnum.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:just_audio/just_audio.dart';
 import 'package:pylons_sdk/pylons_sdk.dart';
 import 'package:pylons_sdk/src/features/models/sdk_ipc_response.dart';
 import 'package:share_plus/share_plus.dart';
@@ -28,10 +32,16 @@ class EaselProvider extends ChangeNotifier {
   final LocalDataSource localDataSource;
   final RemoteDataSource remoteDataSource;
   final VideoPlayerHelper videoPlayerHelper;
+  final AudioPlayerHelper audioPlayerHelper;
+  final FileUtilsHelper fileUtilsHelper;
 
-  EaselProvider({required this.localDataSource,required this.remoteDataSource,required this.videoPlayerHelper});
-
- late bool isFreeDrop = true;
+  EaselProvider({
+    required this.localDataSource,
+    required this.remoteDataSource,
+    required this.videoPlayerHelper,
+    required this.audioPlayerHelper,
+    required this.fileUtilsHelper,
+  });
 
   File? _file;
   NftFormat _nftFormat = NftFormat.supportedFormats[0];
@@ -46,6 +56,24 @@ class EaselProvider extends ChangeNotifier {
   var stripeAccountExists = false;
   Denom _selectedDenom = Denom.availableDenoms.first;
   List<Denom> supportedDenomList = [];
+
+  late NFT _publishedNFTClicked;
+
+  NFT get publishedNFTClicked => _publishedNFTClicked;
+
+  void setPublishedNFTClicked(NFT nft) {
+    _publishedNFTClicked = nft;
+    notifyListeners();
+  }
+
+  String _publishedNFTDuration = "";
+
+  String get publishedNFTDuration => _publishedNFTDuration;
+
+  void setPublishedNFTDuration(String duration) {
+    _publishedNFTDuration = duration;
+    notifyListeners();
+  }
 
   File? _videoThumbnail;
 
@@ -108,6 +136,9 @@ class EaselProvider extends ChangeNotifier {
     notifyListeners();
   }
 
+  late ValueNotifier<ProgressBarState> audioProgressNotifier;
+  late ValueNotifier<ButtonState> buttonNotifier;
+
   initStore() {
     _file = null;
     _nftFormat = NftFormat.supportedFormats[0];
@@ -135,6 +166,12 @@ class EaselProvider extends ChangeNotifier {
 
   }
 
+  void stopVideoIfPlaying() {
+    if (videoPlayerController.value.isPlaying) {
+      videoPlayerController.pause();
+    }
+  }
+
   Future<void> setFormat(BuildContext context, NftFormat format) async {
     _nftFormat = format;
     notifyListeners();
@@ -156,8 +193,22 @@ class EaselProvider extends ChangeNotifier {
   }
 
   /// VIDEO PLAYER FUNCTIONS
-  void initializeVideoPlayer() async {
-    videoPlayerHelper.initializeVideoPlayer(file: _file!);
+  void initializeVideoPlayerWithFile() async {
+    videoPlayerHelper.initializeVideoPlayerWithFile(file: _file!);
+    videoPlayerController = videoPlayerHelper.getVideoPlayerController();
+    delayLoading();
+    notifyListeners();
+
+    videoPlayerController.addListener(() {
+      if (videoPlayerController.value.hasError) {
+        videoLoadingError = videoPlayerController.value.errorDescription!;
+      }
+      notifyListeners();
+    });
+  }
+
+  void initializeVideoPlayerWithUrl({required String publishedNftUrl}) async {
+    videoPlayerHelper.initializeVideoPlayerWithUrl(videoUrl: publishedNftUrl);
     videoPlayerController = videoPlayerHelper.getVideoPlayerController();
     delayLoading();
     notifyListeners();
@@ -187,11 +238,125 @@ class EaselProvider extends ChangeNotifier {
     videoPlayerHelper.destroyVideoPlayer();
   }
 
+  bool isUrlLoaded = false;
+
+  late StreamSubscription playerStateSubscription;
+
+  late StreamSubscription positionStreamSubscription;
+
+  late StreamSubscription bufferPositionSubscription;
+
+  late StreamSubscription durationStreamSubscription;
+
+  Future initializeAudioPlayer({required publishedNFTUrl}) async {
+    audioProgressNotifier = ValueNotifier<ProgressBarState>(
+      ProgressBarState(
+        current: Duration.zero,
+        buffered: Duration.zero,
+        total: Duration.zero,
+      ),
+    );
+    buttonNotifier = ValueNotifier<ButtonState>(ButtonState.loading);
+
+    isUrlLoaded = await audioPlayerHelper.setUrl(url: publishedNFTUrl);
+
+    if (isUrlLoaded) {
+      playerStateSubscription = audioPlayerHelper.playerStateStream().listen((playerState) {
+        final isPlaying = playerState.playing;
+        final processingState = playerState.processingState;
+
+        switch (processingState) {
+          case ProcessingState.loading:
+          case ProcessingState.buffering:
+            buttonNotifier.value = ButtonState.loading;
+            break;
+
+          case ProcessingState.ready:
+            if (!isPlaying) {
+              buttonNotifier.value = ButtonState.paused;
+              break;
+            }
+            buttonNotifier.value = ButtonState.playing;
+            break;
+
+          default:
+            audioPlayerHelper.seekAudio(position: Duration.zero);
+            audioPlayerHelper.pauseAudio();
+        }
+      });
+    }
+
+    positionStreamSubscription = audioPlayerHelper.positionStream().listen((position) {
+      final oldState = audioProgressNotifier.value;
+      audioProgressNotifier.value = ProgressBarState(
+        current: position,
+        buffered: oldState.buffered,
+        total: oldState.total,
+      );
+    });
+
+    bufferPositionSubscription = audioPlayerHelper.bufferedPositionStream().listen((bufferedPosition) {
+      final oldState = audioProgressNotifier.value;
+      audioProgressNotifier.value = ProgressBarState(
+        current: oldState.current,
+        buffered: bufferedPosition,
+        total: oldState.total,
+      );
+    });
+
+    durationStreamSubscription = audioPlayerHelper.durationStream().listen((totalDuration) {
+      final oldState = audioProgressNotifier.value;
+      audioProgressNotifier.value = ProgressBarState(
+        current: oldState.current,
+        buffered: oldState.buffered,
+        total: totalDuration ?? Duration.zero,
+      );
+    });
+  }
+
+  void playAudio() {
+    audioPlayerHelper.playAudio();
+  }
+
+  void pauseAudio() {
+    audioPlayerHelper.pauseAudio();
+  }
+
+  void seekAudio(Duration position) {
+    audioPlayerHelper.seekAudio(position: position);
+  }
+
+  void disposeAudioController() {
+    if (isUrlLoaded) {
+      playerStateSubscription.cancel();
+      bufferPositionSubscription.cancel();
+      durationStreamSubscription.cancel();
+      positionStreamSubscription.cancel();
+    }
+    audioPlayerHelper.destroyAudioPlayer();
+  }
+
+  void initializePlayers({required NFT publishedNFT}) {
+    switch (publishedNFT.assetType) {
+      case AssetType.Audio:
+        initializeAudioPlayer(publishedNFTUrl: publishedNFT.url);
+        break;
+      case AssetType.Image:
+        break;
+      case AssetType.Video:
+        initializeVideoPlayerWithUrl(publishedNftUrl: publishedNFT.url);
+        break;
+
+      default:
+        break;
+    }
+  }
+
   Future<void> setFile(BuildContext context, PlatformFile selectedFile) async {
     _file = File(selectedFile.path!);
     _fileName = selectedFile.name;
-    _fileSize = FileUtils.getFileSizeString(fileLength: _file!.lengthSync());
-    _fileExtension = FileUtils.getExtension(_fileName);
+    _fileSize = fileUtilsHelper.getFileSizeString(fileLength: _file!.lengthSync());
+    _fileExtension = fileUtilsHelper.getExtension(_fileName);
     await _getMetadata(_file!);
     notifyListeners();
   }
@@ -203,12 +368,14 @@ class EaselProvider extends ChangeNotifier {
     final Map<String, dynamic> info;
     try {
       info = await _mediaInfo.getMediaInfo(file.path);
-    } on PlatformException catch (e) {
+    } on PlatformException {
       _fileWidth = 0;
       _fileHeight = 0;
       _fileDuration = 0;
       return;
     }
+
+    log('Information: ${info.toString()}');
 
     if (_nftFormat.format == kImageText || _nftFormat.format == kVideoText) {
       _fileWidth = info['width'];
@@ -253,7 +420,7 @@ class EaselProvider extends ChangeNotifier {
     localDataSource.saveArtistName(name);
   }
 
-  void toCheckSavedArtistName(){
+  void toCheckSavedArtistName() {
     String savedArtistName = localDataSource.getArtistName();
 
     if (savedArtistName.isNotEmpty) {
@@ -293,7 +460,7 @@ class EaselProvider extends ChangeNotifier {
     if (videoThumbnail != null) {
       final loading = Loading().showLoading(message: kUploadingThumbnailMessage);
       thumbnailUploadResponse = await remoteDataSource.uploadFile(videoThumbnail!);
-      setVideoThumbnail(null);
+
       loading.dismiss();
     }
 
@@ -384,20 +551,30 @@ class EaselProvider extends ChangeNotifier {
   bool isDifferentUserName(String savedUserName) => (currentUsername.isNotEmpty && savedUserName != currentUsername);
 
   Future<void> shareNFT(Size size) async {
-    String url = FileUtils.generateEaselLink(
+    String url = fileUtilsHelper.generateEaselLink(
       cookbookId: _cookbookId ?? '',
       recipeId: _recipeId,
     );
-    Share.share("My Easel NFT\n\n$url", subject: 'My Easel NFT', sharePositionOrigin: Rect.fromLTWH(0, 0, size.width, size.height / 2));
+    Share.share("$kMyEaselNFT\n\n$url", subject: kMyEaselNFT, sharePositionOrigin: Rect.fromLTWH(0, 0, size.width, size.height / 2));
+  }
+
+  void onVideoThumbnailPicked() async {
+    final result = await fileUtilsHelper.pickFile(NftFormat.supportedFormats[0]);
+
+    if (result == null) return;
+    final loading = Loading().showLoading(message: kCompressingMessage);
+    final file = await fileUtilsHelper.compressAndGetFile(File(result.path!));
+    setVideoThumbnail(file);
+    loading.dismiss();
   }
 
   @override
   void dispose() {
-    artistNameController?.dispose();
-    artNameController?.dispose();
-    descriptionController?.dispose();
-    noOfEditionController?.dispose();
-    royaltyController?.dispose();
+    artistNameController.dispose();
+    artNameController.dispose();
+    descriptionController.dispose();
+    noOfEditionController.dispose();
+    royaltyController.dispose();
     super.dispose();
   }
 
@@ -427,9 +604,6 @@ class EaselProvider extends ChangeNotifier {
       return true;
     }
 
-
-
-
     Completer<bool> stripeTryAgainCompleter = Completer<bool>();
 
     ScaffoldMessenger.maybeOf(navigatorKey.currentState!.overlay!.context)?.hideCurrentSnackBar();
@@ -458,3 +632,17 @@ class EaselProvider extends ChangeNotifier {
     return stripeTryAgainCompleter.future;
   }
 }
+
+class ProgressBarState {
+  ProgressBarState({
+    required this.current,
+    required this.buffered,
+    required this.total,
+  });
+
+  final Duration current;
+  final Duration buffered;
+  final Duration total;
+}
+
+enum ButtonState { paused, playing, loading }

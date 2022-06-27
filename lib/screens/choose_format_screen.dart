@@ -13,8 +13,6 @@ import 'package:flutter_svg/svg.dart';
 import 'package:flutter_svg_provider/flutter_svg_provider.dart' as svg_provider;
 import 'package:provider/provider.dart';
 
-import '../utils/file_utils.dart';
-
 class ChooseFormatScreen extends StatefulWidget {
   final PageController controller;
 
@@ -27,7 +25,7 @@ class ChooseFormatScreen extends StatefulWidget {
 class _ChooseFormatScreenState extends State<ChooseFormatScreen> {
   ValueNotifier<String> errorText = ValueNotifier(kErrFileNotPicked);
 
-  void proceedToNext(PlatformFile? result) async {
+  void proceedToNext({required PlatformFile? result, required EaselProvider easelProvider}) async {
     EaselProvider provider = context.read();
 
     if (result != null) {
@@ -38,7 +36,7 @@ class _ChooseFormatScreenState extends State<ChooseFormatScreen> {
       }
 
       provider.resolveNftFormat(context, result.extension!);
-      if (FileUtils.getFileSizeInGB(File(result.path!).lengthSync()) <= kFileSizeLimitInGB) {
+      if (easelProvider.fileUtilsHelper.getFileSizeInGB(File(result.path!).lengthSync()) <= kFileSizeLimitInGB) {
         await provider.setFile(context, result);
 
         Navigator.push(
@@ -46,7 +44,7 @@ class _ChooseFormatScreenState extends State<ChooseFormatScreen> {
           MaterialPageRoute(builder: (context) => PreviewScreen(controller: widget.controller)),
         );
       } else {
-        errorText.value = '"${result.name}" could not be uploaded';
+        errorText.value = '${result.name} $kErrFileCouldNotUploaded';
         showErrorDialog();
       }
     } else {
@@ -89,14 +87,14 @@ class _ChooseFormatScreenState extends State<ChooseFormatScreen> {
                       typeIdx: 0,
                       selected: provider.nftFormat.format == NftFormat.supportedFormats[0].format,
                       onFilePicked: (result) async {
-                        proceedToNext(result);
+                        proceedToNext(result: result, easelProvider: provider);
                       }),
                   const SizedBox(width: 10),
                   _CardWidget(
                       typeIdx: 1,
                       selected: provider.nftFormat.format == NftFormat.supportedFormats[1].format,
                       onFilePicked: (result) async {
-                        proceedToNext(result);
+                        proceedToNext(result: result, easelProvider: provider);
                       }),
                   const SizedBox(width: 10),
                 ],
@@ -110,14 +108,14 @@ class _ChooseFormatScreenState extends State<ChooseFormatScreen> {
                       typeIdx: 2,
                       selected: provider.nftFormat.format == NftFormat.supportedFormats[2].format,
                       onFilePicked: (result) async {
-                        proceedToNext(result);
+                        proceedToNext(result: result, easelProvider: provider);
                       }),
                   const SizedBox(width: 10),
                   _CardWidget(
                       typeIdx: 3,
                       selected: provider.nftFormat.format == NftFormat.supportedFormats[3].format,
                       onFilePicked: (result) async {
-                        proceedToNext(result);
+                        proceedToNext(result: result, easelProvider: provider);
                       }),
                   const SizedBox(width: 10),
                 ],
@@ -150,7 +148,7 @@ class _CardWidget extends StatelessWidget {
           onTap: () async {
             EaselProvider provider = context.read();
             provider.setFormat(context, NftFormat.supportedFormats[typeIdx]);
-            final result = await FileUtils.pickFile(provider.nftFormat);
+            final result = await provider.fileUtilsHelper.pickFile(provider.nftFormat);
             onFilePicked(result);
           },
           child: Container(
