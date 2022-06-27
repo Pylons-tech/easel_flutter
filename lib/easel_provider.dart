@@ -104,7 +104,7 @@ class EaselProvider extends ChangeNotifier {
 
   File? _audioThumbnail;
 
-  File? get audioThumnail => _audioThumbnail;
+  File? get audioThumbnail => _audioThumbnail;
 
   bool _isInitialized = false;
 
@@ -464,10 +464,10 @@ class EaselProvider extends ChangeNotifier {
 
     if (_file!.existsSync()) {
       ApiResponse audioThumbnailUploadResponse = ApiResponse.error(errorMessage: "");
-      if (audioThumnail != null) {
+      if (audioThumbnail != null) {
         final loading = Loading().showLoading(message: kUploadingThumbnailMessage);
 
-        audioThumbnailUploadResponse = await remoteDataSource.uploadFile(audioThumnail!);
+        audioThumbnailUploadResponse = await remoteDataSource.uploadFile(audioThumbnail!);
 
         loading.dismiss();
       }
@@ -539,7 +539,7 @@ class EaselProvider extends ChangeNotifier {
                       key: kThumbnailUrl,
                       value: videoThumbnail != null
                           ? "$ipfsDomain/${thumbnailUploadResponse.data?.value?.cid ?? ""}"
-                          : audioThumnail != null
+                          : audioThumbnail != null
                               ? "$ipfsDomain/${audioThumbnailUploadResponse.data?.value?.cid ?? ""}"
                               : ""),
                   StringParam(key: kCreator, value: artistNameController.text.trim()),
@@ -558,12 +558,12 @@ class EaselProvider extends ChangeNotifier {
           enabled: true,
           extraInfo: kExtraInfo);
 
-    log('RecipeResponse: ${recipe.toProto3Json()}');
+      log('RecipeResponse: ${recipe.toProto3Json()}');
 
       var response = await PylonsWallet.instance.txCreateRecipe(recipe, requestResponse: false);
 
-    log('From App $response');
-    setVideoThumbnail(null);
+      log('From App $response');
+      setVideoThumbnail(null);
 
       if (response.success) {
         navigatorKey.currentState!.overlay!.context.show(message: kRecipeCreated);
@@ -663,7 +663,7 @@ class EaselProvider extends ChangeNotifier {
     return stripeTryAgainCompleter.future;
   }
 
-  Future initializeAudioPlayer() async {
+  Future initializeAudioPlayerForFile() async {
     audioProgressNotifier = ValueNotifier<ProgressBarState>(
       ProgressBarState(
         current: Duration.zero,
@@ -729,37 +729,7 @@ class EaselProvider extends ChangeNotifier {
       );
     });
   }
-
-  void playAudio() {
-    audioPlayerHelper.playAudio();
-  }
-
-  void pauseAudio() {
-    audioPlayerHelper.pauseAudio();
-  }
-
-  void seekAudio(Duration position) {
-    audioPlayerHelper.seekAudio(position: position);
-  }
-
-  void disposeAudioController() {
-    audioPlayerHelper.destroyAudioPlayer();
-  }
 }
-
-class ProgressBarState {
-  ProgressBarState({
-    required this.current,
-    required this.buffered,
-    required this.total,
-  });
-
-  final Duration current;
-  final Duration buffered;
-  final Duration total;
-}
-
-enum ButtonState { paused, playing, loading }
 
 class ProgressBarState {
   ProgressBarState({

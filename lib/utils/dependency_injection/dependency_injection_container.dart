@@ -75,8 +75,6 @@ void _registerProviders() {
         remoteDataSource: sl(),
         repository: sl(),
       ));
-  sl.registerLazySingleton<EaselProvider>(() => EaselProvider(remoteDataSource: sl(), videoPlayerHelper: sl(), localDataSource: sl(), audioPlayerHelper: sl()));
-  sl.registerLazySingleton<CreatorHubViewModel>(() => CreatorHubViewModel(localDataSource: sl(), remoteDataSource: sl()));
 }
 
 void _registerServices() {
@@ -88,5 +86,4 @@ void _registerServices() {
 
 void _registerRepository() {
   sl.registerLazySingleton<Repository>(() => RepositoryImp(networkInfo: sl(), localDataSource: sl(), remoteDataSource: sl()));
-  sl.registerLazySingleton<AudioPlayerHelper>(() => AudioPlayerHelperImpl(sl()));
 }

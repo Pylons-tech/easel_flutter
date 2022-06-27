@@ -37,22 +37,6 @@ abstract class AudioPlayerHelper {
   /// Output : [bool] this represents whether the player is initialized successfully or not
   Future<bool> setUrl({required String url});
 
-  /// This method is used to listen to the playing stream of the audio player
-  /// Output : [Duration] it will be a Stream for the playing audio
-  Stream<PlayerState> playerStateStream();
-
-  /// This method is used to listen to the Position stream of the audio player
-  /// Output : [Duration] it will be a Stream for the realtime position on the audio seekbar
-  Stream<Duration> positionStream();
-
-  /// This method is used to listen to the Buffered Position stream of the audio player
-  /// Output : [Duration] it will be a Stream for the realtime Buffered position on the audio seekbar
-  Stream<Duration> bufferedPositionStream();
-
-  /// This method is used to listen to the Duration stream of the audio player
-  /// Output : [Duration] it will be a Stream for the realtime Duration of the audio seekbar
-  Stream<Duration?> durationStream();
-
   /// This method is used to destroy the audio player instances from the memory
   void destroyAudioPlayer();
 
@@ -78,6 +62,12 @@ class AudioPlayerHelperImpl implements AudioPlayerHelper {
     try {
       await audioPlayer.setFilePath(file);
       await audioPlayer.load();
+      return true;
+    } catch (e) {
+      return false;
+    }
+  }
+
   Future<bool> setUrl({required String url}) async {
     try {
       await audioPlayer.setUrl(url);
@@ -111,12 +101,9 @@ class AudioPlayerHelperImpl implements AudioPlayerHelper {
   void destroyAudioPlayer() {
     audioPlayer.seek(Duration.zero);
 
-    if(audioPlayer.playing){
+    if (audioPlayer.playing) {
       audioPlayer.pause();
-
-
     }
-
   }
 
   @override

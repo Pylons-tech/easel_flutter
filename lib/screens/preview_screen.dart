@@ -54,11 +54,11 @@ class _PreviewScreenState extends State<PreviewScreen> {
                 child: PylonsButton(
                     onPressed: () {
                       if (provider.nftFormat.format == kAudioText) {
-                        if (provider.audioThumnail != null) {
+                        if (provider.audioThumbnail != null) {
                           widget.controller.nextPage(duration: const Duration(milliseconds: 10), curve: Curves.easeIn);
                           Navigator.of(context).pop();
                         } else {
-                          context.show(message: kErrAddAudioThumbnil);
+                          context.show(message: kErrAddAudioThumbnail);
                         }
                       } else {
                         widget.controller.nextPage(duration: const Duration(milliseconds: 10), curve: Curves.easeIn);

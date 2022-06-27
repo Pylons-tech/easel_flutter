@@ -37,7 +37,7 @@ class _AudioWidgetState extends State<AudioWidget> with WidgetsBindingObserver {
   initState() {
     log("bool: ${widget.previewFlag}");
     if (!easelProvider.isInitialized) {
-      easelProvider.initializeAudioPlayer();
+      easelProvider.initializeAudioPlayerForFile();
     }
 
     super.initState();
@@ -53,7 +53,7 @@ class _AudioWidgetState extends State<AudioWidget> with WidgetsBindingObserver {
       },
       child: Consumer<EaselProvider>(builder: (context, viewModel, _) {
         return Container(
-          decoration: BoxDecoration(image: viewModel.audioThumnail != null ? DecorationImage(image: FileImage(viewModel.audioThumnail!), fit: BoxFit.fill) : null),
+          decoration: BoxDecoration(image: viewModel.audioThumbnail != null ? DecorationImage(image: FileImage(viewModel.audioThumbnail!), fit: BoxFit.fill) : null),
           child: BackdropFilter(
             filter: ImageFilter.blur(sigmaX: 2, sigmaY: 2),
             child: SafeArea(

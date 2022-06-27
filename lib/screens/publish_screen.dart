@@ -48,6 +48,7 @@ class _PublishScreenState extends State<PublishScreen> {
                           VideoWidget(
                             file: provider.file!,
                             previewFlag: true,
+                            isForFile: true,
                           )
                         ],
                         if (provider.nftFormat.format == kAudioText) ...[
