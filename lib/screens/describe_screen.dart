@@ -38,8 +38,7 @@ class _DescribeScreenState extends State<DescribeScreen> {
     super.initState();
 
     context.read<EaselProvider>().toCheckSavedArtistName();
-
-     }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -163,13 +162,9 @@ class _DescribeScreenState extends State<DescribeScreen> {
                       onPressed: () async {
                         FocusScope.of(context).unfocus();
                         if (_formKey.currentState!.validate()) {
-                          if (_artNameFieldError.isEmpty &&
-                              _artistNameFieldError.isEmpty &&
-                              _descriptionFieldError.isEmpty) {
-
-                            context.read<EaselProvider>().saveArtistName(provider.artistNameController.text.trim());
-                            widget.controller
-                                .nextPage(duration: const Duration(milliseconds: 300), curve: Curves.easeIn);
+                          if (_artNameFieldError.isEmpty && _artistNameFieldError.isEmpty && _descriptionFieldError.isEmpty) {
+                            context.read<EaselProvider>().saveArtistName(provider.artistNameController!.text.trim());
+                            widget.controller.nextPage(duration: const Duration(milliseconds: 300), curve: Curves.easeIn);
                           }
                         }
                       },

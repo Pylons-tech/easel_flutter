@@ -23,11 +23,8 @@ class PreviewScreen extends StatefulWidget {
 }
 
 class _PreviewScreenState extends State<PreviewScreen> {
-
-
   @override
   Widget build(BuildContext context) {
-
     return Scaffold(
       body: Consumer<EaselProvider>(
         builder: (_, provider, __) => Stack(
@@ -39,11 +36,7 @@ class _PreviewScreenState extends State<PreviewScreen> {
               Align(
                 alignment: Alignment.center,
                 child: Text(kPreviewNoticeText,
-                    textAlign: TextAlign.center,
-                    style: Theme.of(context)
-                        .textTheme
-                        .bodyText2!
-                        .copyWith(color: EaselAppTheme.kLightPurple, fontSize: 15.sp, fontWeight: FontWeight.w600)),
+                    textAlign: TextAlign.center, style: Theme.of(context).textTheme.bodyText2!.copyWith(color: EaselAppTheme.kLightPurple, fontSize: 15.sp, fontWeight: FontWeight.w600)),
               ),
               Align(
                 alignment: Alignment.centerLeft,
@@ -65,8 +58,8 @@ class _PreviewScreenState extends State<PreviewScreen> {
               child: Align(
                 alignment: Alignment.bottomRight,
                 child: PylonsButton(
-                    onPressed: () async{
-                      await  GetIt.I.get<CreatorHubViewModel>().saveDraft(provider.file);
+                    onPressed: () async {
+                      await GetIt.I.get<CreatorHubViewModel>().saveNft(provider.file, provider);
 
                       widget.controller.nextPage(duration: const Duration(milliseconds: 10), curve: Curves.easeIn);
                       Navigator.of(context).pop();

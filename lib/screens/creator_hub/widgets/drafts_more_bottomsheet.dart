@@ -1,6 +1,6 @@
 
-import 'package:easel_flutter/models/draft.dart';
-import 'package:easel_flutter/screens/creator_hub/creator_hub_view_model.dart';
+
+import 'package:easel_flutter/models/nft.dart';
 import 'package:easel_flutter/utils/constants.dart';
 import 'package:easel_flutter/utils/easel_app_theme.dart';
 import 'package:easy_localization/easy_localization.dart';
@@ -9,10 +9,12 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:provider/provider.dart';
 
-class DraftsMoreBottomSheet  extends StatelessWidget {
-  const DraftsMoreBottomSheet({Key? key, required this.draft}) : super(key: key);
+import '../creator_hub_view_model.dart';
 
-  final Draft draft;
+class DraftsMoreBottomSheet  extends StatelessWidget {
+  const DraftsMoreBottomSheet({Key? key, required this.nft}) : super(key: key);
+
+  final NFT nft;
 
   @override
   Widget build(BuildContext context) {
@@ -31,7 +33,7 @@ class DraftsMoreBottomSheet  extends StatelessWidget {
             moreOptionTile(title: "delete", svg: kSvgDelete,
                 onPressed: (){
 
-                viewModel.deleteDraft(draft.id);
+                viewModel.deleteDraft(nft.id);
 
             }),
 
@@ -46,6 +48,7 @@ class DraftsMoreBottomSheet  extends StatelessWidget {
     );
   }
 }
+
 Widget  moreOptionTile({required String title, required String svg, required Function onPressed}){
   TextStyle titleStyle = TextStyle(fontSize: 18.sp, fontWeight: FontWeight.w800,fontFamily:  kUniversalFontFamily,  color: EaselAppTheme.kBlack);
 

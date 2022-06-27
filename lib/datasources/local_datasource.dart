@@ -1,8 +1,9 @@
 import 'package:easel_flutter/datasources/database.dart';
-import 'package:easel_flutter/models/draft.dart';
 import 'package:easel_flutter/utils/constants.dart';
 import 'package:easel_flutter/utils/date_utils.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+
+import '../models/nft.dart';
 
 abstract class LocalDataSource {
   /// This method will get the already created cookbook from the local database
@@ -46,16 +47,16 @@ abstract class LocalDataSource {
   /// This method will save the draft of the NFT
   /// Input: [Draft] the draft that will will be saved in database
   /// Output: [bool] returns whether the operation is successful or not
-  Future<bool> saveDraft(Draft draft);
+  Future<bool> saveNft(NFT draft);
 
   /// This method will get the drafts List from the local database
   /// Output: [List] returns  the List of drafts
-  Future<List<Draft>> getDrafts();
+  Future<List<NFT>> getNfts();
 
   /// This method will delete draft from the local database
   /// Input: [id] the id of the draft which the user wants to delete
   /// Output: [bool] returns whether the operation is successful or not
-  Future<void> deleteDraft(int id);
+  Future<void> deleteNft(int id);
 }
 
 class LocalDataSourceImpl implements LocalDataSource {
@@ -124,35 +125,31 @@ class LocalDataSourceImpl implements LocalDataSource {
   }
 
   @override
-  Future<bool> saveDraft(Draft draft) async {
+  Future<bool> saveNft(NFT draft) async {
     final database = await $FloorAppDatabase.databaseBuilder('app_database.db').build();
 
-    final draftDao = database.draftDao;
+    final nftDao = database.nftDao;
 
-    await draftDao.insertDraft(draft);
+    await nftDao.insertNft(draft);
 
     return true;
   }
 
   @override
-  Future<List<Draft>> getDrafts() async{
-
+  Future<List<NFT>> getNfts() async {
     final database = await $FloorAppDatabase.databaseBuilder('app_database.db').build();
 
-    final draftDao = database.draftDao;
+    final nftDao = database.nftDao;
 
-    return await draftDao.findAllDrafts();
-
+    return await nftDao.findAllNft();
   }
 
   @override
-  Future<void> deleteDraft(int id) async{
-
+  Future<void> deleteNft(int id) async {
     final database = await $FloorAppDatabase.databaseBuilder('app_database.db').build();
 
-    final draftDao = database.draftDao;
+    final nftDao = database.nftDao;
 
-    return await draftDao.delete(id);
-
+    return await nftDao.delete(id);
   }
 }

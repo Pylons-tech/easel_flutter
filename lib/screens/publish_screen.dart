@@ -21,23 +21,9 @@ class PublishScreen extends StatefulWidget {
 }
 
 class _PublishScreenState extends State<PublishScreen> {
-  final List<String> detailInfo = const [
-    'Contract Address',
-    'Token ID',
-    'Token Standard',
-    'Blockchain',
-    'Metadata',
-    'Permission'
-  ];
+  final List<String> detailInfo = const ['Contract Address', 'Token ID', 'Token Standard', 'Blockchain', 'Metadata', 'Permission'];
 
-  final List<String> sampleData = const [
-    '0x495f...7b5e',
-    '8416676683197945...',
-    'ERC-1155',
-    'Ethereum',
-    'Centralized',
-    'Exclusive'
-  ];
+  final List<String> sampleData = const ['0x495f...7b5e', '8416676683197945...', 'ERC-1155', 'Ethereum', 'Centralized', 'Exclusive'];
 
   late EaselProvider provider;
 
@@ -61,15 +47,9 @@ class _PublishScreenState extends State<PublishScreen> {
                   children: [
                     Stack(
                       children: [
-                        if (provider.nftFormat.format == kImageText) ...[
-                          ImageWidget(file: provider.file!)
-                        ],
-                        if (provider.nftFormat.format == kVideoText) ...[
-                          VideoWidget(file: provider.file!)
-                        ],
-                        if (provider.nftFormat.format == kAudioText) ...[
-                          AudioWidget(file: provider.file!)
-                        ],
+                        if (provider.nftFormat.format == kImageText) ...[ImageWidget(file: provider.file!)],
+                        if (provider.nftFormat.format == kVideoText) ...[VideoWidget(file: provider.file!)],
+                        if (provider.nftFormat.format == kAudioText) ...[AudioWidget(file: provider.file!)],
                         Positioned(
                             top: 60,
                             right: 10,
@@ -90,12 +70,11 @@ class _PublishScreenState extends State<PublishScreen> {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Text(
-                            provider.artNameController.text,
-                            style:
-                                Theme.of(context).textTheme.headline5!.copyWith(
-                                      color: Colors.black,
-                                      fontWeight: FontWeight.w600,
-                                    ),
+                            provider.artNameController!.text,
+                            style: Theme.of(context).textTheme.headline5!.copyWith(
+                                  color: Colors.black,
+                                  fontWeight: FontWeight.w600,
+                                ),
                           ),
                           const VerticalSpace(
                             4,
@@ -103,18 +82,10 @@ class _PublishScreenState extends State<PublishScreen> {
                           RichText(
                             text: TextSpan(
                                 text: "$kCreatedByText ",
-                                style: Theme.of(context)
-                                    .textTheme
-                                    .bodyText2!
-                                    .copyWith(
+                                style: Theme.of(context).textTheme.bodyText2!.copyWith(
                                       fontSize: 20,
                                     ),
-                                children: [
-                                  TextSpan(
-                                      text: provider.artistNameController.text,
-                                      style: const TextStyle(
-                                          color: EaselAppTheme.kBlue))
-                                ]),
+                                children: [TextSpan(text: provider.artistNameController!.text, style: const TextStyle(color: EaselAppTheme.kBlue))]),
                           ),
                           const Divider(
                             height: 40,
@@ -122,71 +93,61 @@ class _PublishScreenState extends State<PublishScreen> {
                           ),
                           Text(
                             kNftDetailsText,
-                            style:
-                                Theme.of(context).textTheme.bodyText2!.copyWith(
-                                      fontSize: 18,
-                                    ),
+                            style: Theme.of(context).textTheme.bodyText2!.copyWith(
+                                  fontSize: 18,
+                                ),
                           ),
                           Text(
-                            provider.descriptionController.text,
-                            style:
-                                Theme.of(context).textTheme.caption!.copyWith(
-                                      fontSize: 14,
-                                    ),
+                            provider.descriptionController!.text,
+                            style: Theme.of(context).textTheme.caption!.copyWith(
+                                  fontSize: 14,
+                                ),
                           ),
                           const VerticalSpace(
                             10,
                           ),
                           Text(
-                            "$kPriceText: ${provider.priceController.text.trim()} ${provider.selectedDenom.name}",
-                            style:
-                                Theme.of(context).textTheme.caption!.copyWith(
-                                      fontSize: 14,
-                                    ),
+                            "$kPriceText: ${provider.priceController!.text.trim()} ${provider.selectedDenom.name}",
+                            style: Theme.of(context).textTheme.caption!.copyWith(
+                                  fontSize: 14,
+                                ),
                           ),
                           if (provider.nftFormat.format != kAudioText) ...[
                             Text(
                               "$kSizeText: ${provider.fileWidth} x ${provider.fileHeight}px ${provider.fileExtension.toUpperCase()}",
-                              style:
-                                  Theme.of(context).textTheme.caption!.copyWith(
-                                        fontSize: 14,
-                                      ),
+                              style: Theme.of(context).textTheme.caption!.copyWith(
+                                    fontSize: 14,
+                                  ),
                             )
                           ],
-                          if (provider.nftFormat.format == kVideoText ||
-                              provider.nftFormat.format == kAudioText) ...[
+                          if (provider.nftFormat.format == kVideoText || provider.nftFormat.format == kAudioText) ...[
                             Text(
                               "$kDurationText: ${provider.fileDuration / kSecInMillis} sec",
-                              style:
-                                  Theme.of(context).textTheme.caption!.copyWith(
-                                        fontSize: 14,
-                                      ),
+                              style: Theme.of(context).textTheme.caption!.copyWith(
+                                    fontSize: 14,
+                                  ),
                             )
                           ],
                           Text(
                             "$kDateText: ${getDate()}",
-                            style:
-                                Theme.of(context).textTheme.caption!.copyWith(
-                                      fontSize: 14,
-                                    ),
+                            style: Theme.of(context).textTheme.caption!.copyWith(
+                                  fontSize: 14,
+                                ),
                           ),
                           const VerticalSpace(
                             10,
                           ),
                           Text(
-                            "$kNoOfEditionText: ${provider.noOfEditionController.text}",
-                            style:
-                                Theme.of(context).textTheme.caption!.copyWith(
-                                      fontSize: 14,
-                                    ),
+                            "$kNoOfEditionText: ${provider.noOfEditionController!.text}",
+                            style: Theme.of(context).textTheme.caption!.copyWith(
+                                  fontSize: 14,
+                                ),
                           ),
-
                           Text(
-                            "$kRoyaltyText: ${provider.royaltyController.text}%",
-                            style:
-                                Theme.of(context).textTheme.caption!.copyWith(
-                                      fontSize: 14,
-                                    ),
+                            "$kRoyaltyText: ${provider.royaltyController!.text}%",
+                            style: Theme.of(context).textTheme.caption!.copyWith(
+                                  fontSize: 14,
+                                ),
                           ),
                         ],
                       ),

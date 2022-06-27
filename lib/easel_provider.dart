@@ -60,12 +60,16 @@ class EaselProvider extends ChangeNotifier {
 
   Denom get selectedDenom => _selectedDenom;
 
-  final artistNameController = TextEditingController();
-  final artNameController = TextEditingController();
-  final descriptionController = TextEditingController();
-  final noOfEditionController = TextEditingController();
-  final priceController = TextEditingController();
-  final royaltyController = TextEditingController();
+  String get recipeId => _recipeId;
+
+  String? get cookbookId => _cookbookId;
+
+  TextEditingController? artistNameController = TextEditingController();
+  TextEditingController? artNameController = TextEditingController();
+  TextEditingController? descriptionController = TextEditingController();
+  TextEditingController? noOfEditionController = TextEditingController();
+  TextEditingController? priceController = TextEditingController();
+  TextEditingController? royaltyController = TextEditingController();
   final List<String> hashtagsList = [];
 
   String currentUsername = '';
@@ -81,12 +85,12 @@ class EaselProvider extends ChangeNotifier {
     _recipeId = "";
     _selectedDenom = Denom.availableDenoms.first;
 
-    artistNameController.clear();
-    artNameController.clear();
-    descriptionController.clear();
-    noOfEditionController.clear();
-    priceController.clear();
-    royaltyController.clear();
+    artistNameController?.clear();
+    artNameController?.clear();
+    descriptionController?.clear();
+    noOfEditionController?.clear();
+    priceController?.clear();
+    royaltyController?.clear();
     hashtagsList.clear();
     notifyListeners();
   }
@@ -153,7 +157,7 @@ class EaselProvider extends ChangeNotifier {
         iD: _cookbookId,
         name: "Easel Cookbook",
         description: "Cookbook for Easel NFT",
-        developer: artistNameController.text,
+        developer: artistNameController?.text,
         version: "v0.0.1",
         supportEmail: "easel@pylons.tech",
         enabled: true);
@@ -168,27 +172,23 @@ class EaselProvider extends ChangeNotifier {
     return false;
   }
 
-
-
-  void  saveArtistName(name) {
-     localDataSource.saveArtistName(name);
+  void saveArtistName(name) {
+    localDataSource.saveArtistName(name);
   }
 
-  void toCheckSavedArtistName(){
+  void toCheckSavedArtistName() {
     String savedArtistName = localDataSource.getArtistName();
 
-    if(savedArtistName.isNotEmpty){
-      artistNameController.text = savedArtistName;
+    if (savedArtistName.isNotEmpty) {
+      artistNameController?.text = savedArtistName;
       return;
     }
-   artistNameController.text = currentUsername;
-
+    artistNameController?.text = currentUsername;
   }
 
   /// sends a createRecipe Tx message to the wallet
   /// return true or false depending on the response from the wallet app
   Future<bool> createRecipe() async {
-
     if (!await shouldMintUSDOrNot()) {
       return false;
     }
@@ -204,6 +204,7 @@ class EaselProvider extends ChangeNotifier {
       if (isCookBookCreated) {
         // get device cookbook id
         _cookbookId = localDataSource.getCookbookId();
+        notifyListeners();
       } else {
         return false;
       }
@@ -219,15 +220,15 @@ class EaselProvider extends ChangeNotifier {
       return false;
     }
 
-    String residual = DecString.decStringFromDouble(double.parse(royaltyController.text.trim()));
+    String residual = DecString.decStringFromDouble(double.parse(royaltyController!.text.trim()));
 
-    String price = (double.parse(priceController.text.replaceAll(",", "").trim()) * 1000000).toStringAsFixed(0);
+    String price = (double.parse(priceController!.text.replaceAll(",", "").trim()) * 1000000).toStringAsFixed(0);
     var recipe = Recipe(
         cookbookID: _cookbookId,
         iD: _recipeId,
         nodeVersion: "v0.1.0",
-        name: artNameController.text.trim(),
-        description: descriptionController.text.trim(),
+        name: artNameController?.text.trim(),
+        description: descriptionController?.text.trim(),
         version: "v0.1.0",
         coinInputs: [
           CoinInput(coins: [Coin(amount: price, denom: _selectedDenom.symbol)])
@@ -249,28 +250,30 @@ class EaselProvider extends ChangeNotifier {
               longs: [
                 LongParam(key: kQuantityKey, weightRanges: [
                   IntWeightRange(
-                      lower: Int64(int.parse(noOfEditionController.text.replaceAll(",", "").trim())), upper: Int64(int.parse(noOfEditionController.text.replaceAll(",", "").trim())), weight: Int64(1))
+                      lower: Int64(int.parse(noOfEditionController!.text.replaceAll(",", "").trim())),
+                      upper: Int64(int.parse(noOfEditionController!.text.replaceAll(",", "").trim())),
+                      weight: Int64(1))
                 ]),
                 LongParam(key: kWidthKey, weightRanges: [IntWeightRange(lower: Int64(_fileWidth), upper: Int64(_fileWidth), weight: Int64(1))]),
                 LongParam(key: kHeightKey, weightRanges: [IntWeightRange(lower: Int64(_fileHeight), upper: Int64(_fileHeight), weight: Int64(1))]),
                 LongParam(key: kDurationText, weightRanges: [IntWeightRange(lower: Int64(_fileDuration), upper: Int64(_fileDuration), weight: Int64(1))]),
               ],
               strings: [
-                StringParam(key: kNameKey, value: artNameController.text.trim()),
+                StringParam(key: kNameKey, value: artNameController?.text.trim()),
                 StringParam(key: kAppTypeKey, value: "Easel"),
-                StringParam(key: kDescriptionKey, value: descriptionController.text.trim()),
+                StringParam(key: kDescriptionKey, value: descriptionController?.text.trim()),
                 StringParam(key: kHashtagKey, value: hashtagsList.join('#')),
                 StringParam(key: kNftFormatKey, value: _nftFormat.format),
                 StringParam(key: kNftUrlKey, value: "$ipfsDomain/${uploadResponse.data?.value?.cid ?? ""}"),
-                StringParam(key: kCreatorKey, value: artistNameController.text.trim()),
+                StringParam(key: kCreatorKey, value: artistNameController?.text.trim()),
                 StringParam(key: kSizeKey, value: _fileSize.trim()),
               ],
               mutableStrings: [],
               transferFee: [Coin(denom: kPylonSymbol, amount: "1")],
-              tradePercentage: DecString.decStringFromDouble(double.parse(royaltyController.text.trim())),
+              tradePercentage: DecString.decStringFromDouble(double.parse(royaltyController!.text.trim())),
               tradeable: true,
               amountMinted: Int64(0),
-              quantity: Int64(int.parse(noOfEditionController.text.replaceAll(",", "").trim()))),
+              quantity: Int64(int.parse(noOfEditionController!.text.replaceAll(",", "").trim()))),
         ], itemModifyOutputs: []),
         outputs: [
           WeightedOutputs(entryIDs: ["Easel_NFT"], weight: Int64(1))
@@ -306,11 +309,11 @@ class EaselProvider extends ChangeNotifier {
 
   @override
   void dispose() {
-    artistNameController.dispose();
-    artNameController.dispose();
-    descriptionController.dispose();
-    noOfEditionController.dispose();
-    royaltyController.dispose();
+    artistNameController?.dispose();
+    artNameController?.dispose();
+    descriptionController?.dispose();
+    noOfEditionController?.dispose();
+    royaltyController?.dispose();
     super.dispose();
   }
 
@@ -340,9 +343,6 @@ class EaselProvider extends ChangeNotifier {
       return true;
     }
 
-
-
-
     Completer<bool> stripeTryAgainCompleter = Completer<bool>();
 
     ScaffoldMessenger.maybeOf(navigatorKey.currentState!.overlay!.context)?.hideCurrentSnackBar();
@@ -364,12 +364,9 @@ class EaselProvider extends ChangeNotifier {
       ),
     ));
 
-
     await Future.delayed(const Duration(seconds: 1));
 
     PylonsWallet.instance.showStripe();
-
-
 
     return stripeTryAgainCompleter.future;
   }

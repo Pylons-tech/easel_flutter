@@ -209,3 +209,31 @@ const String kHeightKey = "Height";
 const String kQuantityKey = "Quantity";
 const String kHashtagKey = "Hashtags";
 
+
+/// NFT Key Strings
+const kResidual = "Residual";
+const kQuantity = "Quantity";
+const kWidth = "Width";
+const kHeight = "Height";
+const kName = "Name";
+const kAppType = "App_Type";
+const kDescription = "Description";
+const kNFTFormat = "NFT_Format";
+const kNFTURL = "NFT_URL";
+const kCreator = "Creator";
+const kThumbnailUrl = "Thumbnail_URL";
+const kEasel = "Easel";
+const kEaselNFT = "Easel_NFT";
+const kUpylon = "upylon";
+const String kNone = "None";
+const String kNftFormat = "NFT_Format";
+const String kDuration = "Duration";
+const kExtraInfo= "extraInfo";
+const kHashtags = "Hashtags";
+const String kEthereumSymbol = "weth-wei";
+
+
+
+const int kNumberOfSeconds = 1000;
+const int kSixtySeconds = 60;
+const double kPrecision = 100000000000000000;
