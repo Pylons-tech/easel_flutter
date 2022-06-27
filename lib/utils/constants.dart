@@ -102,6 +102,7 @@ const kJunoText = 'Juno';
 const kNone = 'None';
 const kPleaseWait = 'Please Wait';
 const kBack = 'Back';
+const String kUniversalFontFamily = "UniversalSans";
 
 /// ```Text constants
 const kPreviewNoticeText = 'The resolution & orientation of your NFT will remain fixed as seen in the grid.';
@@ -273,3 +274,5 @@ const String kEthereumSymbol = "weth-wei";
 const String kDefault = 'Default';
 
 const String kMyEaselNFT = 'My Easel NFT';
+const String kErrFileCouldNotUploaded = '{} could not be uploaded';
+

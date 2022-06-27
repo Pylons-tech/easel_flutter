@@ -1,5 +1,6 @@
 import 'dart:core';
 import 'package:easel_flutter/utils/constants.dart';
+import 'package:easel_flutter/utils/extension_util.dart';
 import 'package:equatable/equatable.dart';
 import "package:collection/collection.dart";
 import 'package:floor/floor.dart';
@@ -108,45 +109,4 @@ class NFT extends Equatable {
       ];
 }
 
-extension IBCCoinPar on String {
-  IBCCoins toIBCCoinsEnum() {
-    return IBCCoins.values.firstWhere((e) => e.toString() == 'IBCCoins.$this', orElse: () => IBCCoins.upylon);
-  }
-}
 
-extension AssetTypePar on String {
-  AssetType toAssetTypeEnum() {
-    return AssetType.values.firstWhere((e) => e.toString() == 'AssetType.$this', orElse: () => AssetType.Image);
-  }
-}
-
-extension DurationConverter on int {
-  String toSeconds() {
-    final double seconds = this / kNumberOfSeconds;
-    final String min = (seconds / kSixtySeconds).toString().split(".").first;
-    final String sec = (seconds % kSixtySeconds).toString().split(".").first;
-
-    return "$min:$sec";
-  }
-}
-
-extension NFTValue on NFT {
-  String getPriceFromRecipe(Recipe recipe) {
-    if (recipe.coinInputs.isEmpty) {
-      return "0";
-    }
-    if (recipe.coinInputs.first.coins.isEmpty) {
-      return "0";
-    }
-    return recipe.coinInputs.first.coins.first.amount;
-  }
-}
-
-extension ValueConvertor on String {
-  double fromBigInt() {
-    if (this == "") {
-      return 0;
-    }
-    return BigInt.parse(this).toDouble() / kPrecision;
-  }
-}

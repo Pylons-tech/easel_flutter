@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'dart:developer';
 import 'dart:io';
+import '../utils/enums.dart';
 
 import 'package:easel_flutter/main.dart';
 import 'package:easel_flutter/models/api_response.dart';
@@ -160,6 +161,7 @@ class EaselProvider extends ChangeNotifier {
     notifyListeners();
   }
 
+  bool isFreeDrop=false;
   void updateIsFreeDropStatus(bool val){
     isFreeDrop=val;
     notifyListeners();
@@ -337,7 +339,7 @@ class EaselProvider extends ChangeNotifier {
   }
 
   void initializePlayers({required NFT publishedNFT}) {
-    switch (publishedNFT.assetType) {
+    switch (publishedNFT.assetType.toAssetTypeEnum()) {
       case AssetType.Audio:
         initializeAudioPlayer(publishedNFTUrl: publishedNFT.url);
         break;
@@ -570,11 +572,11 @@ class EaselProvider extends ChangeNotifier {
 
   @override
   void dispose() {
-    artistNameController.dispose();
-    artNameController.dispose();
-    descriptionController.dispose();
-    noOfEditionController.dispose();
-    royaltyController.dispose();
+    artistNameController!.dispose();
+    artNameController!.dispose();
+    descriptionController!.dispose();
+    noOfEditionController!.dispose();
+    royaltyController!.dispose();
     super.dispose();
   }
 

@@ -1,3 +1,6 @@
+import 'package:easel_flutter/models/nft.dart';
+import 'package:easel_flutter/utils/constants.dart';
+import 'package:easel_flutter/utils/enums.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:pylons_sdk/pylons_sdk.dart';
@@ -69,14 +72,5 @@ extension NFTValue on NFT {
       return "0";
     }
     return recipe.coinInputs.first.coins.first.amount;
-  }
-}
-
-extension ValueConvertor on String {
-  double fromBigInt() {
-    if (this == "") {
-      return 0;
-    }
-    return BigInt.parse(this).toDouble() / kPrecision;
   }
 }

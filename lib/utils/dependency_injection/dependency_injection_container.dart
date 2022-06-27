@@ -15,6 +15,7 @@ import 'package:easel_flutter/services/third_party_services/video_player_helper.
 import 'package:easel_flutter/utils/file_utils_helper.dart';
 import 'package:get_it/get_it.dart';
 import 'package:internet_connection_checker/internet_connection_checker.dart';
+import 'package:just_audio/just_audio.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:video_player/video_player.dart';
 
@@ -44,6 +45,9 @@ void _registerExternalDependencies() {
           }),
     ),
   );
+  sl.registerSingletonAsync<AppDatabase>(
+          () => $FloorAppDatabase.databaseBuilder('app_database.db').build());
+
 
   sl.registerLazySingleton<InternetConnectionChecker>(() => InternetConnectionChecker());
   sl.registerFactory<VideoPlayerController>(() => VideoPlayerController.file(File('')));
@@ -75,8 +79,7 @@ void _registerServices() {
   sl.registerFactory<VideoPlayerHelper>(() => VideoPlayerHelperImp(sl()));
   sl.registerFactory<AudioPlayerHelper>(() => AudioPlayerHelperImpl(sl()));
   sl.registerLazySingleton<NetworkInfo>(() => NetworkInfoImpl(sl()));
+  sl.registerLazySingleton<Repository>(() => RepositoryImp(networkInfo: sl(), localDataSource: sl(), remoteDataSource: sl()));
+
 }
 
-void _registerRepository() {
-  sl.registerLazySingleton<Repository>(() => RepositoryImp(networkInfo: sl(), localDataSource: sl(), remoteDataSource: sl()));
-}
