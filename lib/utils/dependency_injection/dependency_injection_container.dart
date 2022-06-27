@@ -3,12 +3,14 @@ import 'dart:io';
 
 import 'package:dio/dio.dart';
 import 'package:easel_flutter/datasources/database.dart';
-import 'package:easel_flutter/datasources/local_datasource.dart';
-import 'package:easel_flutter/datasources/remote_datasource.dart';
 import 'package:easel_flutter/easel_provider.dart';
 import 'package:easel_flutter/screens/creator_hub/creator_hub_view_model.dart';
+import 'package:easel_flutter/services/datasources/local_datasource.dart';
+import 'package:easel_flutter/services/datasources/remote_datasource.dart';
+import 'package:easel_flutter/services/third_party_services/video_player_helper.dart';
 import 'package:get_it/get_it.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:video_player/video_player.dart';
 
 import '../../env.dart';
 
@@ -42,13 +44,13 @@ void _registerExternalDependencies() {
   sl.registerSingletonAsync<AppDatabase>(
           () => $FloorAppDatabase.databaseBuilder('app_database.db').build());
 
-}
+
 
   sl.registerFactory<VideoPlayerController>(() => VideoPlayerController.file(File('')));
 }
 void _registerRemoteDataSources() {
   sl.registerLazySingleton<RemoteDataSource>(
-      () => RemoteDataSourceImpl(sl<Dio>()));
+      () => RemoteDataSourceImpl(httpClient: sl<Dio>()));
 }
 
 void _registerLocalDataSources() {
@@ -56,9 +58,9 @@ void _registerLocalDataSources() {
 }
 
 void _registerProviders() {
-  sl.registerLazySingleton<EaselProvider>(() => EaselProvider(sl(), sl()));
+  sl.registerLazySingleton<EaselProvider>(() => EaselProvider(remoteDataSource:sl(),  videoPlayerHelper: sl(), localDataSource: sl()));
   sl.registerLazySingleton<CreatorHubViewModel>(() => CreatorHubViewModel(sl(), sl()));
-
+}
 void _registerServices() {
   sl.registerFactory<VideoPlayerHelper>(() => VideoPlayerHelperImp(sl()));
 }

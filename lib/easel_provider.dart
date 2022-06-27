@@ -335,21 +335,21 @@ class EaselProvider extends ChangeNotifier {
               longs: [
                 LongParam(key: kQuantity, weightRanges: [
                   IntWeightRange(
-                      lower: Int64(int.parse(noOfEditionController.text.replaceAll(",", "").trim())), upper: Int64(int.parse(noOfEditionController.text.replaceAll(",", "").trim())), weight: Int64(1))
+                      lower: Int64(int.parse(noOfEditionController!.text.replaceAll(",", "").trim())), upper: Int64(int.parse(noOfEditionController!.text.replaceAll(",", "").trim())), weight: Int64(1))
                 ]),
                 LongParam(key: kWidth, weightRanges: [IntWeightRange(lower: Int64(_fileWidth), upper: Int64(_fileWidth), weight: Int64(1))]),
                 LongParam(key: kHeight, weightRanges: [IntWeightRange(lower: Int64(_fileHeight), upper: Int64(_fileHeight), weight: Int64(1))]),
                 LongParam(key: kDuration, weightRanges: [IntWeightRange(lower: Int64(_fileDuration), upper: Int64(_fileDuration), weight: Int64(1))]),
               ],
               strings: [
-                StringParam(key: kName, value: artNameController.text.trim()),
+                StringParam(key: kName, value: artNameController!.text.trim()),
                 StringParam(key: kAppType, value: kEasel),
-                StringParam(key: kDescription, value: descriptionController.text.trim()),
+                StringParam(key: kDescription, value: descriptionController!.text.trim()),
                 StringParam(key: kHashtags, value: hashtagsList.join('#')),
                 StringParam(key: kNFTFormat, value: _nftFormat.format),
                 StringParam(key: kNFTURL, value: "$ipfsDomain/${fileUploadResponse.data?.value?.cid ?? ""}"),
                 StringParam(key: kThumbnailUrl, value: videoThumbnail != null ? "$ipfsDomain/${thumbnailUploadResponse.data?.value?.cid ?? ""}" : ""),
-                StringParam(key: kCreator, value: artistNameController.text.trim()),
+                StringParam(key: kCreator, value: artistNameController!.text.trim()),
               ],
               mutableStrings: [],
               transferFee: [Coin(denom: kPylonSymbol, amount: "1")],

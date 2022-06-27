@@ -84,7 +84,7 @@ class _PreviewScreenState extends State<PreviewScreen> {
       case kImageText:
         return ImageWidget(file: provider.file!);
       case kVideoText:
-        return VideoWidget(file: provider.file!);
+        return VideoWidget(file: provider.file!, previewFlag: false,);
       case k3dText:
         return Model3dViewer(file: provider.file!);
       case kAudioText:

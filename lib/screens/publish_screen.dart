@@ -48,7 +48,7 @@ class _PublishScreenState extends State<PublishScreen> {
                     Stack(
                       children: [
                         if (provider.nftFormat.format == kImageText) ...[ImageWidget(file: provider.file!)],
-                        if (provider.nftFormat.format == kVideoText) ...[VideoWidget(file: provider.file!)],
+                        if (provider.nftFormat.format == kVideoText) ...[VideoWidget(file: provider.file!, previewFlag: true,)],
                         if (provider.nftFormat.format == kAudioText) ...[AudioWidget(file: provider.file!)],
                         Positioned(
                             top: 60,

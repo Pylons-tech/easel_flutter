@@ -145,9 +145,17 @@ const kPreview3dModelText = 'Click here to preview\nyour selected 3D Model';
 const kMintMoreText = 'Mint More';
 const kGoToWalletText = 'Go to Wallet';
 const kChooseNFTFormatText = 'Choose your NFT format';
-const kUploadNFTText = 'Upload NFT file';
+
+
+const kEditNFTText = 'Edit your NFT Details';
+const kPreviewYourNFTText = 'Preview your NFT file';
+const kListNftText = 'List NFT';
+
+const kPublishNftText = 'Publish NFT';
+
+const kSelectNFTText = 'Select NFT file';
 const kDetailNftText = 'NFT Details';
-const kPriceNftText = 'Price NFT';
+const kPriceNftText = 'NFT Pricing';
 const kUploadText = 'Upload';
 const kPreviewText = 'Preview';
 const kListText = 'List';
@@ -195,6 +203,20 @@ const kTryAgain = "Try again";
 const kAppNotInstalled = "Please download the Pylons app and create a username to publish a NFT in Easel.";
 const kPleaseTryAgain = "Something went wrong.\n Please try again.";
 const kCancel = "Cancel";
+const videoPlayerError = "Some Error Occurred while playing the video. Please try again later.";
+const kExtraInfo = "extraInfo";
+const kDuration = "Duration";
+
+
+const kThumbnailFileName = "temp.jpg";
+
+//Loader Messages
+const kCompressingMessage = "Compressing Thumbnail";
+const kUploadingMessage = "Uploading";
+const kUploadingThumbnailMessage = "Uploading Thumbnail";
+const kLoadingMessage = "Loading...";
+
+final List stepLabels = ["upload", "draft", "publish"];
 
 
 /// Nft viewmodel key values
@@ -228,8 +250,6 @@ const kEaselNFT = "Easel_NFT";
 const kUpylon = "upylon";
 const String kNone = "None";
 const String kNftFormat = "NFT_Format";
-const String kDuration = "Duration";
-const kExtraInfo= "extraInfo";
 const kHashtags = "Hashtags";
 const String kEthereumSymbol = "weth-wei";
 

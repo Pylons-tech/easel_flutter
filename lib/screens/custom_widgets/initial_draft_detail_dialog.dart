@@ -1,5 +1,5 @@
 
-import 'dart:ui';
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:easel_flutter/main.dart';
 import 'package:easel_flutter/screens/clippers/right_triangle_clipper.dart' as clipper;
 import 'package:easel_flutter/screens/clippers/right_triangle_clipper.dart';
@@ -71,8 +71,18 @@ class _PayNowWidgetState extends State<DraftDetailDialog> {
                 mainAxisSize: MainAxisSize.min,
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  Container(   height: 100.h,
-                    width: 100.h,color: Colors.red,),
+                  SizedBox(
+                    height: 100.h,
+                    width: 100.h,
+                    child: CachedNetworkImage(
+                      fit: BoxFit.fill,
+                      imageUrl: "nft.url",
+                      errorWidget: (a, b, c) => Container(color:EaselAppTheme.kBgWhite,child: const Center(child: Icon(Icons.error_outline, color: Colors.white,))),
+                      placeholder: (context, url) => Center(
+                        child: SizedBox(height: 30.h, width: 30.h, child: const CircularProgressIndicator()),
+                      ),
+                    ),
+                  ),
 
                   SizedBox(
                     height: 30.h,

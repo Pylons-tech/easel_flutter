@@ -30,10 +30,7 @@ class NFT extends Equatable {
   String appType = "";
   String tradeID = "";
   String ownerAddress = "";
-  IBCCoins ibcCoins = IBCCoins.upylon;
 
-  NftType type = NftType.TYPE_ITEM;
-  AssetType assetType = AssetType.Image;
   String ibcCoins = IBCCoins.upylon.name;
 
   String type = NftType.TYPE_ITEM.name;
@@ -49,7 +46,7 @@ class NFT extends Equatable {
     this.description = "",
     this.denom = "",
     this.price = "0",
-    this.type = NftType.TYPE_ITEM,
+    this.type="",
     this.creator = "",
     this.itemID = "",
     this.cookbookID = "",
