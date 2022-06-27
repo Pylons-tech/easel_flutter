@@ -17,6 +17,8 @@ import 'package:provider/provider.dart';
 import 'package:pylons_sdk/pylons_sdk.dart';
 
 import 'choose_format_screen.dart';
+import 'custom_widgets/step_labels.dart';
+import 'custom_widgets/steps_indicator.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({Key? key}) : super(key: key);

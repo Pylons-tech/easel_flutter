@@ -15,10 +15,12 @@ import 'package:easel_flutter/utils/file_utils_helper.dart';
 import 'package:get_it/get_it.dart';
 import 'package:internet_connection_checker/internet_connection_checker.dart';
 import 'package:just_audio/just_audio.dart';
+import 'package:just_audio/just_audio.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:video_player/video_player.dart';
 
 import '../../env.dart';
+import '../../services/third_party_services/audio_player_helper.dart';
 
 final sl = GetIt.instance;
 
@@ -38,7 +40,7 @@ void _registerExternalDependencies() {
   sl.registerLazySingleton<Dio>(
     () => Dio(
       BaseOptions(
-          baseUrl: "https://api.nft.storage",
+          baseUrl: baseUrl,
           headers: {"Authorization": "Bearer $apiKey"},
           validateStatus: (statusCode) {
             return statusCode! <= HttpStatus.internalServerError;
@@ -46,9 +48,10 @@ void _registerExternalDependencies() {
     ),
   );
 
+  sl.registerLazySingleton<AudioPlayer>(() => AudioPlayer());
+
   sl.registerLazySingleton<InternetConnectionChecker>(() => InternetConnectionChecker());
   sl.registerFactory<VideoPlayerController>(() => VideoPlayerController.file(File('')));
-  sl.registerFactory<AudioPlayer>(() => AudioPlayer());
 }
 
 void _registerRemoteDataSources() {

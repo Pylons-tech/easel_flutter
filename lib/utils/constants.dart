@@ -1,7 +1,9 @@
-const List kTutorialItems = [
-  {'header': 'Upload your NFT file', 'description': 'Choose the file you want to upload to draft your NFT', 'image': 'assets/images/tutorial1.png'},
-  {'header': 'Edit your NFT Details', 'description': 'Enter information describing your NFT including the price you wish to sell it for!', 'image': 'assets/images/tutorial2.png'},
-  {'header': 'Manage your NFT with the ', 'header1': 'Pylons app', 'description': 'You can store, collect & manage all your NFTs in the Pylons app!', 'image': 'assets/images/tutorial3.png'},
+import 'package:easy_localization/easy_localization.dart';
+
+List kTutorialItems = [
+  {'header': 'upload_your_nft_file'.tr(), 'description': 'pick_the_file'.tr(), 'image': 'assets/images/tutorial1.png'},
+  {'header': 'edit_your_nft'.tr(), 'description': 'enter_information_describing_your_nft'.tr(), 'image': 'assets/images/tutorial2.png'},
+  {'header': 'manage_your_nft'.tr(), 'header1': 'pylons_app'.tr(), 'description': 'you_can_collect_manage_your_nft'.tr(), 'image': 'assets/images/tutorial3.png'},
 ];
 
 /// ```PNG assets
@@ -174,7 +176,7 @@ const kUploadHint3 = '• One file per upload';
 const kUploadHintAll = 'GB Limit.\nOne file per upload.';
 const kHintNftName = 'Bird on Shoulder';
 const kHintArtistName = 'Sarah Jackson';
-const kHintNftDesc = 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eimod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercita.';
+const kHintNftDesc = 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eimod tempor incididunt ut labore et dolore magna aliquaQ. Ut enim ad minim veniam, quis nostrud exercita.';
 const kHintNoEdition = '100';
 const kHintPrice = '10.87';
 const kHintHashtag = 'Type in';
@@ -185,6 +187,8 @@ const kNetworkFeeWarnText = 'A network fee of 10% of the listed price is require
 const kRecipeCreated = 'Recipe created';
 const kErrProfileNotExist = 'profileDoesNotExist';
 const kErrProfileFetch = 'Error occurred while fetching wallet profile';
+const kErrPickFileFetch = 'Error occurred while uploading the file, please try again';
+const kErrAddAudioThumbnail = 'Please select audio thumbnail';
 const kErrUpload = 'Upload error occurred';
 const kErrFileNotPicked = 'Pick a file';
 const kErrFileCouldNotUploaded = 'could not be uploaded';
@@ -197,6 +201,8 @@ const kAppNotInstalled = "Please download the Pylons app and create a username t
 const kPleaseTryAgain = "Something went wrong.\n Please try again.";
 const kCancel = "Cancel";
 const String videoPlayerNetworkError = 'Unable to play the video right now. Please check your internet connection and try again.';
+const kChooseFifteenSecondsOfAudio = "Choose 15s highlight of your audio for preview";
+const kUploadingThumbnailMessage = "Uploading Thumbnail";
 const videoPlayerError = "Some Error Occurred while playing the video. Please try again later.";
 const kCannotLaunchThisUrl = "Cannot launch this URL";
 
@@ -224,12 +230,12 @@ const kThumbnailFileName = "temp.jpg";
 //Loader Messages
 const kCompressingMessage = "Compressing Thumbnail";
 const kUploadingMessage = "Uploading";
-const kUploadingThumbnailMessage = "Uploading Thumbnail";
 const kLoadingMessage = "Loading...";
 
 final List stepLabels = [kUploadText, kEditText, kPriceText, kListText];
 final List<String> imageAllowedExtsAndroid = ["png", "jpg", "jpeg", "svg", "heif"];
 final List<String> audioAllowedExtsAndroid = ['mp3', 'ogg', 'wav'];
+
 
 /// Nft viewmodel key values
 const String kNameKey = "Name";
@@ -263,3 +269,9 @@ const String kEthereumSymbol = "weth-wei";
 const String kDefault = 'Default';
 
 const String kMyEaselNFT = 'My Easel NFT';
+/// Supported Formats
+
+const mp3 = "mp3";
+const ogg = "ogg";
+const wav = "wav";
+const aac = "aac";

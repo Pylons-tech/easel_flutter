@@ -1,5 +1,6 @@
 import 'package:easel_flutter/easel_provider.dart';
 import 'package:easel_flutter/utils/constants.dart';
+import 'package:easel_flutter/utils/extension_util.dart';
 import 'package:easel_flutter/widgets/audio_widget.dart';
 import 'package:easel_flutter/widgets/image_widget.dart';
 import 'package:easel_flutter/widgets/model_viewer.dart';
@@ -52,8 +53,17 @@ class _PreviewScreenState extends State<PreviewScreen> {
                 alignment: Alignment.bottomRight,
                 child: PylonsButton(
                     onPressed: () {
-                      widget.controller.nextPage(duration: const Duration(milliseconds: 10), curve: Curves.easeIn);
-                      Navigator.of(context).pop();
+                      if (provider.nftFormat.format == kAudioText) {
+                        if (provider.audioThumbnail != null) {
+                          widget.controller.nextPage(duration: const Duration(milliseconds: 10), curve: Curves.easeIn);
+                          Navigator.of(context).pop();
+                        } else {
+                          context.show(message: kErrAddAudioThumbnail);
+                        }
+                      } else {
+                        widget.controller.nextPage(duration: const Duration(milliseconds: 10), curve: Curves.easeIn);
+                        Navigator.of(context).pop();
+                      }
                     },
                     btnText: kContinue,
                     isBlue: false,
@@ -75,7 +85,10 @@ class _PreviewScreenState extends State<PreviewScreen> {
       case k3dText:
         return Model3dViewer(file: provider.file!);
       case kAudioText:
-        return AudioWidget(file: provider.file!);
+        return AudioWidget(
+          file: provider.file!,
+          previewFlag: false,
+        );
     }
     return const SizedBox.shrink();
   }
