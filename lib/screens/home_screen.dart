@@ -3,7 +3,9 @@ import 'package:easel_flutter/screens/creator_hub/creator_hub_view_model.dart';
 import 'package:easel_flutter/screens/custom_widgets/step_labels.dart';
 import 'package:easel_flutter/screens/custom_widgets/steps_indicator.dart';
 import 'package:easel_flutter/screens/describe_screen.dart';
+import 'package:easel_flutter/screens/mint_screen.dart';
 import 'package:easel_flutter/screens/price_screen.dart';
+import 'package:easel_flutter/screens/publish_screen.dart';
 import 'package:easel_flutter/screens/published_screen.dart';
 import 'package:easel_flutter/utils/constants.dart';
 import 'package:easel_flutter/utils/easel_app_theme.dart';
@@ -135,7 +137,8 @@ class _HomeScreenState extends State<HomeScreen> {
 
                     DescribeScreen(controller: _pageController),
                       PriceScreen(controller: _pageController),
-                     const PublishedScreen(),
+                      MintScreen(controller: _pageController),
+                      PublishScreen(controller: _pageController)
                     ],
                   ),
                 ),

@@ -47,8 +47,10 @@ class CreatorHubViewModel extends ChangeNotifier {
 
     notifyListeners();
   }
+  late NFT nft;
 
-  Future<void> saveNft(File? file, EaselProvider provider) async {
+
+  Future<void> saveNft({File? file,required File assetThumbnail,required EaselProvider provider}) async {
     final loading = Loading().showLoading(message: "uploading".tr());
     provider.initilizeTextEditingControllerWithEmptyValues();
     final uploadResponse = await remoteDataSource.uploadFile(file!);
@@ -57,7 +59,7 @@ class CreatorHubViewModel extends ChangeNotifier {
       navigatorKey.currentState!.overlay!.context.show(message: uploadResponse.errorMessage ?? kErrUpload);
       return;
     }
-    NFT nft = NFT(
+     nft = NFT(
       id: null,
       type: NftType.TYPE_ITEM.name,
       ibcCoins: IBCCoins.upylon.name,

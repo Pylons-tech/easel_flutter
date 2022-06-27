@@ -1,6 +1,9 @@
 import 'dart:async';
 import 'dart:developer';
 import 'dart:io';
+import 'package:easel_flutter/screens/creator_hub/creator_hub_view_model.dart';
+import 'package:get_it/get_it.dart';
+
 import '../utils/enums.dart';
 
 import 'package:easel_flutter/main.dart';
@@ -510,7 +513,7 @@ class EaselProvider extends ChangeNotifier {
       if (fileUploadResponse.status == Status.error) {
         navigatorKey.currentState!.overlay!.context.show(message: fileUploadResponse.errorMessage ?? kErrUpload);
         return false;
-      }
+      false}
 
       String residual = DecString.decStringFromDouble(double.parse(royaltyController.text.trim()));
 
@@ -556,7 +559,7 @@ class EaselProvider extends ChangeNotifier {
                   StringParam(key: kDescription, value: descriptionController.text.trim()),
                   StringParam(key: kHashtags, value: hashtagsList.join('#')),
                   StringParam(key: kNFTFormat, value: _nftFormat.format),
-                  StringParam(key: kNFTURL, value: "$ipfsDomain/${fileUploadResponse.data?.value?.cid ?? ""}"),
+                  StringParam(key: kNFTURL, value: GetIt.I.get<CreatorHubViewModel>().nft.url),
                   StringParam(
                       key: kThumbnailUrl,
                       value: videoThumbnail != null

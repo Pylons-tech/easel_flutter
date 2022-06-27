@@ -209,6 +209,8 @@ const kCancel = "Cancel";
 const String videoPlayerNetworkError = 'Unable to play the video right now. Please check your internet connection and try again.';
 const kChooseFifteenSecondsOfAudio = "Choose 15s highlight of your audio for preview";
 const kUploadingThumbnailMessage = "Uploading Thumbnail";
+const kErrVideoThumbnail = 'Please select video thumbnail';
+
 const videoPlayerError = "Some Error Occurred while playing the video. Please try again later.";
 const kCannotLaunchThisUrl = "Cannot launch this URL";
 

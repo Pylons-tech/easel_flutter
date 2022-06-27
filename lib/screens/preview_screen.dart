@@ -60,15 +60,29 @@ class _PreviewScreenState extends State<PreviewScreen> {
                 alignment: Alignment.bottomRight,
                 child: PylonsButton(
                     onPressed: () async {
+
                       if (provider.nftFormat.format == kAudioText) {
                         if (provider.audioThumbnail != null) {
+                          await GetIt.I.get<CreatorHubViewModel>().saveNft(file:provider.file,assetThumbnail:provider.audioThumbnail!, provider: provider);
+
                           widget.controller.nextPage(duration: const Duration(milliseconds: 10), curve: Curves.easeIn);
                           Navigator.of(context).pop();
                         } else {
                           context.show(message: kErrAddAudioThumbnail);
                         }
-                      } else {
-                        await GetIt.I.get<CreatorHubViewModel>().saveNft(provider.file, provider);
+                      }
+                      else if (provider.nftFormat.format == kVideoText) {
+                        if (provider.videoThumbnail != null) {
+                          await GetIt.I.get<CreatorHubViewModel>().saveNft(file:provider.file,assetThumbnail:provider.videoThumbnail!, provider: provider);
+
+                          widget.controller.nextPage(duration: const Duration(milliseconds: 10), curve: Curves.easeIn);
+                          Navigator.of(context).pop();
+                        } else {
+                          context.show(message: kErrAddAudioThumbnail);
+                        }
+                      }
+                      else {
+                        await GetIt.I.get<CreatorHubViewModel>().saveNft(file:provider.file,assetThumbnail:provider.audioThumbnail!, provider: provider);
 
                         widget.controller.nextPage(duration: const Duration(milliseconds: 10), curve: Curves.easeIn);
                         Navigator.of(context).pop();
