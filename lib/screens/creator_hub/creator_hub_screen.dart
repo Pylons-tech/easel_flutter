@@ -239,7 +239,7 @@ class _CreatorHubScreenState extends State<CreatorHubScreen> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      "NFT name",
+                      "nft_name".tr(),
                       style: titleStyle,
                       maxLines: 1,
                       overflow: TextOverflow.ellipsis,
@@ -259,14 +259,9 @@ class _CreatorHubScreenState extends State<CreatorHubScreen> {
               ),
               InkWell(
                   onTap: () {
-                    showModalBottomSheet(
-                        backgroundColor: Colors.transparent,
-                        context: context,
-                        builder: (BuildContext bc) {
-                          return DraftsMoreBottomSheet(
-                            nft: nft,
-                          );
-                        });
+                    final DraftsBottomSheet draftsBottomSheet = DraftsBottomSheet(buildContext: context, nft: nft);
+                    draftsBottomSheet.show();
+
                   },
                   child: SvgPicture.asset(kSvgMoreOption))
             ],

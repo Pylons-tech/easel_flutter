@@ -40,9 +40,7 @@ class _DescribeScreenState extends State<DescribeScreen> {
 
     context.read<EaselProvider>().toCheckSavedArtistName();
     WidgetsBinding.instance.addPostFrameCallback((_) async {
-      await showDialog<String>(
-          context: context,
-          builder: (BuildContext context) =>  const DraftDetailDialog());
+       DraftDetailDialog(context: context).show();
 
 
     });

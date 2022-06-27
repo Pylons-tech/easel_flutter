@@ -49,6 +49,8 @@ class MyApp extends StatelessWidget {
     return MultiProvider(
       providers: [
         ChangeNotifierProvider(create: (_) => GetIt.I.get<EaselProvider>()),
+        ChangeNotifierProvider(create: (_) => GetIt.I.get<CreatorHubViewModel>()),
+
       ],
       child: ScreenUtilInit(
           minTextAdapt: true,
@@ -73,7 +75,7 @@ class MyApp extends StatelessWidget {
                   RouteUtil.ROUTE_TUTORIAL: (context) => const TutorialScreen(),
                   RouteUtil.ROUTE_WELCOME: (context) => const WelcomeScreen(),
                   RouteUtil.ROUTE_CREATOR_HUB: (context) => const CreatorHubScreen(),
-                  RouteUtil.ROUTE_PREVIEW_NFT_FULL_SCREEN: (context) => PreviewNFTFullScreen(),
+                  RouteUtil.ROUTE_PREVIEW_NFT_FULL_SCREEN: (context) => const PreviewNFTFullScreen(),
                   RouteUtil.ROUTE_HOME: (context) => const HomeScreen(),
                 },
               )),

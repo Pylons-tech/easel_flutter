@@ -12,16 +12,28 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 TextStyle _rowTitleTextStyle = TextStyle(color: Colors.white, fontWeight: FontWeight.w700, fontSize:isTablet? 11.sp: 13.sp);
 
 
-class DraftDetailDialog extends StatefulWidget {
+class DraftDetailDialog {
+  final BuildContext context;
 
+  DraftDetailDialog({ required this.context});
 
-  const DraftDetailDialog({Key? key}) : super(key: key);
-
-  @override
-  State<DraftDetailDialog> createState() => _PayNowWidgetState();
+  Future<void> show() async{
+  await  showDialog<String>(
+        context: context,
+        builder: (BuildContext context) =>  const _DraftDetailDialog());
+  }
 }
 
-class _PayNowWidgetState extends State<DraftDetailDialog> {
+class _DraftDetailDialog extends StatefulWidget {
+
+
+  const _DraftDetailDialog({Key? key}) : super(key: key);
+
+  @override
+  State<_DraftDetailDialog> createState() => _DraftWidgetState();
+}
+
+class _DraftWidgetState extends State<_DraftDetailDialog> {
   @override
   Widget build(BuildContext context) {
 

@@ -144,7 +144,7 @@ class _PriceScreenState extends State<PriceScreen> {
                           ],
                         ),
                       ),
-                      const VerticalSpace(20),
+                       VerticalSpace(20.h),
                       EaselTextField(
                         label: kRoyaltiesText,
                         hint: kRoyaltyHintText,
@@ -235,7 +235,7 @@ class _PriceScreenState extends State<PriceScreen> {
                       )
                           : const SizedBox.shrink(),
                       Text(
-                        "${NumberFormat.decimalPattern('hi').format(kMaxEdition)} $kMaxText",
+                        "${NumberFormat.decimalPattern().format(kMaxEdition)} $kMaxText",
                         style: TextStyle(color: EaselAppTheme.kLightPurple, fontSize: 14.sp, fontWeight: FontWeight.w800),
                       ),
 
@@ -263,7 +263,7 @@ class _PriceScreenState extends State<PriceScreen> {
                     isBlue: false,
                   ),
                 ),
-                const VerticalSpace(20),
+                 VerticalSpace(20.h),
               ],
             ),
           );

@@ -23,6 +23,8 @@
   "view_on_pylons": "View On Pylons",
   "go_to_dashboard": "Go to Dashboard",
   "go_to_wallet": "Go to Wallet",
-  "cannot_launch_url": "Cannot launch this URL"
+  "cannot_launch_url": "Cannot launch this URL",
+  "uploading": "Uploading ...",
+  "nft_name": "NFT name"
 
 }

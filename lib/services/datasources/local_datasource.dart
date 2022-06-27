@@ -72,13 +72,13 @@ abstract class LocalDataSource {
   Future<bool> saveNft(NFT draft);
 
   /// This method will get the drafts List from the local database
-  /// Output: [List] returns  the List of drafts
+  /// Output: [List][NFT] returns  the List of drafts
   Future<List<NFT>> getNfts();
 
   /// This method will delete draft from the local database
   /// Input: [id] the id of the draft which the user wants to delete
   /// Output: [bool] returns whether the operation is successful or not
-  Future<void> deleteNft(int id);
+  Future<bool> deleteNft(int id);
 }
 
 class LocalDataSourceImpl implements LocalDataSource {

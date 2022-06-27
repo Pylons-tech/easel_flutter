@@ -11,6 +11,23 @@ import 'package:provider/provider.dart';
 
 import '../creator_hub_view_model.dart';
 
+class DraftsBottomSheet {
+  final BuildContext buildContext;
+  final NFT nft;
+
+  DraftsBottomSheet({ required this.buildContext, required this.nft});
+
+  void show() {
+    showModalBottomSheet(
+        backgroundColor: Colors.transparent,
+        context: buildContext,
+        builder: (BuildContext bc) {
+          return DraftsMoreBottomSheet(
+            nft: nft,
+          );
+        });
+  }
+}
 class DraftsMoreBottomSheet  extends StatelessWidget {
   const DraftsMoreBottomSheet({Key? key, required this.nft}) : super(key: key);
 
