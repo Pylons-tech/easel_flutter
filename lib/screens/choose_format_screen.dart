@@ -6,6 +6,7 @@ import 'package:easel_flutter/screens/preview_screen.dart';
 import 'package:easel_flutter/utils/constants.dart';
 import 'package:easel_flutter/utils/easel_app_theme.dart';
 import 'package:easel_flutter/utils/screen_responsive.dart';
+import 'package:easy_localization/easy_localization.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -44,7 +45,7 @@ class _ChooseFormatScreenState extends State<ChooseFormatScreen> {
           MaterialPageRoute(builder: (context) => PreviewScreen(controller: widget.controller)),
         );
       } else {
-        errorText.value = '${result.name} $kErrFileCouldNotUploaded';
+        errorText.value = 'could_not_uploaded'.tr(args:[result.name]);
         showErrorDialog();
       }
     } else {

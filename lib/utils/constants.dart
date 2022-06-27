@@ -78,10 +78,7 @@ const int kFileCompressQuality = 50;
 
 const double kPrecision = 100000000000000000;
 
-
-
 const suffixes = ["B", "KB", "MB", "GB", "TB"];
-
 
 /// ````Reserved words, symbols, IDs etc
 const kCookbookId = 'cookbook_id';
@@ -201,7 +198,6 @@ const kErrPickFileFetch = 'Error occurred while uploading the file, please try a
 const kErrAddAudioThumbnail = 'Please select audio thumbnail';
 const kErrUpload = 'Upload error occurred';
 const kErrFileNotPicked = 'Pick a file';
-const kErrFileCouldNotUploaded = 'could not be uploaded';
 const kErrUnsupportedFormat = 'Unsupported format';
 const kErrFileMetaParse = 'Error occurred while parsing the chosen media file:';
 const kErrRecipe = 'Recipe error :';
@@ -279,7 +275,6 @@ const String kEthereumSymbol = "weth-wei";
 const String kDefault = 'Default';
 
 const String kMyEaselNFT = 'My Easel NFT';
-const String kErrFileCouldNotUploaded = '{} could not be uploaded';
 
 /// Supported Formats
 

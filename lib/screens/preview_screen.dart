@@ -25,8 +25,6 @@ class PreviewScreen extends StatefulWidget {
 }
 
 class _PreviewScreenState extends State<PreviewScreen> {
-
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -39,8 +37,7 @@ class _PreviewScreenState extends State<PreviewScreen> {
               SizedBox(height: MediaQuery.of(context).viewPadding.top + 20.h),
               Align(
                 alignment: Alignment.center,
-                child: Text(kPreviewNoticeText,
-                    textAlign: TextAlign.center, style: Theme.of(context).textTheme.bodyText2!.copyWith(color: EaselAppTheme.kLightPurple, fontSize: 15.sp, fontWeight: FontWeight.w600)),
+                child: Text(kPreviewNoticeText, textAlign: TextAlign.center, style: Theme.of(context).textTheme.bodyText2!.copyWith(color: EaselAppTheme.kLightPurple, fontSize: 15.sp, fontWeight: FontWeight.w600)),
               ),
               Align(
                 alignment: Alignment.centerLeft,
@@ -63,11 +60,6 @@ class _PreviewScreenState extends State<PreviewScreen> {
                 alignment: Alignment.bottomRight,
                 child: PylonsButton(
                     onPressed: () async {
-                      await GetIt.I.get<CreatorHubViewModel>().saveNft(provider.file, provider);
-
-                      widget.controller.nextPage(duration: const Duration(milliseconds: 10), curve: Curves.easeIn);
-                      Navigator.of(context).pop();
-                    onPressed: () {
                       if (provider.nftFormat.format == kAudioText) {
                         if (provider.audioThumbnail != null) {
                           widget.controller.nextPage(duration: const Duration(milliseconds: 10), curve: Curves.easeIn);
@@ -76,6 +68,8 @@ class _PreviewScreenState extends State<PreviewScreen> {
                           context.show(message: kErrAddAudioThumbnail);
                         }
                       } else {
+                        await GetIt.I.get<CreatorHubViewModel>().saveNft(provider.file, provider);
+
                         widget.controller.nextPage(duration: const Duration(milliseconds: 10), curve: Curves.easeIn);
                         Navigator.of(context).pop();
                       }
@@ -96,7 +90,7 @@ class _PreviewScreenState extends State<PreviewScreen> {
       case kImageText:
         return ImageWidget(file: provider.file!);
       case kVideoText:
-        return VideoWidget(file: provider.file!, previewFlag: false,isForFile: true);
+        return VideoWidget(file: provider.file!, previewFlag: false, isForFile: true);
       case k3dText:
         return Model3dViewer(file: provider.file!);
       case kAudioText:

@@ -72,7 +72,7 @@ class _CreatorHubScreenState extends State<CreatorHubScreen> {
                           SizedBox(
                             width: 20.w,
                           ),
-                          Expanded(child: buildCard(title: "publish".tr(), count: "0", cardColor: EaselAppTheme.kDarkGreen, viewModel: viewModel)),
+                          Expanded(child: buildCard(title: "published".tr(), count: "0", cardColor: EaselAppTheme.kDarkGreen, viewModel: viewModel)),
                           SizedBox(
                             width: 20.w,
                           ),

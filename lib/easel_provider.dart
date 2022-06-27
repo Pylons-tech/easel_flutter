@@ -126,12 +126,6 @@ class EaselProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-  final artistNameController = TextEditingController();
-  final artNameController = TextEditingController();
-  final descriptionController = TextEditingController();
-  final noOfEditionController = TextEditingController();
-  final priceController = TextEditingController();
-  final royaltyController = TextEditingController();
   final List<String> hashtagsList = [];
 
   String currentUsername = '';
@@ -611,11 +605,11 @@ class EaselProvider extends ChangeNotifier {
 
   @override
   void dispose() {
-    artistNameController!.dispose();
-    artNameController!.dispose();
-    descriptionController!.dispose();
-    noOfEditionController!.dispose();
-    royaltyController!.dispose();
+    artistNameController?.dispose();
+    artNameController?.dispose();
+    descriptionController?.dispose();
+    noOfEditionController?.dispose();
+    royaltyController?.dispose();
     super.dispose();
   }
 

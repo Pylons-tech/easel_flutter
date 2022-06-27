@@ -101,29 +101,7 @@ class _HomeScreenState extends State<HomeScreen> {
                         );
                       },
                     ),
-                    Align(
-                        alignment: Alignment.centerRight,
-                        child: ValueListenableBuilder(
-                          valueListenable: _currentPage,
-                          builder: (_, int currentPage, __) => _currentPage.value == _numPages - 1
-                              ? Consumer<EaselProvider>(
-                                  builder: (_, provider, __) => TextButton.icon(
-                                    onPressed: () {
-                                      PylonsWallet.instance.goToPylons();
-                                    },
-                                    label: const Icon(
-                                      Icons.arrow_forward_ios,
-                                      color: EaselAppTheme.kBlue,
-                                      size: 18,
-                                    ),
-                                    icon: Text(
-                                      kGoToWalletText,
-                                      style: Theme.of(context).textTheme.bodyText1!.copyWith(fontSize: 20.sp, color: EaselAppTheme.kBlue, fontWeight: FontWeight.w400),
-                                    ),
-                                  ),
-                                )
-                              : const SizedBox.shrink(),
-                        ))
+
                   ],
                 ),
                 ScreenResponsive(

@@ -1,7 +1,7 @@
 {
   "creator_hub": "Creator Hub",
   "for_sale": "For Sale",
-  "publish": "Published",
+  "published": "Published",
   "publish_total": "Published ({})",
   "draft_total": "Draft ({})",
   "draft": "Draft",
@@ -31,9 +31,9 @@
   "manage_your_nft": "Manage your NFT with the ",
   "pylons_app": "Pylons app",
   "you_can_collect_manage_your_nft": "You can store, collect & manage all your NFTs in the Pylons app!",
-  "compressing_thumbnail": "Compressing Thumbnail"
-  "cannot_launch_url": "Cannot launch this URL",
+  "compressing_thumbnail": "Compressing Thumbnail",
   "uploading": "Uploading ...",
-  "nft_name": "NFT name"
+  "nft_name": "NFT name",
+  "could_not_uploaded" :"{} could not be uploaded"
 
 }
