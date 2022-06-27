@@ -9,6 +9,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:provider/provider.dart';
 
+import '../../../widgets/clippers/bottom_sheet_clipper.dart';
 import '../creator_hub_view_model.dart';
 
 class DraftsBottomSheet {
@@ -96,25 +97,4 @@ Widget moreOptionTile({required String title, required String svg, required Func
   );
 }
 
-class BottomSheetClipper extends CustomClipper<Path> {
-  BottomSheetClipper();
 
-  @override
-  Path getClip(Size size) {
-    final path = Path();
-    path.moveTo(0, size.height);
-    path.lineTo(0, size.height * 0.08.h);
-    path.lineTo(size.width * 0.05.w, 0);
-    path.lineTo(size.width * 0.95.w, 0);
-    path.lineTo(size.width, size.height * 0.08.h);
-    path.lineTo(size.width, size.height);
-    path.lineTo(0, size.height);
-
-    return path;
-  }
-
-  @override
-  bool shouldReclip(covariant CustomClipper<Path> oldClipper) {
-    return false;
-  }
-}

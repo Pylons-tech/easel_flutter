@@ -48,13 +48,14 @@ class CreatorHubViewModel extends ChangeNotifier {
     notifyListeners();
   }
 
-  Future<void>  saveNft(File? file, EaselProvider provider) async {
+  Future<void> saveNft(File? file, EaselProvider provider) async {
     final loading = Loading().showLoading(message: "uploading".tr());
+    provider.initilizeTextEditingControllerWithEmptyValues();
     final uploadResponse = await remoteDataSource.uploadFile(file!);
     loading.dismiss();
     if (uploadResponse.status == Status.error) {
       navigatorKey.currentState!.overlay!.context.show(message: uploadResponse.errorMessage ?? kErrUpload);
-      return ;
+      return;
     }
     NFT nft = NFT(
       id: null,
@@ -65,12 +66,12 @@ class CreatorHubViewModel extends ChangeNotifier {
       width: provider.fileWidth.toString(),
       height: provider.fileHeight.toString(),
       duration: provider.fileDuration.toString(),
-      description: provider.descriptionController?.text ?? "",
+      description: provider.descriptionController.text,
       recipeID: provider.recipeId,
       thumbnailUrl: "",
-      name: provider.artistNameController?.text ?? "",
+      name: provider.artistNameController.text,
       url: "$ipfsDomain/${uploadResponse.data?.value?.cid}",
-      price: provider.priceController?.text ?? "",
+      price: provider.priceController.text,
     );
 
     bool success = await localDataSource.saveNft(nft);
@@ -86,6 +87,5 @@ class CreatorHubViewModel extends ChangeNotifier {
       navigatorKey.currentState!.overlay!.context.show(message: "delete_error".tr());
     }
     getDraftsList();
-
   }
 }
