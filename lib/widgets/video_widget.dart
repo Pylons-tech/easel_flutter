@@ -2,14 +2,11 @@ import 'dart:async';
 import 'dart:io';
 
 import 'package:easel_flutter/easel_provider.dart';
-import 'package:easel_flutter/models/nft_format.dart';
 import 'package:easel_flutter/screens/clippers/custom_triangle_clipper.dart';
 import 'package:easel_flutter/screens/clippers/small_bottom_corner_clipper.dart';
 import 'package:easel_flutter/utils/constants.dart';
 import 'package:easel_flutter/utils/easel_app_theme.dart';
-import 'package:easel_flutter/utils/file_utils.dart';
 import 'package:easel_flutter/utils/space_utils.dart';
-import 'package:easel_flutter/widgets/loading.dart';
 import 'package:easel_flutter/widgets/video_builder.dart';
 import 'package:easel_flutter/widgets/video_progress_widget.dart';
 import 'package:easel_flutter/widgets/video_widget_full_screen.dart';
@@ -26,8 +23,9 @@ import '../screens/custom_widgets/steps_indicator.dart';
 class VideoWidget extends StatefulWidget {
   final File file;
   final bool previewFlag;
+  final bool isForFile;
 
-  const VideoWidget({Key? key, required this.file, required this.previewFlag}) : super(key: key);
+  const VideoWidget({Key? key, required this.file, required this.previewFlag, required this.isForFile}) : super(key: key);
 
   @override
   _VideoWidgetState createState() => _VideoWidgetState();
@@ -42,19 +40,9 @@ class _VideoWidgetState extends State<VideoWidget> {
   @override
   void initState() {
     scheduleMicrotask(() {
-      easelProvider.initializeVideoPlayer();
+      easelProvider.initializeVideoPlayerWithFile();
     });
     super.initState();
-  }
-
-  void videoThumbnailPicked() async {
-    final result = await FileUtils.pickFile(NftFormat.supportedFormats[0]);
-    if (result != null) {
-      final loading = Loading().showLoading(message: kCompressingMessage);
-      final file = await FileUtils.compressAndGetFile(File(result.path!));
-      easelProvider.setVideoThumbnail(file);
-      loading.dismiss();
-    }
   }
 
   Widget _buildThumbnailButton() {
@@ -67,7 +55,7 @@ class _VideoWidgetState extends State<VideoWidget> {
           width: 120.w,
           child: InkWell(
             onTap: () {
-              videoThumbnailPicked();
+              easelProvider.onVideoThumbnailPicked();
             },
             child: easelProvider.videoThumbnail != null
                 ? ClipPath(
@@ -132,19 +120,13 @@ class _VideoWidgetState extends State<VideoWidget> {
     return !widget.previewFlag;
   }
 
-  stopVideoIfPlaying() {
-    if (easelProvider.videoPlayerController.value.isPlaying) {
-      easelProvider.videoPlayerController.pause();
-    }
-  }
-
   @override
   Widget build(BuildContext context) {
     return ChangeNotifierProvider<EaselProvider>.value(
         value: easelProvider,
         child: WillPopScope(
           onWillPop: () async {
-            stopVideoIfPlaying();
+            easelProvider.stopVideoIfPlaying();
             easelProvider.setVideoThumbnail(null);
             Navigator.pop(context);
             return true;
@@ -163,7 +145,7 @@ class _VideoWidgetState extends State<VideoWidget> {
                     children: [
                       IconButton(
                         onPressed: () {
-                          stopVideoIfPlaying();
+                          easelProvider.stopVideoIfPlaying();
                           easelProvider.setVideoThumbnail(null);
                           Navigator.pop(context);
                         },
@@ -235,7 +217,7 @@ class _VideoWidgetState extends State<VideoWidget> {
                 ),
                 Padding(
                   padding: EdgeInsets.only(bottom: 70.h),
-                  child: const VideoProgressWidget(darkMode: false),
+                  child: VideoProgressWidget(darkMode: false, isForFile: widget.isForFile),
                 ),
                 if (shouldShowThumbnailButtonOrStepsOrNot()) ...[
                   _buildThumbnailButton(),

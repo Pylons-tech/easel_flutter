@@ -1,3 +1,4 @@
+
 import 'package:easel_flutter/easel_provider.dart';
 import 'package:easel_flutter/utils/constants.dart';
 import 'package:easel_flutter/utils/easel_app_theme.dart';
@@ -9,8 +10,9 @@ import 'package:video_player/video_player.dart';
 
 class VideoProgressWidget extends StatelessWidget {
   final bool darkMode;
+  final bool isForFile;
 
-  const VideoProgressWidget({Key? key, required this.darkMode}) : super(key: key);
+  const VideoProgressWidget({Key? key, required this.darkMode, required this.isForFile}) : super(key: key);
 
   String _getDuration(Duration duration) {
     String twoDigits(int n) => n.toString().padLeft(2, "0");
@@ -105,7 +107,7 @@ class VideoProgressWidget extends StatelessWidget {
                               }
                             }),
                         Text(
-                          formatDuration(easelProvider.fileDuration ~/ kSecInMillis),
+                          isForFile ? formatDuration(easelProvider.fileDuration ~/ kSecInMillis) : easelProvider.publishedNFTDuration,
                           style: TextStyle(color: darkMode ? EaselAppTheme.kWhite : EaselAppTheme.kBlack),
                         ),
                       ],

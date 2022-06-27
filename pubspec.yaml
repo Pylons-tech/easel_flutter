@@ -76,8 +76,13 @@ dependencies:
   audio_video_progress_bar: ^0.10.0
   model_viewer_plus: 1.1.2
 
+  dartz: ^0.10.0
+
+  internet_connection_checker: ^0.0.1+4
+
+
   # used for bitmap manipulation, needed for svg to png conversion
-  #  bitmap: ^0.1.2
+#  bitmap: ^0.1.2
 
   path_provider: ^2.0.6
 
@@ -93,7 +98,11 @@ dependencies:
 
   easy_localization: 3.0.1
 
+  shimmer_animation: 2.1.0+1
+
+
   flutter_image_compress: 1.1.0
+
 
 
 dev_dependencies:
@@ -129,6 +138,23 @@ flutter:
     - assets/images/svg/
     - i18n/en.json
     - i18n/ru.json
+
+
+  fonts:
+    - family: UniversalSans
+      fonts:
+        - asset: assets/fonts/UniversalSans-300.ttf
+          weight: 300
+        - asset: assets/fonts/UniversalSans-400.ttf
+          weight: 400
+        - asset: assets/fonts/UniversalSans-500.ttf
+          weight: 500
+        - asset: assets/fonts/UniversalSans-600.ttf
+          weight: 600
+        - asset: assets/fonts/UniversalSans-750.ttf
+          weight: 700
+
+
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware.
 

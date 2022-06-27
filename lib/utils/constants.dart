@@ -43,6 +43,10 @@ const kSvgNftFormat3d = 'assets/images/svg/nft_format_3d.svg';
 const kSvgNftFormatAudio = 'assets/images/svg/nft_format_audio.svg';
 const kSvgMoreOption = 'assets/images/svg/more_options.svg';
 const kDummyImg = 'assets/images/svg/dummy_img.png';
+const kVideoIcon = 'assets/images/video_icon.png';
+
+const kSvgPylonsLogo = 'assets/images/svg/pylons_logo.svg';
+const kSvgViewIcon = 'assets/images/svg/view_icon.svg';
 
 /// ```URL constants
 const ipfsDomain = 'https://ipfs.io/ipfs';
@@ -64,6 +68,16 @@ const kFileSizeLimitInGB = 32;
 const kMaxPriceLength = 14;
 const kSecInMillis = 1000;
 const double TABLET_MIN_WIDTH = 600;
+const int kNumberOfSeconds = 1000;
+const int kSixtySeconds = 60;
+const int kFileCompressQuality = 50;
+
+const double kPrecision = 100000000000000000;
+
+
+
+const suffixes = ["B", "KB", "MB", "GB", "TB"];
+
 
 /// ````Reserved words, symbols, IDs etc
 const kCookbookId = 'cookbook_id';
@@ -83,6 +97,9 @@ const kAtomText = 'Atom';
 const kEurText = 'EEur';
 const kAgoricText = 'Agoric';
 const kJunoText = 'Juno';
+const kNone = 'None';
+const kPleaseWait = 'Please Wait';
+const kBack = 'Back';
 
 /// ```Text constants
 const kPreviewNoticeText = 'The resolution & orientation of your NFT will remain fixed as seen in the grid.';
@@ -125,8 +142,6 @@ const kDurationText = 'Duration';
 const kDateText = 'Date';
 const kRoyaltyText = 'Royalty';
 const kPreview3dModelText = 'Click here to preview\nyour selected 3D Model';
-const kMintMoreText = 'Mint More';
-const kGoToWalletText = 'Go to Wallet';
 const kChooseNFTFormatText = 'Choose your NFT format';
 const kUploadNFTText = 'Upload NFT file';
 const kEditNFTText = 'Edit your NFT Details';
@@ -176,6 +191,7 @@ const kErrPickFileFetch = 'Error occurred while uploading picked file, please tr
 const kErrAddAudioThumbnil = 'Please select audio thumbnail';
 const kErrUpload = 'Upload error occurred';
 const kErrFileNotPicked = 'Pick a file';
+const kErrFileCouldNotUploaded = 'could not be uploaded';
 const kErrUnsupportedFormat = 'Unsupported format';
 const kErrFileMetaParse = 'Error occurred while parsing the chosen media file:';
 const kErrRecipe = 'Recipe error :';
@@ -184,9 +200,11 @@ const kTryAgain = "Try again";
 const kAppNotInstalled = "Please download the Pylons app and create a username to publish a NFT in Easel.";
 const kPleaseTryAgain = "Something went wrong.\n Please try again.";
 const kCancel = "Cancel";
+const String videoPlayerNetworkError = 'Unable to play the video right now. Please check your internet connection and try again.';
 const kChooseFifteenSecondsOfAudio = "Choose 15s highlight of your audio for preview";
 const kUploadingThumbnailMessage = "Uploading Thumbnail";
 const videoPlayerError = "Some Error Occurred while playing the video. Please try again later.";
+const kCannotLaunchThisUrl = "Cannot launch this URL";
 
 //NFT STRINGS KEYS
 const kResidual = "Residual";
@@ -215,6 +233,9 @@ const kUploadingMessage = "Uploading";
 const kLoadingMessage = "Loading...";
 
 final List stepLabels = [kUploadText, kEditText, kPriceText, kListText];
+final List<String> imageAllowedExtsAndroid = ["png", "jpg", "jpeg", "svg", "heif"];
+final List<String> audioAllowedExtsAndroid = ['mp3', 'ogg', 'wav'];
+
 
 /// Nft viewmodel key values
 const String kNameKey = "Name";
@@ -229,6 +250,25 @@ const String kHeightKey = "Height";
 const String kQuantityKey = "Quantity";
 const String kHashtagKey = "Hashtags";
 
+const String kNoInternet = 'No internet';
+const String kRecipeNotFound = 'Recipe not found';
+const String kCookBookNotFound = 'Cookbook not found';
+
+const String kNftFormat = "NFT_Format";
+
+/// Currency ABRR
+const String kEmoneyAbb = "EEUR";
+const String kAGoricAbb = "run";
+const String kPYLN_ABBREVATION = 'PYLN';
+const String kStripeUSD_ABR = 'USD';
+const String kAgoricAbr = "RUN";
+const String kAtomAbr = "ATOM";
+const String kLunaAbr = "Luna";
+const String kEthereumAbr = "ETH";
+const String kEthereumSymbol = "weth-wei";
+const String kDefault = 'Default';
+
+const String kMyEaselNFT = 'My Easel NFT';
 /// Supported Formats
 
 const mp3 = "mp3";
