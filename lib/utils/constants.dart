@@ -1,7 +1,20 @@
 const List kTutorialItems = [
-  {'header': 'Upload your NFT file', 'description': 'Choose the file you want to upload to draft your NFT', 'image': 'assets/images/tutorial1.png'},
-  {'header': 'Edit your NFT Details', 'description': 'Enter information describing your NFT including the price you wish to sell it for!', 'image': 'assets/images/tutorial2.png'},
-  {'header': 'Manage your NFT with the ', 'header1': 'Pylons app', 'description': 'You can store, collect & manage all your NFTs in the Pylons app!', 'image': 'assets/images/tutorial3.png'},
+  {
+    'header': 'Upload your NFT file',
+    'description': 'Choose the file you wish to mint into a NFT!',
+    'image': 'assets/images/tutorial1.png'
+  },
+  {
+    'header': 'Edit your NFT Details',
+    'description': 'Enter information describing your NFT including the price you wish to sell it for!',
+    'image': 'assets/images/tutorial2.png'
+  },
+  {
+    'header': 'Manage your NFT with the ',
+    'header1': 'Pylons app',
+    'description': 'You can store, collect & manage all your NFTs in the Pylons app!',
+    'image': 'assets/images/tutorial3.png'
+  },
 ];
 
 const String kUniversalFontFamily = "UniversalSans";
@@ -132,17 +145,10 @@ const kPreview3dModelText = 'Click here to preview\nyour selected 3D Model';
 const kMintMoreText = 'Mint More';
 const kGoToWalletText = 'Go to Wallet';
 const kChooseNFTFormatText = 'Choose your NFT format';
-const kSelectNFTText = 'Select NFT file';
+const kUploadNFTText = 'Upload NFT file';
 const kDetailNftText = 'NFT Details';
-
-const kEditNFTText = 'Edit your NFT Details';
-const kPreviewYourNFTText = 'Preview your NFT file';
-const kPriceNftText = 'NFT Pricing';
-const kListNftText = 'List NFT';
-
-const kPublishNftText = 'Publish NFT';
+const kPriceNftText = 'Price NFT';
 const kUploadText = 'Upload';
-const kEditText = 'Edit';
 const kPreviewText = 'Preview';
 const kListText = 'List';
 const kImageText = 'Image';
@@ -167,7 +173,8 @@ const kUploadHint3 = '• One file per upload';
 const kUploadHintAll = 'GB Limit.\nOne file per upload.';
 const kHintNftName = 'Bird on Shoulder';
 const kHintArtistName = 'Sarah Jackson';
-const kHintNftDesc = 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eimod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercita.';
+const kHintNftDesc =
+    'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eimod tempor incididunt ut labore et dolore magna aliquaQ. Ut enim ad minim veniam, quis nostrud exercita.';
 const kHintNoEdition = '100';
 const kHintPrice = '10.87';
 const kHintHashtag = 'Type in';
@@ -188,37 +195,6 @@ const kTryAgain = "Try again";
 const kAppNotInstalled = "Please download the Pylons app and create a username to publish a NFT in Easel.";
 const kPleaseTryAgain = "Something went wrong.\n Please try again.";
 const kCancel = "Cancel";
-const videoPlayerError = "Some Error Occurred while playing the video. Please try again later.";
-
-//NFT STRINGS KEYS
-const kResidual = "Residual";
-const kQuantity = "Quantity";
-const kWidth = "Width";
-const kHeight = "Height";
-const kName = "Name";
-const kAppType = "App_Type";
-const kDescription = "Description";
-const kHashtags = "Hashtags";
-const kNFTFormat = "NFT_Format";
-const kNFTURL = "NFT_URL";
-const kCreator = "Creator";
-const kThumbnailUrl = "Thumbnail_URL";
-const kEasel = "Easel";
-const kEaselNFT = "Easel_NFT";
-const kUpylon = "upylon";
-const kExtraInfo = "extraInfo";
-const kDuration = "Duration";
-
-
-const kThumbnailFileName = "temp.jpg";
-
-//Loader Messages
-const kCompressingMessage = "Compressing Thumbnail";
-const kUploadingMessage = "Uploading";
-const kUploadingThumbnailMessage = "Uploading Thumbnail";
-const kLoadingMessage = "Loading...";
-
-final List stepLabels = ["upload", "draft", "publish"];
 
 
 /// Nft viewmodel key values
@@ -234,9 +210,31 @@ const String kHeightKey = "Height";
 const String kQuantityKey = "Quantity";
 const String kHashtagKey = "Hashtags";
 
+
+/// NFT Key Strings
+const kResidual = "Residual";
+const kQuantity = "Quantity";
+const kWidth = "Width";
+const kHeight = "Height";
+const kName = "Name";
+const kAppType = "App_Type";
+const kDescription = "Description";
+const kNFTFormat = "NFT_Format";
+const kNFTURL = "NFT_URL";
+const kCreator = "Creator";
+const kThumbnailUrl = "Thumbnail_URL";
+const kEasel = "Easel";
+const kEaselNFT = "Easel_NFT";
+const kUpylon = "upylon";
 const String kNone = "None";
 const String kNftFormat = "NFT_Format";
-const double kPrecision = 100000000000000000;
+const String kDuration = "Duration";
+const kExtraInfo= "extraInfo";
+const kHashtags = "Hashtags";
 const String kEthereumSymbol = "weth-wei";
+
+
+
 const int kNumberOfSeconds = 1000;
 const int kSixtySeconds = 60;
+const double kPrecision = 100000000000000000;

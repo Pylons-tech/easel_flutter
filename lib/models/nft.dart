@@ -1,13 +1,16 @@
 import 'dart:core';
 import 'package:easel_flutter/utils/constants.dart';
-import 'package:easel_flutter/utils/enums.dart';
-import 'package:easel_flutter/utils/extension_util.dart';
 import 'package:equatable/equatable.dart';
 import "package:collection/collection.dart";
+import 'package:floor/floor.dart';
 import 'package:pylons_sdk/pylons_sdk.dart';
 
+import '../utils/enums.dart';
 
+@entity
 class NFT extends Equatable {
+  @primaryKey
+  final int? id;
   String url = "";
   String thumbnailUrl = "";
   String name = "";
@@ -31,10 +34,15 @@ class NFT extends Equatable {
 
   NftType type = NftType.TYPE_ITEM;
   AssetType assetType = AssetType.Image;
+  String ibcCoins = IBCCoins.upylon.name;
+
+  String type = NftType.TYPE_ITEM.name;
+  String assetType = AssetType.Image.name;
   String duration = "";
   String hashtags = "";
 
   NFT({
+    this.id,
     this.url = "",
     this.thumbnailUrl = "",
     this.name = "",
@@ -55,7 +63,7 @@ class NFT extends Equatable {
     this.appType = "",
     required this.ibcCoins,
     this.tradeID = "",
-    this.assetType = AssetType.Image,
+    required this.assetType,
     this.duration = "",
     this.hashtags = "",
   });
@@ -63,7 +71,8 @@ class NFT extends Equatable {
   factory NFT.fromRecipe(Recipe recipe) {
     final royalties = recipe.entries.itemOutputs.firstOrNull?.tradePercentage.fromBigInt().toInt().toString();
     return NFT(
-      type: NftType.TYPE_RECIPE,
+      id: null,
+      type: NftType.TYPE_RECIPE.name,
       recipeID: recipe.iD,
       cookbookID: recipe.cookbookID,
       name: recipe.entries.itemOutputs.firstOrNull?.strings.firstWhere((strKeyValue) => strKeyValue.key == kName, orElse: () => StringParam()).value ?? "",
@@ -79,25 +88,68 @@ class NFT extends Equatable {
       tradePercentage: royalties == null ? kNone : "$royalties%",
       price: recipe.coinInputs.firstOrNull?.coins.firstOrNull?.amount ?? "0",
       denom: recipe.coinInputs.firstOrNull?.coins.firstOrNull?.denom ?? "",
-      ibcCoins: recipe.coinInputs.firstOrNull?.coins.firstOrNull?.denom.toIBCCoinsEnum() ?? IBCCoins.upylon,
-      assetType: recipe.entries.itemOutputs.firstOrNull?.strings.firstWhere((strKeyValue) => strKeyValue.key == kNftFormat, orElse: () => StringParam()).value.toAssetTypeEnum() ?? AssetType.Image,
+      ibcCoins: recipe.coinInputs.firstOrNull?.coins.firstOrNull?.denom ?? IBCCoins.upylon.name,
+      assetType: recipe.entries.itemOutputs.firstOrNull?.strings.firstWhere((strKeyValue) => strKeyValue.key == kNftFormat, orElse: () => StringParam()).value ?? AssetType.Image.name,
       duration:
-      recipe.entries.itemOutputs.firstOrNull?.longs.firstWhere((longKeyValue) => longKeyValue.key == kDuration, orElse: () => LongParam()).weightRanges.firstOrNull?.upper.toInt().toSeconds() ??
-          "0",
+          recipe.entries.itemOutputs.firstOrNull?.longs.firstWhere((longKeyValue) => longKeyValue.key == kDuration, orElse: () => LongParam()).weightRanges.firstOrNull?.upper.toInt().toSeconds() ??
+              "0",
       hashtags: recipe.entries.itemOutputs.firstOrNull?.strings.firstWhere((strKeyValue) => strKeyValue.key == kHashtags, orElse: () => StringParam()).value ?? "",
     );
   }
 
   @override
   List<Object?> get props => [
-    url,
-    name,
-    description,
-    denom,
-    price,
-    type,
-    creator,
-    itemID,
-    owner,
-  ];
+        url,
+        name,
+        description,
+        denom,
+        price,
+        type,
+        creator,
+        itemID,
+        owner,
+      ];
+}
+
+extension IBCCoinPar on String {
+  IBCCoins toIBCCoinsEnum() {
+    return IBCCoins.values.firstWhere((e) => e.toString() == 'IBCCoins.$this', orElse: () => IBCCoins.upylon);
+  }
+}
+
+extension AssetTypePar on String {
+  AssetType toAssetTypeEnum() {
+    return AssetType.values.firstWhere((e) => e.toString() == 'AssetType.$this', orElse: () => AssetType.Image);
+  }
+}
+
+extension DurationConverter on int {
+  String toSeconds() {
+    final double seconds = this / kNumberOfSeconds;
+    final String min = (seconds / kSixtySeconds).toString().split(".").first;
+    final String sec = (seconds % kSixtySeconds).toString().split(".").first;
+
+    return "$min:$sec";
+  }
+}
+
+extension NFTValue on NFT {
+  String getPriceFromRecipe(Recipe recipe) {
+    if (recipe.coinInputs.isEmpty) {
+      return "0";
+    }
+    if (recipe.coinInputs.first.coins.isEmpty) {
+      return "0";
+    }
+    return recipe.coinInputs.first.coins.first.amount;
+  }
+}
+
+extension ValueConvertor on String {
+  double fromBigInt() {
+    if (this == "") {
+      return 0;
+    }
+    return BigInt.parse(this).toDouble() / kPrecision;
+  }
 }

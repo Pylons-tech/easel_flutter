@@ -1,9 +1,9 @@
 import 'package:easel_flutter/datasources/database.dart';
-import 'package:easel_flutter/models/draft.dart';
 import 'package:easel_flutter/utils/constants.dart';
 import 'package:easel_flutter/utils/date_utils.dart';
-import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+
+import '../models/nft.dart';
 
 abstract class LocalDataSource {
 
@@ -68,16 +68,16 @@ abstract class LocalDataSource {
   /// This method will save the draft of the NFT
   /// Input: [Draft] the draft that will will be saved in database
   /// Output: [bool] returns whether the operation is successful or not
-  Future<bool> saveDraft(Draft draft);
+  Future<bool> saveNft(NFT draft);
 
   /// This method will get the drafts List from the local database
-  /// Output: [List][Draft] returns  the drafts list
-  Future<List<Draft>> getDrafts();
+  /// Output: [List] returns  the List of drafts
+  Future<List<NFT>> getNfts();
 
   /// This method will delete draft from the local database
   /// Input: [id] the id of the draft which the user wants to delete
   /// Output: [bool] returns whether the operation is successful or not
-  Future<bool> deleteDraft(int id);
+  Future<void> deleteNft(int id);
 }
 
 class LocalDataSourceImpl implements LocalDataSource {
@@ -85,9 +85,7 @@ class LocalDataSourceImpl implements LocalDataSource {
 
   final SharedPreferences sharedPreferences;
 
-  final AppDatabase database;
-
-  LocalDataSourceImpl(this.sharedPreferences, this.database);
+  LocalDataSourceImpl(this.sharedPreferences);
 
   /// gets cookbookId from local storage
   ///return String or null
@@ -151,33 +149,31 @@ class LocalDataSourceImpl implements LocalDataSource {
   }
 
   @override
-  Future<bool> saveDraft(Draft draft) async {
-    try {
-      await database.draftDao.insertDraft(draft);
-      return true;
-    } catch (e) {
-      debugPrint('An error occured $e');
+  Future<bool> saveNft(NFT draft) async {
+    final database = await $FloorAppDatabase.databaseBuilder('app_database.db').build();
 
-      return false;
-    }
+    final nftDao = database.nftDao;
+
+    await nftDao.insertNft(draft);
+
+    return true;
   }
 
   @override
-  Future<List<Draft>> getDrafts() async {
+  Future<List<NFT>> getNfts() async {
+    final database = await $FloorAppDatabase.databaseBuilder('app_database.db').build();
 
-    return await database.draftDao.findAllDrafts();
+    final nftDao = database.nftDao;
+
+    return await nftDao.findAllNft();
   }
 
   @override
-  Future<bool> deleteDraft(int id) async {
-    try {
-      await database.draftDao.delete(id);
+  Future<void> deleteNft(int id) async {
+    final database = await $FloorAppDatabase.databaseBuilder('app_database.db').build();
 
-      return true;
-    } catch (e) {
-      debugPrint('An error occured $e');
+    final nftDao = database.nftDao;
 
-      return false;
-    }
+    return await nftDao.delete(id);
   }
 }

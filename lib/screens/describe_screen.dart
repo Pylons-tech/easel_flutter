@@ -1,5 +1,4 @@
 import 'package:easel_flutter/easel_provider.dart';
-import 'package:easel_flutter/screens/custom_widgets/initial_draft_detail_dialog.dart';
 import 'package:easel_flutter/utils/constants.dart';
 import 'package:easel_flutter/utils/easel_app_theme.dart';
 import 'package:easel_flutter/utils/space_utils.dart';
@@ -50,10 +49,8 @@ class _DescribeScreenState extends State<DescribeScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return  Scaffold(
-      body:
-
-      SingleChildScrollView(
+    return Scaffold(
+      body: SingleChildScrollView(
         child: Padding(
           padding: EdgeInsets.symmetric(horizontal: 20.w, vertical: 15.h),
           child: Consumer<EaselProvider>(builder: (_, provider, __) {
@@ -172,13 +169,9 @@ class _DescribeScreenState extends State<DescribeScreen> {
                       onPressed: () async {
                         FocusScope.of(context).unfocus();
                         if (_formKey.currentState!.validate()) {
-                          if (_artNameFieldError.isEmpty &&
-                              _artistNameFieldError.isEmpty &&
-                              _descriptionFieldError.isEmpty) {
-
-                            context.read<EaselProvider>().saveArtistName(provider.artistNameController.text.trim());
-                            widget.controller
-                                .nextPage(duration: const Duration(milliseconds: 300), curve: Curves.easeIn);
+                          if (_artNameFieldError.isEmpty && _artistNameFieldError.isEmpty && _descriptionFieldError.isEmpty) {
+                            context.read<EaselProvider>().saveArtistName(provider.artistNameController!.text.trim());
+                            widget.controller.nextPage(duration: const Duration(milliseconds: 300), curve: Curves.easeIn);
                           }
                         }
                       },

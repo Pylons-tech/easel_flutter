@@ -34,7 +34,7 @@ class MintScreen extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: [
                   if (provider.nftFormat.format == kImageText) ...[ImageWidget(file: provider.file!)],
-                  if (provider.nftFormat.format == kVideoText) ...[VideoWidget(file: provider.file!, previewFlag: true,)],
+                  if (provider.nftFormat.format == kVideoText) ...[VideoWidget(file: provider.file!)],
                   if (provider.nftFormat.format == k3dText) ...[
                     SizedBox(
                         height: MediaQuery.of(context).size.height * 0.3,
@@ -50,7 +50,7 @@ class MintScreen extends StatelessWidget {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text(
-                          provider.artNameController.text,
+                          provider.artNameController!.text,
                           style: Theme.of(context).textTheme.headline5!.copyWith(
                                 color: EaselAppTheme.kDarkText,
                                 fontWeight: FontWeight.w600,
@@ -67,7 +67,7 @@ class MintScreen extends StatelessWidget {
                                         fontSize: 20,
                                         color: EaselAppTheme.kDarkText,
                                       )),
-                              children: [TextSpan(text: provider.artistNameController.text, style: const TextStyle(color: EaselAppTheme.kBlue))]),
+                              children: [TextSpan(text: provider.artistNameController!.text, style: const TextStyle(color: EaselAppTheme.kBlue))]),
                         ),
                         const Divider(
                           height: 40,
@@ -80,14 +80,14 @@ class MintScreen extends StatelessWidget {
                               ),
                         ),
                         Text(
-                          provider.descriptionController.text,
+                          provider.descriptionController!.text,
                           style: Theme.of(context).textTheme.caption!.copyWith(fontSize: 14, color: EaselAppTheme.kLightText, fontWeight: FontWeight.w300),
                         ),
                         const VerticalSpace(
                           10,
                         ),
                         Text(
-                          "$kPriceText: ${provider.priceController.text.trim()} ${provider.selectedDenom.name}",
+                          "$kPriceText: ${provider.priceController!.text.trim()} ${provider.selectedDenom.name}",
                           style: Theme.of(context).textTheme.caption!.copyWith(
                                 fontSize: 14,
                               ),
@@ -118,13 +118,13 @@ class MintScreen extends StatelessWidget {
                           10,
                         ),
                         Text(
-                          "$kNoOfEditionText: ${provider.noOfEditionController.text}",
+                          "$kNoOfEditionText: ${provider.noOfEditionController!.text}",
                           style: Theme.of(context).textTheme.caption!.copyWith(
                                 fontSize: 14,
                               ),
                         ),
                         Text(
-                          "$kRoyaltyText: ${provider.royaltyController.text}%",
+                          "$kRoyaltyText: ${provider.royaltyController!.text}%",
                           style: Theme.of(context).textTheme.caption!.copyWith(
                                 fontSize: 14,
                               ),

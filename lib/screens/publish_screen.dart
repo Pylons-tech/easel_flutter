@@ -21,6 +21,10 @@ class PublishScreen extends StatefulWidget {
 }
 
 class _PublishScreenState extends State<PublishScreen> {
+  final List<String> detailInfo = const ['Contract Address', 'Token ID', 'Token Standard', 'Blockchain', 'Metadata', 'Permission'];
+
+  final List<String> sampleData = const ['0x495f...7b5e', '8416676683197945...', 'ERC-1155', 'Ethereum', 'Centralized', 'Exclusive'];
+
   late EaselProvider provider;
 
   @override
@@ -44,12 +48,7 @@ class _PublishScreenState extends State<PublishScreen> {
                     Stack(
                       children: [
                         if (provider.nftFormat.format == kImageText) ...[ImageWidget(file: provider.file!)],
-                        if (provider.nftFormat.format == kVideoText) ...[
-                          VideoWidget(
-                            file: provider.file!,
-                            previewFlag: true,
-                          )
-                        ],
+                        if (provider.nftFormat.format == kVideoText) ...[VideoWidget(file: provider.file!)],
                         if (provider.nftFormat.format == kAudioText) ...[AudioWidget(file: provider.file!)],
                         Positioned(
                             top: 60,
@@ -71,7 +70,7 @@ class _PublishScreenState extends State<PublishScreen> {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Text(
-                            provider.artNameController.text,
+                            provider.artNameController!.text,
                             style: Theme.of(context).textTheme.headline5!.copyWith(
                                   color: Colors.black,
                                   fontWeight: FontWeight.w600,
@@ -86,7 +85,7 @@ class _PublishScreenState extends State<PublishScreen> {
                                 style: Theme.of(context).textTheme.bodyText2!.copyWith(
                                       fontSize: 20,
                                     ),
-                                children: [TextSpan(text: provider.artistNameController.text, style: const TextStyle(color: EaselAppTheme.kBlue))]),
+                                children: [TextSpan(text: provider.artistNameController!.text, style: const TextStyle(color: EaselAppTheme.kBlue))]),
                           ),
                           const Divider(
                             height: 40,
@@ -99,7 +98,7 @@ class _PublishScreenState extends State<PublishScreen> {
                                 ),
                           ),
                           Text(
-                            provider.descriptionController.text,
+                            provider.descriptionController!.text,
                             style: Theme.of(context).textTheme.caption!.copyWith(
                                   fontSize: 14,
                                 ),
@@ -108,7 +107,7 @@ class _PublishScreenState extends State<PublishScreen> {
                             10,
                           ),
                           Text(
-                            "$kPriceText: ${provider.priceController.text.trim()} ${provider.selectedDenom.name}",
+                            "$kPriceText: ${provider.priceController!.text.trim()} ${provider.selectedDenom.name}",
                             style: Theme.of(context).textTheme.caption!.copyWith(
                                   fontSize: 14,
                                 ),
@@ -121,7 +120,8 @@ class _PublishScreenState extends State<PublishScreen> {
                                   ),
                             )
                           ],
-                          if (provider.nftFormat.format == kVideoText || provider.nftFormat.format == kAudioText) ...[
+                          if (provider.nftFormat.format == kVideoText ||
+                              provider.nftFormat.format == kAudioText) ...[
                             Text(
                               "$kDurationText: ${provider.fileDuration / kSecInMillis} sec",
                               style: Theme.of(context).textTheme.caption!.copyWith(
@@ -139,13 +139,13 @@ class _PublishScreenState extends State<PublishScreen> {
                             10,
                           ),
                           Text(
-                            "$kNoOfEditionText: ${provider.noOfEditionController.text}",
+                            "$kNoOfEditionText: ${provider.noOfEditionController!.text}",
                             style: Theme.of(context).textTheme.caption!.copyWith(
                                   fontSize: 14,
                                 ),
                           ),
                           Text(
-                            "$kRoyaltyText: ${provider.royaltyController.text}%",
+                            "$kRoyaltyText: ${provider.royaltyController!.text}%",
                             style: Theme.of(context).textTheme.caption!.copyWith(
                                   fontSize: 14,
                                 ),

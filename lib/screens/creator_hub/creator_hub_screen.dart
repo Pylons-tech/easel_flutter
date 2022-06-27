@@ -38,7 +38,7 @@ class _CreatorHubScreenState extends State<CreatorHubScreen> {
           color: EaselAppTheme.kWhite,
           child: SafeArea(
               child: Scaffold(
-                backgroundColor: EaselAppTheme.kBgWhite,
+            backgroundColor: EaselAppTheme.kBgWhite,
             body: Padding(
               padding: EdgeInsets.only(left: 25.w, right: 25.w, top: 30.h),
               child: Column(
@@ -76,7 +76,7 @@ class _CreatorHubScreenState extends State<CreatorHubScreen> {
                       SizedBox(
                         width: 20.w,
                       ),
-                      Expanded(child: buildCard(title: "draft".tr(), count: viewModel.draftList.length.toString(), cardColor: EaselAppTheme.kLightRed, viewModel: viewModel))
+                      Expanded(child: buildCard(title: "draft".tr(), count: viewModel.nftList.length.toString(), cardColor: EaselAppTheme.kLightRed, viewModel: viewModel))
                     ],
                   ),
                   SizedBox(height: 20.h),
@@ -85,10 +85,9 @@ class _CreatorHubScreenState extends State<CreatorHubScreen> {
                       primary: false,
                       children: [
                         SizedBox(height: 10.h),
-
                         publishedNFTsContainer(title: "publish_total".tr(args: ["0"]), viewModel: viewModel),
                         SizedBox(height: 20.h),
-                        draftNFTsContainer(title: "draft_total".tr(args: [viewModel.draftList.length.toString()]), viewModel: viewModel)
+                        draftNFTsContainer(title: "draft_total".tr(args: [viewModel.nftList.length.toString()]), viewModel: viewModel)
                       ],
                     ),
                   ),
@@ -143,7 +142,7 @@ class _CreatorHubScreenState extends State<CreatorHubScreen> {
         SizedBox(
           height: 10.h,
         ),
-        viewModel.publishCollapse ? const SizedBox() :Container(),
+        viewModel.publishCollapse ? const SizedBox() : Container(),
       ],
     );
   }
@@ -194,19 +193,19 @@ class _CreatorHubScreenState extends State<CreatorHubScreen> {
         ),
         viewModel.draftCollapse
             ? const SizedBox()
-            : viewModel.draftList.isNotEmpty
+            : viewModel.nftList.isNotEmpty
                 ? ListView.builder(
-                  shrinkWrap: true,
-                physics: const NeverScrollableScrollPhysics(),
-                itemBuilder: (_, index) => buildListTile(draft: viewModel.draftList[index]),
-                itemCount: viewModel.draftList.length,
+                    shrinkWrap: true,
+                    physics: const NeverScrollableScrollPhysics(),
+                    itemBuilder: (_, index) => buildListTile(nft: viewModel.nftList[index]),
+                    itemCount: viewModel.nftList.length,
                   )
                 : const SizedBox()
       ],
     );
   }
 
-  Widget buildListTile({required Draft draft}) {
+  Widget buildListTile({required NFT nft}) {
     return Container(
         margin: EdgeInsets.symmetric(vertical: 5.h, horizontal: 3.w),
         decoration: BoxDecoration(color: Colors.white, boxShadow: [
@@ -225,13 +224,10 @@ class _CreatorHubScreenState extends State<CreatorHubScreen> {
                 width: 45.h,
                 child: CachedNetworkImage(
                   fit: BoxFit.fill,
-                  imageUrl: draft.imageString,
-                  errorWidget: (a, b, c) => const Center(
-                      child: Icon(Icons.error_outline)),
-                  placeholder:(context, url) => Center(
-                    child: SizedBox(
-                    height: 30.h, width: 30.h,
-                    child: const CircularProgressIndicator()),
+                  imageUrl: nft.url,
+                  errorWidget: (a, b, c) => const Center(child: Icon(Icons.error_outline)),
+                  placeholder: (context, url) => Center(
+                    child: SizedBox(height: 30.h, width: 30.h, child: const CircularProgressIndicator()),
                   ),
                 ),
               ),
@@ -240,7 +236,6 @@ class _CreatorHubScreenState extends State<CreatorHubScreen> {
               ),
               Expanded(
                 child: Column(
-
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
@@ -265,10 +260,12 @@ class _CreatorHubScreenState extends State<CreatorHubScreen> {
               InkWell(
                   onTap: () {
                     showModalBottomSheet(
-                      backgroundColor: Colors.transparent,
+                        backgroundColor: Colors.transparent,
                         context: context,
                         builder: (BuildContext bc) {
-                          return  DraftsMoreBottomSheet(draft: draft,);
+                          return DraftsMoreBottomSheet(
+                            nft: nft,
+                          );
                         });
                   },
                   child: SvgPicture.asset(kSvgMoreOption))
@@ -276,7 +273,6 @@ class _CreatorHubScreenState extends State<CreatorHubScreen> {
           ),
         ));
   }
-
 
   Widget buildCard({required String title, required String count, required Color cardColor, required CreatorHubViewModel viewModel}) {
     return Container(
@@ -287,7 +283,7 @@ class _CreatorHubScreenState extends State<CreatorHubScreen> {
             children: [
               Text(
                 title,
-                style: TextStyle(color: EaselAppTheme.kWhite, fontWeight: FontWeight.w400, fontFamily:  kUniversalFontFamily, fontSize: 12.sp),
+                style: TextStyle(color: EaselAppTheme.kWhite, fontWeight: FontWeight.w400, fontFamily: kUniversalFontFamily, fontSize: 12.sp),
               ),
               SizedBox(
                 height: 10.h,

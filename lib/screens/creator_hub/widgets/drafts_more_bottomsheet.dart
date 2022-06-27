@@ -9,16 +9,20 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:provider/provider.dart';
 
-class DraftsMoreBottomSheet extends StatelessWidget {
-  const DraftsMoreBottomSheet({Key? key, required this.draft}) : super(key: key);
+import '../creator_hub_view_model.dart';
 
-  final Draft draft;
+class DraftsMoreBottomSheet  extends StatelessWidget {
+  const DraftsMoreBottomSheet({Key? key, required this.nft}) : super(key: key);
+
+  final NFT nft;
 
   @override
   Widget build(BuildContext context) {
+
     final viewModel = context.watch<CreatorHubViewModel>();
     return ClipPath(
       clipper: BottomSheetClipper(),
+
       child: Container(
         color: EaselAppTheme.kLightGrey02,
         padding: EdgeInsets.symmetric(horizontal: 30.w, vertical: 30.h),
@@ -37,7 +41,7 @@ class DraftsMoreBottomSheet extends StatelessWidget {
                 svg: kSvgDelete,
                 onPressed: () {
                   Navigator.of(context).pop();
-                  viewModel.deleteDraft(draft.id);
+                  viewModel.deleteDraft(nft.id);
                 }),
             const Divider(
               color: EaselAppTheme.kGrey,

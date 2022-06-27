@@ -1,3 +1,4 @@
+enum IBCCoins { urun, ujunox, none, ujuno, upylon, ustripeusd, eeur, uatom, weth_wei }
 
 enum NftType {
   TYPE_RECIPE,
@@ -10,5 +11,3 @@ enum AssetType {
   Image,
   Video,
 }
-
-enum IBCCoins { urun, ujunox, none, ujuno, upylon, ustripeusd, eeur, uatom, weth_wei }
