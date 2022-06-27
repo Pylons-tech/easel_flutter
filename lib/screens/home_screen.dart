@@ -19,6 +19,7 @@ import 'package:steps_indicator/steps_indicator.dart';
 import 'choose_format_screen.dart';
 
 class HomeScreen extends StatefulWidget {
+
   const HomeScreen({Key? key}) : super(key: key);
 
   @override
