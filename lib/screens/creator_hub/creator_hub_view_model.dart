@@ -76,6 +76,7 @@ class CreatorHubViewModel extends ChangeNotifier {
     bool success = await localDataSource.saveNft(nft);
     if (!success) {
       navigatorKey.currentState!.overlay!.context.show(message: "save_error".tr());
+      return;
     }
   }
 
@@ -84,6 +85,7 @@ class CreatorHubViewModel extends ChangeNotifier {
 
     if (!success) {
       navigatorKey.currentState!.overlay!.context.show(message: "delete_error".tr());
+      return;
     }
     getDraftsList();
 

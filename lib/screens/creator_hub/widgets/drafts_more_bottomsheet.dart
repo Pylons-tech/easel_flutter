@@ -17,7 +17,7 @@ class DraftsBottomSheet {
 
   DraftsBottomSheet({ required this.buildContext, required this.nft});
 
-  void show() {
+  Future<void> show() async{
     showModalBottomSheet(
         backgroundColor: Colors.transparent,
         context: buildContext,

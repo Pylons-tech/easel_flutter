@@ -250,12 +250,22 @@ class _PriceScreenState extends State<PriceScreen> {
                     onPressed: () async {
                       FocusScope.of(context).unfocus();
                       if (_formKey.currentState!.validate()) {
-                        if (_royaltiesFieldError.isEmpty &&
-                            _noOfEditionsFieldError.isEmpty &&
-                            _priceFieldError.isEmpty) {
-                          widget.controller
-                              .nextPage(duration: const Duration(milliseconds: 300), curve: Curves.easeIn);
+                        if(!provider.isFreeDrop){
+                          if (_royaltiesFieldError.isEmpty &&
+                              _noOfEditionsFieldError.isEmpty &&
+                              _priceFieldError.isEmpty) {
+                            widget.controller
+                                .nextPage(duration: const Duration(milliseconds: 300), curve: Curves.easeIn);
+                          }
                         }
+                        else{
+                          if (_royaltiesFieldError.isEmpty &&
+                              _noOfEditionsFieldError.isEmpty ) {
+                            widget.controller
+                                .nextPage(duration: const Duration(milliseconds: 300), curve: Curves.easeIn);
+                          }
+                        }
+
                       }
                     },
                     btnText: kContinue,
