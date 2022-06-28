@@ -1,4 +1,3 @@
-import 'dart:io';
 import 'package:easel_flutter/easel_provider.dart';
 import 'package:easel_flutter/main.dart';
 import 'package:easel_flutter/models/api_response.dart';
@@ -47,10 +46,10 @@ class CreatorHubViewModel extends ChangeNotifier {
 
     notifyListeners();
   }
+
   late NFT nft;
 
-
-  Future<void> saveNft({required EaselProvider provider}) async {
+  Future<void> saveNft({required EaselProvider provider, required PageController controller}) async {
     final loading = Loading().showLoading(message: "uploading".tr());
     provider.initilizeTextEditingControllerWithEmptyValues();
     final uploadResponse = await remoteDataSource.uploadFile(provider.file!);
@@ -62,10 +61,12 @@ class CreatorHubViewModel extends ChangeNotifier {
       return;
     }
     var uploadThumbnailResponse;
-    if(provider.nftFormat.format == kAudioText || provider.nftFormat.format == kVideoText ){
-       uploadThumbnailResponse = await remoteDataSource.uploadFile(provider.audioThumbnail!);
-      loading.dismiss();
+    if (provider.nftFormat.format == kAudioText || provider.nftFormat.format == kVideoText) {
+      uploadThumbnailResponse = await remoteDataSource.uploadFile(provider.nftFormat.format == kAudioText ? provider.audioThumbnail! : provider.videoThumbnail!);
+
       if (uploadThumbnailResponse.status == Status.error) {
+        loading.dismiss();
+
         navigatorKey.currentState!.overlay!.context.show(message: uploadThumbnailResponse.errorMessage ?? kErrUpload);
         return;
       }
@@ -82,7 +83,7 @@ class CreatorHubViewModel extends ChangeNotifier {
       duration: provider.fileDuration.toString(),
       description: provider.descriptionController.text,
       recipeID: provider.recipeId,
-      thumbnailUrl:provider.nftFormat.format == kImageText ? "" : "$ipfsDomain/${uploadThumbnailResponse.data?.value?.cid}",
+      thumbnailUrl: (provider.nftFormat.format == kAudioText || provider.nftFormat.format == kVideoText) ? "$ipfsDomain/${uploadThumbnailResponse.data?.value?.cid}" : "",
       name: provider.artistNameController.text,
       url: "$ipfsDomain/${uploadResponse.data?.value?.cid}",
       price: provider.priceController.text,
@@ -93,9 +94,11 @@ class CreatorHubViewModel extends ChangeNotifier {
       navigatorKey.currentState!.overlay!.context.show(message: "save_error".tr());
       return;
     }
+    controller.nextPage(duration: const Duration(milliseconds: 10), curve: Curves.easeIn);
+    loading.dismiss();
 
+    Navigator.of(navigatorKey.currentState!.overlay!.context).pop();
   }
-
 
   Future<void> deleteDraft(int? id) async {
     bool success = await localDataSource.deleteNft(id!);
