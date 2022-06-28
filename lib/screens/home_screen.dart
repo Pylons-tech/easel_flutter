@@ -5,8 +5,10 @@ import 'package:easel_flutter/screens/custom_widgets/steps_indicator.dart';
 import 'package:easel_flutter/screens/describe_screen.dart';
 import 'package:easel_flutter/screens/price_screen.dart';
 import 'package:easel_flutter/screens/published_screen.dart';
+import 'package:easel_flutter/services/datasources/local_datasource.dart';
 import 'package:easel_flutter/utils/constants.dart';
 import 'package:easel_flutter/utils/easel_app_theme.dart';
+import 'package:easel_flutter/utils/enums.dart';
 import 'package:easel_flutter/utils/screen_responsive.dart';
 import 'package:easel_flutter/utils/space_utils.dart';
 import 'package:flutter/material.dart';
@@ -15,6 +17,7 @@ import 'package:get_it/get_it.dart';
 import 'package:provider/provider.dart';
 import 'package:pylons_sdk/pylons_sdk.dart';
 
+import '../models/nft.dart';
 import 'choose_format_screen.dart';
 import 'custom_widgets/step_labels.dart';
 import 'custom_widgets/steps_indicator.dart';
@@ -29,15 +32,48 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
+  late EaselProvider easelProvider;
+  var cacheManager = GetIt.I.get<LocalDataSource>();
   final int _numPages = 4;
-  final PageController _pageController = PageController(keepPage: true, initialPage: 0);
-  final ValueNotifier<int> _currentPage = ValueNotifier(0);
-  final ValueNotifier<int> _currentStep = ValueNotifier(0);
+  late final PageController _pageController;
 
-  final List pageTitles = [kSelectNFTText, kDetailNftText, kPriceNftText,  ''];
+  late ValueNotifier<int> _currentPage;
+
+  late ValueNotifier<int> _currentStep;
+
+  NFT? nft;
+  final List pageTitles = [kSelectNFTText, kDetailNftText, kPriceNftText, ''];
 
   @override
   void initState() {
+    easelProvider = Provider.of<EaselProvider>(context, listen: false);
+    nft = cacheManager.getCacheDynamicType(key: "nft");
+
+    if (nft?.step == UploadStep.assetUploaded.name) {
+      _currentPage = ValueNotifier(1);
+      _currentStep = ValueNotifier(1);
+      _pageController = PageController(keepPage: true, initialPage: 1);
+    } else if (nft?.step == UploadStep.descriptionAdded.name) {
+      if (mounted) {
+        Future.delayed(const Duration(milliseconds: 500), () {
+          easelProvider.setTextFieldValues(nft?.name, nft?.description);
+        });
+      }
+      _currentPage = ValueNotifier(1);
+      _currentStep = ValueNotifier(1);
+      _pageController = PageController(keepPage: true, initialPage: 2);
+    } else if (nft?.step == UploadStep.priceAdded.name) {
+      _currentPage = ValueNotifier(2);
+      _currentStep = ValueNotifier(2);
+      _pageController = PageController(keepPage: true, initialPage: 3);
+    } else {
+      _currentPage = ValueNotifier(0);
+      _currentStep = ValueNotifier(0);
+      _pageController = PageController(keepPage: true, initialPage: 0);
+    }
+
+    cacheManager.deleteCacheString(key: 'nft');
+
     super.initState();
   }
 
@@ -49,12 +85,11 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   Widget build(BuildContext context) {
     return WillPopScope(
-        onWillPop: ()async{
+      onWillPop: () async {
+        await GetIt.I.get<CreatorHubViewModel>().getDraftsList();
 
-      await  GetIt.I.get<CreatorHubViewModel>().getDraftsList();
-
-
-      return true;  },
+        return true;
+      },
       child: Container(
         color: EaselAppTheme.kWhite,
         child: SafeArea(
@@ -73,24 +108,21 @@ class _HomeScreenState extends State<HomeScreen> {
                         alignment: Alignment.centerLeft,
                         child: ValueListenableBuilder(
                           valueListenable: _currentPage,
-                          builder: (_, int currentPage, __) =>
-
-                          Padding(
-                                  padding: EdgeInsets.only(left: 10.sp),
-                                  child: IconButton(
-                                    onPressed: () {
-                                      ScaffoldMessenger.of(context).hideCurrentSnackBar();
-                                      _pageController.previousPage(duration: const Duration(milliseconds: 300), curve: Curves.easeIn);
-                                      if(_currentPage.value == 0){
-
-                                        Navigator.of(context).pop();
-                                      }
-                                    },
-                                    icon: const Icon(
-                                      Icons.arrow_back_ios,
-                                      color: EaselAppTheme.kGrey,
-                                    ),
-                                  )),
+                          builder: (_, int currentPage, __) => Padding(
+                              padding: EdgeInsets.only(left: 10.sp),
+                              child: IconButton(
+                                onPressed: () {
+                                  ScaffoldMessenger.of(context).hideCurrentSnackBar();
+                                  _pageController.previousPage(duration: const Duration(milliseconds: 300), curve: Curves.easeIn);
+                                  if (_currentPage.value == 0) {
+                                    Navigator.of(context).pop();
+                                  }
+                                },
+                                icon: const Icon(
+                                  Icons.arrow_back_ios,
+                                  color: EaselAppTheme.kGrey,
+                                ),
+                              )),
                         )),
                     ValueListenableBuilder(
                       valueListenable: _currentPage,
@@ -101,7 +133,6 @@ class _HomeScreenState extends State<HomeScreen> {
                         );
                       },
                     ),
-
                   ],
                 ),
                 ScreenResponsive(
@@ -114,28 +145,25 @@ class _HomeScreenState extends State<HomeScreen> {
                     physics: const NeverScrollableScrollPhysics(),
                     onPageChanged: (int page) {
                       _currentPage.value = page;
-                      switch(page){
+                      switch (page) {
                         case 0:
-
-                          _currentStep.value =0;
+                          _currentStep.value = 0;
                           break;
                         case 1:
                         case 2:
-                          _currentStep.value =1;
+                          _currentStep.value = 1;
                           break;
 
                         case 3:
-                          _currentStep.value =2;
+                          _currentStep.value = 2;
                           break;
-
                       }
                     },
                     children: [
                       ChooseFormatScreen(controller: _pageController),
-
-                    DescribeScreen(controller: _pageController),
+                      DescribeScreen(controller: _pageController),
                       PriceScreen(controller: _pageController),
-                     const PublishedScreen(),
+                      const PublishedScreen(),
                     ],
                   ),
                 ),

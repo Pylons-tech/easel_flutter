@@ -31,7 +31,7 @@ class NFT extends Equatable {
   String appType = "";
   String tradeID = "";
   String ownerAddress = "";
-
+  String step = "";
   String ibcCoins = IBCCoins.upylon.name;
 
   String type = NftType.TYPE_ITEM.name;
@@ -47,7 +47,7 @@ class NFT extends Equatable {
     this.description = "",
     this.denom = "",
     this.price = "0",
-    this.type="",
+    this.type = "",
     this.creator = "",
     this.itemID = "",
     this.cookbookID = "",
@@ -62,6 +62,7 @@ class NFT extends Equatable {
     required this.ibcCoins,
     this.tradeID = "",
     required this.assetType,
+    required this.step,
     this.duration = "",
     this.hashtags = "",
   });
@@ -91,6 +92,7 @@ class NFT extends Equatable {
       duration:
           recipe.entries.itemOutputs.firstOrNull?.longs.firstWhere((longKeyValue) => longKeyValue.key == kDuration, orElse: () => LongParam()).weightRanges.firstOrNull?.upper.toInt().toSeconds() ??
               "0",
+      step: "",
       hashtags: recipe.entries.itemOutputs.firstOrNull?.strings.firstWhere((strKeyValue) => strKeyValue.key == kHashtags, orElse: () => StringParam()).value ?? "",
     );
   }
@@ -108,5 +110,3 @@ class NFT extends Equatable {
         owner,
       ];
 }
-
-

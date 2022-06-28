@@ -12,6 +12,8 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:provider/provider.dart';
 
+import '../../utils/dependency_injection/dependency_injection_container.dart';
+
 class CreatorHubScreen extends StatefulWidget {
   const CreatorHubScreen({Key? key}) : super(key: key);
 
@@ -28,8 +30,18 @@ class _CreatorHubScreenState extends State<CreatorHubScreen> {
     super.initState();
   }
 
-  TextStyle titleStyle = TextStyle(fontSize: 18.sp, fontWeight: FontWeight.w800, color: EaselAppTheme.kBlack, fontFamily:  kUniversalFontFamily,);
-  TextStyle digitTextStyle = TextStyle(fontSize: 20.sp, fontWeight: FontWeight.w800, color: EaselAppTheme.kWhite, fontFamily:  kUniversalFontFamily,);
+  TextStyle titleStyle = TextStyle(
+    fontSize: 18.sp,
+    fontWeight: FontWeight.w800,
+    color: EaselAppTheme.kBlack,
+    fontFamily: kUniversalFontFamily,
+  );
+  TextStyle digitTextStyle = TextStyle(
+    fontSize: 20.sp,
+    fontWeight: FontWeight.w800,
+    color: EaselAppTheme.kWhite,
+    fontFamily: kUniversalFontFamily,
+  );
 
   @override
   Widget build(BuildContext context) {
@@ -38,63 +50,65 @@ class _CreatorHubScreenState extends State<CreatorHubScreen> {
           color: EaselAppTheme.kWhite,
           child: SafeArea(
               child: Scaffold(
-                backgroundColor: EaselAppTheme.kBgWhite,
-                body: Padding(
-                  padding: EdgeInsets.only(left: 25.w, right: 25.w, top: 30.h),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
+            backgroundColor: EaselAppTheme.kBgWhite,
+            body: Padding(
+              padding: EdgeInsets.only(left: 25.w, right: 25.w, top: 30.h),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Stack(
+                    alignment: AlignmentDirectional.center,
                     children: [
-                      Stack(
-                        alignment: AlignmentDirectional.center,
-                        children: [
-                          Text("creator_hub".tr(), style: titleStyle),
-                          Align(
-                            alignment: Alignment.topRight,
-                            child: InkWell(
-                              onTap: () {
-                                Navigator.of(context).pushNamed(RouteUtil.ROUTE_HOME,);
-                              },
-                              child: Icon(
-                                Icons.add,
-                                size: 30.h,
-                                color: EaselAppTheme.kBlack,
-                              ),
-                            ),
+                      Text("creator_hub".tr(), style: titleStyle),
+                      Align(
+                        alignment: Alignment.topRight,
+                        child: InkWell(
+                          onTap: () {
+                            Navigator.of(context).pushNamed(
+                              RouteUtil.ROUTE_HOME,
+                            );
+                          },
+                          child: Icon(
+                            Icons.add,
+                            size: 30.h,
+                            color: EaselAppTheme.kBlack,
                           ),
-                        ],
-                      ),
-                      SizedBox(
-                        height: 25.h,
-                      ),
-                      Row(
-                        children: [
-                          Expanded(child: buildCard(title: "for_sale".tr(), count: 0.toString(), cardColor: EaselAppTheme.kBlue, viewModel: viewModel)),
-                          SizedBox(
-                            width: 20.w,
-                          ),
-                          Expanded(child: buildCard(title: "published".tr(), count: "0", cardColor: EaselAppTheme.kDarkGreen, viewModel: viewModel)),
-                          SizedBox(
-                            width: 20.w,
-                          ),
-                          Expanded(child: buildCard(title: "draft".tr(), count: viewModel.nftList.length.toString(), cardColor: EaselAppTheme.kLightRed, viewModel: viewModel))
-                        ],
-                      ),
-                      SizedBox(height: 20.h),
-                      Expanded(
-                        child: ListView(
-                          primary: false,
-                          children: [
-                            SizedBox(height: 10.h),
-                            publishedNFTsContainer(title: "publish_total".tr(args: ["0"]), viewModel: viewModel),
-                            SizedBox(height: 20.h),
-                            draftNFTsContainer(title: "draft_total".tr(args: [viewModel.nftList.length.toString()]), viewModel: viewModel)
-                          ],
                         ),
                       ),
                     ],
                   ),
-                ),
-              )));
+                  SizedBox(
+                    height: 25.h,
+                  ),
+                  Row(
+                    children: [
+                      Expanded(child: buildCard(title: "for_sale".tr(), count: 0.toString(), cardColor: EaselAppTheme.kBlue, viewModel: viewModel)),
+                      SizedBox(
+                        width: 20.w,
+                      ),
+                      Expanded(child: buildCard(title: "published".tr(), count: "0", cardColor: EaselAppTheme.kDarkGreen, viewModel: viewModel)),
+                      SizedBox(
+                        width: 20.w,
+                      ),
+                      Expanded(child: buildCard(title: "draft".tr(), count: viewModel.nftList.length.toString(), cardColor: EaselAppTheme.kLightRed, viewModel: viewModel))
+                    ],
+                  ),
+                  SizedBox(height: 20.h),
+                  Expanded(
+                    child: ListView(
+                      primary: false,
+                      children: [
+                        SizedBox(height: 10.h),
+                        publishedNFTsContainer(title: "publish_total".tr(args: ["0"]), viewModel: viewModel),
+                        SizedBox(height: 20.h),
+                        draftNFTsContainer(title: "draft_total".tr(args: [viewModel.nftList.length.toString()]), viewModel: viewModel)
+                      ],
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          )));
     });
   }
 
@@ -112,7 +126,7 @@ class _CreatorHubScreenState extends State<CreatorHubScreen> {
                   child: Text(
                     title,
                     maxLines: 1,
-                    style:  titleStyle.copyWith(fontSize: 15.sp),
+                    style: titleStyle.copyWith(fontSize: 15.sp),
                   ),
                 ),
                 SizedBox(
@@ -194,13 +208,13 @@ class _CreatorHubScreenState extends State<CreatorHubScreen> {
         viewModel.draftCollapse
             ? const SizedBox()
             : viewModel.nftList.isNotEmpty
-            ? ListView.builder(
-          shrinkWrap: true,
-          physics: const NeverScrollableScrollPhysics(),
-          itemBuilder: (_, index) => buildListTile(nft: viewModel.nftList[index]),
-          itemCount: viewModel.nftList.length,
-        )
-            : const SizedBox()
+                ? ListView.builder(
+                    shrinkWrap: true,
+                    physics: const NeverScrollableScrollPhysics(),
+                    itemBuilder: (_, index) => buildListTile(nft: viewModel.nftList[index]),
+                    itemCount: viewModel.nftList.length,
+                  )
+                : const SizedBox()
       ],
     );
   }
@@ -239,7 +253,7 @@ class _CreatorHubScreenState extends State<CreatorHubScreen> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      "nft_name".tr(),
+                      "nft_name".tr(args: [nft.name != '' ? nft.name : 'Nft Name']),
                       style: titleStyle,
                       maxLines: 1,
                       overflow: TextOverflow.ellipsis,
@@ -259,9 +273,8 @@ class _CreatorHubScreenState extends State<CreatorHubScreen> {
               ),
               InkWell(
                   onTap: () {
-                    final DraftsBottomSheet draftsBottomSheet = DraftsBottomSheet(buildContext: context, nft: nft);
+                    final DraftsBottomSheet draftsBottomSheet = DraftsBottomSheet(buildContext: context, nft: nft, localDataSource: sl());
                     draftsBottomSheet.show();
-
                   },
                   child: SvgPicture.asset(kSvgMoreOption))
             ],
@@ -309,4 +322,3 @@ class DiagonalLinePainter extends CustomPainter {
     return true;
   }
 }
-

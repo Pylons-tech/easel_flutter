@@ -2,14 +2,18 @@ import 'package:easel_flutter/easel_provider.dart';
 import 'package:easel_flutter/screens/custom_widgets/initial_draft_detail_dialog.dart';
 import 'package:easel_flutter/utils/constants.dart';
 import 'package:easel_flutter/utils/easel_app_theme.dart';
+import 'package:easel_flutter/utils/enums.dart';
 import 'package:easel_flutter/utils/space_utils.dart';
 import 'package:easel_flutter/widgets/easel_hashtag_input_field.dart';
 import 'package:easel_flutter/widgets/easel_text_field.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:get_it/get_it.dart';
 import 'package:provider/provider.dart';
 
+import '../models/nft.dart';
+import '../services/datasources/local_datasource.dart';
 import '../widgets/pylons_button.dart';
 
 class DescribeScreen extends StatefulWidget {
@@ -22,11 +26,13 @@ class DescribeScreen extends StatefulWidget {
 }
 
 class _DescribeScreenState extends State<DescribeScreen> {
+  var cacheManager = GetIt.I.get<LocalDataSource>();
   final _formKey = GlobalKey<FormState>();
 
   String _artNameFieldError = '';
   String _artistNameFieldError = '';
   String _descriptionFieldError = '';
+  NFT? nft;
 
   @override
   void dispose() {
@@ -36,15 +42,15 @@ class _DescribeScreenState extends State<DescribeScreen> {
 
   @override
   void initState() {
+    nft = cacheManager.getCacheDynamicType(key: "nft");
+
     super.initState();
 
     context.read<EaselProvider>().toCheckSavedArtistName();
     WidgetsBinding.instance.addPostFrameCallback((_) async {
-       DraftDetailDialog(context: context).show();
-
-
+      DraftDetailDialog(context: context).show();
     });
-     }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -169,7 +175,9 @@ class _DescribeScreenState extends State<DescribeScreen> {
                         FocusScope.of(context).unfocus();
                         if (_formKey.currentState!.validate()) {
                           if (_artNameFieldError.isEmpty && _artistNameFieldError.isEmpty && _descriptionFieldError.isEmpty) {
-                            context.read<EaselProvider>().saveArtistName(provider.artistNameController!.text.trim());
+                            context.read<EaselProvider>().updateNftFromDescription(nft?.id);
+
+                            context.read<EaselProvider>().saveArtistName(provider.artistNameController.text.trim());
                             widget.controller.nextPage(duration: const Duration(milliseconds: 300), curve: Curves.easeIn);
                           }
                         }

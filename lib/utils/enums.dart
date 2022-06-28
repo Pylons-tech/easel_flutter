@@ -11,3 +11,9 @@ enum AssetType {
   Image,
   Video,
 }
+
+enum UploadStep {
+  assetUploaded,
+  descriptionAdded,
+  priceAdded,
+}

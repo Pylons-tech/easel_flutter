@@ -1,4 +1,5 @@
 import 'package:easel_flutter/easel_provider.dart';
+import 'package:easel_flutter/models/nft.dart';
 import 'package:easel_flutter/widgets/clipped_button.dart';
 import 'package:easel_flutter/utils/amount_formatter.dart';
 import 'package:easel_flutter/utils/constants.dart';
@@ -10,8 +11,10 @@ import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:get_it/get_it.dart';
 import 'package:provider/provider.dart';
 
+import '../services/datasources/local_datasource.dart';
 import '../widgets/pylons_button.dart';
 
 class PriceScreen extends StatefulWidget {
@@ -25,7 +28,8 @@ class PriceScreen extends StatefulWidget {
 
 class _PriceScreenState extends State<PriceScreen> {
   final _formKey = GlobalKey<FormState>();
-
+  var cacheManager = GetIt.I.get<LocalDataSource>();
+  NFT? nft;
   String _royaltiesFieldError = '';
   String _noOfEditionsFieldError = '';
   String _priceFieldError = '';
@@ -38,8 +42,8 @@ class _PriceScreenState extends State<PriceScreen> {
 
   @override
   void initState() {
+    nft = cacheManager.getCacheDynamicType(key: "nft");
     super.initState();
-
   }
 
   @override
@@ -54,60 +58,56 @@ class _PriceScreenState extends State<PriceScreen> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Expanded(
-                  child: ListView(           
-
+                  child: ListView(
                     primary: false,
                     children: [
-                      Text("is_this_free".tr(),
-              style: TextStyle(fontSize: 18.sp, fontWeight: FontWeight.w500),
+                      Text(
+                        "is_this_free".tr(),
+                        style: TextStyle(fontSize: 18.sp, fontWeight: FontWeight.w500),
                       ),
-
                       SizedBox(
                         height: 10.h,
                       ),
-                      Row(
-                          children:[
-                            Expanded(
-                              child: ClippedButton(
-                                title: "yes".tr(),
-                                bgColor: provider.isFreeDrop ?EaselAppTheme.kpurpleButtonColor :EaselAppTheme.kLightGreyColor,
-                                textColor: provider.isFreeDrop ?EaselAppTheme.kWhite :EaselAppTheme.kLightBlackText,
-                                onPressed: () async {
-                                  provider.updateIsFreeDropStatus(true);
-
-                                }, cuttingHeight: 12.h,isShadow: false,),
-                            ),
-                            SizedBox(
-                              width: 30.w,
-                            ),
-                            Expanded(
-                              child: ClippedButton(
-                                title: "no".tr(),
-                                bgColor: provider.isFreeDrop ? EaselAppTheme.kLightGreyColor : EaselAppTheme.kpurpleButtonColor ,
-                                textColor: provider.isFreeDrop ?EaselAppTheme.kLightBlackText : EaselAppTheme.kWhite ,
-                                onPressed: () async {
-                                  provider.updateIsFreeDropStatus(false);
-                                }, cuttingHeight: 12.h,isShadow: false,),
-                            ),
-                            SizedBox(
-                              width: 60.w,
-                            ),
-                          ]
-
-                      ),
+                      Row(children: [
+                        Expanded(
+                          child: ClippedButton(
+                            title: "yes".tr(),
+                            bgColor: provider.isFreeDrop ? EaselAppTheme.kpurpleButtonColor : EaselAppTheme.kLightGreyColor,
+                            textColor: provider.isFreeDrop ? EaselAppTheme.kWhite : EaselAppTheme.kLightBlackText,
+                            onPressed: () async {
+                              provider.updateIsFreeDropStatus(true);
+                            },
+                            cuttingHeight: 12.h,
+                            isShadow: false,
+                          ),
+                        ),
+                        SizedBox(
+                          width: 30.w,
+                        ),
+                        Expanded(
+                          child: ClippedButton(
+                            title: "no".tr(),
+                            bgColor: provider.isFreeDrop ? EaselAppTheme.kLightGreyColor : EaselAppTheme.kpurpleButtonColor,
+                            textColor: provider.isFreeDrop ? EaselAppTheme.kLightBlackText : EaselAppTheme.kWhite,
+                            onPressed: () async {
+                              provider.updateIsFreeDropStatus(false);
+                            },
+                            cuttingHeight: 12.h,
+                            isShadow: false,
+                          ),
+                        ),
+                        SizedBox(
+                          width: 60.w,
+                        ),
+                      ]),
                       Visibility(
                         visible: !provider.isFreeDrop,
                         child: Column(
                           children: [
                             VerticalSpace(20.h),
-
                             EaselPriceInputField(
                               key: ValueKey("${provider.selectedDenom.name}-amount"),
-                              inputFormatters: [
-                                FilteringTextInputFormatter.digitsOnly,
-                                LengthLimitingTextInputFormatter(kMaxPriceLength),
-                                provider.selectedDenom.getFormatter()
-                              ],
+                              inputFormatters: [FilteringTextInputFormatter.digitsOnly, LengthLimitingTextInputFormatter(kMaxPriceLength), provider.selectedDenom.getFormatter()],
                               controller: provider.priceController,
                               validator: (value) {
                                 setState(() {
@@ -126,25 +126,24 @@ class _PriceScreenState extends State<PriceScreen> {
                             ),
                             _priceFieldError.isNotEmpty
                                 ? Padding(
-                              padding: EdgeInsets.only(left: 10.w, right: 10.w, top: 2.h),
-                              child: Text(
-                                _priceFieldError,
-                                style: TextStyle(
-                                  fontSize: 12.sp,
-                                  color: Colors.red,
-                                ),
-                              ),
-                            )
+                                    padding: EdgeInsets.only(left: 10.w, right: 10.w, top: 2.h),
+                                    child: Text(
+                                      _priceFieldError,
+                                      style: TextStyle(
+                                        fontSize: 12.sp,
+                                        color: Colors.red,
+                                      ),
+                                    ),
+                                  )
                                 : const SizedBox.shrink(),
                             Text(
                               kNetworkFeeWarnText,
                               style: TextStyle(color: EaselAppTheme.kLightPurple, fontSize: 14.sp, fontWeight: FontWeight.w800),
                             ),
-
                           ],
                         ),
                       ),
-                       VerticalSpace(20.h),
+                      VerticalSpace(20.h),
                       EaselTextField(
                         label: kRoyaltiesText,
                         hint: kRoyaltyHintText,
@@ -174,21 +173,20 @@ class _PriceScreenState extends State<PriceScreen> {
                       ),
                       _royaltiesFieldError.isNotEmpty
                           ? Padding(
-                        padding: EdgeInsets.only(left: 10.w, right: 10.w, top: 2.h),
-                        child: Text(
-                          _royaltiesFieldError,
-                          style: TextStyle(
-                            fontSize: 12.sp,
-                            color: Colors.red,
-                          ),
-                        ),
-                      )
+                              padding: EdgeInsets.only(left: 10.w, right: 10.w, top: 2.h),
+                              child: Text(
+                                _royaltiesFieldError,
+                                style: TextStyle(
+                                  fontSize: 12.sp,
+                                  color: Colors.red,
+                                ),
+                              ),
+                            )
                           : const SizedBox.shrink(),
                       Text(
                         "$kRoyaltyNoteText “$kMinRoyalty”.",
                         style: TextStyle(color: EaselAppTheme.kLightPurple, fontWeight: FontWeight.w800, fontSize: 14.sp),
                       ),
-
                       VerticalSpace(20.h),
                       EaselTextField(
                         key: ValueKey(provider.selectedDenom.name),
@@ -224,37 +222,33 @@ class _PriceScreenState extends State<PriceScreen> {
                       ),
                       _noOfEditionsFieldError.isNotEmpty
                           ? Padding(
-                        padding: EdgeInsets.only(left: 10.w, right: 10.w, top: 2.h),
-                        child: Text(
-                          _noOfEditionsFieldError,
-                          style: TextStyle(
-                            fontSize: 12.sp,
-                            color: Colors.red,
-                          ),
-                        ),
-                      )
+                              padding: EdgeInsets.only(left: 10.w, right: 10.w, top: 2.h),
+                              child: Text(
+                                _noOfEditionsFieldError,
+                                style: TextStyle(
+                                  fontSize: 12.sp,
+                                  color: Colors.red,
+                                ),
+                              ),
+                            )
                           : const SizedBox.shrink(),
                       Text(
                         "${NumberFormat.decimalPattern().format(kMaxEdition)} $kMaxText",
                         style: TextStyle(color: EaselAppTheme.kLightPurple, fontSize: 14.sp, fontWeight: FontWeight.w800),
                       ),
-
                     ],
                   ),
                 ),
                 VerticalSpace(20.h),
-
                 Align(
                   alignment: Alignment.centerRight,
                   child: PylonsButton(
                     onPressed: () async {
                       FocusScope.of(context).unfocus();
                       if (_formKey.currentState!.validate()) {
-                        if (_royaltiesFieldError.isEmpty &&
-                            _noOfEditionsFieldError.isEmpty &&
-                            _priceFieldError.isEmpty) {
-                          widget.controller
-                              .nextPage(duration: const Duration(milliseconds: 300), curve: Curves.easeIn);
+                        if (_royaltiesFieldError.isEmpty && _noOfEditionsFieldError.isEmpty && _priceFieldError.isEmpty) {
+                          context.read<EaselProvider>().updateNftFromPrice(nft?.id);
+                          widget.controller.nextPage(duration: const Duration(milliseconds: 300), curve: Curves.easeIn);
                         }
                       }
                     },
@@ -263,7 +257,7 @@ class _PriceScreenState extends State<PriceScreen> {
                     isBlue: false,
                   ),
                 ),
-                 VerticalSpace(20.h),
+                VerticalSpace(20.h),
               ],
             ),
           );

@@ -33,7 +33,7 @@
   "you_can_collect_manage_your_nft": "You can store, collect & manage all your NFTs in the Pylons app!",
   "compressing_thumbnail": "Compressing Thumbnail",
   "uploading": "Uploading ...",
-  "nft_name": "NFT name",
+  "nft_name": "{}",
   "could_not_uploaded" :"{} could not be uploaded"
 
 }

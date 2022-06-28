@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:easel_flutter/models/nft.dart';
 import 'package:easel_flutter/screens/creator_hub/creator_hub_view_model.dart';
 import 'package:easel_flutter/utils/constants.dart';
@@ -8,15 +10,17 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:provider/provider.dart';
-
+import '../../../services/datasources/local_datasource.dart';
+import '../../../utils/enums.dart';
 import '../../../widgets/clippers/bottom_sheet_clipper.dart';
 import '../creator_hub_view_model.dart';
 
 class DraftsBottomSheet {
   final BuildContext buildContext;
   final NFT nft;
+  final LocalDataSource localDataSource;
 
-  DraftsBottomSheet({ required this.buildContext, required this.nft});
+  DraftsBottomSheet({required this.buildContext, required this.nft, required this.localDataSource});
 
   void show() {
     showModalBottomSheet(
@@ -25,32 +29,36 @@ class DraftsBottomSheet {
         builder: (BuildContext bc) {
           return DraftsMoreBottomSheet(
             nft: nft,
+            localDataSource: localDataSource,
           );
         });
   }
 }
-class DraftsMoreBottomSheet  extends StatelessWidget {
-  const DraftsMoreBottomSheet({Key? key, required this.nft}) : super(key: key);
+
+class DraftsMoreBottomSheet extends StatelessWidget {
+  const DraftsMoreBottomSheet({Key? key, required this.nft, required this.localDataSource}) : super(key: key);
 
   final NFT nft;
+  final LocalDataSource localDataSource;
 
   @override
   Widget build(BuildContext context) {
-
     final viewModel = context.watch<CreatorHubViewModel>();
     return ClipPath(
       clipper: BottomSheetClipper(),
-
       child: Container(
         color: EaselAppTheme.kLightGrey02,
         padding: EdgeInsets.symmetric(horizontal: 30.w, vertical: 30.h),
         child: Wrap(
           children: [
-            moreOptionTile(title: "publish", svg: kSvgPublish, onPressed: () {
-              Navigator.of(context).pop();
-              Navigator.of(context).pushNamed(RouteUtil.ROUTE_HOME );
-
-            }),
+            moreOptionTile(
+                title: "publish",
+                svg: kSvgPublish,
+                onPressed: () {
+                 final value =  localDataSource.setCacheDynamicType(key: "nft", value: nft);
+                  Navigator.of(context).pop();
+                  Navigator.of(context).pushNamed(RouteUtil.ROUTE_HOME);
+                }),
             const Divider(
               color: EaselAppTheme.kGrey,
             ),
@@ -59,7 +67,7 @@ class DraftsMoreBottomSheet  extends StatelessWidget {
                 svg: kSvgDelete,
                 onPressed: () {
                   Navigator.of(context).pop();
-                  viewModel.deleteDraft(nft.id);
+                  viewModel.deleteNft(nft.id);
                 }),
             const Divider(
               color: EaselAppTheme.kGrey,
@@ -96,5 +104,3 @@ Widget moreOptionTile({required String title, required String svg, required Func
     ),
   );
 }
-
-

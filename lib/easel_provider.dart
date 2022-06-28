@@ -1,6 +1,8 @@
 import 'dart:async';
 import 'dart:developer';
 import 'dart:io';
+import 'package:easy_localization/easy_localization.dart';
+
 import '../utils/enums.dart';
 
 import 'package:easel_flutter/main.dart';
@@ -181,6 +183,12 @@ class EaselProvider extends ChangeNotifier {
     noOfEditionController.text = '';
     priceController.text = '';
     royaltyController.text = '';
+    notifyListeners();
+  }
+
+  setTextFieldValues(String? artName, String? description) {
+    artNameController.text = artName ?? "";
+    descriptionController.text = description ?? "";
     notifyListeners();
   }
 
@@ -750,6 +758,57 @@ class EaselProvider extends ChangeNotifier {
         total: totalDuration ?? Duration.zero,
       );
     });
+  }
+
+  Future<void> saveNftLocally(UploadStep step) async {
+    final loading = Loading().showLoading(message: "uploading".tr());
+    initilizeTextEditingControllerWithEmptyValues();
+    final uploadResponse = await remoteDataSource.uploadFile(file!);
+    loading.dismiss();
+    if (uploadResponse.status == Status.error) {
+      navigatorKey.currentState!.overlay!.context.show(message: uploadResponse.errorMessage ?? kErrUpload);
+      return;
+    }
+    NFT nft = NFT(
+      id: null,
+      type: NftType.TYPE_ITEM.name,
+      ibcCoins: IBCCoins.upylon.name,
+      assetType: nftFormat.format,
+      cookbookID: cookbookId ?? "",
+      width: fileWidth.toString(),
+      height: fileHeight.toString(),
+      duration: fileDuration.toString(),
+      description: descriptionController.text,
+      recipeID: recipeId,
+      step: step.name,
+      thumbnailUrl: "",
+      name: artistNameController.text,
+      url: "$ipfsDomain/${uploadResponse.data?.value?.cid}",
+      price: priceController.text,
+    );
+
+    bool success = await localDataSource.saveNft(nft);
+    if (!success) {
+      navigatorKey.currentState!.overlay!.context.show(message: "save_error".tr());
+    }
+  }
+
+  Future<bool> updateNftFromDescription(int? id) async {
+    bool success = await localDataSource.updateNftFromDescription(id!, artNameController.text, descriptionController.text, artistNameController.text, UploadStep.descriptionAdded.name);
+    if (!success) {
+      navigatorKey.currentState!.overlay!.context.show(message: "save_error".tr());
+      return false;
+    }
+    return true;
+  }
+
+  Future<bool> updateNftFromPrice(int? id) async {
+    bool success = await localDataSource.updateNftFromPrice(id!, royaltyController.text, priceController.text, noOfEditionController.text, UploadStep.priceAdded.name);
+    if (!success) {
+      navigatorKey.currentState!.overlay!.context.show(message: "save_error".tr());
+      return false;
+    }
+    return true;
   }
 }
 

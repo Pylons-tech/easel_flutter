@@ -2,6 +2,7 @@ import 'dart:developer';
 import 'dart:io';
 
 import 'package:dio/dio.dart';
+import 'package:easel_flutter/datasources/cache_manager.dart';
 import 'package:easel_flutter/datasources/database.dart';
 import 'package:easel_flutter/easel_provider.dart';
 import 'package:easel_flutter/repository/repository.dart';
@@ -26,11 +27,11 @@ import '../../services/third_party_services/audio_player_helper.dart';
 final sl = GetIt.instance;
 
 void init() {
+  _registerServices();
   _registerProviders();
   _registerLocalDataSources();
   _registerRemoteDataSources();
   _registerExternalDependencies();
-  _registerServices();
 }
 
 void _registerExternalDependencies() {
@@ -47,9 +48,7 @@ void _registerExternalDependencies() {
           }),
     ),
   );
-  sl.registerSingletonAsync<AppDatabase>(
-          () => $FloorAppDatabase.databaseBuilder('app_database.db').build());
-
+  sl.registerSingletonAsync<AppDatabase>(() => $FloorAppDatabase.databaseBuilder('app_database.db').build());
 
   sl.registerLazySingleton<AudioPlayer>(() => AudioPlayer());
 
@@ -62,7 +61,7 @@ void _registerRemoteDataSources() {
 }
 
 void _registerLocalDataSources() {
-  sl.registerLazySingleton<LocalDataSource>(() => LocalDataSourceImpl(sl(), sl()));
+  sl.registerLazySingleton<LocalDataSource>(() => LocalDataSourceImpl(sharedPreferences: sl(), database: sl(), cacheManager: sl()));
 }
 
 void _registerProviders() {
@@ -79,10 +78,9 @@ void _registerProviders() {
 
 void _registerServices() {
   sl.registerFactory<FileUtilsHelper>(() => FileUtilsHelperImpl());
+  sl.registerLazySingleton<CacheManager>(() => CacheManagerImp());
   sl.registerFactory<VideoPlayerHelper>(() => VideoPlayerHelperImp(sl()));
   sl.registerFactory<AudioPlayerHelper>(() => AudioPlayerHelperImpl(sl()));
   sl.registerLazySingleton<NetworkInfo>(() => NetworkInfoImpl(sl()));
   sl.registerLazySingleton<Repository>(() => RepositoryImp(networkInfo: sl(), localDataSource: sl(), remoteDataSource: sl()));
-
 }
-

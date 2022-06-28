@@ -96,7 +96,7 @@ class _CurrencyDropDown extends StatelessWidget {
                         onChanged: (String? data) {
                           if (data != null) {
                             final value = provider.supportedDenomList.firstWhere((denom) => denom.symbol == data);
-                            provider.priceController!.clear();
+                            provider.priceController.clear();
                             provider.setSelectedDenom(value);
                           }
                         },

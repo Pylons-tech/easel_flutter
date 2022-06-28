@@ -1,6 +1,7 @@
 import 'package:easel_flutter/easel_provider.dart';
 import 'package:easel_flutter/screens/creator_hub/creator_hub_view_model.dart';
 import 'package:easel_flutter/utils/constants.dart';
+import 'package:easel_flutter/utils/enums.dart';
 import 'package:easel_flutter/utils/extension_util.dart';
 import 'package:easel_flutter/widgets/audio_widget.dart';
 import 'package:easel_flutter/widgets/image_widget.dart';
@@ -37,7 +38,8 @@ class _PreviewScreenState extends State<PreviewScreen> {
               SizedBox(height: MediaQuery.of(context).viewPadding.top + 20.h),
               Align(
                 alignment: Alignment.center,
-                child: Text(kPreviewNoticeText, textAlign: TextAlign.center, style: Theme.of(context).textTheme.bodyText2!.copyWith(color: EaselAppTheme.kLightPurple, fontSize: 15.sp, fontWeight: FontWeight.w600)),
+                child: Text(kPreviewNoticeText,
+                    textAlign: TextAlign.center, style: Theme.of(context).textTheme.bodyText2!.copyWith(color: EaselAppTheme.kLightPurple, fontSize: 15.sp, fontWeight: FontWeight.w600)),
               ),
               Align(
                 alignment: Alignment.centerLeft,
@@ -68,7 +70,7 @@ class _PreviewScreenState extends State<PreviewScreen> {
                           context.show(message: kErrAddAudioThumbnail);
                         }
                       } else {
-                        await GetIt.I.get<CreatorHubViewModel>().saveNft(provider.file, provider);
+                        await provider.saveNftLocally(UploadStep.assetUploaded);
 
                         widget.controller.nextPage(duration: const Duration(milliseconds: 10), curve: Curves.easeIn);
                         Navigator.of(context).pop();
