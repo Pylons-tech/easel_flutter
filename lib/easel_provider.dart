@@ -506,14 +506,14 @@ class EaselProvider extends ChangeNotifier {
         loading.dismiss();
       }
 
-      final loading = Loading().showLoading(message: "$kUploadingMessage ${_nftFormat.format}...");
-      final fileUploadResponse = await remoteDataSource.uploadFile(_file!);
+      // final loading = Loading().showLoading(message: "$kUploadingMessage ${_nftFormat.format}...");
+      // final fileUploadResponse = await remoteDataSource.uploadFile(_file!);
       setAudioThumbnail(null);
-      loading.dismiss();
-      if (fileUploadResponse.status == Status.error) {
-        navigatorKey.currentState!.overlay!.context.show(message: fileUploadResponse.errorMessage ?? kErrUpload);
-        return false;
-      false}
+      // loading.dismiss();
+      // if (fileUploadResponse.status == Status.error) {
+      //   navigatorKey.currentState!.overlay!.context.show(message: fileUploadResponse.errorMessage ?? kErrUpload);
+      //   return false;
+      // }
 
       String residual = DecString.decStringFromDouble(double.parse(royaltyController.text.trim()));
 
@@ -562,11 +562,14 @@ class EaselProvider extends ChangeNotifier {
                   StringParam(key: kNFTURL, value: GetIt.I.get<CreatorHubViewModel>().nft.url),
                   StringParam(
                       key: kThumbnailUrl,
-                      value: videoThumbnail != null
-                          ? "$ipfsDomain/${thumbnailUploadResponse.data?.value?.cid ?? ""}"
-                          : audioThumbnail != null
-                              ? "$ipfsDomain/${audioThumbnailUploadResponse.data?.value?.cid ?? ""}"
-                              : ""),
+                      value: GetIt.I.get<CreatorHubViewModel>().nft.thumbnailUrl
+
+                      // videoThumbnail != null
+                      //     ? "$ipfsDomain/${thumbnailUploadResponse.data?.value?.cid ?? ""}"
+                      //     : audioThumbnail != null
+                      //         ? "$ipfsDomain/${audioThumbnailUploadResponse.data?.value?.cid ?? ""}"
+                      //         : ""
+                  ),
                   StringParam(key: kCreator, value: artistNameController.text.trim()),
                 ],
                 mutableStrings: [],

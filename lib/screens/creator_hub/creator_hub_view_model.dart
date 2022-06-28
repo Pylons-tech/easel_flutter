@@ -50,16 +50,28 @@ class CreatorHubViewModel extends ChangeNotifier {
   late NFT nft;
 
 
-  Future<void> saveNft({File? file,required File assetThumbnail,required EaselProvider provider}) async {
+  Future<void> saveNft({required EaselProvider provider}) async {
     final loading = Loading().showLoading(message: "uploading".tr());
     provider.initilizeTextEditingControllerWithEmptyValues();
-    final uploadResponse = await remoteDataSource.uploadFile(file!);
-    loading.dismiss();
+    final uploadResponse = await remoteDataSource.uploadFile(provider.file!);
     if (uploadResponse.status == Status.error) {
+      loading.dismiss();
+
       navigatorKey.currentState!.overlay!.context.show(message: uploadResponse.errorMessage ?? kErrUpload);
+
       return;
     }
-     nft = NFT(
+    var uploadThumbnailResponse;
+    if(provider.nftFormat.format == kAudioText || provider.nftFormat.format == kVideoText ){
+       uploadThumbnailResponse = await remoteDataSource.uploadFile(provider.audioThumbnail!);
+      loading.dismiss();
+      if (uploadThumbnailResponse.status == Status.error) {
+        navigatorKey.currentState!.overlay!.context.show(message: uploadThumbnailResponse.errorMessage ?? kErrUpload);
+        return;
+      }
+    }
+
+    nft = NFT(
       id: null,
       type: NftType.TYPE_ITEM.name,
       ibcCoins: IBCCoins.upylon.name,
@@ -70,7 +82,7 @@ class CreatorHubViewModel extends ChangeNotifier {
       duration: provider.fileDuration.toString(),
       description: provider.descriptionController.text,
       recipeID: provider.recipeId,
-      thumbnailUrl: "",
+      thumbnailUrl:provider.nftFormat.format == kImageText ? "" : "$ipfsDomain/${uploadThumbnailResponse.data?.value?.cid}",
       name: provider.artistNameController.text,
       url: "$ipfsDomain/${uploadResponse.data?.value?.cid}",
       price: provider.priceController.text,
@@ -81,7 +93,9 @@ class CreatorHubViewModel extends ChangeNotifier {
       navigatorKey.currentState!.overlay!.context.show(message: "save_error".tr());
       return;
     }
+
   }
+
 
   Future<void> deleteDraft(int? id) async {
     bool success = await localDataSource.deleteNft(id!);
