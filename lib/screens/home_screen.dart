@@ -13,7 +13,6 @@ import 'package:easel_flutter/utils/screen_responsive.dart';
 import 'package:easel_flutter/utils/space_utils.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:get_it/get_it.dart';
 import 'package:provider/provider.dart';
 
 import 'choose_format_screen.dart';
@@ -52,9 +51,11 @@ class _HomeScreenState extends State<HomeScreen> {
 
   @override
   Widget build(BuildContext context) {
+    EaselProvider easelProvider = context.read<EaselProvider>();
+
     return WillPopScope(
       onWillPop: () async {
-        await GetIt.I.get<CreatorHubViewModel>().getDraftsList();
+        await context.read<CreatorHubViewModel>().getDraftsList();
 
         return true;
       },
@@ -94,9 +95,21 @@ class _HomeScreenState extends State<HomeScreen> {
                                     onPressed: () {
                                       ScaffoldMessenger.of(context).hideCurrentSnackBar();
                                       _pageController.previousPage(duration: const Duration(milliseconds: 300), curve: Curves.easeIn);
-                                      if (_currentPage.value == 0) {
-                                        Navigator.of(context).pop();
+
+                                      switch(_currentPage.value){
+                                        case 0:
+                                          context.read<CreatorHubViewModel>().getDraftsList();
+                                          Navigator.of(context).pop();
+                                          break;
+
+                                        case 1:
+                                          easelProvider.willLoadFirstTime = true;
+                                          break;
+                                        case 2:
+                                          easelProvider.willLoadFirstTime = false;
+                                          break;
                                       }
+
                                     },
                                     icon: const Icon(
                                       Icons.arrow_back_ios,
@@ -140,13 +153,7 @@ class _HomeScreenState extends State<HomeScreen> {
                           break;
                       }
                     },
-                    children: [
-                      ChooseFormatScreen(controller: _pageController),
-                      DescribeScreen(controller: _pageController),
-                      PriceScreen(controller: _pageController),
-                      MintScreen(controller: _pageController),
-                      PublishScreen(controller: _pageController)
-                    ],
+                    children: [ChooseFormatScreen(controller: _pageController), DescribeScreen(controller: _pageController), PriceScreen(controller: _pageController), MintScreen(controller: _pageController), PublishScreen(controller: _pageController)],
                   ),
                 ),
               ],

@@ -51,7 +51,7 @@ class CreatorHubViewModel extends ChangeNotifier {
 
   Future<void> saveNft({required EaselProvider provider, required PageController controller}) async {
     final loading = Loading().showLoading(message: "uploading".tr());
-    provider.initilizeTextEditingControllerWithEmptyValues();
+    provider.initializeTextEditingControllerWithEmptyValues();
     final uploadResponse = await remoteDataSource.uploadFile(provider.file!);
     if (uploadResponse.status == Status.error) {
       loading.dismiss();
@@ -87,6 +87,8 @@ class CreatorHubViewModel extends ChangeNotifier {
       name: provider.artistNameController.text,
       url: "$ipfsDomain/${uploadResponse.data?.value?.cid}",
       price: provider.priceController.text,
+      fileName: provider.fileName,
+      cid: "${uploadResponse.data?.value?.cid}"
     );
 
     bool success = await localDataSource.saveNft(nft);

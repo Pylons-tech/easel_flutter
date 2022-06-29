@@ -2,7 +2,6 @@ import 'dart:async';
 import 'dart:developer';
 import 'dart:io';
 import 'package:easel_flutter/screens/creator_hub/creator_hub_view_model.dart';
-import 'package:get_it/get_it.dart';
 import 'package:provider/provider.dart';
 
 import '../utils/enums.dart';
@@ -64,6 +63,8 @@ class EaselProvider extends ChangeNotifier {
   late NFT _publishedNFTClicked;
 
   NFT get publishedNFTClicked => _publishedNFTClicked;
+
+  bool willLoadFirstTime = true;
 
   void setPublishedNFTClicked(NFT nft) {
     _publishedNFTClicked = nft;
@@ -174,10 +175,12 @@ class EaselProvider extends ChangeNotifier {
     priceController.clear();
     royaltyController.clear();
     hashtagsList.clear();
+    willLoadFirstTime = true;
+    isFreeDrop = false;
     notifyListeners();
   }
 
-  void initilizeTextEditingControllerWithEmptyValues() {
+  void initializeTextEditingControllerWithEmptyValues() {
     artistNameController.text = '';
     artNameController.text = '';
     descriptionController.text = '';
@@ -427,15 +430,7 @@ class EaselProvider extends ChangeNotifier {
   /// return true or false depending on the response from the wallet app
   Future<bool> createCookbook() async {
     _cookbookId = await localDataSource.autoGenerateCookbookId();
-    var cookBook1 = Cookbook(
-        creator: "",
-        iD: _cookbookId,
-        name: "Easel Cookbook",
-        description: "Cookbook for Easel NFT",
-        developer: artistNameController.text,
-        version: "v0.0.1",
-        supportEmail: "easel@pylons.tech",
-        enabled: true);
+    var cookBook1 = Cookbook(creator: "", iD: _cookbookId, name: "Easel Cookbook", description: "Cookbook for Easel NFT", developer: artistNameController.text, version: "v0.0.1", supportEmail: "easel@pylons.tech", enabled: true);
 
     var response = await PylonsWallet.instance.txCreateCookbook(cookBook1);
     if (response.success) {
@@ -484,13 +479,13 @@ class EaselProvider extends ChangeNotifier {
         return false;
       }
     }
-   setVideoThumbnail(null);
+    setVideoThumbnail(null);
     setAudioThumbnail(null);
     _recipeId = localDataSource.autoGenerateEaselId();
 
     String residual = DecString.decStringFromDouble(double.parse(royaltyController.text.trim()));
 
-    String price =isFreeDrop? "0" : (double.parse(priceController.text.replaceAll(",", "").trim()) * 1000000).toStringAsFixed(0);
+    String price = isFreeDrop ? "0" : (double.parse(priceController.text.replaceAll(",", "").trim()) * 1000000).toStringAsFixed(0);
     var recipe = Recipe(
         cookbookID: _cookbookId,
         iD: _recipeId,
@@ -499,8 +494,7 @@ class EaselProvider extends ChangeNotifier {
         description: descriptionController.text.trim(),
         version: "v0.1.0",
         coinInputs: [
-
-          isFreeDrop? CoinInput(): CoinInput(coins: [Coin(amount: price, denom:  _selectedDenom.symbol)])
+          isFreeDrop ? CoinInput() : CoinInput(coins: [Coin(amount: price, denom: _selectedDenom.symbol)])
         ],
         itemInputs: [],
         costPerBlock: Coin(denom: kUpylon, amount: "0"),
@@ -517,10 +511,7 @@ class EaselProvider extends ChangeNotifier {
                 ])
               ],
               longs: [
-                LongParam(key: kQuantity, weightRanges: [
-                  IntWeightRange(
-                      lower: Int64(int.parse(noOfEditionController.text.replaceAll(",", "").trim())), upper: Int64(int.parse(noOfEditionController.text.replaceAll(",", "").trim())), weight: Int64(1))
-                ]),
+                LongParam(key: kQuantity, weightRanges: [IntWeightRange(lower: Int64(int.parse(noOfEditionController.text.replaceAll(",", "").trim())), upper: Int64(int.parse(noOfEditionController.text.replaceAll(",", "").trim())), weight: Int64(1))]),
                 LongParam(key: kWidth, weightRanges: [IntWeightRange(lower: Int64(_fileWidth), upper: Int64(_fileWidth), weight: Int64(1))]),
                 LongParam(key: kHeight, weightRanges: [IntWeightRange(lower: Int64(_fileHeight), upper: Int64(_fileHeight), weight: Int64(1))]),
                 LongParam(key: kDuration, weightRanges: [IntWeightRange(lower: Int64(_fileDuration), upper: Int64(_fileDuration), weight: Int64(1))]),
@@ -532,7 +523,7 @@ class EaselProvider extends ChangeNotifier {
                 StringParam(key: kHashtags, value: hashtagsList.join('#')),
                 StringParam(key: kNFTFormat, value: _nftFormat.format),
                 StringParam(key: kNFTURL, value: navigatorKey.currentState!.overlay!.context.read<CreatorHubViewModel>().nft.url),
-                StringParam(key: kThumbnailUrl, value:  navigatorKey.currentState!.overlay!.context.read<CreatorHubViewModel>().nft.thumbnailUrl),
+                StringParam(key: kThumbnailUrl, value: navigatorKey.currentState!.overlay!.context.read<CreatorHubViewModel>().nft.thumbnailUrl),
                 StringParam(key: kCreator, value: artistNameController.text.trim()),
               ],
               mutableStrings: [],
@@ -722,7 +713,7 @@ class EaselProvider extends ChangeNotifier {
       switch (nftFormat.format) {
         case kAudioText:
           if (audioThumbnail != null) {
-            await GetIt.I.get<CreatorHubViewModel>().saveNft(provider: provider, controller: controller);
+            await navigatorKey.currentState!.overlay!.context.read<CreatorHubViewModel>().saveNft(provider: provider, controller: controller);
           } else {
             navigatorKey.currentState!.overlay!.context.show(message: kErrAddAudioThumbnail);
           }
@@ -730,14 +721,14 @@ class EaselProvider extends ChangeNotifier {
 
         case kVideoText:
           if (videoThumbnail != null) {
-            await GetIt.I.get<CreatorHubViewModel>().saveNft(provider: provider, controller: controller);
+            await navigatorKey.currentState!.overlay!.context.read<CreatorHubViewModel>().saveNft(provider: provider, controller: controller);
           } else {
             navigatorKey.currentState!.overlay!.context.show(message: kErrVideoThumbnail);
           }
           break;
 
         default:
-          await GetIt.I.get<CreatorHubViewModel>().saveNft(provider: provider, controller: controller);
+          await navigatorKey.currentState!.overlay!.context.read<CreatorHubViewModel>().saveNft(provider: provider, controller: controller);
       }
     } else {
       navigatorKey.currentState!.overlay!.context.show(message: kErrPickFileFetch);
