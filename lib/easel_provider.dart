@@ -57,6 +57,8 @@ class EaselProvider extends ChangeNotifier {
   String? _cookbookId;
   String _recipeId = "";
   var stripeAccountExists = false;
+  bool isFreeDrop = false;
+
   Denom _selectedDenom = Denom.availableDenoms.first;
   List<Denom> supportedDenomList = [];
 
@@ -186,21 +188,19 @@ class EaselProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-  setTextFieldValuesDescription(String? artName, String? description) {
+  void setTextFieldValuesDescription({String? artName, String? description}) {
     artNameController.text = artName ?? "";
     descriptionController.text = description ?? "";
     notifyListeners();
   }
 
-  setTextFieldValuesPrice(String? royalties, String? price, String? edition, String? denom) {
+  void setTextFieldValuesPrice({String? royalties, String? price, String? edition, String? denom}) {
     royaltyController.text = royalties ?? "";
     priceController.text = price ?? "";
     noOfEditionController.text = edition ?? "";
     _selectedDenom = denom != "" ? Denom.availableDenoms.firstWhere((element) => element.name == denom) : Denom.availableDenoms.first;
     notifyListeners();
   }
-
-  bool isFreeDrop = false;
 
   void updateIsFreeDropStatus(bool val) {
     isFreeDrop = val;
@@ -772,15 +772,14 @@ class EaselProvider extends ChangeNotifier {
     ApiResponse thumbnailUploadResponse = ApiResponse.error(errorMessage: "");
     ApiResponse audioThumbnailUploadResponse = ApiResponse.error(errorMessage: "");
     bool success = false;
-
-    initilizeTextEditingControllerWithEmptyValues();
-
-    if (_file!.existsSync()) {
+    if (!_file!.existsSync()) {
+      navigatorKey.currentState!.overlay!.context.show(message: kErrPickFileFetch);
+      return false;
+    } else {
+      initilizeTextEditingControllerWithEmptyValues();
       if (audioThumbnail != null) {
         final loading = Loading().showLoading(message: kUploadingThumbnailMessage);
-
         audioThumbnailUploadResponse = await remoteDataSource.uploadFile(audioThumbnail!);
-
         loading.dismiss();
       }
       audioPlayerHelper.pauseAudio();
@@ -836,9 +835,6 @@ class EaselProvider extends ChangeNotifier {
       setAudioThumbnail(null);
 
       setVideoThumbnail(null);
-    } else {
-      navigatorKey.currentState!.overlay!.context.show(message: kErrPickFileFetch);
-      return false;
     }
 
     return success;

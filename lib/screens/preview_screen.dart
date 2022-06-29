@@ -63,13 +63,12 @@ class _PreviewScreenState extends State<PreviewScreen> {
                 child: PylonsButton(
                     onPressed: () async {
                       if (provider.nftFormat.format == kAudioText) {
-                        if (provider.audioThumbnail != null) {
+                        if (provider.audioThumbnail == null) {
+                          context.show(message: kErrAddAudioThumbnail);
+                        } else {
                           await provider.saveNftLocally(UploadStep.assetUploaded);
-
                           widget.controller.nextPage(duration: const Duration(milliseconds: 10), curve: Curves.easeIn);
                           Navigator.of(context).pop();
-                        } else {
-                          context.show(message: kErrAddAudioThumbnail);
                         }
                       } else {
                         await provider.saveNftLocally(UploadStep.assetUploaded);

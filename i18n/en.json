@@ -12,13 +12,15 @@
   "save_error": "Failed to save draft",
   "upload": "Upload",
   "upload_to_ipfs": "Upload to IPFS",
-  "content_id":"Content ID",
-  "tx_receipt":"TX receipt",
-  "close":"Close",
-  "is_this_free" : "Is this a free drop?",
+  "content_id": "Content ID",
+  "tx_receipt": "TX receipt",
+  "close": "Close",
+  "is_this_free": "Is this a free drop?",
   "yes": "Yes",
   "no": "No",
-
+  "select_nft_file": "Select NFT file",
+  "nft_detail_text": "NFT Details",
+  "nft_pricing": "NFT Pricing",
   "update_failed": "Upload Failed",
   "view_on_pylons": "View On Pylons",
   "go_to_dashboard": "Go to Dashboard",
@@ -34,6 +36,5 @@
   "compressing_thumbnail": "Compressing Thumbnail",
   "uploading": "Uploading ...",
   "nft_name": "{}",
-  "could_not_uploaded" :"{} could not be uploaded"
-
+  "could_not_uploaded": "{} could not be uploaded"
 }

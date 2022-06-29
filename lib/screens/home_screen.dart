@@ -1,4 +1,5 @@
 import 'package:easel_flutter/easel_provider.dart';
+import 'package:easel_flutter/repository/repository.dart';
 import 'package:easel_flutter/screens/creator_hub/creator_hub_view_model.dart';
 import 'package:easel_flutter/screens/custom_widgets/step_labels.dart';
 import 'package:easel_flutter/screens/custom_widgets/steps_indicator.dart';
@@ -6,11 +7,13 @@ import 'package:easel_flutter/screens/describe_screen.dart';
 import 'package:easel_flutter/screens/price_screen.dart';
 import 'package:easel_flutter/screens/published_screen.dart';
 import 'package:easel_flutter/services/datasources/local_datasource.dart';
+import 'package:easel_flutter/services/datasources/remote_datasource.dart';
 import 'package:easel_flutter/utils/constants.dart';
 import 'package:easel_flutter/utils/easel_app_theme.dart';
 import 'package:easel_flutter/utils/enums.dart';
 import 'package:easel_flutter/utils/screen_responsive.dart';
 import 'package:easel_flutter/utils/space_utils.dart';
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get_it/get_it.dart';
@@ -33,8 +36,7 @@ class HomeScreen extends StatefulWidget {
 
 class _HomeScreenState extends State<HomeScreen> {
   late EaselProvider easelProvider;
-  var cacheManager = GetIt.I.get<LocalDataSource>();
-  final int _numPages = 4;
+  var cacheManager = GetIt.I.get<Repository>();
   late final PageController _pageController;
 
   late ValueNotifier<int> _currentPage;
@@ -43,7 +45,7 @@ class _HomeScreenState extends State<HomeScreen> {
 
   NFT? nft;
   String? from;
-  final List pageTitles = [kSelectNFTText, kDetailNftText, kPriceNftText, ''];
+  final List pageTitles = ["select_nft_file".tr(), "nft_detail_text".tr(), "nft_pricing".tr(), ''];
 
   @override
   void initState() {
@@ -55,23 +57,26 @@ class _HomeScreenState extends State<HomeScreen> {
 
       if (mounted) {
         Future.delayed(const Duration(milliseconds: 1), () {
-          easelProvider.setTextFieldValuesDescription(nft?.name, nft?.description);
-          easelProvider.setTextFieldValuesPrice(nft?.tradePercentage, nft?.price, nft?.quantity.toString(), nft?.denom);
+          easelProvider.setTextFieldValuesDescription(artName: nft?.name, description: nft?.description);
+          easelProvider.setTextFieldValuesPrice(royalties: nft?.tradePercentage, price: nft?.price, edition: nft?.quantity.toString(), denom: nft?.denom);
         });
       }
 
-      if (nft?.step == UploadStep.assetUploaded.name) {
+      if (nft!.step == UploadStep.assetUploaded.name) {
         _currentPage = ValueNotifier(1);
         _currentStep = ValueNotifier(1);
         _pageController = PageController(keepPage: true, initialPage: 1);
-      } else if (nft?.step == UploadStep.descriptionAdded.name) {
+        return;
+      } else if (nft!.step == UploadStep.descriptionAdded.name) {
         _currentPage = ValueNotifier(1);
         _currentStep = ValueNotifier(1);
         _pageController = PageController(keepPage: true, initialPage: 2);
-      } else if (nft?.step == UploadStep.priceAdded.name) {
+        return;
+      } else if (nft!.step == UploadStep.priceAdded.name) {
         _currentPage = ValueNotifier(2);
         _currentStep = ValueNotifier(2);
         _pageController = PageController(keepPage: true, initialPage: 3);
+        return;
       } else {
         _currentPage = ValueNotifier(0);
         _currentStep = ValueNotifier(0);

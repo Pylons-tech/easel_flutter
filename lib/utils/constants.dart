@@ -151,12 +151,7 @@ const kUploadNFTText = 'Upload NFT file';
 const kEditNFTText = 'Edit your NFT Details';
 const kPreviewYourNFTText = 'Preview your NFT file';
 const kListNftText = 'List NFT';
-
 const kPublishNftText = 'Publish NFT';
-
-const kSelectNFTText = 'Select NFT file';
-const kDetailNftText = 'NFT Details';
-const kPriceNftText = 'NFT Pricing';
 const kUploadText = 'Upload';
 const kEditText = 'Edit';
 const kPreviewText = 'Preview';
