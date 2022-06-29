@@ -174,7 +174,7 @@ class EaselProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-  void initilizeTextEditingControllerWithEmptyValues() {
+  void initializeTextEditingControllerWithEmptyValues() {
     artistNameController.text = '';
     artNameController.text = '';
     descriptionController.text = '';

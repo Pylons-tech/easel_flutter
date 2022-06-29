@@ -50,7 +50,7 @@ class CreatorHubViewModel extends ChangeNotifier {
 
   Future<void> saveNft(File? file, EaselProvider provider) async {
     final loading = Loading().showLoading(message: "uploading".tr());
-    provider.initilizeTextEditingControllerWithEmptyValues();
+    provider.initializeTextEditingControllerWithEmptyValues();
     final uploadResponse = await remoteDataSource.uploadFile(file!);
     loading.dismiss();
     if (uploadResponse.status == Status.error) {
