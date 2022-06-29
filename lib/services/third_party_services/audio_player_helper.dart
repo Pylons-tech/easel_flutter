@@ -1,7 +1,6 @@
 import 'dart:async';
 import 'dart:io';
 
-import 'package:flutter/material.dart';
 import 'package:just_audio/just_audio.dart';
 
 /// Abstract Class for providing audio player
@@ -68,6 +67,7 @@ class AudioPlayerHelperImpl implements AudioPlayerHelper {
     }
   }
 
+  @override
   Future<bool> setUrl({required String url}) async {
     try {
       await audioPlayer.setUrl(url);
