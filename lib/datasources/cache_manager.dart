@@ -20,7 +20,7 @@ abstract class CacheManager {
   /// This method will delete the value from the cache
   /// Input: [key] the key of the value
   /// Output: [True] or [False] will return the it is removed or not
-  bool deleteDynamicData({required String key});
+  bool deleteCacheDynamic({required String key});
 
   /// This method will return the saved String if exists
   /// Input: [key] the key of the value
@@ -40,7 +40,7 @@ class CacheManagerImp extends CacheManager {
   }
 
   @override
-  bool deleteDynamicData({required String key}) {
+  bool deleteCacheDynamic({required String key}) {
     if (cache.containsKey(key)) {
       cache.remove(key);
       return true;

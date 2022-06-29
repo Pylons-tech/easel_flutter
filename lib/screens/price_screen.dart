@@ -103,6 +103,7 @@ class _PriceScreenState extends State<PriceScreen> {
                       Visibility(
                         visible: !provider.isFreeDrop,
                         child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             VerticalSpace(20.h),
                             EaselPriceInputField(
@@ -126,7 +127,7 @@ class _PriceScreenState extends State<PriceScreen> {
                             ),
                             _priceFieldError.isNotEmpty
                                 ? Padding(
-                                    padding: EdgeInsets.only(left: 10.w, right: 10.w, top: 2.h),
+                                    padding: EdgeInsets.only(left: 8.w, right: 10.w, top: 2.h),
                                     child: Text(
                                       _priceFieldError,
                                       style: TextStyle(

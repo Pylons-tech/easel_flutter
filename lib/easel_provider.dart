@@ -186,9 +186,17 @@ class EaselProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-  setTextFieldValues(String? artName, String? description) {
+  setTextFieldValuesDescription(String? artName, String? description) {
     artNameController.text = artName ?? "";
     descriptionController.text = description ?? "";
+    notifyListeners();
+  }
+
+  setTextFieldValuesPrice(String? royalties, String? price, String? edition, String? denom) {
+    royaltyController.text = royalties ?? "";
+    priceController.text = price ?? "";
+    noOfEditionController.text = edition ?? "";
+    _selectedDenom = denom != "" ? Denom.availableDenoms.firstWhere((element) => element.name == denom) : Denom.availableDenoms.first;
     notifyListeners();
   }
 
@@ -760,37 +768,80 @@ class EaselProvider extends ChangeNotifier {
     });
   }
 
-  Future<void> saveNftLocally(UploadStep step) async {
-    final loading = Loading().showLoading(message: "uploading".tr());
-    initilizeTextEditingControllerWithEmptyValues();
-    final uploadResponse = await remoteDataSource.uploadFile(file!);
-    loading.dismiss();
-    if (uploadResponse.status == Status.error) {
-      navigatorKey.currentState!.overlay!.context.show(message: uploadResponse.errorMessage ?? kErrUpload);
-      return;
-    }
-    NFT nft = NFT(
-      id: null,
-      type: NftType.TYPE_ITEM.name,
-      ibcCoins: IBCCoins.upylon.name,
-      assetType: nftFormat.format,
-      cookbookID: cookbookId ?? "",
-      width: fileWidth.toString(),
-      height: fileHeight.toString(),
-      duration: fileDuration.toString(),
-      description: descriptionController.text,
-      recipeID: recipeId,
-      step: step.name,
-      thumbnailUrl: "",
-      name: artistNameController.text,
-      url: "$ipfsDomain/${uploadResponse.data?.value?.cid}",
-      price: priceController.text,
-    );
+  Future<bool> saveNftLocally(UploadStep step) async {
+    ApiResponse thumbnailUploadResponse = ApiResponse.error(errorMessage: "");
+    ApiResponse audioThumbnailUploadResponse = ApiResponse.error(errorMessage: "");
+    bool success = false;
 
-    bool success = await localDataSource.saveNft(nft);
-    if (!success) {
-      navigatorKey.currentState!.overlay!.context.show(message: "save_error".tr());
+    initilizeTextEditingControllerWithEmptyValues();
+
+    if (_file!.existsSync()) {
+      if (audioThumbnail != null) {
+        final loading = Loading().showLoading(message: kUploadingThumbnailMessage);
+
+        audioThumbnailUploadResponse = await remoteDataSource.uploadFile(audioThumbnail!);
+
+        loading.dismiss();
+      }
+      audioPlayerHelper.pauseAudio();
+
+      if (videoThumbnail != null) {
+        final loading = Loading().showLoading(message: kUploadingThumbnailMessage);
+        thumbnailUploadResponse = await remoteDataSource.uploadFile(videoThumbnail!);
+
+        loading.dismiss();
+      }
+
+      final loading = Loading().showLoading(message: "$kUploadingMessage ${_nftFormat.format}...");
+      final fileUploadResponse = await remoteDataSource.uploadFile(_file!);
+      loading.dismiss();
+      if (fileUploadResponse.status == Status.error) {
+        navigatorKey.currentState!.overlay!.context.show(message: fileUploadResponse.errorMessage ?? kErrUpload);
+        return false;
+      }
+
+      if (fileUploadResponse.status == Status.error) {
+        navigatorKey.currentState!.overlay!.context.show(message: fileUploadResponse.errorMessage ?? kErrUpload);
+        return false;
+      }
+      NFT nft = NFT(
+        id: null,
+        type: NftType.TYPE_ITEM.name,
+        ibcCoins: IBCCoins.upylon.name,
+        assetType: nftFormat.format,
+        cookbookID: cookbookId ?? "",
+        width: fileWidth.toString(),
+        denom: "",
+        tradePercentage: "",
+        height: fileHeight.toString(),
+        duration: fileDuration.toString(),
+        description: descriptionController.text,
+        recipeID: recipeId,
+        step: step.name,
+        thumbnailUrl: videoThumbnail != null
+            ? "$ipfsDomain/${thumbnailUploadResponse.data?.value?.cid ?? ""}"
+            : audioThumbnail != null
+                ? "$ipfsDomain/${audioThumbnailUploadResponse.data?.value?.cid ?? ""}"
+                : "",
+        name: artistNameController.text,
+        url: "$ipfsDomain/${fileUploadResponse.data?.value?.cid}",
+        price: priceController.text,
+      );
+
+      success = await localDataSource.saveNft(nft);
+      if (!success) {
+        navigatorKey.currentState!.overlay!.context.show(message: "save_error".tr());
+        return false;
+      }
+      setAudioThumbnail(null);
+
+      setVideoThumbnail(null);
+    } else {
+      navigatorKey.currentState!.overlay!.context.show(message: kErrPickFileFetch);
+      return false;
     }
+
+    return success;
   }
 
   Future<bool> updateNftFromDescription(int? id) async {
@@ -803,7 +854,7 @@ class EaselProvider extends ChangeNotifier {
   }
 
   Future<bool> updateNftFromPrice(int? id) async {
-    bool success = await localDataSource.updateNftFromPrice(id!, royaltyController.text, priceController.text, noOfEditionController.text, UploadStep.priceAdded.name);
+    bool success = await localDataSource.updateNftFromPrice(id!, royaltyController.text, priceController.text, noOfEditionController.text, UploadStep.priceAdded.name, selectedDenom.name);
     if (!success) {
       navigatorKey.currentState!.overlay!.context.show(message: "save_error".tr());
       return false;

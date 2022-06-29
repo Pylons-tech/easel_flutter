@@ -55,7 +55,8 @@ class EaselPriceInputField extends StatelessWidget {
                               hintStyle: TextStyle(fontSize: 18.sp, color: EaselAppTheme.kGrey),
                               border: const OutlineInputBorder(borderSide: BorderSide.none),
                               floatingLabelBehavior: FloatingLabelBehavior.always,
-                              contentPadding: EdgeInsets.fromLTRB(10.w, 0.h, 10.w, 0.h))),
+                              contentPadding: EdgeInsets.fromLTRB(10.w, 0.h, 10.w, 0.h)
+                          )),
                     ),
                   ),
                 ),

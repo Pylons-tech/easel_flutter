@@ -57,7 +57,7 @@ abstract class LocalDataSource {
 
   Future<bool> updateNftFromDescription(int id, String nftName, String nftDescription, String creatorName, String step);
 
-  Future<bool> updateNftFromPrice(int id, String tradePercentage, String price, String quantity, String step);
+  Future<bool> updateNftFromPrice(int id, String tradePercentage, String price, String quantity, String step, String name);
 
   /// This method will delete draft from the local database
   /// Input: [id] the id of the draft which the user wants to delete
@@ -86,6 +86,11 @@ abstract class LocalDataSource {
   /// Input: [key] the key of the value
   /// Output: [String] the value of the key
   dynamic getCacheDynamicType({required String key});
+
+  /// This method will delete the value from the cache
+  /// Input: [key] the key of the value
+  /// Output: [value] will return the value that is just removed
+  dynamic deleteCacheDynamic({required String key});
 }
 
 class LocalDataSourceImpl implements LocalDataSource {
@@ -182,9 +187,9 @@ class LocalDataSourceImpl implements LocalDataSource {
   }
 
   @override
-  Future<bool> updateNftFromPrice(int id, String tradePercentage, String price, String quantity, String step) async {
+  Future<bool> updateNftFromPrice(int id, String tradePercentage, String price, String quantity, String step, String denom) async {
     try {
-      await database.nftDao.updateNFTFromPrice(id, tradePercentage, price, quantity, step);
+      await database.nftDao.updateNFTFromPrice(id, tradePercentage, price, quantity, step, denom);
       return true;
     } catch (e) {
       debugPrint('An error occured $e');
@@ -234,5 +239,10 @@ class LocalDataSourceImpl implements LocalDataSource {
   @override
   void setCacheString({required String key, required String value}) {
     cacheManager.setString(key: key, value: value);
+  }
+
+  @override
+  deleteCacheDynamic({required String key}) {
+    cacheManager.deleteCacheDynamic(key: key);
   }
 }

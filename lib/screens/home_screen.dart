@@ -42,37 +42,48 @@ class _HomeScreenState extends State<HomeScreen> {
   late ValueNotifier<int> _currentStep;
 
   NFT? nft;
+  String? from;
   final List pageTitles = [kSelectNFTText, kDetailNftText, kPriceNftText, ''];
 
   @override
   void initState() {
     easelProvider = Provider.of<EaselProvider>(context, listen: false);
-    nft = cacheManager.getCacheDynamicType(key: "nft");
+    from = cacheManager.getCacheDynamicType(key: "from");
 
-    if (nft?.step == UploadStep.assetUploaded.name) {
-      _currentPage = ValueNotifier(1);
-      _currentStep = ValueNotifier(1);
-      _pageController = PageController(keepPage: true, initialPage: 1);
-    } else if (nft?.step == UploadStep.descriptionAdded.name) {
+    if (from == "draft") {
+      nft = cacheManager.getCacheDynamicType(key: "nft");
+
       if (mounted) {
-        Future.delayed(const Duration(milliseconds: 500), () {
-          easelProvider.setTextFieldValues(nft?.name, nft?.description);
+        Future.delayed(const Duration(milliseconds: 1), () {
+          easelProvider.setTextFieldValuesDescription(nft?.name, nft?.description);
+          easelProvider.setTextFieldValuesPrice(nft?.tradePercentage, nft?.price, nft?.quantity.toString(), nft?.denom);
         });
       }
-      _currentPage = ValueNotifier(1);
-      _currentStep = ValueNotifier(1);
-      _pageController = PageController(keepPage: true, initialPage: 2);
-    } else if (nft?.step == UploadStep.priceAdded.name) {
-      _currentPage = ValueNotifier(2);
-      _currentStep = ValueNotifier(2);
-      _pageController = PageController(keepPage: true, initialPage: 3);
+
+      if (nft?.step == UploadStep.assetUploaded.name) {
+        _currentPage = ValueNotifier(1);
+        _currentStep = ValueNotifier(1);
+        _pageController = PageController(keepPage: true, initialPage: 1);
+      } else if (nft?.step == UploadStep.descriptionAdded.name) {
+        _currentPage = ValueNotifier(1);
+        _currentStep = ValueNotifier(1);
+        _pageController = PageController(keepPage: true, initialPage: 2);
+      } else if (nft?.step == UploadStep.priceAdded.name) {
+        _currentPage = ValueNotifier(2);
+        _currentStep = ValueNotifier(2);
+        _pageController = PageController(keepPage: true, initialPage: 3);
+      } else {
+        _currentPage = ValueNotifier(0);
+        _currentStep = ValueNotifier(0);
+        _pageController = PageController(keepPage: true, initialPage: 0);
+      }
     } else {
       _currentPage = ValueNotifier(0);
       _currentStep = ValueNotifier(0);
       _pageController = PageController(keepPage: true, initialPage: 0);
     }
 
-    cacheManager.deleteCacheString(key: 'nft');
+    cacheManager.deleteCacheString(key: "from");
 
     super.initState();
   }

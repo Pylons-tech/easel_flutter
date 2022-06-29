@@ -175,7 +175,7 @@ class _DescribeScreenState extends State<DescribeScreen> {
                         FocusScope.of(context).unfocus();
                         if (_formKey.currentState!.validate()) {
                           if (_artNameFieldError.isEmpty && _artistNameFieldError.isEmpty && _descriptionFieldError.isEmpty) {
-                            context.read<EaselProvider>().updateNftFromDescription(nft?.id);
+                            context.read<EaselProvider>().updateNftFromDescription(nft!.id);
 
                             context.read<EaselProvider>().saveArtistName(provider.artistNameController.text.trim());
                             widget.controller.nextPage(duration: const Duration(milliseconds: 300), curve: Curves.easeIn);
