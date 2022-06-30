@@ -96,20 +96,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                       ScaffoldMessenger.of(context).hideCurrentSnackBar();
                                       _pageController.previousPage(duration: const Duration(milliseconds: 300), curve: Curves.easeIn);
 
-                                      switch(_currentPage.value){
-                                        case 0:
-                                          context.read<CreatorHubViewModel>().getDraftsList();
-                                          Navigator.of(context).pop();
-                                          break;
-
-                                        case 1:
-                                          easelProvider.willLoadFirstTime = true;
-                                          break;
-                                        case 2:
-                                          easelProvider.willLoadFirstTime = false;
-                                          break;
-                                      }
-
+                                      getCurrentPageExecution(easelProvider:easelProvider );
                                     },
                                     icon: const Icon(
                                       Icons.arrow_back_ios,
@@ -162,5 +149,21 @@ class _HomeScreenState extends State<HomeScreen> {
         ),
       ),
     );
+  }
+
+ void  getCurrentPageExecution({required EaselProvider easelProvider}){
+    switch(_currentPage.value){
+      case 0:
+        context.read<CreatorHubViewModel>().getDraftsList();
+        Navigator.of(context).pop();
+        break;
+
+      case 1:
+        easelProvider.willLoadFirstTime = true;
+        break;
+      case 2:
+        easelProvider.willLoadFirstTime = false;
+        break;
+    }
   }
 }

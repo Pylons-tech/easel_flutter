@@ -48,7 +48,7 @@ class CreatorHubViewModel extends ChangeNotifier {
     bool success = await localDataSource.deleteNft(id!);
 
     if (!success) {
-      navigatorKey.currentState!.overlay!.context.show(message: "delete_error".tr());
+      navigatorKey.showMsg(message: "delete_error".tr());
       return;
     }
     getDraftsList();

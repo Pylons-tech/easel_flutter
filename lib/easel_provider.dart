@@ -439,7 +439,7 @@ class EaselProvider extends ChangeNotifier {
       return true;
     }
 
-    navigatorKey.currentState!.overlay!.context.show(message: response.error);
+    navigatorKey.showMsg(message: response.error);
     return false;
   }
 
@@ -547,11 +547,11 @@ class EaselProvider extends ChangeNotifier {
     setVideoThumbnail(null);
 
     if (response.success) {
-      navigatorKey.currentState!.overlay!.context.show(message: kRecipeCreated);
+      navigatorKey.showMsg(message: kRecipeCreated);
       log("${response.data}");
       return true;
     } else {
-      navigatorKey.currentState!.overlay!.context.show(message: "$kErrRecipe ${response.error}");
+      navigatorKey.showMsg(message: "$kErrRecipe ${response.error}");
       return false;
     }
   }
@@ -709,13 +709,13 @@ class EaselProvider extends ChangeNotifier {
 
   Future<void> saveNftAsset({required EaselProvider provider, required PageController controller}) async {
     if ( !_file!.existsSync()) {
-      navigatorKey.currentState!.overlay!.context.show(message: kErrPickFileFetch);
+      navigatorKey.showMsg(message: kErrPickFileFetch);
       return;
     }
       switch (nftFormat.format) {
         case kAudioText:
           if (audioThumbnail == null) {
-            navigatorKey.currentState!.overlay!.context.show(message: "err_add_audio_thumbnail".tr());
+            navigatorKey.showMsg(message: "err_add_audio_thumbnail".tr());
             return;
           }
           await saveNft( controller: controller);
@@ -723,7 +723,7 @@ class EaselProvider extends ChangeNotifier {
 
         case kVideoText:
           if (videoThumbnail == null) {
-            navigatorKey.currentState!.overlay!.context.show(message: "err_add_video_thumbnail".tr());
+            navigatorKey.showMsg(message: "err_add_video_thumbnail".tr());
             return;
           }
           await saveNft( controller: controller);
@@ -744,7 +744,7 @@ class EaselProvider extends ChangeNotifier {
     if (uploadResponse.status == Status.error) {
       loading.dismiss();
 
-      navigatorKey.currentState!.overlay!.context.show(message: uploadResponse.errorMessage ?? kErrUpload);
+      navigatorKey.showMsg(message: uploadResponse.errorMessage ?? kErrUpload);
 
       return;
     }
@@ -755,7 +755,7 @@ class EaselProvider extends ChangeNotifier {
       if (uploadThumbnailResponse.status == Status.error) {
         loading.dismiss();
 
-        navigatorKey.currentState!.overlay!.context.show(message: uploadThumbnailResponse.errorMessage ?? kErrUpload);
+        navigatorKey.showMsg(message: uploadThumbnailResponse.errorMessage ?? kErrUpload);
         return;
       }
     }
@@ -781,7 +781,7 @@ class EaselProvider extends ChangeNotifier {
 
     bool success = await localDataSource.saveNft(nft);
     if (!success) {
-      navigatorKey.currentState!.overlay!.context.show(message: "save_error".tr());
+      navigatorKey.showMsg(message: "save_error".tr());
       return;
     }
     controller.nextPage(duration: const Duration(milliseconds: 10), curve: Curves.easeIn);
