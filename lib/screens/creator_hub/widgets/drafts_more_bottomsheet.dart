@@ -39,7 +39,7 @@ class DraftsMoreBottomSheet  extends StatelessWidget {
 
     final viewModel = context.watch<CreatorHubViewModel>();
     return ClipPath(
-      clipper: BottomSheetClipper(),
+      clipper: BottomSheetClipperDialog(),
 
       child: Container(
         color: EaselAppTheme.kLightGrey02,
