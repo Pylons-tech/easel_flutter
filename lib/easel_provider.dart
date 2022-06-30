@@ -1,7 +1,9 @@
 import 'dart:async';
 import 'dart:developer';
 import 'dart:io';
+import 'package:easel_flutter/screens/creator_hub/creator_hub_view_model.dart';
 import 'package:easy_localization/easy_localization.dart';
+import 'package:provider/provider.dart';
 
 import '../utils/enums.dart';
 
@@ -779,6 +781,7 @@ class EaselProvider extends ChangeNotifier {
   }
 
   Future<bool> saveNftLocally(UploadStep step) async {
+    CreatorHubViewModel creatorHubViewModel = navigatorKey.currentState!.overlay!.context.read<CreatorHubViewModel>();
     ApiResponse thumbnailUploadResponse = ApiResponse.error(errorMessage: "");
     ApiResponse audioThumbnailUploadResponse = ApiResponse.error(errorMessage: "");
     bool success = false;
@@ -842,6 +845,7 @@ class EaselProvider extends ChangeNotifier {
         navigatorKey.currentState!.overlay!.context.show(message: "save_error".tr());
         return false;
       }
+      creatorHubViewModel.getDraftsList();
       setAudioThumbnail(null);
 
       setVideoThumbnail(null);
@@ -851,20 +855,27 @@ class EaselProvider extends ChangeNotifier {
   }
 
   Future<bool> updateNftFromDescription(int? id) async {
+    CreatorHubViewModel creatorHubViewModel = navigatorKey.currentState!.overlay!.context.read<CreatorHubViewModel>();
+
     bool success = await localDataSource.updateNftFromDescription(id!, artNameController.text, descriptionController.text, artistNameController.text, UploadStep.descriptionAdded.name);
     if (!success) {
       navigatorKey.currentState!.overlay!.context.show(message: "save_error".tr());
       return false;
     }
+    creatorHubViewModel.getDraftsList();
     return true;
   }
 
   Future<bool> updateNftFromPrice(int? id) async {
+    CreatorHubViewModel creatorHubViewModel = navigatorKey.currentState!.overlay!.context.read<CreatorHubViewModel>();
+
     bool success = await localDataSource.updateNftFromPrice(id!, royaltyController.text, priceController.text, noOfEditionController.text, UploadStep.priceAdded.name, selectedDenom.name);
     if (!success) {
       navigatorKey.currentState!.overlay!.context.show(message: "save_error".tr());
       return false;
     }
+    creatorHubViewModel.getDraftsList();
+
     return true;
   }
 }
