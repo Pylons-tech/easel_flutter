@@ -1,4 +1,5 @@
 import 'package:easel_flutter/easel_provider.dart';
+import 'package:easel_flutter/repository/repository.dart';
 import 'package:easel_flutter/screens/custom_widgets/initial_draft_detail_dialog.dart';
 import 'package:easel_flutter/utils/constants.dart';
 import 'package:easel_flutter/utils/easel_app_theme.dart';
@@ -26,7 +27,7 @@ class DescribeScreen extends StatefulWidget {
 }
 
 class _DescribeScreenState extends State<DescribeScreen> {
-  var cacheManager = GetIt.I.get<LocalDataSource>();
+  var cacheManager = GetIt.I.get<Repository>();
   final _formKey = GlobalKey<FormState>();
 
   String _artNameFieldError = '';

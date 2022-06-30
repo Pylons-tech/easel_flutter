@@ -17,6 +17,7 @@ import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get_it/get_it.dart';
+import 'package:provider/provider.dart';
 
 import '../models/nft.dart';
 import 'choose_format_screen.dart';
@@ -48,7 +49,9 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   void initState() {
     easelProvider = Provider.of<EaselProvider>(context, listen: false);
-    from = cacheManager.getCacheDynamicType(key: "from");
+    from = cacheManager.getCacheString(key: "from");
+    cacheManager.deleteCacheString(key: "from");
+
 
     if (from == "draft") {
       nft = cacheManager.getCacheDynamicType(key: "nft");
@@ -86,7 +89,6 @@ class _HomeScreenState extends State<HomeScreen> {
       _pageController = PageController(keepPage: true, initialPage: 0);
     }
 
-    cacheManager.deleteCacheString(key: "from");
 
     super.initState();
   }

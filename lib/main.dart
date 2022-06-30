@@ -19,7 +19,7 @@ import 'package:pylons_sdk/pylons_sdk.dart';
 
 bool isTablet = false;
 
-Future<void> main() async{
+Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
   await EasyLocalization.ensureInitialized();
@@ -29,13 +29,15 @@ Future<void> main() async{
 
   isTablet = MediaQueryData.fromWindow(WidgetsBinding.instance.window).size.shortestSide >= TABLET_MIN_WIDTH;
 
-  runApp(EasyLocalization(
-      supportedLocales: const [Locale('en'), Locale('ru')],
+  runApp(
+    EasyLocalization(
+      supportedLocales: const [Locale('en', 'US'), Locale('ru', 'RU')],
       path: 'i18n',
-      fallbackLocale: const Locale('en'),
+      fallbackLocale: const Locale('en', 'US'),
       saveLocale: false,
-      useOnlyLangCode: true,
-      child:const MyApp()));
+      child: const MyApp(),
+    ),
+  );
 }
 
 final navigatorKey = GlobalKey<NavigatorState>();
@@ -50,7 +52,6 @@ class MyApp extends StatelessWidget {
       providers: [
         ChangeNotifierProvider(create: (_) => GetIt.I.get<EaselProvider>()),
         ChangeNotifierProvider(create: (_) => GetIt.I.get<CreatorHubViewModel>()),
-
       ],
       child: ScreenUtilInit(
           minTextAdapt: true,
@@ -62,11 +63,10 @@ class MyApp extends StatelessWidget {
                     child: widget!,
                   );
                 },
-            localizationsDelegates: context.localizationDelegates,
-            supportedLocales: context.supportedLocales,
-            locale: context.locale,
-
-            title: 'Easel',
+                localizationsDelegates: context.localizationDelegates,
+                supportedLocales: context.supportedLocales,
+                locale: context.locale,
+                title: 'Easel',
                 navigatorKey: navigatorKey,
                 theme: EaselAppTheme.theme(context),
                 initialRoute: '/',

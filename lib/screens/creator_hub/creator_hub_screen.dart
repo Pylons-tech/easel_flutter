@@ -238,7 +238,7 @@ class _CreatorHubScreenState extends State<CreatorHubScreen> {
                 width: 45.h,
                 child: CachedNetworkImage(
                   fit: BoxFit.fill,
-                  imageUrl: nft.assetType==kImageText? nft.url:nft.thumbnailUrl,
+                  imageUrl: nft.assetType == kImageText ? nft.url : nft.thumbnailUrl,
                   errorWidget: (a, b, c) => const Center(child: Icon(Icons.error_outline)),
                   placeholder: (context, url) => Center(
                     child: SizedBox(height: 30.h, width: 30.h, child: const CircularProgressIndicator()),
@@ -273,11 +273,11 @@ class _CreatorHubScreenState extends State<CreatorHubScreen> {
               ),
               InkWell(
                   onTap: () {
-                    final DraftsBottomSheet draftsBottomSheet = DraftsBottomSheet(buildContext: context, nft: nft, localDataSource: sl());
+                    final DraftsBottomSheet draftsBottomSheet = DraftsBottomSheet(buildContext: context, nft: nft, repository: sl());
                     draftsBottomSheet.show();
                   },
                   child: Padding(
-                    padding:   EdgeInsets.all(4.0.w),
+                    padding: EdgeInsets.all(4.0.w),
                     child: SvgPicture.asset(kSvgMoreOption),
                   ))
             ],

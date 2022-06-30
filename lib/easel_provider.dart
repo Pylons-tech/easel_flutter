@@ -768,6 +768,16 @@ class EaselProvider extends ChangeNotifier {
     });
   }
 
+  void initilizeTextEditingControllerWithEmptyValues() {
+    artistNameController.text = '';
+    artNameController.text = '';
+    descriptionController.text = '';
+    noOfEditionController.text = '';
+    priceController.text = '';
+    royaltyController.text = '';
+    notifyListeners();
+  }
+
   Future<bool> saveNftLocally(UploadStep step) async {
     ApiResponse thumbnailUploadResponse = ApiResponse.error(errorMessage: "");
     ApiResponse audioThumbnailUploadResponse = ApiResponse.error(errorMessage: "");

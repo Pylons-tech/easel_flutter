@@ -1,6 +1,7 @@
 import 'dart:developer';
 
 import 'package:easel_flutter/models/nft.dart';
+import 'package:easel_flutter/repository/repository.dart';
 import 'package:easel_flutter/screens/creator_hub/creator_hub_view_model.dart';
 import 'package:easel_flutter/utils/constants.dart';
 import 'package:easel_flutter/utils/easel_app_theme.dart';
@@ -18,28 +19,28 @@ import '../creator_hub_view_model.dart';
 class DraftsBottomSheet {
   final BuildContext buildContext;
   final NFT nft;
-  final LocalDataSource localDataSource;
+  final Repository repository;
 
-  DraftsBottomSheet({required this.buildContext, required this.nft, required this.localDataSource});
+  DraftsBottomSheet({required this.buildContext, required this.nft, required this.repository});
 
-  Future<void> show() async{
+  Future<void> show() async {
     showModalBottomSheet(
         backgroundColor: Colors.transparent,
         context: buildContext,
         builder: (BuildContext bc) {
           return DraftsMoreBottomSheet(
             nft: nft,
-            localDataSource: localDataSource,
+            repository: repository,
           );
         });
   }
 }
 
 class DraftsMoreBottomSheet extends StatelessWidget {
-  const DraftsMoreBottomSheet({Key? key, required this.nft, required this.localDataSource}) : super(key: key);
+  const DraftsMoreBottomSheet({Key? key, required this.nft, required this.repository}) : super(key: key);
 
   final NFT nft;
-  final LocalDataSource localDataSource;
+  final Repository repository;
 
   @override
   Widget build(BuildContext context) {
@@ -55,8 +56,8 @@ class DraftsMoreBottomSheet extends StatelessWidget {
                 title: "publish",
                 svg: kSvgPublish,
                 onPressed: () {
-                  localDataSource.setCacheDynamicType(key: "nft", value: nft);
-                  localDataSource.setCacheString(key: "from", value: "draft");
+                  repository.setCacheDynamicType(key: "nft", value: nft);
+                  repository.setCacheString(key: "from", value: "draft");
                   Navigator.of(context).pop();
                   Navigator.of(context).pushNamed(RouteUtil.ROUTE_HOME);
                 }),
@@ -105,5 +106,3 @@ Widget moreOptionTile({required String title, required String svg, required Func
     ),
   );
 }
-
-

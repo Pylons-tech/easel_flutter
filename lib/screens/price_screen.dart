@@ -1,5 +1,6 @@
 import 'package:easel_flutter/easel_provider.dart';
 import 'package:easel_flutter/models/nft.dart';
+import 'package:easel_flutter/repository/repository.dart';
 import 'package:easel_flutter/widgets/clipped_button.dart';
 import 'package:easel_flutter/utils/amount_formatter.dart';
 import 'package:easel_flutter/utils/constants.dart';
@@ -28,7 +29,7 @@ class PriceScreen extends StatefulWidget {
 
 class _PriceScreenState extends State<PriceScreen> {
   final _formKey = GlobalKey<FormState>();
-  var cacheManager = GetIt.I.get<LocalDataSource>();
+  var cacheManager = GetIt.I.get<Repository>();
   NFT? nft;
   String _royaltiesFieldError = '';
   String _noOfEditionsFieldError = '';
@@ -44,7 +45,6 @@ class _PriceScreenState extends State<PriceScreen> {
   void initState() {
     nft = cacheManager.getCacheDynamicType(key: "nft");
     super.initState();
-
   }
 
   @override
@@ -142,7 +142,6 @@ class _PriceScreenState extends State<PriceScreen> {
                               kNetworkFeeWarnText,
                               style: TextStyle(color: EaselAppTheme.kLightPurple, fontSize: 14.sp, fontWeight: FontWeight.w800),
                             ),
-
                           ],
                         ),
                       ),
@@ -190,7 +189,6 @@ class _PriceScreenState extends State<PriceScreen> {
                         "$kRoyaltyNoteText “$kMinRoyalty”.",
                         style: TextStyle(color: EaselAppTheme.kLightPurple, fontWeight: FontWeight.w800, fontSize: 14.sp),
                       ),
-
                       VerticalSpace(20.h),
                       EaselTextField(
                         key: ValueKey(provider.selectedDenom.name),
@@ -254,7 +252,6 @@ class _PriceScreenState extends State<PriceScreen> {
                           context.read<EaselProvider>().updateNftFromPrice(nft?.id);
                           widget.controller.nextPage(duration: const Duration(milliseconds: 300), curve: Curves.easeIn);
                         }
-
                       }
                     },
                     btnText: kContinue,
