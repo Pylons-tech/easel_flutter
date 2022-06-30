@@ -2,6 +2,7 @@ import 'dart:developer';
 import 'dart:io';
 
 import 'package:dio/dio.dart';
+import 'package:easel_flutter/datasources/database.dart';
 import 'package:easel_flutter/easel_provider.dart';
 import 'package:easel_flutter/repository/repository.dart';
 import 'package:easel_flutter/screens/creator_hub/creator_hub_view_model.dart';
@@ -15,7 +16,6 @@ import 'package:easel_flutter/utils/file_utils_helper.dart';
 import 'package:get_it/get_it.dart';
 import 'package:internet_connection_checker/internet_connection_checker.dart';
 import 'package:just_audio/just_audio.dart';
-import 'package:just_audio/just_audio.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:video_player/video_player.dart';
 
@@ -28,9 +28,8 @@ void init() {
   _registerProviders();
   _registerLocalDataSources();
   _registerRemoteDataSources();
-  _registerServices();
-  _registerRepository();
   _registerExternalDependencies();
+  _registerServices();
 }
 
 void _registerExternalDependencies() {
@@ -47,6 +46,9 @@ void _registerExternalDependencies() {
           }),
     ),
   );
+  sl.registerSingletonAsync<AppDatabase>(
+          () => $FloorAppDatabase.databaseBuilder('app_database.db').build());
+
 
   sl.registerLazySingleton<AudioPlayer>(() => AudioPlayer());
 
@@ -59,7 +61,7 @@ void _registerRemoteDataSources() {
 }
 
 void _registerLocalDataSources() {
-  sl.registerLazySingleton<LocalDataSource>(() => LocalDataSourceImpl(sharedPreferences: sl()));
+  sl.registerLazySingleton<LocalDataSource>(() => LocalDataSourceImpl(sl(), sl()));
 }
 
 void _registerProviders() {
@@ -70,11 +72,8 @@ void _registerProviders() {
         audioPlayerHelper: sl(),
         fileUtilsHelper: sl(),
       ));
-  sl.registerLazySingleton<CreatorHubViewModel>(() => CreatorHubViewModel(
-        localDataSource: sl(),
-        remoteDataSource: sl(),
-        repository: sl(),
-      ));
+
+  sl.registerLazySingleton<CreatorHubViewModel>(() => CreatorHubViewModel(sl(), sl()));
 }
 
 void _registerServices() {
@@ -82,8 +81,7 @@ void _registerServices() {
   sl.registerFactory<VideoPlayerHelper>(() => VideoPlayerHelperImp(sl()));
   sl.registerFactory<AudioPlayerHelper>(() => AudioPlayerHelperImpl(sl()));
   sl.registerLazySingleton<NetworkInfo>(() => NetworkInfoImpl(sl()));
+  sl.registerLazySingleton<Repository>(() => RepositoryImp(networkInfo: sl(), localDataSource: sl(), remoteDataSource: sl()));
+
 }
 
-void _registerRepository() {
-  sl.registerLazySingleton<Repository>(() => RepositoryImp(networkInfo: sl(), localDataSource: sl(), remoteDataSource: sl()));
-}

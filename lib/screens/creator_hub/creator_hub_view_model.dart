@@ -1,29 +1,24 @@
-import 'dart:developer';
-
+import 'dart:io';
+import 'package:easel_flutter/easel_provider.dart';
+import 'package:easel_flutter/main.dart';
+import 'package:easel_flutter/models/api_response.dart';
 import 'package:easel_flutter/models/nft.dart';
-import 'package:easel_flutter/repository/repository.dart';
 import 'package:easel_flutter/services/datasources/local_datasource.dart';
 import 'package:easel_flutter/services/datasources/remote_datasource.dart';
 import 'package:easel_flutter/utils/constants.dart';
+import 'package:easel_flutter/utils/enums.dart';
+import 'package:easel_flutter/utils/extension_util.dart';
 import 'package:easel_flutter/widgets/loading.dart';
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/cupertino.dart';
 
 class CreatorHubViewModel extends ChangeNotifier {
   final LocalDataSource localDataSource;
   final RemoteDataSource remoteDataSource;
-  Repository repository;
 
-  CreatorHubViewModel({required this.localDataSource, required this.remoteDataSource, required this.repository});
+  CreatorHubViewModel(this.localDataSource, this.remoteDataSource);
 
-  int _publishedRecipesLength = 0;
-
-  get publishedRecipesLength => _publishedRecipesLength;
-
-  set publishedRecipeLength(int value) {
-    _publishedRecipesLength = value;
-
-    notifyListeners();
-  }
+  List<NFT> nftList = [];
 
   bool _publishCollapse = true;
 
@@ -43,43 +38,56 @@ class CreatorHubViewModel extends ChangeNotifier {
     notifyListeners();
   }
 
-  final List<NFT> _publishedNFTsList = [];
+  Future<void> getDraftsList() async {
+    final loading = Loading().showLoading(message: "loading ...");
 
-  List<NFT> get publishedNFTsList => _publishedNFTsList;
+    nftList = await localDataSource.getNfts();
 
-  String? getCookbookIdFromLocalDatasource() {
-    return localDataSource.getCookbookId();
-  }
-
-  void getRecipesList() async {
-    final loading = Loading().showLoading(message: kPleaseWait);
-
-    final cookBookId = getCookbookIdFromLocalDatasource();
-    if (cookBookId == null) {
-      loading.dismiss();
-      return;
-    }
-
-    final recipesListEither = await repository.getRecipesBasedOnCookBookId(cookBookId: cookBookId);
-
-    if (recipesListEither.isLeft()) {
-      loading.dismiss();
-      return;
-    }
-
-    final recipesList = recipesListEither.getOrElse(() => []);
-    _publishedNFTsList.clear();
-    if (recipesList.isNotEmpty) {
-      for (final recipe in recipesList) {
-        final nft = NFT.fromRecipe(recipe);
-
-        _publishedNFTsList.add(nft);
-      }
-    }
-
-    publishedRecipeLength = publishedNFTsList.length;
     loading.dismiss();
 
-    log('recipesLength: $publishedRecipesLength');
+    notifyListeners();
+  }
+
+  Future<void> saveNft(File? file, EaselProvider provider) async {
+    final loading = Loading().showLoading(message: "uploading".tr());
+    provider.initializeTextEditingControllerWithEmptyValues();
+    final uploadResponse = await remoteDataSource.uploadFile(file!);
+    loading.dismiss();
+    if (uploadResponse.status == Status.error) {
+      navigatorKey.currentState!.overlay!.context.show(message: uploadResponse.errorMessage ?? kErrUpload);
+      return;
+    }
+    NFT nft = NFT(
+      id: null,
+      type: NftType.TYPE_ITEM.name,
+      ibcCoins: IBCCoins.upylon.name,
+      assetType: provider.nftFormat.format,
+      cookbookID: provider.cookbookId ?? "",
+      width: provider.fileWidth.toString(),
+      height: provider.fileHeight.toString(),
+      duration: provider.fileDuration.toString(),
+      description: provider.descriptionController.text,
+      recipeID: provider.recipeId,
+      thumbnailUrl: "",
+      name: provider.artistNameController.text,
+      url: "$ipfsDomain/${uploadResponse.data?.value?.cid}",
+      price: provider.priceController.text,
+    );
+
+    bool success = await localDataSource.saveNft(nft);
+    if (!success) {
+      navigatorKey.currentState!.overlay!.context.show(message: "save_error".tr());
+      return;
+    }
+  }
+
+  Future<void> deleteDraft(int? id) async {
+    bool success = await localDataSource.deleteNft(id!);
+
+    if (!success) {
+      navigatorKey.currentState!.overlay!.context.show(message: "delete_error".tr());
+      return;
+    }
+    getDraftsList();
   }
 }

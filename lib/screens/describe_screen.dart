@@ -1,4 +1,5 @@
 import 'package:easel_flutter/easel_provider.dart';
+import 'package:easel_flutter/screens/custom_widgets/initial_draft_detail_dialog.dart';
 import 'package:easel_flutter/utils/constants.dart';
 import 'package:easel_flutter/utils/easel_app_theme.dart';
 import 'package:easel_flutter/utils/space_utils.dart';
@@ -38,7 +39,11 @@ class _DescribeScreenState extends State<DescribeScreen> {
     super.initState();
 
     context.read<EaselProvider>().toCheckSavedArtistName();
+    WidgetsBinding.instance.addPostFrameCallback((_) async {
+       DraftDetailDialog(context: context).show();
 
+
+    });
      }
 
   @override
@@ -163,13 +168,9 @@ class _DescribeScreenState extends State<DescribeScreen> {
                       onPressed: () async {
                         FocusScope.of(context).unfocus();
                         if (_formKey.currentState!.validate()) {
-                          if (_artNameFieldError.isEmpty &&
-                              _artistNameFieldError.isEmpty &&
-                              _descriptionFieldError.isEmpty) {
-
+                          if (_artNameFieldError.isEmpty && _artistNameFieldError.isEmpty && _descriptionFieldError.isEmpty) {
                             context.read<EaselProvider>().saveArtistName(provider.artistNameController.text.trim());
-                            widget.controller
-                                .nextPage(duration: const Duration(milliseconds: 300), curve: Curves.easeIn);
+                            widget.controller.nextPage(duration: const Duration(milliseconds: 300), curve: Curves.easeIn);
                           }
                         }
                       },

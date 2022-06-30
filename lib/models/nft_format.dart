@@ -26,12 +26,12 @@ class NftFormat {
   static List<NftFormat> get supportedFormats => [
         NftFormat(
             format: kImageText,
-            extensions: ['jpg', 'png', 'svg', 'heif', 'jpeg'],
+            extensions: ['jpg', 'png', 'svg', 'heif'],
             badge: kSvgNftFormatImage,
             color: EaselAppTheme.kLightRed),
         NftFormat(
             format: kVideoText,
-            extensions: ['mp4', 'mov', 'm4v', 'avi'],
+            extensions: ['mp4'],
             badge: kSvgNftFormatVideo,
             color: EaselAppTheme.kDarkGreen),
         NftFormat(
@@ -42,7 +42,7 @@ class NftFormat {
         ),
         NftFormat(
             format: kAudioText,
-            extensions: ['wav', 'aiff', 'alac', 'flac', 'mp3', 'aac', 'wma', 'ogg'],
+            extensions: [ 'mp3', 'flac',  'wav'],
             badge: kSvgNftFormatAudio,
             color: EaselAppTheme.kBlue),
       ];

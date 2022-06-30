@@ -1,10 +1,26 @@
 {
   "creator_hub": "автор центр",
   "for_sale": "Продается",
-  "publish": "изданный",
+  "published": "изданный",
   "publish_total": "изданный ({})",
   "draft_total": "проект ({})",
   "draft": "проект",
+  "publish": "издавать",
+  "delete": "удалять",
+  "view": "Вид на IFPS",
+  "delete_error": "Не удалось удалить черновик",
+  "save_error": "Не удалось сохранить черновик",
+  "upload": "загрузить",
+  "upload_to_ipfs": "загрузить на IPFS",
+  "content_id":"содержание ID",
+  "tx_receipt":"TX чек",
+  "close":"близко",
+  "is_this_free" : "это бесплатное падение?",
+  "yes": "да",
+  "no": "нет",
+  "uploading": "Загрузка...",
+  "nft_name": "NFT имя",
+
   "upload_your_nft_file": "Загрузите ваш NFT-файл",
   "pick_the_file": "Выберите файл, который вы хотите преобразовать в NFT!",
   "edit_your_nft": "Отредактируйте свои данные NFT",
@@ -12,5 +28,7 @@
   "manage_your_nft": "Управляйте своим NFT с помощью",
   "pylons_app": "Приложение пилонов",
   "you_can_collect_manage_your_nft": "Вы можете хранить, собирать и управлять всеми своими NFT в приложении Pylons!",
-  "compressing_thumbnail": "Compressing Thumbnail"
+  "compressing_thumbnail": "Compressing Thumbnail",
+  "could_not_uploaded" :"{} не удалось загрузить"
+
 }

@@ -42,6 +42,10 @@ const kSvgNftFormatVideo = 'assets/images/svg/nft_format_video.svg';
 const kSvgNftFormat3d = 'assets/images/svg/nft_format_3d.svg';
 const kSvgNftFormatAudio = 'assets/images/svg/nft_format_audio.svg';
 const kSvgMoreOption = 'assets/images/svg/more_options.svg';
+const kSvgPublish = 'assets/images/svg/publish.svg';
+const kSvgDelete = 'assets/images/svg/delete.svg';
+const kSvgView = 'assets/images/svg/view.svg';
+
 const kDummyImg = 'assets/images/svg/dummy_img.png';
 const kVideoIcon = 'assets/images/video_icon.png';
 
@@ -74,10 +78,7 @@ const int kFileCompressQuality = 50;
 
 const double kPrecision = 100000000000000000;
 
-
-
 const suffixes = ["B", "KB", "MB", "GB", "TB"];
-
 
 /// ````Reserved words, symbols, IDs etc
 const kCookbookId = 'cookbook_id';
@@ -100,6 +101,7 @@ const kJunoText = 'Juno';
 const kNone = 'None';
 const kPleaseWait = 'Please Wait';
 const kBack = 'Back';
+const String kUniversalFontFamily = "UniversalSans";
 
 /// ```Text constants
 const kPreviewNoticeText = 'The resolution & orientation of your NFT will remain fixed as seen in the grid.';
@@ -119,7 +121,7 @@ const kNoOfEditionText = 'Number of editions';
 const kEnterRoyaltyText = 'Enter royalty in percentage';
 const kRoyaltiesText = 'Royalties';
 const kRoyaltyHintText = '5%';
-const kRoyaltyNoteText = 'Percentage of all secondary market sales automatically distributed to the NFT creator.\nTo opt out set value to';
+const kRoyaltyNoteText = 'Percentage of all secondary market sales automatically distributed to the NFT creator';
 const kRoyaltyRangeText = 'Allowed royalty is between';
 const kMinIsText = 'Minimum is';
 const kMaxIsTextText = 'Maximum is';
@@ -142,14 +144,19 @@ const kDurationText = 'Duration';
 const kDateText = 'Date';
 const kRoyaltyText = 'Royalty';
 const kPreview3dModelText = 'Click here to preview\nyour selected 3D Model';
+const kMintMoreText = 'Mint More';
+const kGoToWalletText = 'Go to Wallet';
 const kChooseNFTFormatText = 'Choose your NFT format';
 const kUploadNFTText = 'Upload NFT file';
 const kEditNFTText = 'Edit your NFT Details';
 const kPreviewYourNFTText = 'Preview your NFT file';
-const kDescribeNftText = 'Describe NFT';
-const kPriceNftText = 'Price NFT';
 const kListNftText = 'List NFT';
+
 const kPublishNftText = 'Publish NFT';
+
+const kSelectNFTText = 'Select NFT file';
+const kDetailNftText = 'NFT Details';
+const kPriceNftText = 'NFT Pricing';
 const kUploadText = 'Upload';
 const kEditText = 'Edit';
 const kPreviewText = 'Preview';
@@ -191,7 +198,6 @@ const kErrPickFileFetch = 'Error occurred while uploading the file, please try a
 const kErrAddAudioThumbnail = 'Please select audio thumbnail';
 const kErrUpload = 'Upload error occurred';
 const kErrFileNotPicked = 'Pick a file';
-const kErrFileCouldNotUploaded = 'could not be uploaded';
 const kErrUnsupportedFormat = 'Unsupported format';
 const kErrFileMetaParse = 'Error occurred while parsing the chosen media file:';
 const kErrRecipe = 'Recipe error :';
@@ -232,10 +238,10 @@ const kCompressingMessage = "Compressing Thumbnail";
 const kUploadingMessage = "Uploading";
 const kLoadingMessage = "Loading...";
 
-final List stepLabels = [kUploadText, kEditText, kPriceText, kListText];
+final List stepLabels = ["upload", "draft", "publish"];
+
 final List<String> imageAllowedExtsAndroid = ["png", "jpg", "jpeg", "svg", "heif"];
 final List<String> audioAllowedExtsAndroid = ['mp3', 'ogg', 'wav'];
-
 
 /// Nft viewmodel key values
 const String kNameKey = "Name";
@@ -269,6 +275,7 @@ const String kEthereumSymbol = "weth-wei";
 const String kDefault = 'Default';
 
 const String kMyEaselNFT = 'My Easel NFT';
+
 /// Supported Formats
 
 const mp3 = "mp3";

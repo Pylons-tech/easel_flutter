@@ -6,6 +6,7 @@ import 'package:easel_flutter/screens/preview_screen.dart';
 import 'package:easel_flutter/utils/constants.dart';
 import 'package:easel_flutter/utils/easel_app_theme.dart';
 import 'package:easel_flutter/utils/screen_responsive.dart';
+import 'package:easy_localization/easy_localization.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -38,12 +39,13 @@ class _ChooseFormatScreenState extends State<ChooseFormatScreen> {
       provider.resolveNftFormat(context, result.extension!);
       if (easelProvider.fileUtilsHelper.getFileSizeInGB(File(result.path!).lengthSync()) <= kFileSizeLimitInGB) {
         await provider.setFile(context, result);
+
         Navigator.push(
           context,
           MaterialPageRoute(builder: (context) => PreviewScreen(controller: widget.controller)),
         );
       } else {
-        errorText.value = '${result.name} $kErrFileCouldNotUploaded';
+        errorText.value = 'could_not_uploaded'.tr(args:[result.name]);
         showErrorDialog();
       }
     } else {
@@ -154,7 +156,7 @@ class _CardWidget extends StatelessWidget {
           child: Container(
               width: 0.4.sw,
               height: 0.4.sw,
-              padding: EdgeInsets.symmetric(horizontal: 0.05.sw, vertical: 4.5.h),
+              padding: EdgeInsets.symmetric(horizontal: 0.02.sw, vertical: 4.5.h),
               decoration: BoxDecoration(color: NftFormat.supportedFormats[typeIdx].color),
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,

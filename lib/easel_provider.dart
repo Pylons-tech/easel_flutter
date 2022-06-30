@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'dart:developer';
 import 'dart:io';
+import '../utils/enums.dart';
 
 import 'package:easel_flutter/main.dart';
 import 'package:easel_flutter/models/api_response.dart';
@@ -102,6 +103,16 @@ class EaselProvider extends ChangeNotifier {
 
   Denom get selectedDenom => _selectedDenom;
 
+  String get recipeId => _recipeId;
+
+  String? get cookbookId => _cookbookId;
+
+  TextEditingController artistNameController = TextEditingController();
+  TextEditingController artNameController = TextEditingController();
+  TextEditingController descriptionController = TextEditingController();
+  TextEditingController noOfEditionController = TextEditingController();
+  TextEditingController priceController = TextEditingController();
+  TextEditingController royaltyController = TextEditingController();
   File? _audioThumbnail;
 
   File? get audioThumbnail => _audioThumbnail;
@@ -115,12 +126,6 @@ class EaselProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-  final artistNameController = TextEditingController();
-  final artNameController = TextEditingController();
-  final descriptionController = TextEditingController();
-  final noOfEditionController = TextEditingController();
-  final priceController = TextEditingController();
-  final royaltyController = TextEditingController();
   final List<String> hashtagsList = [];
 
   String currentUsername = '';
@@ -162,11 +167,27 @@ class EaselProvider extends ChangeNotifier {
     artistNameController.clear();
     artNameController.clear();
     descriptionController.clear();
-    descriptionController.clear();
     noOfEditionController.clear();
     priceController.clear();
     royaltyController.clear();
     hashtagsList.clear();
+    notifyListeners();
+  }
+
+  void initializeTextEditingControllerWithEmptyValues() {
+    artistNameController.text = '';
+    artNameController.text = '';
+    descriptionController.text = '';
+    noOfEditionController.text = '';
+    priceController.text = '';
+    royaltyController.text = '';
+    notifyListeners();
+  }
+
+  bool isFreeDrop = false;
+
+  void updateIsFreeDropStatus(bool val) {
+    isFreeDrop = val;
     notifyListeners();
   }
 
@@ -346,7 +367,7 @@ class EaselProvider extends ChangeNotifier {
   }
 
   void initializePlayers({required NFT publishedNFT}) {
-    switch (publishedNFT.assetType) {
+    switch (publishedNFT.assetType.toAssetTypeEnum()) {
       case AssetType.Audio:
         initializeAudioPlayer(publishedNFTUrl: publishedNFT.url);
         break;
@@ -455,6 +476,7 @@ class EaselProvider extends ChangeNotifier {
       if (isCookBookCreated) {
         // get device cookbook id
         _cookbookId = localDataSource.getCookbookId();
+        notifyListeners();
       } else {
         return false;
       }

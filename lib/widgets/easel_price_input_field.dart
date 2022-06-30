@@ -10,8 +10,7 @@ import '../main.dart';
 import '../models/denom.dart';
 
 class EaselPriceInputField extends StatelessWidget {
-  const EaselPriceInputField({Key? key, this.controller, this.validator, this.inputFormatters = const []})
-      : super(key: key);
+  const EaselPriceInputField({Key? key, this.controller, this.validator, this.inputFormatters = const []}) : super(key: key);
 
   final TextEditingController? controller;
   final String? Function(String?)? validator;
@@ -43,8 +42,7 @@ class EaselPriceInputField extends StatelessWidget {
                     child: Align(
                       alignment: Alignment.center,
                       child: TextFormField(
-                          style:
-                              TextStyle(fontSize: 18.sp, fontWeight: FontWeight.w400, color: EaselAppTheme.kDarkText),
+                          style: TextStyle(fontSize: 18.sp, fontWeight: FontWeight.w400, color: EaselAppTheme.kDarkText),
                           controller: controller,
                           validator: validator,
                           minLines: 1,
@@ -105,9 +103,7 @@ class _CurrencyDropDown extends StatelessWidget {
                         items: provider.supportedDenomList.map((Denom value) {
                           return DropdownMenuItem<String>(
                             value: value.symbol,
-                            child: Row(
-                                mainAxisAlignment: MainAxisAlignment.start,
-                                children: [Image.asset(value.icon), SizedBox(width: 15.w), Text(value.name)]),
+                            child: Row(mainAxisAlignment: MainAxisAlignment.start, children: [Image.asset(value.icon), SizedBox(width: 15.w), Text(value.name)]),
                           );
                         }).toList(),
                       ),

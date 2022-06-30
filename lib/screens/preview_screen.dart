@@ -1,4 +1,5 @@
 import 'package:easel_flutter/easel_provider.dart';
+import 'package:easel_flutter/screens/creator_hub/creator_hub_view_model.dart';
 import 'package:easel_flutter/utils/constants.dart';
 import 'package:easel_flutter/utils/extension_util.dart';
 import 'package:easel_flutter/widgets/audio_widget.dart';
@@ -6,8 +7,10 @@ import 'package:easel_flutter/widgets/image_widget.dart';
 import 'package:easel_flutter/widgets/model_viewer.dart';
 import 'package:easel_flutter/widgets/pylons_button.dart';
 import 'package:easel_flutter/widgets/video_widget.dart';
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:get_it/get_it.dart';
 import 'package:provider/provider.dart';
 
 import '../utils/easel_app_theme.dart';
@@ -29,9 +32,13 @@ class _PreviewScreenState extends State<PreviewScreen> {
         builder: (_, provider, __) => Stack(
           children: [
             buildPreviewWidget(provider),
+            Image.asset(kPreviewGradient, width: 1.sw, fit: BoxFit.fill),
             Column(children: [
               SizedBox(height: MediaQuery.of(context).viewPadding.top + 20.h),
-
+              Align(
+                alignment: Alignment.center,
+                child: Text(kPreviewNoticeText, textAlign: TextAlign.center, style: Theme.of(context).textTheme.bodyText2!.copyWith(color: EaselAppTheme.kLightPurple, fontSize: 15.sp, fontWeight: FontWeight.w600)),
+              ),
               Align(
                 alignment: Alignment.centerLeft,
                 child: Padding(
@@ -52,7 +59,7 @@ class _PreviewScreenState extends State<PreviewScreen> {
               child: Align(
                 alignment: Alignment.bottomRight,
                 child: PylonsButton(
-                    onPressed: () {
+                    onPressed: () async {
                       if (provider.nftFormat.format == kAudioText) {
                         if (provider.audioThumbnail != null) {
                           widget.controller.nextPage(duration: const Duration(milliseconds: 10), curve: Curves.easeIn);
@@ -61,11 +68,13 @@ class _PreviewScreenState extends State<PreviewScreen> {
                           context.show(message: kErrAddAudioThumbnail);
                         }
                       } else {
+                        await GetIt.I.get<CreatorHubViewModel>().saveNft(provider.file, provider);
+
                         widget.controller.nextPage(duration: const Duration(milliseconds: 10), curve: Curves.easeIn);
                         Navigator.of(context).pop();
                       }
                     },
-                    btnText: kContinue,
+                    btnText: "upload".tr(),
                     isBlue: false,
                     showArrow: true),
               ),
@@ -81,7 +90,7 @@ class _PreviewScreenState extends State<PreviewScreen> {
       case kImageText:
         return ImageWidget(file: provider.file!);
       case kVideoText:
-        return VideoWidget(file: provider.file!, previewFlag: false,isForFile: true);
+        return VideoWidget(file: provider.file!, previewFlag: false, isForFile: true);
       case k3dText:
         return Model3dViewer(file: provider.file!);
       case kAudioText:

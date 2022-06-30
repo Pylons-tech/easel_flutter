@@ -25,6 +25,15 @@ extension ScaffoldHelper on BuildContext? {
       ));
   }
 }
+extension ValueConvertor on String {
+  double fromBigInt() {
+    if (this == "") {
+      return 0;
+    }
+    return BigInt.parse(this).toDouble() / kPrecision;
+  }
+}
+
 
 extension IBCCoinsPar on String {
   IBCCoins toIBCCoinsEnum() {
@@ -63,14 +72,5 @@ extension NFTValue on NFT {
       return "0";
     }
     return recipe.coinInputs.first.coins.first.amount;
-  }
-}
-
-extension ValueConvertor on String {
-  double fromBigInt() {
-    if (this == "") {
-      return 0;
-    }
-    return BigInt.parse(this).toDouble() / kPrecision;
   }
 }

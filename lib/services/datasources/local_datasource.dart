@@ -1,7 +1,10 @@
-
+import 'package:easel_flutter/datasources/database.dart';
+import 'package:easel_flutter/models/nft.dart';
 import 'package:easel_flutter/utils/constants.dart';
 import 'package:easel_flutter/utils/date_utils.dart';
+import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+
 
 abstract class LocalDataSource {
 
@@ -63,24 +66,36 @@ abstract class LocalDataSource {
   /// Output: [bool] returns whether the operation is successful or not
   bool getOnBoardingComplete();
 
+  /// This method will save the draft of the NFT
+  /// Input: [NFT] the draft that will will be saved in database
+  /// Output: [bool] returns whether the operation is successful or not
+  Future<bool> saveNft(NFT draft);
+
+  /// This method will get the drafts List from the local database
+  /// Output: [List][NFT] returns  the List of drafts
+  Future<List<NFT>> getNfts();
+
+  /// This method will delete draft from the local database
+  /// Input: [id] the id of the draft which the user wants to delete
+  /// Output: [bool] returns whether the operation is successful or not
+  Future<bool> deleteNft(int id);
 }
 
 class LocalDataSourceImpl implements LocalDataSource {
-
-
-
   static const String ONBOARDING_COMPLETE = "";
 
   final SharedPreferences sharedPreferences;
 
+  final AppDatabase database;
 
 
-  LocalDataSourceImpl({required this.sharedPreferences});
+  LocalDataSourceImpl(this.sharedPreferences, this.database);
 
   /// gets cookbookId from local storage
   ///return String or null
   @override
   String? getCookbookId(){
+
     return sharedPreferences.getString(kCookbookId);
   }
 
@@ -136,9 +151,36 @@ class LocalDataSourceImpl implements LocalDataSource {
   Future<bool> saveArtistName(String name) async {
     await sharedPreferences.setString(kArtistName, name);
     return true;
+  }
+  @override
+  Future<bool> saveNft(NFT draft) async {
+    try {
+      await database.nftDao.insertNft(draft);
+      return true;
+    } catch (e) {
+      debugPrint('An error occured $e');
 
+      return false;
+    }
   }
 
+  @override
+  Future<List<NFT>> getNfts() async {
 
+    return await database.nftDao.findAllNft();
+  }
+
+  @override
+  Future<bool> deleteNft(int id) async {
+    try {
+      await database.nftDao.delete(id);
+
+      return true;
+    } catch (e) {
+      debugPrint('An error occured $e');
+
+      return false;
+    }
+  }
 
 }
