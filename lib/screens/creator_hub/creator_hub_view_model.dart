@@ -48,39 +48,6 @@ class CreatorHubViewModel extends ChangeNotifier {
     notifyListeners();
   }
 
-  Future<void> saveNft(File? file, EaselProvider provider) async {
-    final loading = Loading().showLoading(message: "uploading".tr());
-    provider.initializeTextEditingControllerWithEmptyValues();
-    final uploadResponse = await remoteDataSource.uploadFile(file!);
-    loading.dismiss();
-    if (uploadResponse.status == Status.error) {
-      navigatorKey.currentState!.overlay!.context.show(message: uploadResponse.errorMessage ?? kErrUpload);
-      return;
-    }
-    NFT nft = NFT(
-      id: null,
-      type: NftType.TYPE_ITEM.name,
-      ibcCoins: IBCCoins.upylon.name,
-      assetType: provider.nftFormat.format,
-      cookbookID: provider.cookbookId ?? "",
-      width: provider.fileWidth.toString(),
-      height: provider.fileHeight.toString(),
-      duration: provider.fileDuration.toString(),
-      description: provider.descriptionController.text,
-      recipeID: provider.recipeId,
-      thumbnailUrl: "",
-      name: provider.artistNameController.text,
-      url: "$ipfsDomain/${uploadResponse.data?.value?.cid}",
-      price: provider.priceController.text,
-    );
-
-    bool success = await localDataSource.saveNft(nft);
-    if (!success) {
-      navigatorKey.currentState!.overlay!.context.show(message: "save_error".tr());
-      return;
-    }
-  }
-
   Future<void> deleteDraft(int? id) async {
     bool success = await localDataSource.deleteNft(id!);
 
