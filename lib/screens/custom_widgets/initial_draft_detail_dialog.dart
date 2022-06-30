@@ -38,7 +38,7 @@ class _DraftDetailDialog extends StatefulWidget {
 class _DraftWidgetState extends State<_DraftDetailDialog> {
   @override
   Widget build(BuildContext context) {
-    CreatorHubViewModel creatorHubViewModel = context.watch<CreatorHubViewModel>();
+    EaselProvider easelProvider = context.watch<EaselProvider>();
 
     return Dialog(
       backgroundColor: Colors.transparent,
@@ -88,16 +88,16 @@ class _DraftWidgetState extends State<_DraftDetailDialog> {
                   SizedBox(
                     height: 100.h,
                     width: 100.h,
-                    child: creatorHubViewModel.nft.appType == k3dText
+                    child: easelProvider.nft.appType == k3dText
                         ? ModelViewer(
-                            src: creatorHubViewModel.nft.url,
+                            src: easelProvider.nft.url,
                             ar: true,
                             autoRotate: false,
                             cameraControls: false,
                           )
                         : CachedNetworkImage(
                             fit: BoxFit.contain,
-                            imageUrl: getImageUrl(creatorHubViewModel),
+                            imageUrl: getImageUrl(easelProvider),
                             errorWidget: (a, b, c) => const Center(
                                 child: Icon(
                               Icons.error_outline,
@@ -111,14 +111,14 @@ class _DraftWidgetState extends State<_DraftDetailDialog> {
                   ),
                   buildRow(
                     title: "upload_to_ipfs".tr(),
-                    subtitle: creatorHubViewModel.nft.fileName,
+                    subtitle: easelProvider.nft.fileName,
                   ),
                   SizedBox(
                     height: 5.h,
                   ),
                   buildRow(
                     title: "content_id".tr(),
-                    subtitle: creatorHubViewModel.nft.cid,
+                    subtitle: easelProvider.nft.cid,
                   ),
                   SizedBox(
                     height: 5.h,
@@ -127,7 +127,7 @@ class _DraftWidgetState extends State<_DraftDetailDialog> {
                       title: "tx_receipt".tr(),
                       subtitle: "view".tr(),
                       onPressed: () {
-                        navigateToPreviewScreen(context: context, nft: creatorHubViewModel.nft);
+                        navigateToPreviewScreen(context: context, nft: easelProvider.nft);
                       }),
                   SizedBox(
                     height: 50.h,
@@ -160,11 +160,11 @@ class _DraftWidgetState extends State<_DraftDetailDialog> {
     Navigator.of(context).pushReplacementNamed(RouteUtil.ROUTE_PREVIEW_NFT_FULL_SCREEN);
   }
 
-  String getImageUrl(CreatorHubViewModel creatorHubViewModel) {
-    if (creatorHubViewModel.nft.assetType == kImageText) {
-      return creatorHubViewModel.nft.url;
+  String getImageUrl(EaselProvider easelProvider) {
+    if (easelProvider.nft.assetType == kImageText) {
+      return easelProvider.nft.url;
     } else {
-      return creatorHubViewModel.nft.thumbnailUrl;
+      return easelProvider.nft.thumbnailUrl;
     }
   }
 
@@ -184,7 +184,9 @@ class _DraftWidgetState extends State<_DraftDetailDialog> {
                 padding: EdgeInsets.only(
                   right: 5.w,
                 ),
-                child: Row(
+                child:
+                subtitle.length > 14?
+                Row(
                   children: [
                     Text(
                       subtitle.substring(0, 8),
@@ -199,7 +201,10 @@ class _DraftWidgetState extends State<_DraftDetailDialog> {
                       style: _rowTitleTextStyle,
                     ),
                   ],
-                )))
+                )
+            :Text( subtitle,
+                  style: _rowTitleTextStyle,)
+            ))
       ],
     );
   }

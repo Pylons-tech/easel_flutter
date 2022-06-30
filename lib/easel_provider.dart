@@ -1,8 +1,8 @@
 import 'dart:async';
 import 'dart:developer';
 import 'dart:io';
-import 'package:easel_flutter/screens/creator_hub/creator_hub_view_model.dart';
-import 'package:provider/provider.dart';
+import 'package:easel_flutter/models/api_response.dart';
+import 'package:easy_localization/easy_localization.dart';
 
 import '../utils/enums.dart';
 
@@ -430,7 +430,8 @@ class EaselProvider extends ChangeNotifier {
   /// return true or false depending on the response from the wallet app
   Future<bool> createCookbook() async {
     _cookbookId = await localDataSource.autoGenerateCookbookId();
-    var cookBook1 = Cookbook(creator: "", iD: _cookbookId, name: "Easel Cookbook", description: "Cookbook for Easel NFT", developer: artistNameController.text, version: "v0.0.1", supportEmail: "easel@pylons.tech", enabled: true);
+    var cookBook1 = Cookbook(creator: "", iD: _cookbookId, name: "Easel Cookbook", description: "Cookbook for Easel NFT", developer: artistNameController.text, version: "v0.0.1",
+        supportEmail: kEaselEmail, enabled: true);
 
     var response = await PylonsWallet.instance.txCreateCookbook(cookBook1);
     if (response.success) {
@@ -522,8 +523,8 @@ class EaselProvider extends ChangeNotifier {
                 StringParam(key: kDescription, value: descriptionController.text.trim()),
                 StringParam(key: kHashtags, value: hashtagsList.join('#')),
                 StringParam(key: kNFTFormat, value: _nftFormat.format),
-                StringParam(key: kNFTURL, value: navigatorKey.currentState!.overlay!.context.read<CreatorHubViewModel>().nft.url),
-                StringParam(key: kThumbnailUrl, value: navigatorKey.currentState!.overlay!.context.read<CreatorHubViewModel>().nft.thumbnailUrl),
+                StringParam(key: kNFTURL, value: nft.url),
+                StringParam(key: kThumbnailUrl, value: nft.thumbnailUrl),
                 StringParam(key: kCreator, value: artistNameController.text.trim()),
               ],
               mutableStrings: [],
@@ -539,8 +540,6 @@ class EaselProvider extends ChangeNotifier {
         blockInterval: Int64(0),
         enabled: true,
         extraInfo: kExtraInfo);
-
-    log('RecipeResponse: ${recipe.toProto3Json()}');
 
     var response = await PylonsWallet.instance.txCreateRecipe(recipe, requestResponse: false);
 
@@ -708,31 +707,87 @@ class EaselProvider extends ChangeNotifier {
     });
   }
 
-  Future saveNftAsset({required EaselProvider provider, required PageController controller}) async {
-    if (_file!.existsSync()) {
+  Future<void> saveNftAsset({required EaselProvider provider, required PageController controller}) async {
+    if ( !_file!.existsSync()) {
+      navigatorKey.currentState!.overlay!.context.show(message: kErrPickFileFetch);
+      return;
+    }
       switch (nftFormat.format) {
         case kAudioText:
-          if (audioThumbnail != null) {
-            await navigatorKey.currentState!.overlay!.context.read<CreatorHubViewModel>().saveNft(provider: provider, controller: controller);
-          } else {
-            navigatorKey.currentState!.overlay!.context.show(message: kErrAddAudioThumbnail);
+          if (audioThumbnail == null) {
+            navigatorKey.currentState!.overlay!.context.show(message: "err_add_audio_thumbnail".tr());
+            return;
           }
+          await saveNft( controller: controller);
           break;
 
         case kVideoText:
-          if (videoThumbnail != null) {
-            await navigatorKey.currentState!.overlay!.context.read<CreatorHubViewModel>().saveNft(provider: provider, controller: controller);
-          } else {
-            navigatorKey.currentState!.overlay!.context.show(message: kErrVideoThumbnail);
+          if (videoThumbnail == null) {
+            navigatorKey.currentState!.overlay!.context.show(message: "err_add_video_thumbnail".tr());
+            return;
           }
+          await saveNft( controller: controller);
           break;
 
         default:
-          await navigatorKey.currentState!.overlay!.context.read<CreatorHubViewModel>().saveNft(provider: provider, controller: controller);
+          await saveNft(controller: controller);
       }
-    } else {
-      navigatorKey.currentState!.overlay!.context.show(message: kErrPickFileFetch);
     }
+
+
+  late NFT nft;
+
+  Future<void> saveNft({required PageController controller}) async {
+    final loading = Loading().showLoading(message: "uploading".tr());
+    initializeTextEditingControllerWithEmptyValues();
+    final uploadResponse = await remoteDataSource.uploadFile(file!);
+    if (uploadResponse.status == Status.error) {
+      loading.dismiss();
+
+      navigatorKey.currentState!.overlay!.context.show(message: uploadResponse.errorMessage ?? kErrUpload);
+
+      return;
+    }
+    var uploadThumbnailResponse;
+    if (nftFormat.format == kAudioText || nftFormat.format == kVideoText) {
+      uploadThumbnailResponse = await remoteDataSource.uploadFile(nftFormat.format == kAudioText ? audioThumbnail! : videoThumbnail!);
+
+      if (uploadThumbnailResponse.status == Status.error) {
+        loading.dismiss();
+
+        navigatorKey.currentState!.overlay!.context.show(message: uploadThumbnailResponse.errorMessage ?? kErrUpload);
+        return;
+      }
+    }
+
+    nft = NFT(
+        id: null,
+        type: NftType.TYPE_ITEM.name,
+        ibcCoins: IBCCoins.upylon.name,
+        assetType: nftFormat.format,
+        cookbookID: cookbookId ?? "",
+        width: fileWidth.toString(),
+        height: fileHeight.toString(),
+        duration: fileDuration.toString(),
+        description: descriptionController.text,
+        recipeID: recipeId,
+        thumbnailUrl: (nftFormat.format == kAudioText || nftFormat.format == kVideoText) ? "$ipfsDomain/${uploadThumbnailResponse.data?.value?.cid}" : "",
+        name: artistNameController.text,
+        url: "$ipfsDomain/${uploadResponse.data?.value?.cid}",
+        price: priceController.text,
+        fileName: fileName,
+        cid: "${uploadResponse.data?.value?.cid}"
+    );
+
+    bool success = await localDataSource.saveNft(nft);
+    if (!success) {
+      navigatorKey.currentState!.overlay!.context.show(message: "save_error".tr());
+      return;
+    }
+    controller.nextPage(duration: const Duration(milliseconds: 10), curve: Curves.easeIn);
+    loading.dismiss();
+
+    Navigator.of(navigatorKey.currentState!.overlay!.context).pop();
   }
 }
 
