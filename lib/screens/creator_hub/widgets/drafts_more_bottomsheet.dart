@@ -22,7 +22,7 @@ class DraftsBottomSheet {
 
   DraftsBottomSheet({required this.buildContext, required this.nft, required this.localDataSource});
 
-  void show() {
+  Future<void> show() async{
     showModalBottomSheet(
         backgroundColor: Colors.transparent,
         context: buildContext,
@@ -105,3 +105,5 @@ Widget moreOptionTile({required String title, required String svg, required Func
     ),
   );
 }
+
+

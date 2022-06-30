@@ -40,9 +40,11 @@ class CreatorHubViewModel extends ChangeNotifier {
 
   Future<void> getDraftsList() async {
     final loading = Loading().showLoading(message: "loading ...");
+
     nftList = await localDataSource.getNfts();
-    print(nftList);
+
     loading.dismiss();
+
     notifyListeners();
   }
 
@@ -62,6 +64,7 @@ class CreatorHubViewModel extends ChangeNotifier {
 
     if (!success) {
       navigatorKey.currentState!.overlay!.context.show(message: "delete_error".tr());
+      return;
     }
     notifyListeners();
   }
