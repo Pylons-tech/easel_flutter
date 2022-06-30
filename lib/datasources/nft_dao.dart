@@ -10,7 +10,7 @@ abstract class NftDao {
   Stream<NFT?> findNftById(int id);
 
   @insert
-  Future<void> insertNft(NFT nft);
+  Future<int> insertNft(NFT nft);
 
   @Query('DELETE FROM nft WHERE id = :id')
   Future<void> delete(int id);

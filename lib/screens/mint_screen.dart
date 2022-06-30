@@ -1,4 +1,5 @@
 import 'package:easel_flutter/easel_provider.dart';
+import 'package:easel_flutter/models/nft.dart';
 import 'package:easel_flutter/utils/constants.dart';
 import 'package:easel_flutter/utils/date_utils.dart';
 import 'package:easel_flutter/utils/easel_app_theme.dart';
@@ -10,13 +11,30 @@ import 'package:easel_flutter/widgets/model_viewer.dart';
 import 'package:easel_flutter/widgets/pylons_button.dart';
 import 'package:easel_flutter/widgets/video_widget.dart';
 import 'package:flutter/material.dart';
+import 'package:get_it/get_it.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
 
-class MintScreen extends StatelessWidget {
+import '../repository/repository.dart';
+
+class MintScreen extends StatefulWidget {
   final PageController controller;
 
   const MintScreen({Key? key, required this.controller}) : super(key: key);
+
+  @override
+  State<MintScreen> createState() => _MintScreenState();
+}
+
+class _MintScreenState extends State<MintScreen> {
+  late NFT nft;
+  var cacheManager = GetIt.I.get<Repository>();
+
+  @override
+  initState() {
+    nft = cacheManager.getCacheDynamicType(key: "nft");
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -33,8 +51,19 @@ class MintScreen extends StatelessWidget {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: [
-                  if (provider.nftFormat.format == kImageText) ...[ImageWidget(file: provider.file!)],
-                  if (provider.nftFormat.format == kVideoText) ...[VideoWidget(file: provider.file!, previewFlag: true, isForFile: true,)],
+                  if (provider.nftFormat.format == kImageText) ...[
+                    ImageWidget(
+                      file: provider.file,
+                      filePath: nft.url,
+                    )
+                  ],
+                  if (provider.nftFormat.format == kVideoText) ...[
+                    VideoWidget(
+                      file: provider.file!,
+                      previewFlag: true,
+                      isForFile: true,
+                    )
+                  ],
                   if (provider.nftFormat.format == k3dText) ...[
                     SizedBox(
                         height: MediaQuery.of(context).size.height * 0.3,
@@ -145,7 +174,7 @@ class MintScreen extends StatelessWidget {
                                 return;
                               }
                               provider.disposeAudioController();
-                              controller.nextPage(duration: const Duration(milliseconds: 300), curve: Curves.easeIn);
+                              widget.controller.nextPage(duration: const Duration(milliseconds: 300), curve: Curves.easeIn);
                             },
                             btnText: kListText,
                             showArrow: true,

@@ -23,6 +23,7 @@ import '../models/nft.dart';
 import 'choose_format_screen.dart';
 import 'custom_widgets/step_labels.dart';
 import 'custom_widgets/steps_indicator.dart';
+import 'mint_screen.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({Key? key}) : super(key: key);
@@ -52,12 +53,12 @@ class _HomeScreenState extends State<HomeScreen> {
     from = cacheManager.getCacheString(key: "from");
     cacheManager.deleteCacheString(key: "from");
 
-
     if (from == "draft") {
       nft = cacheManager.getCacheDynamicType(key: "nft");
 
       if (mounted) {
         Future.delayed(const Duration(milliseconds: 1), () {
+
           easelProvider.setTextFieldValuesDescription(artName: nft?.name, description: nft?.description);
           easelProvider.setTextFieldValuesPrice(royalties: nft?.tradePercentage, price: nft?.price, edition: nft?.quantity.toString(), denom: nft?.denom);
         });
@@ -88,7 +89,6 @@ class _HomeScreenState extends State<HomeScreen> {
       _currentStep = ValueNotifier(0);
       _pageController = PageController(keepPage: true, initialPage: 0);
     }
-
 
     super.initState();
   }
@@ -179,7 +179,8 @@ class _HomeScreenState extends State<HomeScreen> {
                       ChooseFormatScreen(controller: _pageController),
                       DescribeScreen(controller: _pageController),
                       PriceScreen(controller: _pageController),
-                      const PublishedScreen(),
+                      MintScreen(controller: _pageController),
+                      // const PublishedScreen(),
                     ],
                   ),
                 ),

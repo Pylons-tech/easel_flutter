@@ -33,7 +33,7 @@ class _DescribeScreenState extends State<DescribeScreen> {
   String _artNameFieldError = '';
   String _artistNameFieldError = '';
   String _descriptionFieldError = '';
-  NFT? nft;
+  late NFT nft;
 
   @override
   void dispose() {
@@ -43,12 +43,11 @@ class _DescribeScreenState extends State<DescribeScreen> {
 
   @override
   void initState() {
-    nft = cacheManager.getCacheDynamicType(key: "nft");
-
     super.initState();
 
     context.read<EaselProvider>().toCheckSavedArtistName();
     WidgetsBinding.instance.addPostFrameCallback((_) async {
+      nft = cacheManager.getCacheDynamicType(key: "nft");
       DraftDetailDialog(context: context).show();
     });
   }
@@ -176,7 +175,7 @@ class _DescribeScreenState extends State<DescribeScreen> {
                         FocusScope.of(context).unfocus();
                         if (_formKey.currentState!.validate()) {
                           if (_artNameFieldError.isEmpty && _artistNameFieldError.isEmpty && _descriptionFieldError.isEmpty) {
-                            context.read<EaselProvider>().updateNftFromDescription(nft!.id);
+                            context.read<EaselProvider>().updateNftFromDescription(nft.id!);
 
                             context.read<EaselProvider>().saveArtistName(provider.artistNameController.text.trim());
                             widget.controller.nextPage(duration: const Duration(milliseconds: 300), curve: Curves.easeIn);

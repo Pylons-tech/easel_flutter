@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'dart:developer';
 import 'dart:io';
+import 'package:easel_flutter/repository/repository.dart';
 import 'package:easel_flutter/screens/creator_hub/creator_hub_view_model.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:provider/provider.dart';
@@ -39,6 +40,7 @@ class EaselProvider extends ChangeNotifier {
   final VideoPlayerHelper videoPlayerHelper;
   final AudioPlayerHelper audioPlayerHelper;
   final FileUtilsHelper fileUtilsHelper;
+  final Repository repository;
 
   EaselProvider({
     required this.localDataSource,
@@ -46,6 +48,7 @@ class EaselProvider extends ChangeNotifier {
     required this.videoPlayerHelper,
     required this.audioPlayerHelper,
     required this.fileUtilsHelper,
+    required this.repository,
   });
 
   File? _file;
@@ -784,7 +787,7 @@ class EaselProvider extends ChangeNotifier {
     CreatorHubViewModel creatorHubViewModel = navigatorKey.currentState!.overlay!.context.read<CreatorHubViewModel>();
     ApiResponse thumbnailUploadResponse = ApiResponse.error(errorMessage: "");
     ApiResponse audioThumbnailUploadResponse = ApiResponse.error(errorMessage: "");
-    bool success = false;
+    int id = 0;
     if (!_file!.existsSync()) {
       navigatorKey.currentState!.overlay!.context.show(message: kErrPickFileFetch);
       return false;
@@ -840,24 +843,50 @@ class EaselProvider extends ChangeNotifier {
         price: priceController.text,
       );
 
-      success = await localDataSource.saveNft(nft);
-      if (!success) {
+      id = await localDataSource.saveNft(nft);
+
+      NFT _nft = NFT(
+        id: id,
+        type: NftType.TYPE_ITEM.name,
+        ibcCoins: IBCCoins.upylon.name,
+        assetType: nftFormat.format,
+        cookbookID: cookbookId ?? "",
+        width: fileWidth.toString(),
+        denom: "",
+        tradePercentage: "",
+        height: fileHeight.toString(),
+        duration: fileDuration.toString(),
+        description: descriptionController.text,
+        recipeID: recipeId,
+        step: step.name,
+        thumbnailUrl: videoThumbnail != null
+            ? "$ipfsDomain/${thumbnailUploadResponse.data?.value?.cid ?? ""}"
+            : audioThumbnail != null
+                ? "$ipfsDomain/${audioThumbnailUploadResponse.data?.value?.cid ?? ""}"
+                : "",
+        name: artistNameController.text,
+        url: "$ipfsDomain/${fileUploadResponse.data?.value?.cid}",
+        price: priceController.text,
+      );
+
+      if (id < 1) {
         navigatorKey.currentState!.overlay!.context.show(message: "save_error".tr());
         return false;
       }
       creatorHubViewModel.getDraftsList();
+      repository.setCacheDynamicType(key: 'nft', value: _nft);
       setAudioThumbnail(null);
 
       setVideoThumbnail(null);
     }
 
-    return success;
+    return true;
   }
 
-  Future<bool> updateNftFromDescription(int? id) async {
+  Future<bool> updateNftFromDescription(int id) async {
     CreatorHubViewModel creatorHubViewModel = navigatorKey.currentState!.overlay!.context.read<CreatorHubViewModel>();
 
-    bool success = await localDataSource.updateNftFromDescription(id!, artNameController.text, descriptionController.text, artistNameController.text, UploadStep.descriptionAdded.name);
+    bool success = await localDataSource.updateNftFromDescription(id, artNameController.text, descriptionController.text, artistNameController.text, UploadStep.descriptionAdded.name);
     if (!success) {
       navigatorKey.currentState!.overlay!.context.show(message: "save_error".tr());
       return false;

@@ -70,6 +70,7 @@ void _registerProviders() {
         localDataSource: sl(),
         audioPlayerHelper: sl(),
         fileUtilsHelper: sl(),
+        repository: sl(),
       ));
 
   sl.registerLazySingleton<CreatorHubViewModel>(() => CreatorHubViewModel(sl(), sl()));

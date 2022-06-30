@@ -48,8 +48,8 @@ abstract class LocalDataSource {
 
   /// This method will save the draft of the NFT
   /// Input: [NFT] the draft that will will be saved in database
-  /// Output: [bool] returns whether the operation is successful or not
-  Future<bool> saveNft(NFT draft);
+  /// Output: [int] returns id of the inserted document
+  Future<int> saveNft(NFT draft);
 
   /// This method will get the drafts List from the local database
   /// Output: [List][NFT] returns  the List of drafts
@@ -163,14 +163,13 @@ class LocalDataSourceImpl implements LocalDataSource {
   }
 
   @override
-  Future<bool> saveNft(NFT draft) async {
+  Future<int> saveNft(NFT draft) async {
     try {
-      await database.nftDao.insertNft(draft);
-      return true;
+      final result = await database.nftDao.insertNft(draft);
+      return result;
     } catch (e) {
       debugPrint('An error occured $e');
-
-      return false;
+      throw "";
     }
   }
 
