@@ -183,27 +183,27 @@ class _DraftWidgetState extends State<_DraftDetailDialog> {
                 padding: EdgeInsets.only(
                   right: 5.w,
                 ),
-                child:
-                subtitle.length > 14?
-                Row(
-                  children: [
-                    Text(
-                      subtitle.substring(0, 8),
-                      style: _rowTitleTextStyle,
-                    ),
-                    Text(
-                      "...",
-                      style: _rowTitleTextStyle,
-                    ),
-                    Text(
-                      subtitle.substring(subtitle.length - 5, subtitle.length),
-                      style: _rowTitleTextStyle,
-                    ),
-                  ],
-                )
-            :Text( subtitle,
-                  style: _rowTitleTextStyle,)
-            ))
+                child: subtitle.length > 14
+                    ? Row(
+                        children: [
+                          Text(
+                            subtitle.substring(0, 8),
+                            style: _rowTitleTextStyle,
+                          ),
+                          const Text("...",
+                              style: TextStyle(
+                                color: Colors.white,
+                              )),
+                          Text(
+                            subtitle.substring(subtitle.length - 5, subtitle.length),
+                            style: _rowTitleTextStyle,
+                          ),
+                        ],
+                      )
+                    : Text(
+                        subtitle,
+                        style: _rowTitleTextStyle,
+                      )))
       ],
     );
   }

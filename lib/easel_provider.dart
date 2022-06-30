@@ -2,6 +2,7 @@ import 'dart:async';
 import 'dart:developer';
 import 'dart:io';
 import 'package:easel_flutter/models/api_response.dart';
+import 'package:easel_flutter/repository/repository.dart';
 import 'package:easy_localization/easy_localization.dart';
 
 import '../utils/enums.dart';
@@ -37,6 +38,7 @@ class EaselProvider extends ChangeNotifier {
   final VideoPlayerHelper videoPlayerHelper;
   final AudioPlayerHelper audioPlayerHelper;
   final FileUtilsHelper fileUtilsHelper;
+  final Repository repository;
 
   EaselProvider({
     required this.localDataSource,
@@ -44,6 +46,8 @@ class EaselProvider extends ChangeNotifier {
     required this.videoPlayerHelper,
     required this.audioPlayerHelper,
     required this.fileUtilsHelper,
+    required this.repository
+
   });
 
   File? _file;
@@ -543,7 +547,6 @@ class EaselProvider extends ChangeNotifier {
 
     var response = await PylonsWallet.instance.txCreateRecipe(recipe, requestResponse: false);
 
-    log('From App $response');
     setVideoThumbnail(null);
 
     if (response.success) {
@@ -779,11 +782,8 @@ class EaselProvider extends ChangeNotifier {
         cid: "${uploadResponse.data?.value?.cid}"
     );
 
-    bool success = await localDataSource.saveNft(nft);
-    if (!success) {
-      navigatorKey.showMsg(message: "save_error".tr());
-      return;
-    }
+    await repository.saveNft(nft);
+
     controller.nextPage(duration: const Duration(milliseconds: 10), curve: Curves.easeIn);
     loading.dismiss();
 

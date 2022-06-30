@@ -44,7 +44,7 @@ extension NavigatorKey on GlobalKey {
   }
 }
 
-extension ValueConvertor on String {
+extension ValueConverter on String {
   double fromBigInt() {
     if (this == "") {
       return 0;
