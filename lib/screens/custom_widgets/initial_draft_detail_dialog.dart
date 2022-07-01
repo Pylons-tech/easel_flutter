@@ -85,7 +85,7 @@ class _DraftDetailDialog extends StatelessWidget {
                     child: easelProvider.nft.assetType == k3dText
                         ? ModelViewer(
                             src: easelProvider.nft.url,
-                            ar: true,
+                            ar: false,
                             autoRotate: false,
                             cameraControls: false,
                           )
@@ -97,7 +97,12 @@ class _DraftDetailDialog extends StatelessWidget {
                               Icons.error_outline,
                               color: Colors.white,
                             )),
-                            placeholder: (context, url) => Shimmer(color: EaselAppTheme.cardBackground, child: const SizedBox.expand()),
+                            placeholder: (context, url) => Shimmer(
+                                color: EaselAppTheme.cardBackground,
+                                child: SizedBox(
+                                  height: 100.h,
+                                  width: 100.h,
+                                )),
                           ),
                   ),
                   SizedBox(

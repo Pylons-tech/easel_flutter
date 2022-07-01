@@ -51,18 +51,16 @@ class _PreviewScreenState extends State<PreviewScreen> {
                     )),
               )
             ]),
-            Padding(
-              padding: EdgeInsets.only(bottom: 30.h, right: 25.w),
-              child: Align(
-                alignment: Alignment.bottomRight,
-                child: PylonsButton(
-                    onPressed: () async {
-                      provider.saveNftAsset(provider: provider, controller: widget.controller);
-                    },
-                    btnText: "upload".tr(),
-                    isBlue: false,
-                    showArrow: true),
-              ),
+            Positioned(
+              right: 25.w,
+              bottom: 30.h,
+              child: PylonsButton(
+                  onPressed: () async {
+                    provider.saveNftAsset(provider: provider, controller: widget.controller);
+                  },
+                  btnText: "upload".tr(),
+                  isBlue: false,
+                  showArrow: true),
             )
           ],
         ),

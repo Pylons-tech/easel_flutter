@@ -2,6 +2,7 @@ import 'dart:async';
 import 'dart:developer';
 import 'dart:io';
 import 'package:easel_flutter/models/api_response.dart';
+import 'package:easel_flutter/models/storage_response_model.dart';
 import 'package:easel_flutter/repository/repository.dart';
 import 'package:easy_localization/easy_localization.dart';
 
@@ -751,7 +752,7 @@ class EaselProvider extends ChangeNotifier {
 
       return;
     }
-    var uploadThumbnailResponse;
+    late ApiResponse<StorageResponseModel> uploadThumbnailResponse;
     if (nftFormat.format == kAudioText || nftFormat.format == kVideoText) {
       uploadThumbnailResponse = await remoteDataSource.uploadFile(nftFormat.format == kAudioText ? audioThumbnail! : videoThumbnail!);
 

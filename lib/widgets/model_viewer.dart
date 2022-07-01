@@ -19,12 +19,21 @@ class _Model3dViewerState extends State<Model3dViewer> {
   Widget build(BuildContext context) {
     return Padding(
       padding: EdgeInsets.only(bottom: 60.h),
-      child: ModelViewer(
-        src: widget.isFile! ? 'file://${widget.path!}' : widget.path! ,
-        ar: true,
-        autoRotate: false,
-        cameraControls: true,
-      ),
+      child: modelViewer,
+    );
+  }
+
+  ModelViewer? modelViewer;
+
+  @override
+  void initState() {
+    super.initState();
+
+    modelViewer = ModelViewer(
+      src: widget.isFile! ? 'file://${widget.path!}' : widget.path!,
+      ar: true,
+      autoRotate: false,
+      cameraControls: true,
     );
   }
 }
