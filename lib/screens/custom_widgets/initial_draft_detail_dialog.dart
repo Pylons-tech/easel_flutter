@@ -27,14 +27,9 @@ class DraftDetailDialog {
   }
 }
 
-class _DraftDetailDialog extends StatefulWidget {
+class _DraftDetailDialog extends StatelessWidget {
   const _DraftDetailDialog({Key? key}) : super(key: key);
 
-  @override
-  State<_DraftDetailDialog> createState() => _DraftWidgetState();
-}
-
-class _DraftWidgetState extends State<_DraftDetailDialog> {
   @override
   Widget build(BuildContext context) {
     EaselProvider easelProvider = context.watch<EaselProvider>();
@@ -87,7 +82,7 @@ class _DraftWidgetState extends State<_DraftDetailDialog> {
                   SizedBox(
                     height: 100.h,
                     width: 100.h,
-                    child: easelProvider.nft.appType == k3dText
+                    child: easelProvider.nft.assetType == k3dText
                         ? ModelViewer(
                             src: easelProvider.nft.url,
                             ar: true,
