@@ -28,11 +28,11 @@ class MintScreen extends StatefulWidget {
 
 class _MintScreenState extends State<MintScreen> {
   late NFT nft;
-  var cacheManager = GetIt.I.get<Repository>();
+  var repository = GetIt.I.get<Repository>();
 
   @override
   initState() {
-    nft = cacheManager.getCacheDynamicType(key: "nft");
+    nft = repository.getCacheDynamicType(key: "nft");
     super.initState();
   }
 

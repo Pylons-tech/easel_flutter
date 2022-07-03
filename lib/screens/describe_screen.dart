@@ -1,9 +1,9 @@
 import 'package:easel_flutter/easel_provider.dart';
 import 'package:easel_flutter/repository/repository.dart';
+import 'package:easel_flutter/screens/creator_hub/creator_hub_view_model.dart';
 import 'package:easel_flutter/screens/custom_widgets/initial_draft_detail_dialog.dart';
 import 'package:easel_flutter/utils/constants.dart';
 import 'package:easel_flutter/utils/easel_app_theme.dart';
-import 'package:easel_flutter/utils/enums.dart';
 import 'package:easel_flutter/utils/space_utils.dart';
 import 'package:easel_flutter/widgets/easel_hashtag_input_field.dart';
 import 'package:easel_flutter/widgets/easel_text_field.dart';
@@ -14,7 +14,6 @@ import 'package:get_it/get_it.dart';
 import 'package:provider/provider.dart';
 
 import '../models/nft.dart';
-import '../services/datasources/local_datasource.dart';
 import '../widgets/pylons_button.dart';
 
 class DescribeScreen extends StatefulWidget {
@@ -27,7 +26,7 @@ class DescribeScreen extends StatefulWidget {
 }
 
 class _DescribeScreenState extends State<DescribeScreen> {
-  var cacheManager = GetIt.I.get<Repository>();
+  var repository = GetIt.I.get<Repository>();
   final _formKey = GlobalKey<FormState>();
 
   String _artNameFieldError = '';
@@ -47,7 +46,7 @@ class _DescribeScreenState extends State<DescribeScreen> {
 
     context.read<EaselProvider>().toCheckSavedArtistName();
     WidgetsBinding.instance.addPostFrameCallback((_) async {
-      nft = cacheManager.getCacheDynamicType(key: "nft");
+      nft = repository.getCacheDynamicType(key: "nft");
       DraftDetailDialog(context: context).show();
     });
   }

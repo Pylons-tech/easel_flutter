@@ -253,7 +253,7 @@ class _CreatorHubScreenState extends State<CreatorHubScreen> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      "nft_name".tr(args: [nft.name != '' ? nft.name : 'Nft Name']),
+                      "nft_name".tr(args: [nft.name.isNotEmpty ? nft.name : 'Nft Name']),
                       style: titleStyle,
                       maxLines: 1,
                       overflow: TextOverflow.ellipsis,

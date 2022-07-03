@@ -36,7 +36,7 @@ class HomeScreen extends StatefulWidget {
 
 class _HomeScreenState extends State<HomeScreen> {
   late EaselProvider easelProvider;
-  var cacheManager = GetIt.I.get<Repository>();
+  var repository = GetIt.I.get<Repository>();
   late final PageController _pageController;
 
   late ValueNotifier<int> _currentPage;
@@ -50,15 +50,14 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   void initState() {
     easelProvider = Provider.of<EaselProvider>(context, listen: false);
-    from = cacheManager.getCacheString(key: "from");
-    cacheManager.deleteCacheString(key: "from");
+    from = repository.getCacheString(key: "from");
+    repository.deleteCacheString(key: "from");
 
     if (from == "draft") {
-      nft = cacheManager.getCacheDynamicType(key: "nft");
+      nft = repository.getCacheDynamicType(key: "nft");
 
       if (mounted) {
         Future.delayed(const Duration(milliseconds: 1), () {
-
           easelProvider.setTextFieldValuesDescription(artName: nft?.name, description: nft?.description);
           easelProvider.setTextFieldValuesPrice(royalties: nft?.tradePercentage, price: nft?.price, edition: nft?.quantity.toString(), denom: nft?.denom);
         });
@@ -102,7 +101,7 @@ class _HomeScreenState extends State<HomeScreen> {
   Widget build(BuildContext context) {
     return WillPopScope(
       onWillPop: () async {
-        await GetIt.I.get<CreatorHubViewModel>().getDraftsList();
+        await context.read<CreatorHubViewModel>().getDraftsList();
 
         return true;
       },
@@ -131,6 +130,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                   ScaffoldMessenger.of(context).hideCurrentSnackBar();
                                   _pageController.previousPage(duration: const Duration(milliseconds: 300), curve: Curves.easeIn);
                                   if (_currentPage.value == 0) {
+                                    context.read<CreatorHubViewModel>().getDraftsList();
                                     Navigator.of(context).pop();
                                   }
                                 },
@@ -180,7 +180,6 @@ class _HomeScreenState extends State<HomeScreen> {
                       DescribeScreen(controller: _pageController),
                       PriceScreen(controller: _pageController),
                       MintScreen(controller: _pageController),
-                      // const PublishedScreen(),
                     ],
                   ),
                 ),

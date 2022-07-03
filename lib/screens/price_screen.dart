@@ -14,8 +14,6 @@ import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get_it/get_it.dart';
 import 'package:provider/provider.dart';
-
-import '../services/datasources/local_datasource.dart';
 import '../widgets/pylons_button.dart';
 
 class PriceScreen extends StatefulWidget {

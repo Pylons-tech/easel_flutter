@@ -2,7 +2,6 @@ import 'package:easel_flutter/datasources/database.dart';
 import 'package:easel_flutter/models/nft.dart';
 import 'package:easel_flutter/utils/constants.dart';
 import 'package:easel_flutter/utils/date_utils.dart';
-import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../datasources/cache_manager.dart';
@@ -55,8 +54,18 @@ abstract class LocalDataSource {
   /// Output: [List][NFT] returns  the List of drafts
   Future<List<NFT>> getNfts();
 
+  /// This method will update draft in the local database from description Page
+  /// Input: [id] the id of the nft,
+  /// [String] the  name of the nft , [String] the  description of the nft
+  /// [String] the  creator name of the nft , [String] the page name of the Pageview
+  /// Output: [bool] returns whether the operation is successful or not
   Future<bool> updateNftFromDescription(int id, String nftName, String nftDescription, String creatorName, String step);
 
+  /// This method will update draft in the local database from Pricing page
+  /// Input: [id] the id of the nft, [String] the  name of the nft ,
+  /// [String] the  tradePercentage of the nft , [String] the  price of the nft
+  /// [String] the  quantity of the nft , [String] the page name of the Pageview
+  /// Output: [bool] returns whether the operation is successful or not
   Future<bool> updateNftFromPrice(int id, String tradePercentage, String price, String quantity, String step, String name);
 
   /// This method will delete draft from the local database
@@ -168,7 +177,6 @@ class LocalDataSourceImpl implements LocalDataSource {
       final result = await database.nftDao.insertNft(draft);
       return result;
     } catch (e) {
-      debugPrint('An error occured $e');
       throw "";
     }
   }
@@ -179,9 +187,7 @@ class LocalDataSourceImpl implements LocalDataSource {
       await database.nftDao.updateNFTFromDescription(id, nftName, nftDescription, creatorName, step);
       return true;
     } catch (e) {
-      debugPrint('An error occured $e');
-
-      return false;
+      return throw "";
     }
   }
 
@@ -191,9 +197,8 @@ class LocalDataSourceImpl implements LocalDataSource {
       await database.nftDao.updateNFTFromPrice(id, tradePercentage, price, quantity, step, denom);
       return true;
     } catch (e) {
-      debugPrint('An error occured $e');
 
-      return false;
+      return throw "";
     }
   }
 
@@ -209,9 +214,8 @@ class LocalDataSourceImpl implements LocalDataSource {
 
       return true;
     } catch (e) {
-      debugPrint('An error occured $e');
 
-      return false;
+      return throw "";
     }
   }
 

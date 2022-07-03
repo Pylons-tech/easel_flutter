@@ -65,15 +65,13 @@ void _registerLocalDataSources() {
 
 void _registerProviders() {
   sl.registerLazySingleton<EaselProvider>(() => EaselProvider(
-        remoteDataSource: sl(),
         videoPlayerHelper: sl(),
-        localDataSource: sl(),
         audioPlayerHelper: sl(),
         fileUtilsHelper: sl(),
         repository: sl(),
       ));
 
-  sl.registerLazySingleton<CreatorHubViewModel>(() => CreatorHubViewModel(sl(), sl()));
+  sl.registerLazySingleton<CreatorHubViewModel>(() => CreatorHubViewModel(sl()));
 }
 
 void _registerServices() {

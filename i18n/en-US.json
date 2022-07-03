@@ -36,5 +36,7 @@
   "compressing_thumbnail": "Compressing Thumbnail",
   "uploading": "Uploading ...",
   "nft_name": "{}",
-  "could_not_uploaded": "{} could not be uploaded"
+  "could_not_uploaded": "{} could not be uploaded",
+  "something_wrong": "something went wrong"
+
 }
