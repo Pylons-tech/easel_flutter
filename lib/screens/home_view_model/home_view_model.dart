@@ -1,6 +1,7 @@
 import 'package:easel_flutter/easel_provider.dart';
 import 'package:easel_flutter/models/nft.dart';
 import 'package:easel_flutter/repository/repository.dart';
+import 'package:easel_flutter/utils/constants.dart';
 import 'package:easel_flutter/utils/enums.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/cupertino.dart';
@@ -23,7 +24,7 @@ class HomeViewModel extends ChangeNotifier {
     from = repository.getCacheString(key: "from");
     repository.deleteCacheString(key: "from");
 
-    if (from == "draft") {
+    if (from == kDraft) {
       nft = repository.getCacheDynamicType(key: "nft");
 
       Future.delayed(const Duration(milliseconds: 1), () {

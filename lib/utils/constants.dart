@@ -277,3 +277,5 @@ const mp3 = "mp3";
 const ogg = "ogg";
 const wav = "wav";
 const aac = "aac";
+
+const kDraft = "draft";

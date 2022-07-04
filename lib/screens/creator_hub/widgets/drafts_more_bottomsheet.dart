@@ -54,7 +54,7 @@ class DraftsMoreBottomSheet extends StatelessWidget {
                 svg: kSvgPublish,
                 onPressed: () {
                   repository.setCacheDynamicType(key: "nft", value: nft);
-                  repository.setCacheString(key: "from", value: "draft");
+                  repository.setCacheString(key: "from", value:kDraft);
                   Navigator.of(context).pop();
                   Navigator.of(context).pushNamed(RouteUtil.ROUTE_HOME);
                 }),
