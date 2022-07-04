@@ -224,12 +224,13 @@ class _CreatorHubScreenState extends State<CreatorHubScreen> {
   Widget buildListTile({required NFT nft, required CreatorHubViewModel viewModel}) {
     final repository= GetIt.I.get<Repository>();
     return Slidable(
-      key: const ValueKey(0),
+      key:  ValueKey(nft.id),
       closeOnScroll: false,
       endActionPane: ActionPane(
         extentRatio: 0.3,
         motion: const ScrollMotion(),
         children: [
+
           Expanded(
             child: InkWell(
               onTap: () {
