@@ -45,7 +45,7 @@ class _ChooseFormatScreenState extends State<ChooseFormatScreen> {
           MaterialPageRoute(builder: (context) => PreviewScreen(controller: widget.controller)),
         );
       } else {
-        errorText.value = 'could_not_uploaded'.tr(args:[result.name]);
+        errorText.value = 'could_not_uploaded'.tr(args: [result.name]);
         showErrorDialog();
       }
     } else {
@@ -74,7 +74,6 @@ class _ChooseFormatScreenState extends State<ChooseFormatScreen> {
         children: [
           Column(
             children: [
-
               Align(
                 alignment: Alignment.center,
                 child: Text("$kFileSizeLimitInGB$kUploadHintAll",

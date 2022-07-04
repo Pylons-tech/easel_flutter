@@ -10,7 +10,7 @@
   "view": "View On IPFS",
   "delete_error": "Failed to delete draft",
   "save_error": "Failed to save draft",
-  "upload": "upload",
+  "upload": "Upload",
   "upload_to_ipfs": "Upload to IPFS",
   "content_id":"Content ID",
   "tx_receipt":"TX receipt",
@@ -34,6 +34,8 @@
   "compressing_thumbnail": "Compressing Thumbnail",
   "uploading": "Uploading ...",
   "nft_name": "NFT name",
-  "could_not_uploaded" :"{} could not be uploaded"
+  "could_not_uploaded" :"{} could not be uploaded",
 
+  "err_add_audio_thumbnail" : "Please select audio thumbnail",
+  "err_add_video_thumbnail" : "Please select video thumbnail"
 }

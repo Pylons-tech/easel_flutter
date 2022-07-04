@@ -29,6 +29,7 @@
   "pylons_app": "Приложение пилонов",
   "you_can_collect_manage_your_nft": "Вы можете хранить, собирать и управлять всеми своими NFT в приложении Pylons!",
   "compressing_thumbnail": "Compressing Thumbnail",
-  "could_not_uploaded" :"{} не удалось загрузить"
-
+  "could_not_uploaded" :"{} не удалось загрузить",
+  "err_add_audio_thumbnail" : "Пожалуйста, выберите миниатюру аудио",
+  "err_add_video_thumbnail" : "Пожалуйста, выберите миниатюру видео"
 }

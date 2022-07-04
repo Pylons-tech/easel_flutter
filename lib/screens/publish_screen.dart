@@ -1,3 +1,4 @@
+
 import 'package:easel_flutter/easel_provider.dart';
 import 'package:easel_flutter/utils/constants.dart';
 import 'package:easel_flutter/utils/date_utils.dart';
@@ -6,9 +7,11 @@ import 'package:easel_flutter/utils/space_utils.dart';
 import 'package:easel_flutter/widgets/audio_widget.dart';
 import 'package:easel_flutter/widgets/background_widget.dart';
 import 'package:easel_flutter/widgets/image_widget.dart';
+import 'package:easel_flutter/widgets/model_viewer.dart';
 import 'package:easel_flutter/widgets/rounded_purple_button_widget.dart';
 import 'package:easel_flutter/widgets/video_widget.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:provider/provider.dart';
 
 class PublishScreen extends StatefulWidget {
@@ -43,20 +46,7 @@ class _PublishScreenState extends State<PublishScreen> {
                   children: [
                     Stack(
                       children: [
-                        if (provider.nftFormat.format == kImageText) ...[ImageWidget(file: provider.file!)],
-                        if (provider.nftFormat.format == kVideoText) ...[
-                          VideoWidget(
-                            file: provider.file!,
-                            previewFlag: true,
-                            isForFile: true,
-                          )
-                        ],
-                        if (provider.nftFormat.format == kAudioText) ...[
-                          AudioWidget(
-                            file: provider.file!,
-                            previewFlag: true,
-                          )
-                        ],
+                        buildPreviewWidget(provider),
                         Positioned(
                             top: 60,
                             right: 10,
@@ -167,5 +157,32 @@ class _PublishScreenState extends State<PublishScreen> {
         ],
       ),
     );
+  }
+
+  Widget buildPreviewWidget(EaselProvider provider) {
+    switch (provider.nft.assetType) {
+      case kImageText:
+        return ImageWidget(file: provider.file!);
+      case kVideoText:
+        return VideoWidget(
+          file: provider.file!,
+          previewFlag: true,
+          isForFile: true,
+        );
+      case k3dText:
+        return SizedBox(
+            height: MediaQuery.of(context).size.height * 0.3,
+            width: 1.sw,
+            child: Model3dViewer(
+              path: provider.nft.url,
+              isFile: false,
+            ));
+      case kAudioText:
+        return AudioWidget(
+          file: provider.file!,
+          previewFlag: true,
+        );
+    }
+    return const SizedBox.shrink();
   }
 }

@@ -38,13 +38,16 @@ class _DescribeScreenState extends State<DescribeScreen> {
   void initState() {
     super.initState();
 
-    context.read<EaselProvider>().toCheckSavedArtistName();
-    WidgetsBinding.instance.addPostFrameCallback((_) async {
-       DraftDetailDialog(context: context).show();
+    EaselProvider easelProvider = context.read<EaselProvider>();
 
+    easelProvider.toCheckSavedArtistName();
 
-    });
-     }
+    if (easelProvider.willLoadFirstTime) {
+      WidgetsBinding.instance.addPostFrameCallback((_) async {
+        DraftDetailDialog(context: context).show();
+      });
+    }
+  }
 
   @override
   Widget build(BuildContext context) {

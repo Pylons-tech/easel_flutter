@@ -98,6 +98,7 @@ class _PriceScreenState extends State<PriceScreen> {
                       Visibility(
                         visible: !provider.isFreeDrop,
                         child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             VerticalSpace(20.h),
 

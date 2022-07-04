@@ -46,9 +46,7 @@ void _registerExternalDependencies() {
           }),
     ),
   );
-  sl.registerSingletonAsync<AppDatabase>(
-          () => $FloorAppDatabase.databaseBuilder('app_database.db').build());
-
+  sl.registerSingletonAsync<AppDatabase>(() => $FloorAppDatabase.databaseBuilder('app_database.db').build());
 
   sl.registerLazySingleton<AudioPlayer>(() => AudioPlayer());
 
@@ -65,13 +63,7 @@ void _registerLocalDataSources() {
 }
 
 void _registerProviders() {
-  sl.registerLazySingleton<EaselProvider>(() => EaselProvider(
-        remoteDataSource: sl(),
-        videoPlayerHelper: sl(),
-        localDataSource: sl(),
-        audioPlayerHelper: sl(),
-        fileUtilsHelper: sl(),
-      ));
+  sl.registerLazySingleton<EaselProvider>(() => EaselProvider(remoteDataSource: sl(), videoPlayerHelper: sl(), localDataSource: sl(), audioPlayerHelper: sl(), fileUtilsHelper: sl(), repository: sl()));
 
   sl.registerLazySingleton<CreatorHubViewModel>(() => CreatorHubViewModel(sl(), sl()));
 }
@@ -82,6 +74,4 @@ void _registerServices() {
   sl.registerFactory<AudioPlayerHelper>(() => AudioPlayerHelperImpl(sl()));
   sl.registerLazySingleton<NetworkInfo>(() => NetworkInfoImpl(sl()));
   sl.registerLazySingleton<Repository>(() => RepositoryImp(networkInfo: sl(), localDataSource: sl(), remoteDataSource: sl()));
-
 }
-
