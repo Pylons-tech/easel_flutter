@@ -4,22 +4,15 @@ import 'package:easel_flutter/screens/creator_hub/creator_hub_view_model.dart';
 import 'package:easel_flutter/screens/custom_widgets/step_labels.dart';
 import 'package:easel_flutter/screens/custom_widgets/steps_indicator.dart';
 import 'package:easel_flutter/screens/describe_screen.dart';
+import 'package:easel_flutter/screens/home_view_model/home_view_model.dart';
 import 'package:easel_flutter/screens/price_screen.dart';
-import 'package:easel_flutter/screens/published_screen.dart';
-import 'package:easel_flutter/services/datasources/local_datasource.dart';
-import 'package:easel_flutter/services/datasources/remote_datasource.dart';
-import 'package:easel_flutter/utils/constants.dart';
 import 'package:easel_flutter/utils/easel_app_theme.dart';
-import 'package:easel_flutter/utils/enums.dart';
 import 'package:easel_flutter/utils/screen_responsive.dart';
 import 'package:easel_flutter/utils/space_utils.dart';
-import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get_it/get_it.dart';
 import 'package:provider/provider.dart';
-
-import '../models/nft.dart';
 import 'choose_format_screen.dart';
 import 'custom_widgets/step_labels.dart';
 import 'custom_widgets/steps_indicator.dart';
@@ -37,63 +30,21 @@ class HomeScreen extends StatefulWidget {
 class _HomeScreenState extends State<HomeScreen> {
   late EaselProvider easelProvider;
   var repository = GetIt.I.get<Repository>();
-  late final PageController _pageController;
-
-  late ValueNotifier<int> _currentPage;
-
-  late ValueNotifier<int> _currentStep;
-
-  NFT? nft;
-  String? from;
-  final List pageTitles = ["select_nft_file".tr(), "nft_detail_text".tr(), "nft_pricing".tr(), ''];
+  late HomeViewModel homeViewModel;
 
   @override
   void initState() {
     easelProvider = Provider.of<EaselProvider>(context, listen: false);
-    from = repository.getCacheString(key: "from");
-    repository.deleteCacheString(key: "from");
+    homeViewModel = Provider.of<HomeViewModel>(context, listen: false);
 
-    if (from == "draft") {
-      nft = repository.getCacheDynamicType(key: "nft");
-
-      if (mounted) {
-        Future.delayed(const Duration(milliseconds: 1), () {
-          easelProvider.setTextFieldValuesDescription(artName: nft?.name, description: nft?.description);
-          easelProvider.setTextFieldValuesPrice(royalties: nft?.tradePercentage, price: nft?.price, edition: nft?.quantity.toString(), denom: nft?.denom);
-        });
-      }
-
-      if (nft!.step == UploadStep.assetUploaded.name) {
-        _currentPage = ValueNotifier(1);
-        _currentStep = ValueNotifier(1);
-        _pageController = PageController(keepPage: true, initialPage: 1);
-        return;
-      } else if (nft!.step == UploadStep.descriptionAdded.name) {
-        _currentPage = ValueNotifier(1);
-        _currentStep = ValueNotifier(1);
-        _pageController = PageController(keepPage: true, initialPage: 2);
-        return;
-      } else if (nft!.step == UploadStep.priceAdded.name) {
-        _currentPage = ValueNotifier(2);
-        _currentStep = ValueNotifier(2);
-        _pageController = PageController(keepPage: true, initialPage: 3);
-        return;
-      } else {
-        _currentPage = ValueNotifier(0);
-        _currentStep = ValueNotifier(0);
-        _pageController = PageController(keepPage: true, initialPage: 0);
-      }
-    } else {
-      _currentPage = ValueNotifier(0);
-      _currentStep = ValueNotifier(0);
-      _pageController = PageController(keepPage: true, initialPage: 0);
-    }
+    homeViewModel.init(easelProvider);
 
     super.initState();
   }
 
   @override
   void dispose() {
+    homeViewModel.disposeControllers();
     super.dispose();
   }
 
@@ -112,9 +63,9 @@ class _HomeScreenState extends State<HomeScreen> {
             body: Column(
               children: [
                 const VerticalSpace(20),
-                MyStepsIndicator(currentPage: _currentPage, currentStep: _currentStep),
+                MyStepsIndicator(currentPage: homeViewModel.currentPage, currentStep: homeViewModel.currentStep),
                 const VerticalSpace(5),
-                StepLabels(currentPage: _currentPage, currentStep: _currentStep),
+                StepLabels(currentPage: homeViewModel.currentPage, currentStep: homeViewModel.currentStep),
                 const VerticalSpace(10),
                 Stack(
                   alignment: Alignment.center,
@@ -122,14 +73,14 @@ class _HomeScreenState extends State<HomeScreen> {
                     Align(
                         alignment: Alignment.centerLeft,
                         child: ValueListenableBuilder(
-                          valueListenable: _currentPage,
+                          valueListenable: homeViewModel.currentPage,
                           builder: (_, int currentPage, __) => Padding(
                               padding: EdgeInsets.only(left: 10.sp),
                               child: IconButton(
                                 onPressed: () {
                                   ScaffoldMessenger.of(context).hideCurrentSnackBar();
-                                  _pageController.previousPage(duration: const Duration(milliseconds: 300), curve: Curves.easeIn);
-                                  if (_currentPage.value == 0) {
+                                  homeViewModel.pageController.previousPage(duration: const Duration(milliseconds: 300), curve: Curves.easeIn);
+                                  if (homeViewModel.currentPage.value == 0) {
                                     context.read<CreatorHubViewModel>().getDraftsList();
                                     Navigator.of(context).pop();
                                   }
@@ -141,10 +92,10 @@ class _HomeScreenState extends State<HomeScreen> {
                               )),
                         )),
                     ValueListenableBuilder(
-                      valueListenable: _currentPage,
+                      valueListenable: homeViewModel.currentPage,
                       builder: (_, int currentPage, __) {
                         return Text(
-                          pageTitles[_currentPage.value],
+                          homeViewModel.pageTitles[homeViewModel.currentPage.value],
                           style: Theme.of(context).textTheme.bodyText1!.copyWith(fontSize: 18.sp, fontWeight: FontWeight.w400, color: EaselAppTheme.kDarkText),
                         );
                       },
@@ -157,29 +108,29 @@ class _HomeScreenState extends State<HomeScreen> {
                 ),
                 Expanded(
                   child: PageView(
-                    controller: _pageController,
+                    controller: homeViewModel.pageController,
                     physics: const NeverScrollableScrollPhysics(),
                     onPageChanged: (int page) {
-                      _currentPage.value = page;
+                      homeViewModel.currentPage.value = page;
                       switch (page) {
                         case 0:
-                          _currentStep.value = 0;
+                          homeViewModel.currentStep.value = 0;
                           break;
                         case 1:
                         case 2:
-                          _currentStep.value = 1;
+                          homeViewModel.currentStep.value = 1;
                           break;
 
                         case 3:
-                          _currentStep.value = 2;
+                          homeViewModel.currentStep.value = 2;
                           break;
                       }
                     },
                     children: [
-                      ChooseFormatScreen(controller: _pageController),
-                      DescribeScreen(controller: _pageController),
-                      PriceScreen(controller: _pageController),
-                      MintScreen(controller: _pageController),
+                      ChooseFormatScreen(controller: homeViewModel.pageController),
+                      DescribeScreen(controller: homeViewModel.pageController),
+                      PriceScreen(controller: homeViewModel.pageController),
+                      MintScreen(controller: homeViewModel.pageController),
                     ],
                   ),
                 ),

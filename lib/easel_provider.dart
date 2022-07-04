@@ -835,7 +835,7 @@ class EaselProvider extends ChangeNotifier {
   }
 
   Future<bool> updateNftFromDescription(int id) async {
-    final saveNftResponse =await repository.updateNftFromDescription(888, artNameController.text, descriptionController.text, artistNameController.text, UploadStep.descriptionAdded.name);
+    final saveNftResponse =await repository.updateNftFromDescription(id, artNameController.text, descriptionController.text, artistNameController.text, UploadStep.descriptionAdded.name);
 
     if(saveNftResponse.isLeft()){
 
