@@ -767,9 +767,12 @@ class EaselProvider extends ChangeNotifier {
   }
 
   Future<bool> createRecipe(NFT nft) async {
-    if (!await shouldMintUSDOrNot()) {
-      return false;
+    if(nft.isFreeDrop==false){
+      if (!await shouldMintUSDOrNot()) {
+        return false;
+      }
     }
+
 
     // get device cookbook id
     _cookbookId = repository.getCookbookId();
