@@ -98,7 +98,7 @@ abstract class Repository {
   /// [String] the  quantity of the nft , [String] the page name of the Pageview
   /// Output: [bool] returns whether the operation is successful or not
   /// will return error in the form of failure
-  Future<Either<Failure, bool>> updateNftFromPrice(int id, String tradePercentage, String price, String quantity, String step, String name);
+  Future<Either<Failure, bool>> updateNftFromPrice(int id, String tradePercentage, String price, String quantity, String step, String denomName, bool isFreeDrop);
 
   /// This method is used uploading provided file to the server using [httpClient]
   /// Input : [file] which needs to be uploaded
@@ -108,6 +108,10 @@ abstract class Repository {
   /// This method will get the drafts List from the local database
   /// Output: [List][NFT] returns  the List of drafts
   Future<Either<Failure, List<NFT>>> getNfts();
+
+  /// This method will get the drafts List from the local database
+  /// Output: [List][NFT] returns  the List of drafts
+  Future<Either<Failure, NFT>> getNft(int id);
 
   /// This method will delete draft from the local database
   /// Input: [id] the id of the draft which the user wants to delete
@@ -218,7 +222,7 @@ class RepositoryImp implements Repository {
     try {
       bool result = await localDataSource.updateNftFromDescription(id, nftName, nftDescription, creatorName, step);
 
-      if(!result){
+      if (!result) {
         return Left(CacheFailure("save_error".tr()));
       }
       return Right(result);
@@ -228,9 +232,9 @@ class RepositoryImp implements Repository {
   }
 
   @override
-  Future<Either<Failure, bool>> updateNftFromPrice(int id, String tradePercentage, String price, String quantity, String step, String name) async {
+  Future<Either<Failure, bool>> updateNftFromPrice(int id, String tradePercentage, String price, String quantity, String step, String name, bool isFreeDrop) async {
     try {
-      bool result = await localDataSource.updateNftFromPrice(id, tradePercentage, price, quantity, step, name);
+      bool result = await localDataSource.updateNftFromPrice(id, tradePercentage, price, quantity, step, name, isFreeDrop);
 
       return Right(result);
     } on Exception catch (_) {
@@ -239,7 +243,7 @@ class RepositoryImp implements Repository {
   }
 
   @override
-  Future<Either<Failure, ApiResponse>> uploadFile(File file) async{
+  Future<Either<Failure, ApiResponse>> uploadFile(File file) async {
     try {
       ApiResponse apiResponse = await remoteDataSource.uploadFile(file);
 
@@ -250,25 +254,34 @@ class RepositoryImp implements Repository {
   }
 
   @override
-  Future<Either<Failure, List<NFT>>> getNfts() async{
+  Future<Either<Failure, List<NFT>>> getNfts() async {
     try {
-     final response =  await localDataSource.getNfts();
+      final response = await localDataSource.getNfts();
 
       return Right(response);
     } on Exception catch (_) {
-
-      return  Left(CacheFailure("something_wrong".tr()));
+      return Left(CacheFailure("something_wrong".tr()));
     }
   }
 
   @override
-  Future<Either<Failure, bool>> deleteNft(int id) async{
-      try {
-        bool result = await localDataSource.deleteNft(id);
-        return Right(result);
-      } on Exception catch (_) {
-        return Left(CacheFailure("something_wrong".tr()));
-      }
+  Future<Either<Failure, bool>> deleteNft(int id) async {
+    try {
+      bool result = await localDataSource.deleteNft(id);
+      return Right(result);
+    } on Exception catch (_) {
+      return Left(CacheFailure("something_wrong".tr()));
     }
+  }
 
+  @override
+  Future<Either<Failure, NFT>> getNft(int id) async{
+    try {
+      Stream<NFT?> results =  localDataSource.getNft(id);
+     NFT result = results.firstWhere((element) => element!.id == id) as NFT;
+      return Right(result);
+    } on Exception catch (_) {
+      return Left(CacheFailure("something_wrong".tr()));
+    }
+  }
 }

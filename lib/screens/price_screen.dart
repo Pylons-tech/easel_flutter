@@ -247,7 +247,7 @@ class _PriceScreenState extends State<PriceScreen> {
                       FocusScope.of(context).unfocus();
                       if (_formKey.currentState!.validate()) {
                         if (_royaltiesFieldError.isEmpty && _noOfEditionsFieldError.isEmpty && _priceFieldError.isEmpty) {
-                          context.read<EaselProvider>().updateNftFromPrice(nft?.id);
+                          context.read<EaselProvider>().updateNftFromPrice(nft!.id!);
                           widget.controller.nextPage(duration: const Duration(milliseconds: 300), curve: Curves.easeIn);
                         }
                       }

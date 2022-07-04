@@ -169,7 +169,7 @@ class _MintScreenState extends State<MintScreen> {
                         Align(
                           child: PylonsButton(
                             onPressed: () async {
-                              bool isRecipeCreated = await provider.createRecipe();
+                              bool isRecipeCreated = await provider.createRecipeFromNftDraft(nft);
                               if (!isRecipeCreated) {
                                 return;
                               }

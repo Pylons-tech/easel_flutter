@@ -18,6 +18,6 @@ abstract class NftDao {
   @Query('UPDATE nft SET name = :nftName, description= :nftDescription, creator = :creatorName, step = :step WHERE id = :id')
   Future<void> updateNFTFromDescription(int id, String nftName, String nftDescription, String creatorName, String step);
 
-  @Query('UPDATE nft SET tradePercentage = :tradePercentage, price= :price, quantity = :quantity, denom =:denom, step = :step WHERE id = :id')
-  Future<void> updateNFTFromPrice(int id, String tradePercentage, String price, String quantity, String step, String denom);
+  @Query('UPDATE nft SET tradePercentage = :tradePercentage, price= :price, quantity = :quantity, denom =:denom, step = :step, isFreeDrop = :isFreeDrop WHERE id = :id')
+  Future<void> updateNFTFromPrice(int id, String tradePercentage, String price, String quantity, String step, String denom, bool isFreeDrop);
 }
