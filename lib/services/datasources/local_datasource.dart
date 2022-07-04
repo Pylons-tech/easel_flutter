@@ -56,7 +56,7 @@ abstract class LocalDataSource {
 
   /// This method will get the drafts List from the local database
   /// Output: [List][NFT] returns  the List of drafts
-  Stream<NFT?> getNft(int id);
+  Future<NFT?> getNft(int id);
 
   /// This method will update draft in the local database from description Page
   /// Input: [id] the id of the nft,
@@ -252,11 +252,11 @@ class LocalDataSourceImpl implements LocalDataSource {
   }
 
   @override
-  Stream<NFT?> getNft(int id) async* {
+  Future<NFT?> getNft(int id) async {
     try {
-      yield*  database.nftDao.findNftById(id);
+      return await  database.nftDao.findNftById(id);
     } catch (e) {
-      yield throw "";
+      return throw "";
     }
   }
 }

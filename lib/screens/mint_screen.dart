@@ -3,6 +3,7 @@ import 'package:easel_flutter/models/nft.dart';
 import 'package:easel_flutter/utils/constants.dart';
 import 'package:easel_flutter/utils/date_utils.dart';
 import 'package:easel_flutter/utils/easel_app_theme.dart';
+import 'package:easel_flutter/utils/route_util.dart';
 import 'package:easel_flutter/utils/space_utils.dart';
 import 'package:easel_flutter/widgets/audio_widget.dart';
 import 'package:easel_flutter/widgets/background_widget.dart';
@@ -169,12 +170,12 @@ class _MintScreenState extends State<MintScreen> {
                         Align(
                           child: PylonsButton(
                             onPressed: () async {
-                              bool isRecipeCreated = await provider.createRecipeFromNftDraft(nft);
+                              bool isRecipeCreated = await provider.createRecipe(nft);
                               if (!isRecipeCreated) {
                                 return;
                               }
                               provider.disposeAudioController();
-                              widget.controller.nextPage(duration: const Duration(milliseconds: 300), curve: Curves.easeIn);
+                              Navigator.of(context).pop();
                             },
                             btnText: kListText,
                             showArrow: true,

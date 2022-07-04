@@ -275,11 +275,14 @@ class RepositoryImp implements Repository {
   }
 
   @override
-  Future<Either<Failure, NFT>> getNft(int id) async{
+  Future<Either<Failure, NFT>> getNft(int id) async {
     try {
-      Stream<NFT?> results =  localDataSource.getNft(id);
-     NFT result = results.firstWhere((element) => element!.id == id) as NFT;
-      return Right(result);
+      NFT? data = await localDataSource.getNft(id);
+      if (data == null) {
+        return Left(CacheFailure("something_wrong".tr()));
+      } else {
+        return Right(data);
+      }
     } on Exception catch (_) {
       return Left(CacheFailure("something_wrong".tr()));
     }

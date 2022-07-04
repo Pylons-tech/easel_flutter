@@ -7,7 +7,7 @@ abstract class NftDao {
   Future<List<NFT>> findAllNft();
 
   @Query('SELECT * FROM nft WHERE id = :id')
-  Stream<NFT?> findNftById(int id);
+  Future<NFT?> findNftById(int id);
 
   @insert
   Future<int> insertNft(NFT nft);
