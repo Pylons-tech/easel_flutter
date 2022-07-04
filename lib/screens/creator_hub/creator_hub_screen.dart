@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:easel_flutter/models/nft.dart';
+import 'package:easel_flutter/repository/repository.dart';
 import 'package:easel_flutter/screens/creator_hub/creator_hub_view_model.dart';
 import 'package:easel_flutter/screens/creator_hub/widgets/drafts_more_bottomsheet.dart';
 import 'package:easel_flutter/utils/constants.dart';
@@ -9,9 +10,10 @@ import 'package:easel_flutter/utils/route_util.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:get_it/get_it.dart';
 import 'package:provider/provider.dart';
-
 import '../../utils/dependency_injection/dependency_injection_container.dart';
 
 class CreatorHubScreen extends StatefulWidget {
@@ -211,7 +213,7 @@ class _CreatorHubScreenState extends State<CreatorHubScreen> {
                 ? ListView.builder(
                     shrinkWrap: true,
                     physics: const NeverScrollableScrollPhysics(),
-                    itemBuilder: (_, index) => buildListTile(nft: viewModel.nftList[index]),
+                    itemBuilder: (_, index) => buildListTile(nft: viewModel.nftList[index], viewModel: viewModel),
                     itemCount: viewModel.nftList.length,
                   )
                 : const SizedBox()
@@ -219,70 +221,100 @@ class _CreatorHubScreenState extends State<CreatorHubScreen> {
     );
   }
 
-  Widget buildListTile({required NFT nft}) {
-    return Container(
-        margin: EdgeInsets.symmetric(vertical: 5.h, horizontal: 3.w),
-        decoration: BoxDecoration(color: Colors.white, boxShadow: [
-          BoxShadow(
-            color: Colors.black.withOpacity(0.3),
-            offset: const Offset(0.0, 1.0),
-            blurRadius: 4.0,
+  Widget buildListTile({required NFT nft, required CreatorHubViewModel viewModel}) {
+    final repository= GetIt.I.get<Repository>();
+    return Slidable(
+      key: const ValueKey(0),
+      closeOnScroll: false,
+      endActionPane: ActionPane(
+        extentRatio: 0.3,
+        motion: const ScrollMotion(),
+        children: [
+          Expanded(
+            child: InkWell(
+              onTap: () {
+                viewModel.deleteNft(nft.id);
+              },
+              child: SvgPicture.asset(kSvgDelete),
+            ),
           ),
-        ]),
-        child: Padding(
-          padding: EdgeInsets.symmetric(horizontal: 15.w, vertical: 15.h),
-          child: Row(
-            children: [
-              SizedBox(
-                height: 45.h,
-                width: 45.h,
-                child: CachedNetworkImage(
-                  fit: BoxFit.fill,
-                  imageUrl: nft.assetType == kImageText ? nft.url : nft.thumbnailUrl,
-                  errorWidget: (a, b, c) => const Center(child: Icon(Icons.error_outline)),
-                  placeholder: (context, url) => Center(
-                    child: SizedBox(height: 30.h, width: 30.h, child: const CircularProgressIndicator()),
+          Expanded(
+            child: InkWell(
+              onTap: () {
+                repository.setCacheDynamicType(key: "nft", value: nft);
+                repository.setCacheString(key: "from", value: "draft");
+                Navigator.of(context).pop();
+                Navigator.of(context).pushNamed(RouteUtil.ROUTE_HOME);
+              },
+              child: SvgPicture.asset(kSvgPublish),
+            ),
+          )
+        ],
+      ),
+      child: Container(
+          margin: EdgeInsets.symmetric(vertical: 5.h, horizontal: 3.w),
+          decoration: BoxDecoration(color: Colors.white, boxShadow: [
+            BoxShadow(
+              color: Colors.black.withOpacity(0.3),
+              offset: const Offset(0.0, 1.0),
+              blurRadius: 4.0,
+            ),
+          ]),
+          child: Padding(
+            padding: EdgeInsets.symmetric(horizontal: 15.w, vertical: 15.h),
+            child: Row(
+              children: [
+                SizedBox(
+                  height: 45.h,
+                  width: 45.h,
+                  child: CachedNetworkImage(
+                    fit: BoxFit.fill,
+                    imageUrl: nft.assetType == kImageText ? nft.url : nft.thumbnailUrl,
+                    errorWidget: (a, b, c) => const Center(child: Icon(Icons.error_outline)),
+                    placeholder: (context, url) => Center(
+                      child: SizedBox(height: 30.h, width: 30.h, child: const CircularProgressIndicator()),
+                    ),
                   ),
                 ),
-              ),
-              SizedBox(
-                width: 10.w,
-              ),
-              Expanded(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      "nft_name".tr(args: [nft.name.isNotEmpty ? nft.name : 'Nft Name']),
-                      style: titleStyle,
-                      maxLines: 1,
-                      overflow: TextOverflow.ellipsis,
-                    ),
-                    SizedBox(
-                      height: 11.h,
-                    ),
-                    Text(
-                      "draft".tr(),
-                      style: titleStyle.copyWith(color: EaselAppTheme.kLightRed, fontSize: 13.sp),
-                    ),
-                  ],
+                SizedBox(
+                  width: 10.w,
                 ),
-              ),
-              SizedBox(
-                width: 10.w,
-              ),
-              InkWell(
-                  onTap: () {
-                    final DraftsBottomSheet draftsBottomSheet = DraftsBottomSheet(buildContext: context, nft: nft, repository: sl());
-                    draftsBottomSheet.show();
-                  },
-                  child: Padding(
-                    padding: EdgeInsets.all(4.0.w),
-                    child: SvgPicture.asset(kSvgMoreOption),
-                  ))
-            ],
-          ),
-        ));
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        "nft_name".tr(args: [nft.name.isNotEmpty ? nft.name : 'Nft Name']),
+                        style: titleStyle,
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
+                      ),
+                      SizedBox(
+                        height: 11.h,
+                      ),
+                      Text(
+                        "draft".tr(),
+                        style: titleStyle.copyWith(color: EaselAppTheme.kLightRed, fontSize: 13.sp),
+                      ),
+                    ],
+                  ),
+                ),
+                SizedBox(
+                  width: 10.w,
+                ),
+                InkWell(
+                    onTap: () {
+                      final DraftsBottomSheet draftsBottomSheet = DraftsBottomSheet(buildContext: context, nft: nft, repository: sl());
+                      draftsBottomSheet.show();
+                    },
+                    child: Padding(
+                      padding: EdgeInsets.all(4.0.w),
+                      child: SvgPicture.asset(kSvgMoreOption),
+                    ))
+              ],
+            ),
+          )),
+    );
   }
 
   Widget buildCard({required String title, required String count, required Color cardColor, required CreatorHubViewModel viewModel}) {

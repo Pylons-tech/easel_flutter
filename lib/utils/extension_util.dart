@@ -25,7 +25,27 @@ extension ScaffoldHelper on BuildContext? {
       ));
   }
 }
-extension ValueConvertor on String {
+
+
+extension NavigatorKey on GlobalKey {
+  void showMsg({required String message}) {
+
+    ScaffoldMessenger.maybeOf(currentState!.context)
+      ?..hideCurrentSnackBar()
+      ..showSnackBar(SnackBar(
+        content: Text(
+          message,
+          textAlign: TextAlign.start,
+          style: TextStyle(
+            fontSize: 14.sp,
+          ),
+        ),
+        duration: const Duration(seconds: 2),
+      ));
+  }
+}
+
+extension ValueConverter on String {
   double fromBigInt() {
     if (this == "") {
       return 0;

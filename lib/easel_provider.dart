@@ -2,6 +2,7 @@ import 'dart:async';
 import 'dart:developer';
 import 'dart:io';
 import 'package:easel_flutter/repository/repository.dart';
+import 'package:easel_flutter/utils/route_util.dart';
 import 'package:easy_localization/easy_localization.dart';
 
 import '../utils/enums.dart';
@@ -841,12 +842,49 @@ class EaselProvider extends ChangeNotifier {
     return true;
   }
 
+  Future<void> saveNftAsset(BuildContext context) async {
+    if ( !_file!.existsSync()) {
+      navigatorKey.showMsg(message: kErrPickFileFetch);
+      return;
+    }
+    switch (nftFormat.format) {
+      case kAudioText:
+        if (audioThumbnail == null) {
+          navigatorKey.showMsg(message: "err_add_audio_thumbnail".tr());
+          return;
+        }
+        await saveNftCheckResponse( UploadStep.assetUploaded, context);
+        break;
+
+      case kVideoText:
+        if (videoThumbnail == null) {
+          navigatorKey.showMsg(message: "err_add_video_thumbnail".tr());
+          return;
+        }
+        await saveNftCheckResponse( UploadStep.assetUploaded, context);
+        break;
+
+      default:
+        await saveNftCheckResponse(UploadStep.assetUploaded ,context);
+    }
+  }
+
+  saveNftCheckResponse(UploadStep step, BuildContext context)async{
+
+    bool success= await  saveNftLocally(step);
+
+    if(!success)  {
+      return;
+    }
+    Navigator.of(context).pushNamedAndRemoveUntil((RouteUtil.ROUTE_CREATOR_HUB), (route) => false);
+
+  }
   Future<bool> updateNftFromDescription(int id) async {
     final saveNftResponse = await repository.updateNftFromDescription(id, artNameController.text, descriptionController.text, artistNameController.text, UploadStep.descriptionAdded.name);
 
     final _nft = repository.getNft(id);
     // if(_nft.isLeft()){}
-    repository.setCacheDynamicType(key: 'nft', value: _nft.);
+    repository.setCacheDynamicType(key: 'nft', value: _nft);
     if (saveNftResponse.isLeft()) {
       navigatorKey.currentState!.overlay!.context.show(message: "save_error".tr());
 
