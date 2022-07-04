@@ -4,10 +4,14 @@ import 'dart:io';
 import 'package:easel_flutter/repository/repository.dart';
 import 'package:easy_localization/easy_localization.dart';
 
+import 'package:easel_flutter/models/api_response.dart';
+import 'package:easel_flutter/models/storage_response_model.dart';
+import 'package:easel_flutter/repository/repository.dart';
+import 'package:easy_localization/easy_localization.dart';
+
 import '../utils/enums.dart';
 
 import 'package:easel_flutter/main.dart';
-import 'package:easel_flutter/models/api_response.dart';
 import 'package:easel_flutter/models/denom.dart';
 import 'package:easel_flutter/models/nft.dart';
 import 'package:easel_flutter/models/nft_format.dart';
@@ -62,6 +66,8 @@ class EaselProvider extends ChangeNotifier {
   late NFT _publishedNFTClicked;
 
   NFT get publishedNFTClicked => _publishedNFTClicked;
+
+  bool willLoadFirstTime = true;
 
   void setPublishedNFTClicked(NFT nft) {
     _publishedNFTClicked = nft;
@@ -172,6 +178,8 @@ class EaselProvider extends ChangeNotifier {
     priceController.clear();
     royaltyController.clear();
     hashtagsList.clear();
+    willLoadFirstTime = true;
+    isFreeDrop = false;
     notifyListeners();
   }
 
@@ -453,7 +461,7 @@ class EaselProvider extends ChangeNotifier {
       return true;
     }
 
-    navigatorKey.currentState!.overlay!.context.show(message: response.error);
+    navigatorKey.showMsg(message: response.error);
     return false;
   }
 
@@ -523,7 +531,7 @@ class EaselProvider extends ChangeNotifier {
   /// false || false (Stripe account doesnt exists and selected denom is USD) return false
   /// false || true (Stripe account doesnt exists and selected denom is not  USD) return true
   Future<bool> shouldMintUSDOrNot() async {
-    if (stripeAccountExists || _selectedDenom.symbol != kUsdSymbol) {
+    if (stripeAccountExists || _selectedDenom.symbol != kUsdSymbol || isFreeDrop) {
       return true;
     }
 

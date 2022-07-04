@@ -1,15 +1,19 @@
 import 'package:easel_flutter/easel_provider.dart';
+import 'package:easel_flutter/easel_provider.dart';
 import 'package:easel_flutter/repository/repository.dart';
 import 'package:easel_flutter/screens/creator_hub/creator_hub_view_model.dart';
 import 'package:easel_flutter/screens/custom_widgets/step_labels.dart';
 import 'package:easel_flutter/screens/custom_widgets/steps_indicator.dart';
 import 'package:easel_flutter/screens/describe_screen.dart';
+import 'package:easel_flutter/screens/mint_screen.dart';
 import 'package:easel_flutter/screens/price_screen.dart';
 import 'package:easel_flutter/screens/published_screen.dart';
 import 'package:easel_flutter/services/datasources/local_datasource.dart';
 import 'package:easel_flutter/services/datasources/remote_datasource.dart';
 import 'package:easel_flutter/utils/constants.dart';
+import 'package:easel_flutter/screens/publish_screen.dart';
 import 'package:easel_flutter/utils/easel_app_theme.dart';
+import 'package:easel_flutter/utils/route_util.dart';
 import 'package:easel_flutter/utils/enums.dart';
 import 'package:easel_flutter/utils/screen_responsive.dart';
 import 'package:easel_flutter/utils/space_utils.dart';
@@ -17,6 +21,7 @@ import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get_it/get_it.dart';
+import 'package:provider/provider.dart';
 import 'package:provider/provider.dart';
 
 import '../models/nft.dart';
@@ -90,6 +95,9 @@ class _HomeScreenState extends State<HomeScreen> {
     }
 
     super.initState();
+    Future.delayed(const Duration(milliseconds: 10), () {
+      context.read<EaselProvider>().initStore();
+    });
   }
 
   @override
@@ -99,6 +107,8 @@ class _HomeScreenState extends State<HomeScreen> {
 
   @override
   Widget build(BuildContext context) {
+    EaselProvider easelProvider = context.read<EaselProvider>();
+
     return WillPopScope(
       onWillPop: () async {
         await context.read<CreatorHubViewModel>().getDraftsList();
@@ -149,6 +159,7 @@ class _HomeScreenState extends State<HomeScreen> {
                         );
                       },
                     ),
+
                   ],
                 ),
                 ScreenResponsive(
@@ -189,5 +200,21 @@ class _HomeScreenState extends State<HomeScreen> {
         ),
       ),
     );
+  }
+
+ void  getCurrentPageExecution({required EaselProvider easelProvider}){
+    switch(_currentPage.value){
+      case 0:
+        context.read<CreatorHubViewModel>().getDraftsList();
+        Navigator.of(context).pop();
+        break;
+
+      case 1:
+        easelProvider.willLoadFirstTime = true;
+        break;
+      case 2:
+        easelProvider.willLoadFirstTime = false;
+        break;
+    }
   }
 }

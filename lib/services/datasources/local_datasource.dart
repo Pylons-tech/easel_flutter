@@ -2,6 +2,9 @@ import 'package:easel_flutter/datasources/database.dart';
 import 'package:easel_flutter/models/nft.dart';
 import 'package:easel_flutter/utils/constants.dart';
 import 'package:easel_flutter/utils/date_utils.dart';
+import 'package:easel_flutter/utils/failure/failure.dart';
+import 'package:easy_localization/easy_localization.dart';
+import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../datasources/cache_manager.dart';
@@ -27,6 +30,9 @@ abstract class LocalDataSource {
   /// This method will get the username of the cookbook generator
   /// Output: [String] returns whether the operation is successful or not
   String getCookBookGeneratorUsername();
+
+
+
 
   /// This method will save the artist name
   /// Input: [name] the name of the artist which the user want to save

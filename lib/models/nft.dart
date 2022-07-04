@@ -113,3 +113,5 @@ class NFT extends Equatable {
         owner,
       ];
 }
+
+

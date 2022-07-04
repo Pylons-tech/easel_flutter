@@ -1,6 +1,7 @@
-
 import 'package:easel_flutter/main.dart';
 import 'package:easel_flutter/models/nft.dart';
+import 'package:easel_flutter/services/datasources/local_datasource.dart';
+import 'package:easel_flutter/services/datasources/remote_datasource.dart';
 import 'package:easel_flutter/repository/repository.dart';
 import 'package:easel_flutter/utils/extension_util.dart';
 import 'package:easel_flutter/widgets/loading.dart';
@@ -52,12 +53,17 @@ class CreatorHubViewModel extends ChangeNotifier {
 
     notifyListeners();
   }
+    notifyListeners();
+  }
+
 
   Future<void> deleteNft(int? id) async {
     final deleteNftResponse = await repository.deleteNft(id!);
 
     if (deleteNftResponse.isLeft()) {
       navigatorKey.currentState!.overlay!.context.show(message: "delete_error".tr());
+    if (!success) {
+      navigatorKey.showMsg(message: "delete_error".tr());
       return;
     }
 

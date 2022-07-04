@@ -1,41 +1,38 @@
-
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:easel_flutter/easel_provider.dart';
 import 'package:easel_flutter/main.dart';
+import 'package:easel_flutter/models/nft.dart';
 import 'package:easel_flutter/screens/clippers/right_triangle_clipper.dart' as clipper;
 import 'package:easel_flutter/screens/clippers/right_triangle_clipper.dart';
+import 'package:easel_flutter/utils/constants.dart';
+import 'package:easel_flutter/utils/route_util.dart';
 import 'package:easel_flutter/widgets/clipped_button.dart';
 import 'package:easel_flutter/utils/easel_app_theme.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:model_viewer_plus/model_viewer_plus.dart';
+import 'package:provider/provider.dart';
+import 'package:shimmer_animation/shimmer_animation.dart';
 
-TextStyle _rowTitleTextStyle = TextStyle(color: Colors.white, fontWeight: FontWeight.w700, fontSize:isTablet? 11.sp: 13.sp);
-
+TextStyle _rowTitleTextStyle = TextStyle(color: Colors.white, fontWeight: FontWeight.w700, fontSize: isTablet ? 11.sp : 13.sp);
 
 class DraftDetailDialog {
   final BuildContext context;
 
-  DraftDetailDialog({ required this.context});
+  DraftDetailDialog({required this.context});
 
-  Future<void> show() async{
-  await  showDialog<String>(
-        context: context,
-        builder: (BuildContext context) =>  const _DraftDetailDialog());
+  Future<void> show() async {
+    await showDialog<String>(context: context, barrierDismissible: false, builder: (BuildContext context) => const _DraftDetailDialog());
   }
 }
 
-class _DraftDetailDialog extends StatefulWidget {
-
-
+class _DraftDetailDialog extends StatelessWidget {
   const _DraftDetailDialog({Key? key}) : super(key: key);
 
   @override
-  State<_DraftDetailDialog> createState() => _DraftWidgetState();
-}
-
-class _DraftWidgetState extends State<_DraftDetailDialog> {
-  @override
   Widget build(BuildContext context) {
+    EaselProvider easelProvider = context.watch<EaselProvider>();
 
     return Dialog(
       backgroundColor: Colors.transparent,
@@ -54,8 +51,7 @@ class _DraftWidgetState extends State<_DraftDetailDialog> {
                 child: ClipPath(
                   clipper: RightTriangleClipper(orientation: clipper.Orientation.Orientation_NW),
                   child: Container(
-                    color:  EaselAppTheme.kLightRed,
-
+                    color: EaselAppTheme.kLightRed,
                   ),
                 ),
               ),
@@ -86,53 +82,67 @@ class _DraftWidgetState extends State<_DraftDetailDialog> {
                   SizedBox(
                     height: 100.h,
                     width: 100.h,
-                    child: CachedNetworkImage(
-                      fit: BoxFit.fill,
-                      imageUrl: "nft.url",
-                      errorWidget: (a, b, c) => Container(color:EaselAppTheme.kBgWhite,child: const Center(child: Icon(Icons.error_outline, color: Colors.white,))),
-                      placeholder: (context, url) => Center(
-                        child: SizedBox(height: 30.h, width: 30.h, child: const CircularProgressIndicator()),
-                      ),
-                    ),
+                    child: easelProvider.nft.assetType == k3dText
+                        ? ModelViewer(
+                            src: easelProvider.nft.url,
+                            ar: false,
+                            autoRotate: false,
+                            cameraControls: false,
+                          )
+                        : CachedNetworkImage(
+                            fit: BoxFit.contain,
+                            imageUrl: getImageUrl(easelProvider),
+                            errorWidget: (a, b, c) => const Center(
+                                child: Icon(
+                              Icons.error_outline,
+                              color: Colors.white,
+                            )),
+                            placeholder: (context, url) => Shimmer(
+                                color: EaselAppTheme.cardBackground,
+                                child: SizedBox(
+                                  height: 100.h,
+                                  width: 100.h,
+                                )),
+                          ),
                   ),
-
                   SizedBox(
                     height: 30.h,
                   ),
-
                   buildRow(
-                    subtitle:"file.jpeg",
                     title: "upload_to_ipfs".tr(),
+                    subtitle: easelProvider.nft.fileName,
                   ),
                   SizedBox(
                     height: 5.h,
                   ),
                   buildRow(
-                    subtitle: "x5909yTEo90",
                     title: "content_id".tr(),
+                    subtitle: easelProvider.nft.cid,
                   ),
                   SizedBox(
                     height: 5.h,
                   ),
-
-                  buildRow(
-                    subtitle:"view".tr(),
-                    title: "tx_receipt".tr(),
-                  ),
+                  buildViewOnIPFS(
+                      title: "tx_receipt".tr(),
+                      subtitle: "view".tr(),
+                      onPressed: () {
+                        navigateToPreviewScreen(context: context, nft: easelProvider.nft);
+                      }),
                   SizedBox(
                     height: 50.h,
                   ),
-
                   SizedBox(
                     height: 45.h,
-                    width:isTablet? 120.w: 150.w,
+                    width: isTablet ? 120.w : 150.w,
                     child: ClippedButton(
-                        title: "close".tr(),
-                        bgColor: Colors.white.withOpacity(0.2),
-                        textColor: EaselAppTheme.kWhite,
-                        onPressed: () async {
-                          Navigator.pop(context);
-                        }, cuttingHeight: 15.h,),
+                      title: "close".tr(),
+                      bgColor: Colors.white.withOpacity(0.2),
+                      textColor: EaselAppTheme.kWhite,
+                      onPressed: () async {
+                        Navigator.pop(context);
+                      },
+                      cuttingHeight: 15.h,
+                    ),
                   )
                 ],
               ),
@@ -143,28 +153,89 @@ class _DraftWidgetState extends State<_DraftDetailDialog> {
     );
   }
 
+  void navigateToPreviewScreen({required BuildContext context, required NFT nft}) {
+    context.read<EaselProvider>().setPublishedNFTClicked(nft);
+    context.read<EaselProvider>().setPublishedNFTDuration(nft.duration);
+    Navigator.of(context).pushReplacementNamed(RouteUtil.ROUTE_PREVIEW_NFT_FULL_SCREEN);
+  }
+
+  String getImageUrl(EaselProvider easelProvider) {
+    if (easelProvider.nft.assetType == kImageText) {
+      return easelProvider.nft.url;
+    } else {
+      return easelProvider.nft.thumbnailUrl;
+    }
+  }
+
   Widget buildRow({required String title, required String subtitle}) {
     return Row(
       children: [
         Expanded(
             child: Padding(
-              padding: EdgeInsets.only(left:isTablet? 20.w : 40.w, right: 5.w),
-              child: Text(
-                title,
-                style: _rowTitleTextStyle,
-              ),
-            )),
+          padding: EdgeInsets.only(left: isTablet ? 20.w : 40.w, right: 5.w),
+          child: Text(
+            title,
+            style: _rowTitleTextStyle,
+          ),
+        )),
         Expanded(
             child: Padding(
-              padding: EdgeInsets.only(right:5.w,),
-              child: Text(
-                subtitle,
-                style: subtitle== "view".tr()? _rowTitleTextStyle.copyWith(color:EaselAppTheme.kLightPurple ): _rowTitleTextStyle,
-              ),
-            ))
+                padding: EdgeInsets.only(
+                  right: 5.w,
+                ),
+                child: subtitle.length > 14
+                    ? Row(
+                        children: [
+                          Text(
+                            subtitle.substring(0, 8),
+                            style: _rowTitleTextStyle,
+                          ),
+                          const Text("...",
+                              style: TextStyle(
+                                color: Colors.white,
+                              )),
+                          Text(
+                            subtitle.substring(subtitle.length - 5, subtitle.length),
+                            style: _rowTitleTextStyle,
+                          ),
+                        ],
+                      )
+                    : Text(
+                        subtitle,
+                        style: _rowTitleTextStyle,
+                      )))
       ],
     );
   }
 
-
+  Widget buildViewOnIPFS({required String title, required String subtitle, required Function onPressed}) {
+    return Row(
+      children: [
+        Expanded(
+            child: Padding(
+          padding: EdgeInsets.only(left: isTablet ? 20.w : 40.w, right: 5.w),
+          child: Text(
+            title,
+            style: _rowTitleTextStyle,
+          ),
+        )),
+        Expanded(
+          child: InkWell(
+            onTap: () {
+              onPressed();
+            },
+            child: Padding(
+              padding: EdgeInsets.only(
+                right: 5.w,
+              ),
+              child: Text(
+                subtitle,
+                style: subtitle == "view".tr() ? _rowTitleTextStyle.copyWith(color: EaselAppTheme.kLightPurple) : _rowTitleTextStyle,
+              ),
+            ),
+          ),
+        )
+      ],
+    );
+  }
 }
