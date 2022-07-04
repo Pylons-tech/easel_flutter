@@ -19,7 +19,7 @@ class HomeViewModel extends ChangeNotifier {
   String? from;
   final List pageTitles = ["select_nft_file".tr(), "nft_detail_text".tr(), "nft_pricing".tr(), ''];
 
-  init(EaselProvider easelProvider) {
+  init( {required VoidCallback setTextField}) {
     from = repository.getCacheString(key: "from");
     repository.deleteCacheString(key: "from");
 
@@ -27,9 +27,9 @@ class HomeViewModel extends ChangeNotifier {
       nft = repository.getCacheDynamicType(key: "nft");
 
       Future.delayed(const Duration(milliseconds: 1), () {
-        easelProvider.setTextFieldValuesDescription(artName: nft?.name, description: nft?.description);
-        easelProvider.setTextFieldValuesPrice(royalties: nft?.tradePercentage, price: nft?.price, edition: nft?.quantity.toString(), denom: nft?.denom);
-      });
+
+        setTextField.call();
+           });
 
       if (nft!.step == UploadStep.assetUploaded.name) {
         currentPage = ValueNotifier(1);
