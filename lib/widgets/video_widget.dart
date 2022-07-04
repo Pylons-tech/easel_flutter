@@ -136,36 +136,7 @@ class _VideoWidgetState extends State<VideoWidget> {
               children: [
                 SizedBox(height: MediaQuery.of(context).viewPadding.top + 20.h),
                 if (shouldShowThumbnailButtonOrStepsOrNot()) ...[
-                  // MyStepsIndicator(currentPage: _currentPage, currentStep: _currentStep),
                   VerticalSpace(50.h),
-                  // StepLabels(currentPage: _currentPage, currentStep: _currentStep),
-                  // Row(
-                  //   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                  //   children: [
-                  //     IconButton(
-                  //       onPressed: () {
-                  //         easelProvider.stopVideoIfPlaying();
-                  //         easelProvider.setVideoThumbnail(null);
-                  //         Navigator.pop(context);
-                  //       },
-                  //       icon: const Icon(
-                  //         Icons.arrow_back_ios,
-                  //         color: EaselAppTheme.kBlack,
-                  //       ),
-                  //     ),
-                  //     Text(
-                  //       kPreviewYourNFTText,
-                  //       style: Theme.of(context).textTheme.bodyText1!.copyWith(
-                  //             fontSize: 18.sp,
-                  //             fontWeight: FontWeight.w600,
-                  //             color: EaselAppTheme.kDarkText,
-                  //           ),
-                  //     ),
-                  //     SizedBox(
-                  //       width: 20.w,
-                  //     ),
-                  //   ],
-                  // ),
                 ],
                 SizedBox(
                   height: 20.w,
