@@ -95,7 +95,7 @@ class NFTsListTile extends StatelessWidget {
                           ),
                         ),
                         SizedBox(width: 9.w),
-                        if (publishedNFT.amountMinted < publishedNFT.quantity)
+                        if (publishedNFT.isEnabled && publishedNFT.amountMinted < publishedNFT.quantity)
                           Container(
                             color: EaselAppTheme.kBlue,
                             padding: EdgeInsets.symmetric(horizontal: 6.w, vertical: 3.h),
@@ -106,8 +106,6 @@ class NFTsListTile extends StatelessWidget {
                           )
                       ],
                     ),
-
-
                   ],
                 ),
               ),

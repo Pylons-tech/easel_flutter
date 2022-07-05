@@ -42,6 +42,7 @@ class NFT extends Equatable {
   String fileName = "";
   String cid = "";
 
+  bool isEnabled =true;
 
   NFT({
     this.id,
@@ -72,6 +73,7 @@ class NFT extends Equatable {
     this.hashtags = "",
     this.fileName = "",
     this.cid = ""
+    this.isEnabled= true
   });
 
   factory NFT.fromRecipe(Recipe recipe) {
@@ -102,6 +104,8 @@ class NFT extends Equatable {
       step: "",
       isFreeDrop: false,
       hashtags: recipe.entries.itemOutputs.firstOrNull?.strings.firstWhere((strKeyValue) => strKeyValue.key == kHashtags, orElse: () => StringParam()).value ?? "",
+
+      isEnabled: recipe.enabled,
     );
   }
 
@@ -118,5 +122,3 @@ class NFT extends Equatable {
         owner,
       ];
 }
-
-

@@ -14,6 +14,7 @@ class CreatorHubViewModel extends ChangeNotifier {
   CreatorHubViewModel(this.repository);
 
   int _publishedRecipesLength = 0;
+  int forSaleCount = 0;
 
   get publishedRecipesLength => _publishedRecipesLength;
 
@@ -49,11 +50,20 @@ class CreatorHubViewModel extends ChangeNotifier {
     return repository.getCookbookId();
   }
 
-  Future<void> getPublishAndDraftData() async{
-    await getDraftsList();
-   await getRecipesList();
-   notifyListeners();
+  getTotalForSale() {
+    forSaleCount = 0;
+    for (int i = 0; i < _publishedNFTsList.length; i++) {
+      if (publishedNFTsList[i].isEnabled && publishedNFTsList[i].amountMinted < publishedNFTsList[i].quantity) {
+        forSaleCount++;
+      }
+    }
+  }
 
+  Future<void> getPublishAndDraftData() async {
+    await getDraftsList();
+    await getRecipesList();
+    getTotalForSale();
+    notifyListeners();
   }
 
   Future<void> getRecipesList() async {
@@ -82,13 +92,9 @@ class CreatorHubViewModel extends ChangeNotifier {
       }
     }
 
-
     publishedRecipeLength = publishedNFTsList.length;
     loading.dismiss();
   }
-
-
-
 
   List<NFT> nftList = [];
 
