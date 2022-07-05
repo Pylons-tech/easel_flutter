@@ -119,11 +119,6 @@ abstract class Repository {
   /// Output: [bool] returns whether the operation is successful or not
   Future<Either<Failure, bool>> deleteNft(int id);
 
-  /// This method will save the draft of the NFT
-  /// Input: [NFT] the draft that will be saved in database
-  /// Output: [bool] returns whether the operation is successful or not
-  /// will return error in the form of failure
-  Future<Either<Failure, bool>> saveNft(NFT draft);
 }
 
 class RepositoryImp implements Repository {

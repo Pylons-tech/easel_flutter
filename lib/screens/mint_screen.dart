@@ -11,6 +11,7 @@ import 'package:easel_flutter/widgets/image_widget.dart';
 import 'package:easel_flutter/widgets/model_viewer.dart';
 import 'package:easel_flutter/widgets/pylons_button.dart';
 import 'package:easel_flutter/widgets/video_widget.dart';
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:get_it/get_it.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -70,7 +71,8 @@ class _MintScreenState extends State<MintScreen> {
                     SizedBox(
                         height: MediaQuery.of(context).size.height * 0.3,
                         child: Model3dViewer(
-                          file: provider.file!,
+                          path: provider.file!.path,
+                           isFile: true,
                         ))
                   ],
                   if (provider.nftFormat.format == kAudioText) ...[
