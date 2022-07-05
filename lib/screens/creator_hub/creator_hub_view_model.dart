@@ -58,9 +58,11 @@ class CreatorHubViewModel extends ChangeNotifier {
 
     if (deleteNftResponse.isLeft()) {
       navigatorKey.currentState!.overlay!.context.show(message: "delete_error".tr());
+    }
+    else{
       nftList.removeWhere((element) => element.id == id);
-
       notifyListeners();
+
     }
   }
 }
