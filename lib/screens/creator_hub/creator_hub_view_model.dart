@@ -1,7 +1,5 @@
 import 'package:easel_flutter/main.dart';
 import 'package:easel_flutter/models/nft.dart';
-import 'package:easel_flutter/services/datasources/local_datasource.dart';
-import 'package:easel_flutter/services/datasources/remote_datasource.dart';
 import 'package:easel_flutter/repository/repository.dart';
 import 'package:easel_flutter/utils/extension_util.dart';
 import 'package:easel_flutter/widgets/loading.dart';
@@ -60,25 +58,24 @@ class CreatorHubViewModel extends ChangeNotifier {
   }
 
   Future<void> getPublishAndDraftData() async {
-    await getDraftsList();
+
     await getRecipesList();
+    await getDraftsList();
+
     getTotalForSale();
     notifyListeners();
   }
 
   Future<void> getRecipesList() async {
-    final loading = Loading().showLoading(message: "loading ...");
 
     final cookBookId = getCookbookIdFromLocalDatasource();
     if (cookBookId == null) {
-      loading.dismiss();
       return;
     }
 
     final recipesListEither = await repository.getRecipesBasedOnCookBookId(cookBookId: cookBookId);
 
     if (recipesListEither.isLeft()) {
-      loading.dismiss();
       return;
     }
 
@@ -93,13 +90,12 @@ class CreatorHubViewModel extends ChangeNotifier {
     }
 
     publishedRecipeLength = publishedNFTsList.length;
-    loading.dismiss();
   }
 
   List<NFT> nftList = [];
 
   Future<void> getDraftsList() async {
-    final loading = Loading().showLoading(message: "Uploading ...");
+    final loading = Loading().showLoading(message: "loading ...");
 
     final getNftResponse = await repository.getNfts();
 

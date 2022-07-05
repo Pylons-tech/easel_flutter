@@ -11,7 +11,6 @@ import 'package:easel_flutter/widgets/image_widget.dart';
 import 'package:easel_flutter/widgets/model_viewer.dart';
 import 'package:easel_flutter/widgets/pylons_button.dart';
 import 'package:easel_flutter/widgets/video_widget.dart';
-import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:get_it/get_it.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -19,6 +18,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
 
 import '../repository/repository.dart';
+import 'creator_hub/creator_hub_view_model.dart';
 
 class MintScreen extends StatefulWidget {
   final PageController controller;
@@ -179,6 +179,7 @@ class _MintScreenState extends State<MintScreen> {
                               }
                               provider.disposeAudioController();
                               Navigator.of(context).popUntil(ModalRoute.withName(RouteUtil.ROUTE_CREATOR_HUB));
+                              context.read<CreatorHubViewModel>().getPublishAndDraftData();
 
 
                             },

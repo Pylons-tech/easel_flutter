@@ -1,14 +1,9 @@
 import 'dart:async';
-import 'dart:developer';
 import 'dart:io';
 import 'package:easel_flutter/repository/repository.dart';
 import 'package:easy_localization/easy_localization.dart';
 
 import 'package:easel_flutter/models/api_response.dart';
-import 'package:easel_flutter/models/storage_response_model.dart';
-import 'package:easel_flutter/repository/repository.dart';
-import 'package:easy_localization/easy_localization.dart';
-
 import '../utils/enums.dart';
 
 import 'package:easel_flutter/main.dart';

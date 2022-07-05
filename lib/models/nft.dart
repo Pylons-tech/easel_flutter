@@ -42,7 +42,7 @@ class NFT extends Equatable {
   String fileName = "";
   String cid = "";
 
-  bool isEnabled =true;
+  bool isEnabled = true;
 
   NFT({
     this.id,
@@ -72,7 +72,7 @@ class NFT extends Equatable {
     this.duration = "",
     this.hashtags = "",
     this.fileName = "",
-    this.cid = ""
+    this.cid = "",
     this.isEnabled= true
   });
 

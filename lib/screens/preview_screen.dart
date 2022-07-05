@@ -1,4 +1,5 @@
 import 'package:easel_flutter/easel_provider.dart';
+import 'package:easel_flutter/screens/creator_hub/creator_hub_view_model.dart';
 import 'package:easel_flutter/utils/constants.dart';
 import 'package:easel_flutter/utils/enums.dart';
 import 'package:easel_flutter/utils/extension_util.dart';
@@ -68,12 +69,14 @@ class _PreviewScreenState extends State<PreviewScreen> {
                           final result = await provider.saveNftLocally(UploadStep.assetUploaded);
                           if (result) {
                             Navigator.of(context).popUntil(ModalRoute.withName(RouteUtil.ROUTE_CREATOR_HUB));
+                            context.read<CreatorHubViewModel>().getDraftsList();
                           }
                         }
                       } else {
                         final result = await provider.saveNftLocally(UploadStep.assetUploaded);
                         if (result) {
                           Navigator.of(context).popUntil(ModalRoute.withName(RouteUtil.ROUTE_CREATOR_HUB));
+                          context.read<CreatorHubViewModel>().getDraftsList();
                         }
                       }
                     },

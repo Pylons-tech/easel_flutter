@@ -17,9 +17,6 @@ import 'package:provider/provider.dart';
 import 'package:video_player/video_player.dart';
 import 'package:flutter/material.dart';
 
-import '../screens/custom_widgets/step_labels.dart';
-import '../screens/custom_widgets/steps_indicator.dart';
-
 class VideoWidget extends StatefulWidget {
   final File file;
   final bool previewFlag;
