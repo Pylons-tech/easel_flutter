@@ -12,7 +12,15 @@ class CreatorHubViewModel extends ChangeNotifier {
 
   CreatorHubViewModel(this.repository);
 
-  List<NFT> nftList = [];
+  int _publishedRecipesLength = 0;
+
+  get publishedRecipesLength => _publishedRecipesLength;
+
+  set publishedRecipeLength(int value) {
+    _publishedRecipesLength = value;
+
+    notifyListeners();
+  }
 
   bool _publishCollapse = true;
 
@@ -32,8 +40,59 @@ class CreatorHubViewModel extends ChangeNotifier {
     notifyListeners();
   }
 
-  Future<void> getDraftsList() async {
+  final List<NFT> _publishedNFTsList = [];
+
+  List<NFT> get publishedNFTsList => _publishedNFTsList;
+
+  String? getCookbookIdFromLocalDatasource() {
+    return repository.getCookbookId();
+  }
+
+  Future<void> getPublishAndDraftData() async{
+    await getDraftsList();
+   await getRecipesList();
+   notifyListeners();
+
+  }
+
+  Future<void> getRecipesList() async {
     final loading = Loading().showLoading(message: "loading ...");
+
+    final cookBookId = getCookbookIdFromLocalDatasource();
+    if (cookBookId == null) {
+      loading.dismiss();
+      return;
+    }
+
+    final recipesListEither = await repository.getRecipesBasedOnCookBookId(cookBookId: cookBookId);
+
+    if (recipesListEither.isLeft()) {
+      loading.dismiss();
+      return;
+    }
+
+    final recipesList = recipesListEither.getOrElse(() => []);
+    _publishedNFTsList.clear();
+    if (recipesList.isNotEmpty) {
+      for (final recipe in recipesList) {
+        final nft = NFT.fromRecipe(recipe);
+
+        _publishedNFTsList.add(nft);
+      }
+    }
+
+
+    publishedRecipeLength = publishedNFTsList.length;
+    loading.dismiss();
+  }
+
+
+
+
+  List<NFT> nftList = [];
+
+  Future<void> getDraftsList() async {
+    final loading = Loading().showLoading(message: "Uploading ...");
 
     final getNftResponse = await repository.getNfts();
 

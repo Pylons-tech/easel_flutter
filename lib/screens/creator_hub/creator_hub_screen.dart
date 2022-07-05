@@ -5,6 +5,7 @@ import 'package:easel_flutter/models/nft.dart';
 import 'package:easel_flutter/repository/repository.dart';
 import 'package:easel_flutter/screens/creator_hub/creator_hub_view_model.dart';
 import 'package:easel_flutter/screens/creator_hub/widgets/drafts_more_bottomsheet.dart';
+import 'package:easel_flutter/screens/creator_hub/widgets/nfts_list_tile.dart';
 import 'package:easel_flutter/utils/constants.dart';
 import 'package:easel_flutter/utils/easel_app_theme.dart';
 import 'package:easel_flutter/utils/route_util.dart';
@@ -13,8 +14,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:focus_detector/focus_detector.dart';
 import 'package:get_it/get_it.dart';
 import 'package:provider/provider.dart';
+import 'package:shimmer_animation/shimmer_animation.dart';
 import '../../utils/dependency_injection/dependency_injection_container.dart';
 
 class CreatorHubScreen extends StatefulWidget {
@@ -26,12 +29,7 @@ class CreatorHubScreen extends StatefulWidget {
 
 class _CreatorHubScreenState extends State<CreatorHubScreen> {
   @override
-  void initState() {
-    scheduleMicrotask(() {
-      Provider.of<CreatorHubViewModel>(context, listen: false).getDraftsList();
-    });
-    super.initState();
-  }
+
 
   TextStyle titleStyle = TextStyle(
     fontSize: 18.sp,
@@ -48,71 +46,76 @@ class _CreatorHubScreenState extends State<CreatorHubScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Consumer(builder: (context, CreatorHubViewModel viewModel, child) {
-      return Container(
-          color: EaselAppTheme.kWhite,
-          child: SafeArea(
-              child: Scaffold(
-                backgroundColor: EaselAppTheme.kBgWhite,
-                body: Padding(
-                  padding: EdgeInsets.only(left: 25.w, right: 25.w, top: 30.h),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Stack(
-                        alignment: AlignmentDirectional.center,
-                        children: [
-                          Text("creator_hub".tr(), style: titleStyle),
-                          Align(
-                            alignment: Alignment.topRight,
-                            child: InkWell(
-                              onTap: () {
-                                Navigator.of(context).pushNamed(
-                                  RouteUtil.ROUTE_HOME,
-                                );
-                              },
-                              child: Icon(
-                                Icons.add,
-                                size: 30.h,
-                                color: EaselAppTheme.kBlack,
+    return FocusDetector(
+       onFocusGained: (){
+        GetIt.I.get<CreatorHubViewModel>().getPublishAndDraftData();
+       },
+      child: Consumer(builder: (context, CreatorHubViewModel viewModel, child) {
+        return Container(
+            color: EaselAppTheme.kWhite,
+            child: SafeArea(
+                child: Scaffold(
+                  backgroundColor: EaselAppTheme.kBgWhite,
+                  body: Padding(
+                    padding: EdgeInsets.only(left: 25.w, right: 25.w, top: 30.h),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Stack(
+                          alignment: AlignmentDirectional.center,
+                          children: [
+                            Text("creator_hub".tr(), style: titleStyle),
+                            Align(
+                              alignment: Alignment.topRight,
+                              child: InkWell(
+                                onTap: () {
+                                  Navigator.of(context).pushNamed(
+                                    RouteUtil.ROUTE_HOME,
+                                  );
+                                },
+                                child: Icon(
+                                  Icons.add,
+                                  size: 30.h,
+                                  color: EaselAppTheme.kBlack,
+                                ),
                               ),
                             ),
-                          ),
-                        ],
-                      ),
-                      SizedBox(
-                        height: 25.h,
-                      ),
-                      Row(
-                        children: [
-                          Expanded(child: buildCard(title: "for_sale".tr(), count: 0.toString(), cardColor: EaselAppTheme.kBlue, viewModel: viewModel)),
-                          SizedBox(
-                            width: 20.w,
-                          ),
-                          Expanded(child: buildCard(title: "published".tr(), count: "0", cardColor: EaselAppTheme.kDarkGreen, viewModel: viewModel)),
-                          SizedBox(
-                            width: 20.w,
-                          ),
-                          Expanded(child: buildCard(title: "draft".tr(), count: viewModel.nftList.length.toString(), cardColor: EaselAppTheme.kLightRed, viewModel: viewModel))
-                        ],
-                      ),
-                      SizedBox(height: 20.h),
-                      Expanded(
-                        child: ListView(
-                          primary: false,
-                          children: [
-                            SizedBox(height: 10.h),
-                            publishedNFTsContainer(title: "publish_total".tr(args: ["0"]), viewModel: viewModel),
-                            SizedBox(height: 20.h),
-                            draftNFTsContainer(title: "draft_total".tr(args: [viewModel.nftList.length.toString()]), viewModel: viewModel)
                           ],
                         ),
-                      ),
-                    ],
+                        SizedBox(
+                          height: 25.h,
+                        ),
+                        Row(
+                          children: [
+                            Expanded(child: buildCard(title: "for_sale".tr(), count: 0.toString(), cardColor: EaselAppTheme.kBlue, viewModel: viewModel)),
+                            SizedBox(
+                              width: 20.w,
+                            ),
+                            Expanded(child: buildCard(title: "published".tr(), count: viewModel.publishedRecipesLength.toString(), cardColor: EaselAppTheme.kDarkGreen, viewModel: viewModel)),
+                            SizedBox(
+                              width: 20.w,
+                            ),
+                            Expanded(child: buildCard(title: "draft".tr(), count: viewModel.nftList.length.toString(), cardColor: EaselAppTheme.kLightRed, viewModel: viewModel))
+                          ],
+                        ),
+                        SizedBox(height: 20.h),
+                        Expanded(
+                          child: ListView(
+                            primary: false,
+                            children: [
+                              SizedBox(height: 10.h),
+                              publishedNFTsContainer(title: "publish_total".tr(args: [viewModel.publishedRecipesLength.toString() ]), viewModel: viewModel),
+                              SizedBox(height: 20.h),
+                              draftNFTsContainer(title: "draft_total".tr(args: [viewModel.nftList.length.toString()]), viewModel: viewModel)
+                            ],
+                          ),
+                        ),
+                      ],
+                    ),
                   ),
-                ),
-              )));
-    });
+                )));
+      }),
+    );
   }
 
   Widget publishedNFTsContainer({required String title, required CreatorHubViewModel viewModel}) {
@@ -129,7 +132,7 @@ class _CreatorHubScreenState extends State<CreatorHubScreen> {
                   child: Text(
                     title,
                     maxLines: 1,
-                    style: titleStyle.copyWith(fontSize: 15.sp),
+                    style: EaselAppTheme.titleStyle.copyWith(fontSize: 15.sp),
                   ),
                 ),
                 SizedBox(
@@ -159,7 +162,7 @@ class _CreatorHubScreenState extends State<CreatorHubScreen> {
         SizedBox(
           height: 10.h,
         ),
-        viewModel.publishCollapse ? const SizedBox() : Container(),
+        viewModel.publishCollapse ? const SizedBox() : _buildPublishedNFTsListView(viewModel: viewModel),
       ],
     );
   }
@@ -221,7 +224,16 @@ class _CreatorHubScreenState extends State<CreatorHubScreen> {
       ],
     );
   }
-
+  Widget _buildPublishedNFTsListView({required CreatorHubViewModel viewModel}) {
+    return ListView.builder(
+        shrinkWrap: true,
+        physics: const NeverScrollableScrollPhysics(),
+        itemCount: viewModel.publishedNFTsList.length,
+        itemBuilder: (context, index) {
+          final nft = viewModel.publishedNFTsList[index];
+          return NFTsListTile(publishedNFT: nft);
+        });
+  }
   Widget buildListTile({required NFT nft, required CreatorHubViewModel viewModel}) {
     final repository= GetIt.I.get<Repository>();
     return Slidable(
@@ -273,9 +285,8 @@ class _CreatorHubScreenState extends State<CreatorHubScreen> {
                     fit: BoxFit.fill,
                     imageUrl: nft.assetType == kImageText ? nft.url : nft.thumbnailUrl,
                     errorWidget: (a, b, c) => const Center(child: Icon(Icons.error_outline)),
-                    placeholder: (context, url) => Center(
-                      child: SizedBox(height: 30.h, width: 30.h, child: const CircularProgressIndicator()),
-                    ),
+                    placeholder: (context, url) => Shimmer(color: EaselAppTheme.cardBackground, child: const SizedBox.expand()),
+
                   ),
                 ),
                 SizedBox(
@@ -292,7 +303,7 @@ class _CreatorHubScreenState extends State<CreatorHubScreen> {
                         overflow: TextOverflow.ellipsis,
                       ),
                       SizedBox(
-                        height: 11.h,
+                        height: 6.h,
                       ),
                       Text(
                         "draft".tr(),
