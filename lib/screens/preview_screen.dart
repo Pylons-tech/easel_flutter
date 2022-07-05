@@ -2,6 +2,7 @@ import 'package:easel_flutter/easel_provider.dart';
 import 'package:easel_flutter/utils/constants.dart';
 import 'package:easel_flutter/utils/enums.dart';
 import 'package:easel_flutter/utils/extension_util.dart';
+import 'package:easel_flutter/utils/route_util.dart';
 import 'package:easel_flutter/widgets/audio_widget.dart';
 import 'package:easel_flutter/widgets/image_widget.dart';
 import 'package:easel_flutter/widgets/model_viewer.dart';
@@ -64,15 +65,16 @@ class _PreviewScreenState extends State<PreviewScreen> {
                         if (provider.audioThumbnail == null) {
                           context.show(message: kErrAddAudioThumbnail);
                         } else {
-                          await provider.saveNftLocally(UploadStep.assetUploaded);
-                          widget.controller.nextPage(duration: const Duration(milliseconds: 10), curve: Curves.easeIn);
-                          Navigator.of(context).pop();
+                          final result = await provider.saveNftLocally(UploadStep.assetUploaded);
+                          if (result) {
+                            Navigator.of(context).popUntil(ModalRoute.withName(RouteUtil.ROUTE_CREATOR_HUB));
+                          }
                         }
                       } else {
-                        await provider.saveNftLocally(UploadStep.assetUploaded);
-
-                        widget.controller.nextPage(duration: const Duration(milliseconds: 10), curve: Curves.easeIn);
-                        Navigator.of(context).pop();
+                        final result = await provider.saveNftLocally(UploadStep.assetUploaded);
+                        if (result) {
+                          Navigator.of(context).popUntil(ModalRoute.withName(RouteUtil.ROUTE_CREATOR_HUB));
+                        }
                       }
                     },
                     btnText: "upload".tr(),
@@ -93,7 +95,10 @@ class _PreviewScreenState extends State<PreviewScreen> {
       case kVideoText:
         return VideoWidget(file: provider.file!, previewFlag: false, isForFile: true);
       case k3dText:
-        return Model3dViewer(file: provider.file!);
+        return Model3dViewer(
+          path: provider.file!.path,
+          isFile: true,
+        );
       case kAudioText:
         return AudioWidget(
           file: provider.file!,

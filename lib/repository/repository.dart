@@ -4,6 +4,7 @@ import 'dart:io';
 import 'package:dartz/dartz.dart';
 import 'package:easel_flutter/models/api_response.dart';
 import 'package:easel_flutter/models/nft.dart';
+import 'package:easel_flutter/models/nft.dart';
 import 'package:easel_flutter/services/datasources/local_datasource.dart';
 import 'package:easel_flutter/services/datasources/remote_datasource.dart';
 
@@ -117,6 +118,7 @@ abstract class Repository {
   /// Input: [id] the id of the draft which the user wants to delete
   /// Output: [bool] returns whether the operation is successful or not
   Future<Either<Failure, bool>> deleteNft(int id);
+
 }
 
 class RepositoryImp implements Repository {

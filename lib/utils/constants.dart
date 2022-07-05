@@ -60,6 +60,8 @@ const kWalletAndroidId = 'tech.pylons.wallet';
 const kWalletWebLink = 'https://wallet.pylons.tech';
 const kWalletDynamicLink = 'pylons.page.link';
 
+const kEaselEmail = "easel@pylons.tech";
+
 /// ```Number constants
 const kMinNFTName = 9;
 const kMinDescription = 20;
@@ -181,6 +183,7 @@ const kHintArtistName = 'Sarah Jackson';
 const kHintNftDesc = 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eimod tempor incididunt ut labore et dolore magna aliquaQ. Ut enim ad minim veniam, quis nostrud exercita.';
 const kHintNoEdition = '100';
 const kHintPrice = '10.87';
+const kErrAddAudioThumbnail = "Error while uploading thumbnail";
 const kHintHashtag = 'Type in';
 const kHashtagsText = 'Hashtags (optional)';
 const kAddText = 'Add';
@@ -190,7 +193,6 @@ const kRecipeCreated = 'Recipe created';
 const kErrProfileNotExist = 'profileDoesNotExist';
 const kErrProfileFetch = 'Error occurred while fetching wallet profile';
 const kErrPickFileFetch = 'Error occurred while uploading the file, please try again';
-const kErrAddAudioThumbnail = 'Please select audio thumbnail';
 const kErrUpload = 'Upload error occurred';
 const kErrFileNotPicked = 'Pick a file';
 const kErrUnsupportedFormat = 'Unsupported format';
@@ -204,6 +206,7 @@ const kCancel = "Cancel";
 const String videoPlayerNetworkError = 'Unable to play the video right now. Please check your internet connection and try again.';
 const kChooseFifteenSecondsOfAudio = "Choose 15s highlight of your audio for preview";
 const kUploadingThumbnailMessage = "Uploading Thumbnail";
+
 const videoPlayerError = "Some Error Occurred while playing the video. Please try again later.";
 const kCannotLaunchThisUrl = "Cannot launch this URL";
 
@@ -277,3 +280,6 @@ const mp3 = "mp3";
 const ogg = "ogg";
 const wav = "wav";
 const aac = "aac";
+
+
+

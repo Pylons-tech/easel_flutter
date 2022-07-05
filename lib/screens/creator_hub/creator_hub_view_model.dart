@@ -1,6 +1,7 @@
-
 import 'package:easel_flutter/main.dart';
 import 'package:easel_flutter/models/nft.dart';
+import 'package:easel_flutter/services/datasources/local_datasource.dart';
+import 'package:easel_flutter/services/datasources/remote_datasource.dart';
 import 'package:easel_flutter/repository/repository.dart';
 import 'package:easel_flutter/utils/extension_util.dart';
 import 'package:easel_flutter/widgets/loading.dart';
@@ -96,8 +97,7 @@ class CreatorHubViewModel extends ChangeNotifier {
 
     final getNftResponse = await repository.getNfts();
 
-    if(getNftResponse.isLeft()){
-
+    if (getNftResponse.isLeft()) {
       loading.dismiss();
 
       navigatorKey.currentState!.overlay!.context.show(message: "something_wrong".tr());
@@ -105,7 +105,7 @@ class CreatorHubViewModel extends ChangeNotifier {
       return;
     }
 
-   nftList = getNftResponse.getOrElse(() => []);
+    nftList = getNftResponse.getOrElse(() => []);
 
     loading.dismiss();
 
@@ -117,11 +117,11 @@ class CreatorHubViewModel extends ChangeNotifier {
 
     if (deleteNftResponse.isLeft()) {
       navigatorKey.currentState!.overlay!.context.show(message: "delete_error".tr());
-      return;
     }
+    else{
+      nftList.removeWhere((element) => element.id == id);
+      notifyListeners();
 
-    nftList.removeWhere((element) => element.id == id);
-
-    notifyListeners();
+    }
   }
 }
