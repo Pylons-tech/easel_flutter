@@ -219,7 +219,7 @@ class RepositoryImp implements Repository {
     try {
       bool result = await localDataSource.updateNftFromDescription(id, nftName, nftDescription, creatorName, step);
 
-      if(!result){
+      if (!result) {
         return Left(CacheFailure("save_error".tr()));
       }
       return Right(result);
@@ -240,7 +240,7 @@ class RepositoryImp implements Repository {
   }
 
   @override
-  Future<Either<Failure, ApiResponse>> uploadFile(File file) async{
+  Future<Either<Failure, ApiResponse>> uploadFile(File file) async {
     try {
       ApiResponse apiResponse = await remoteDataSource.uploadFile(file);
 
@@ -251,35 +251,23 @@ class RepositoryImp implements Repository {
   }
 
   @override
-  Future<Either<Failure, List<NFT>>> getNfts() async{
+  Future<Either<Failure, List<NFT>>> getNfts() async {
     try {
-     final response =  await localDataSource.getNfts();
+      final response = await localDataSource.getNfts();
 
       return Right(response);
     } on Exception catch (_) {
-
-      return  Left(CacheFailure("something_wrong".tr()));
+      return Left(CacheFailure("something_wrong".tr()));
     }
   }
 
   @override
-  Future<Either<Failure, bool>> deleteNft(int id) async{
-      try {
-        bool result = await localDataSource.deleteNft(id);
-        return Right(result);
-      } on Exception catch (_) {
-        return Left(CacheFailure("something_wrong".tr()));
-      }
-    }
-
-
-  @override
-  Future<Either<Failure, bool>> saveNft(NFT draft) async {
+  Future<Either<Failure, bool>> deleteNft(int id) async {
     try {
-      await localDataSource.saveNft(draft);
-      return const Right(true);
+      bool result = await localDataSource.deleteNft(id);
+      return Right(result);
     } on Exception catch (_) {
-      return Left(CacheFailure("save_error".tr()));
+      return Left(CacheFailure("something_wrong".tr()));
     }
   }
 }

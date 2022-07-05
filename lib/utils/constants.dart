@@ -278,6 +278,7 @@ const String kDefault = 'Default';
 const String kMyEaselNFT = 'My Easel NFT';
 const String fromKey = 'from';
 const String nftKey = 'nft';
+const String kErrAddAudioThumbnail = 'Error while uploading thumbnail';
 
 /// Supported Formats
 

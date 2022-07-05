@@ -40,13 +40,13 @@ class _HomeScreenState extends State<HomeScreen> {
     easelProvider = Provider.of<EaselProvider>(context, listen: false);
     homeViewModel = Provider.of<HomeViewModel>(context, listen: false);
 
-    homeViewModel.init(setTextField: (){
-      easelProvider.setTextFieldValuesDescription(artName: homeViewModel.nft?.name, description: homeViewModel.nft?.description);
-      easelProvider.setTextFieldValuesPrice(royalties:homeViewModel. nft?.tradePercentage, price: homeViewModel.nft?.price, edition: homeViewModel.nft?.quantity.toString(), denom: homeViewModel.nft?.denom);
-
-    });
-
-
+    homeViewModel.init(
+      setTextField: () {
+        easelProvider.setTextFieldValuesDescription(artName: homeViewModel.nft?.name, description: homeViewModel.nft?.description);
+        easelProvider.setTextFieldValuesPrice(
+            royalties: homeViewModel.nft?.tradePercentage, price: homeViewModel.nft?.price, edition: homeViewModel.nft?.quantity.toString(), denom: homeViewModel.nft?.denom);
+      },
+    );
 
     super.initState();
     Future.delayed(const Duration(milliseconds: 10), () {
@@ -114,7 +114,6 @@ class _HomeScreenState extends State<HomeScreen> {
                         );
                       },
                     ),
-
                   ],
                 ),
                 ScreenResponsive(
@@ -155,21 +154,5 @@ class _HomeScreenState extends State<HomeScreen> {
         ),
       ),
     );
-  }
-
- void  getCurrentPageExecution({required EaselProvider easelProvider}){
-    switch(_currentPage.value){
-      case 0:
-        context.read<CreatorHubViewModel>().getDraftsList();
-        Navigator.of(context).pop();
-        break;
-
-      case 1:
-        easelProvider.willLoadFirstTime = true;
-        break;
-      case 2:
-        easelProvider.willLoadFirstTime = false;
-        break;
-    }
   }
 }
