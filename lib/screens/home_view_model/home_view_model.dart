@@ -20,17 +20,16 @@ class HomeViewModel extends ChangeNotifier {
   String? from;
   final List pageTitles = ["select_nft_file".tr(), "nft_detail_text".tr(), "nft_pricing".tr(), ''];
 
-  init( {required VoidCallback setTextField}) {
-    from = repository.getCacheString(key: "from");
-    repository.deleteCacheString(key: "from");
+  init({required VoidCallback setTextField}) {
+    from = repository.getCacheString(key: fromKey);
+    repository.deleteCacheString(key: fromKey);
 
     if (from == kDraft) {
-      nft = repository.getCacheDynamicType(key: "nft");
+      nft = repository.getCacheDynamicType(key: nftKey);
 
       Future.delayed(const Duration(milliseconds: 1), () {
-
         setTextField.call();
-           });
+      });
 
       if (nft!.step == UploadStep.assetUploaded.name) {
         currentPage = ValueNotifier(1);

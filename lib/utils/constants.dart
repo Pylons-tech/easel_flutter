@@ -270,6 +270,8 @@ const String kEthereumSymbol = "weth-wei";
 const String kDefault = 'Default';
 
 const String kMyEaselNFT = 'My Easel NFT';
+const String fromKey = 'from';
+const String nftKey = 'nft';
 
 /// Supported Formats
 
