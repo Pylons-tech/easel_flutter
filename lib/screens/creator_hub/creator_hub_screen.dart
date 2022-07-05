@@ -1,4 +1,5 @@
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:easel_flutter/main.dart';
 import 'package:easel_flutter/models/nft.dart';
 import 'package:easel_flutter/repository/repository.dart';
 import 'package:easel_flutter/screens/creator_hub/creator_hub_view_model.dart';
@@ -27,7 +28,7 @@ class CreatorHubScreen extends StatefulWidget {
 class _CreatorHubScreenState extends State<CreatorHubScreen> {
   @override
   TextStyle titleStyle = TextStyle(
-    fontSize: 18.sp,
+    fontSize:  18.sp,
     fontWeight: FontWeight.w800,
     color: EaselAppTheme.kBlack,
     fontFamily: kUniversalFontFamily,
@@ -296,7 +297,7 @@ class _CreatorHubScreenState extends State<CreatorHubScreen> {
                     children: [
                       Text(
                         "nft_name".tr(args: [nft.name.isNotEmpty ? nft.name : 'Nft Name']),
-                        style: titleStyle,
+                        style: titleStyle.copyWith(fontSize: isTablet? 13.sp :18.sp),
                         maxLines: 1,
                         overflow: TextOverflow.ellipsis,
                       ),
@@ -305,7 +306,7 @@ class _CreatorHubScreenState extends State<CreatorHubScreen> {
                       ),
                       Text(
                         "draft".tr(),
-                        style: titleStyle.copyWith(color: EaselAppTheme.kLightRed, fontSize: 13.sp),
+                        style: titleStyle.copyWith(color: EaselAppTheme.kLightRed, fontSize:isTablet? 8.sp :  13.sp),
                       ),
                     ],
                   ),

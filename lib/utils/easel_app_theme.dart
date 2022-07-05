@@ -1,3 +1,4 @@
+import 'package:easel_flutter/main.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -46,7 +47,7 @@ class EaselAppTheme {
   static Color cardBackgroundSelected = const Color(0x801212C4).withOpacity(0.2);
 
   static TextStyle titleStyle = TextStyle(
-    fontSize: 18.sp,
+    fontSize:  18.sp,
     fontWeight: FontWeight.w800,
     color: EaselAppTheme.kBlack,
     fontFamily: universalSansFamily,

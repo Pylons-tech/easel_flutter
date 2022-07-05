@@ -1,5 +1,6 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:easel_flutter/easel_provider.dart';
+import 'package:easel_flutter/main.dart';
 import 'package:easel_flutter/models/nft.dart';
 import 'package:easel_flutter/screens/creator_hub/widgets/published_nfts_bottom_sheet.dart';
 import 'package:easel_flutter/screens/creator_hub/widgets/video_placeholder.dart';
@@ -79,7 +80,7 @@ class NFTsListTile extends StatelessWidget {
                       publishedNFT.name,
                       maxLines: 1,
                       overflow: TextOverflow.ellipsis,
-                      style: EaselAppTheme.titleStyle,
+                      style: EaselAppTheme.titleStyle.copyWith(fontSize: isTablet ? 13.sp : 18.sp),
                     ),
                     SizedBox(
                       height: 6.h,
@@ -87,21 +88,27 @@ class NFTsListTile extends StatelessWidget {
                     Row(
                       children: [
                         Container(
-                          color: EaselAppTheme.kDarkGreen,
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(3.h),
+                            color: EaselAppTheme.kDarkGreen,
+                          ),
                           padding: EdgeInsets.symmetric(horizontal: 6.w, vertical: 3.h),
                           child: Text(
                             "publish".tr(),
-                            style: EaselAppTheme.titleStyle.copyWith(color: EaselAppTheme.kWhite, fontSize: 11.sp),
+                            style: EaselAppTheme.titleStyle.copyWith(color: EaselAppTheme.kWhite, fontSize: isTablet ? 8.sp : 11.sp),
                           ),
                         ),
                         SizedBox(width: 9.w),
                         if (publishedNFT.isEnabled && publishedNFT.amountMinted < publishedNFT.quantity)
                           Container(
-                            color: EaselAppTheme.kBlue,
                             padding: EdgeInsets.symmetric(horizontal: 6.w, vertical: 3.h),
                             child: Text(
                               "for_sale".tr(),
-                              style: EaselAppTheme.titleStyle.copyWith(color: EaselAppTheme.kWhite, fontSize: 11.sp),
+                              style: EaselAppTheme.titleStyle.copyWith(color: EaselAppTheme.kWhite, fontSize: isTablet ? 8.sp : 11.sp),
+                            ),
+                            decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(3.h),
+                              color: EaselAppTheme.kBlue,
                             ),
                           )
                       ],
@@ -113,13 +120,11 @@ class NFTsListTile extends StatelessWidget {
                 width: 10.w,
               ),
               InkWell(
-                onTap: () => buildBottomSheet(context: context),
-                child: SizedBox(
-                  height: 25.w,
-                  width: 25.w,
-                  child: SvgPicture.asset(kSvgMoreOption),
-                ),
-              )
+                  onTap: () => buildBottomSheet(context: context),
+                  child: Padding(
+                    padding: EdgeInsets.all(4.0.w),
+                    child: SvgPicture.asset(kSvgMoreOption),
+                  ))
             ],
           ),
         ));

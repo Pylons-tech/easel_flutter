@@ -1,4 +1,5 @@
 
+import 'package:easel_flutter/main.dart';
 import 'package:easel_flutter/models/nft.dart';
 import 'package:easel_flutter/repository/repository.dart';
 import 'package:easel_flutter/screens/creator_hub/creator_hub_view_model.dart';
@@ -80,7 +81,7 @@ class DraftsMoreBottomSheet extends StatelessWidget {
 }
 
 Widget moreOptionTile({required String title, required String svg, required Function onPressed}) {
-  TextStyle titleStyle = TextStyle(fontSize: 18.sp, fontWeight: FontWeight.w800, fontFamily: kUniversalFontFamily, color: EaselAppTheme.kBlack);
+  TextStyle titleStyle = TextStyle(fontSize: isTablet? 13.sp :16.sp, fontWeight: FontWeight.w800, fontFamily: kUniversalFontFamily, color: EaselAppTheme.kBlack);
 
   return Padding(
     padding: EdgeInsets.symmetric(vertical: 8.h),
@@ -96,7 +97,7 @@ Widget moreOptionTile({required String title, required String svg, required Func
           ),
           Text(
             title.tr(),
-            style: titleStyle.copyWith(fontSize: 16.sp),
+            style: titleStyle,
           )
         ],
       ),
