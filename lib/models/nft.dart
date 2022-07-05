@@ -39,6 +39,7 @@ class NFT extends Equatable {
   String assetType = AssetType.Image.name;
   String duration = "";
   String hashtags = "";
+  bool isEnabled =true;
 
   NFT({
     this.id,
@@ -67,6 +68,7 @@ class NFT extends Equatable {
     required this.step,
     this.duration = "",
     this.hashtags = "",
+    this.isEnabled= true
   });
 
   factory NFT.fromRecipe(Recipe recipe) {
@@ -97,6 +99,8 @@ class NFT extends Equatable {
       step: "",
       isFreeDrop: false,
       hashtags: recipe.entries.itemOutputs.firstOrNull?.strings.firstWhere((strKeyValue) => strKeyValue.key == kHashtags, orElse: () => StringParam()).value ?? "",
+
+      isEnabled: recipe.enabled,
     );
   }
 
