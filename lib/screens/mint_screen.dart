@@ -35,7 +35,7 @@ class _MintScreenState extends State<MintScreen> {
 
   @override
   initState() {
-    nft = repository.getCacheDynamicType(key: "nft");
+    nft = repository.getCacheDynamicType(key: nftKey);
     super.initState();
   }
 

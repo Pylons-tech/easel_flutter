@@ -14,6 +14,7 @@ import 'package:easel_flutter/services/datasources/local_datasource.dart';
 import 'package:easel_flutter/services/datasources/remote_datasource.dart';
 import 'package:easel_flutter/services/third_party_services/video_player_helper.dart';
 import 'package:easel_flutter/utils/file_utils_helper.dart';
+import 'package:easel_flutter/viewmodels/home_viewmodel.dart';
 import 'package:get_it/get_it.dart';
 import 'package:internet_connection_checker/internet_connection_checker.dart';
 import 'package:just_audio/just_audio.dart';
@@ -70,6 +71,8 @@ void _registerProviders() {
         fileUtilsHelper: sl(),
         repository: sl(),
       ));
+
+  sl.registerLazySingleton<HomeViewModel>(() => HomeViewModel(repository: sl()));
 
   sl.registerLazySingleton<CreatorHubViewModel>(() => CreatorHubViewModel(sl()));
 }

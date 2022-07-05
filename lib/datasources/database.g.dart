@@ -222,6 +222,8 @@ class _$NftDao extends NftDao {
   @override
   Future<void> updateNFTFromPrice(int id, String tradePercentage, String price,
       String quantity, String step, String denom, bool isFreeDrop) async {
+
+
     await _queryAdapter.queryNoReturn(
         'UPDATE nft SET tradePercentage = ?2, price= ?3, quantity = ?4, denom =?6, step = ?5, isFreeDrop = ?7 WHERE id = ?1',
         arguments: [

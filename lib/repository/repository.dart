@@ -5,6 +5,7 @@ import 'package:dartz/dartz.dart';
 import 'package:easel_flutter/models/api_response.dart';
 import 'package:easel_flutter/models/nft.dart';
 import 'package:easel_flutter/models/nft.dart';
+import 'package:easel_flutter/models/save_nft.dart';
 import 'package:easel_flutter/services/datasources/local_datasource.dart';
 import 'package:easel_flutter/services/datasources/remote_datasource.dart';
 
@@ -83,23 +84,17 @@ abstract class Repository {
   /// Input: [NFT] the draft that will will be saved in database
   /// Output: [int] returns id of the inserted document
   /// will return error in the form of failure
-  Future<Either<Failure, int>> saveNft(NFT draft);
+  Future<Either<Failure, int>> saveNft(NFT nft);
 
   /// This method will update draft in the local database from description Page
-  /// Input: [id] the id of the nft,
-  /// [String] the  name of the nft , [String] the  description of the nft
-  /// [String] the  creator name of the nft , [String] the page name of the Pageview
+  /// Input:[SaveNft] this model data contains bring [id],[nftName],[nftDescription],[creatorName],[step]
   /// Output: [bool] returns whether the operation is successful or not
-  /// will return error in the form of failure
-  Future<Either<Failure, bool>> updateNftFromDescription(int id, String nftName, String nftDescription, String creatorName, String step);
+  Future<Either<Failure, bool>> updateNftFromDescription({required SaveNft saveNft});
 
   /// This method will update draft in the local database from Pricing page
-  /// Input: [id] the id of the nft, [String] the  name of the nft ,
-  /// [String] the  tradePercentage of the nft , [String] the  price of the nft
-  /// [String] the  quantity of the nft , [String] the page name of the Pageview
+  /// Input:[SaveNft] this model data contains bring [id],[tradePercentage],[price],[quantity],[step],[denomName],[isFreeDrop]
   /// Output: [bool] returns whether the operation is successful or not
-  /// will return error in the form of failure
-  Future<Either<Failure, bool>> updateNftFromPrice(int id, String tradePercentage, String price, String quantity, String step, String denomName, bool isFreeDrop);
+  Future<Either<Failure, bool>> updateNftFromPrice({required SaveNft saveNft});
 
   /// This method is used uploading provided file to the server using [httpClient]
   /// Input : [file] which needs to be uploaded
@@ -118,7 +113,6 @@ abstract class Repository {
   /// Input: [id] the id of the draft which the user wants to delete
   /// Output: [bool] returns whether the operation is successful or not
   Future<Either<Failure, bool>> deleteNft(int id);
-
 }
 
 class RepositoryImp implements Repository {
@@ -210,9 +204,9 @@ class RepositoryImp implements Repository {
   }
 
   @override
-  Future<Either<Failure, int>> saveNft(NFT draft) async {
+  Future<Either<Failure, int>> saveNft(NFT nft) async {
     try {
-      int id = await localDataSource.saveNft(draft);
+      int id = await localDataSource.saveNft(nft);
       return Right(id);
     } on Exception catch (_) {
       return Left(CacheFailure("save_error".tr()));
@@ -220,9 +214,9 @@ class RepositoryImp implements Repository {
   }
 
   @override
-  Future<Either<Failure, bool>> updateNftFromDescription(int id, String nftName, String nftDescription, String creatorName, String step) async {
+  Future<Either<Failure, bool>> updateNftFromDescription({required SaveNft saveNft}) async {
     try {
-      bool result = await localDataSource.updateNftFromDescription(id, nftName, nftDescription, creatorName, step);
+      bool result = await localDataSource.updateNftFromDescription(saveNft.id!, saveNft.nftName!, saveNft.nftDescription!, saveNft.creatorName!, saveNft.step!);
 
       if (!result) {
         return Left(CacheFailure("save_error".tr()));
@@ -234,9 +228,9 @@ class RepositoryImp implements Repository {
   }
 
   @override
-  Future<Either<Failure, bool>> updateNftFromPrice(int id, String tradePercentage, String price, String quantity, String step, String name, bool isFreeDrop) async {
+  Future<Either<Failure, bool>> updateNftFromPrice({required SaveNft saveNft}) async {
     try {
-      bool result = await localDataSource.updateNftFromPrice(id, tradePercentage, price, quantity, step, name, isFreeDrop);
+      bool result = await localDataSource.updateNftFromPrice(saveNft.id!, saveNft.tradePercentage!, saveNft.price!, saveNft.quantity!, saveNft.step!, saveNft.denomName!, saveNft.isFreeDrop!);
 
       return Right(result);
     } on Exception catch (_) {

@@ -1,4 +1,3 @@
-
 import 'package:easel_flutter/models/nft.dart';
 import 'package:easel_flutter/repository/repository.dart';
 import 'package:easel_flutter/screens/creator_hub/creator_hub_view_model.dart';
@@ -53,8 +52,8 @@ class DraftsMoreBottomSheet extends StatelessWidget {
                 title: "publish",
                 svg: kSvgPublish,
                 onPressed: () {
-                  repository.setCacheDynamicType(key: "nft", value: nft);
-                  repository.setCacheString(key: "from", value: "draft");
+                  repository.setCacheDynamicType(key: nftKey, value: nft);
+                  repository.setCacheString(key: fromKey, value: draftKey);
                   Navigator.of(context).pop();
                   Navigator.of(context).pushNamed(RouteUtil.ROUTE_HOME);
                 }),

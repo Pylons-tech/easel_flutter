@@ -8,6 +8,7 @@ import 'package:easel_flutter/screens/tutorial_screen.dart';
 import 'package:easel_flutter/screens/welcome_screen/welcome_screen.dart';
 import 'package:easel_flutter/utils/constants.dart';
 import 'package:easel_flutter/utils/route_util.dart';
+import 'package:easel_flutter/viewmodels/home_viewmodel.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:easel_flutter/utils/dependency_injection/dependency_injection_container.dart' as di;
@@ -51,6 +52,7 @@ class MyApp extends StatelessWidget {
     return MultiProvider(
       providers: [
         ChangeNotifierProvider(create: (_) => GetIt.I.get<EaselProvider>()),
+        ChangeNotifierProvider(create: (_) => GetIt.I.get<HomeViewModel>()),
         ChangeNotifierProvider(create: (_) => GetIt.I.get<CreatorHubViewModel>()),
       ],
       child: ScreenUtilInit(

@@ -273,6 +273,9 @@ const String kEthereumSymbol = "weth-wei";
 const String kDefault = 'Default';
 
 const String kMyEaselNFT = 'My Easel NFT';
+const String nftKey = 'nft';
+const String fromKey = 'from';
+const String draftKey = 'draft';
 
 /// Supported Formats
 
@@ -280,6 +283,3 @@ const mp3 = "mp3";
 const ogg = "ogg";
 const wav = "wav";
 const aac = "aac";
-
-
-

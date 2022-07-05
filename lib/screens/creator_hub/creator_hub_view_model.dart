@@ -41,7 +41,7 @@ class CreatorHubViewModel extends ChangeNotifier {
     if (getNftResponse.isLeft()) {
       loading.dismiss();
 
-      navigatorKey.currentState!.overlay!.context.show(message: "something_wrong".tr());
+      navigatorKey.getContext().show(message: "something_wrong".tr());
 
       return;
     }
@@ -57,12 +57,10 @@ class CreatorHubViewModel extends ChangeNotifier {
     final deleteNftResponse = await repository.deleteNft(id!);
 
     if (deleteNftResponse.isLeft()) {
-      navigatorKey.currentState!.overlay!.context.show(message: "delete_error".tr());
-    }
-    else{
+      navigatorKey.getContext().show(message: "delete_error".tr());
+    } else {
       nftList.removeWhere((element) => element.id == id);
       notifyListeners();
-
     }
   }
 }

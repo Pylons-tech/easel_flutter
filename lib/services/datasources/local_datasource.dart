@@ -204,6 +204,7 @@ class LocalDataSourceImpl implements LocalDataSource {
   @override
   Future<bool> updateNftFromPrice(int id, String tradePercentage, String price, String quantity, String step, String denom, bool isFreeDrop) async {
     try {
+
       await database.nftDao.updateNFTFromPrice(id, tradePercentage, price, quantity, step, denom, isFreeDrop);
       return true;
     } catch (e) {

@@ -44,10 +44,9 @@ class _DescribeScreenState extends State<DescribeScreen> {
   void initState() {
     super.initState();
 
-    context.read<EaselProvider>().toCheckSavedArtistName();
     WidgetsBinding.instance.addPostFrameCallback((_) async {
-      nft = repository.getCacheDynamicType(key: "nft");
-      DraftDetailDialog(context: context).show();
+      context.read<EaselProvider>().toCheckSavedArtistName();
+      nft = repository.getCacheDynamicType(key: nftKey);
     });
   }
 
@@ -130,6 +129,7 @@ class _DescribeScreenState extends State<DescribeScreen> {
                     label: kDescribeYourNftText,
                     hint: kHintNftDesc,
                     noOfLines: 5,
+
                     controller: provider.descriptionController,
                     textCapitalization: TextCapitalization.sentences,
                     inputFormatters: [LengthLimitingTextInputFormatter(kMaxDescription)],

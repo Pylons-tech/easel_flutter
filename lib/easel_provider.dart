@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'dart:developer';
 import 'dart:io';
+import 'package:easel_flutter/models/save_nft.dart';
 import 'package:easel_flutter/repository/repository.dart';
 import 'package:easy_localization/easy_localization.dart';
 
@@ -735,7 +736,7 @@ class EaselProvider extends ChangeNotifier {
         navigatorKey.currentState!.overlay!.context.show(message: "save_error".tr());
         return false;
       }
-      repository.setCacheDynamicType(key: 'nft', value: _nft);
+      repository.setCacheDynamicType(key: nftKey, value: _nft);
       setAudioThumbnail(null);
 
       setVideoThumbnail(null);
@@ -745,11 +746,13 @@ class EaselProvider extends ChangeNotifier {
   }
 
   Future<bool> updateNftFromDescription(int id) async {
-    final saveNftResponse = await repository.updateNftFromDescription(id, artNameController.text, descriptionController.text, artistNameController.text, UploadStep.descriptionAdded.name);
+    SaveNft saveNftForDescription =
+        SaveNft(id: id, nftDescription: descriptionController.text, nftName: artNameController.text, creatorName: artistNameController.text, step: UploadStep.descriptionAdded.name);
+    final saveNftResponse = await repository.updateNftFromDescription(saveNft: saveNftForDescription);
 
     final _nft = await repository.getNft(id);
     final dataFromLocal = _nft.getOrElse(() => nft);
-    repository.setCacheDynamicType(key: 'nft', value: dataFromLocal);
+    repository.setCacheDynamicType(key: nftKey, value: dataFromLocal);
     if (saveNftResponse.isLeft()) {
       navigatorKey.currentState!.overlay!.context.show(message: "save_error".tr());
 
@@ -760,11 +763,18 @@ class EaselProvider extends ChangeNotifier {
   }
 
   Future<bool> updateNftFromPrice(int id) async {
-    final saveNftResponse = await repository.updateNftFromPrice(
-        id, royaltyController.text, priceController.text, noOfEditionController.text, UploadStep.priceAdded.name, isFreeDrop == false ? selectedDenom.name : "", isFreeDrop);
+    SaveNft saveNftForPrice = SaveNft(
+        id: id,
+        tradePercentage: royaltyController.text,
+        price: priceController.text,
+        quantity: noOfEditionController.text,
+        step: UploadStep.priceAdded.name,
+        denomName: isFreeDrop == false ? selectedDenom.name : "",
+        isFreeDrop: isFreeDrop);
+    final saveNftResponse = await repository.updateNftFromPrice(saveNft: saveNftForPrice);
     final _nft = await repository.getNft(id);
     final dataFromLocal = _nft.getOrElse(() => nft);
-    repository.setCacheDynamicType(key: 'nft', value: dataFromLocal);
+    repository.setCacheDynamicType(key: nftKey, value: dataFromLocal);
     if (saveNftResponse.isLeft()) {
       navigatorKey.currentState!.overlay!.context.show(message: "save_error".tr());
 
@@ -775,12 +785,11 @@ class EaselProvider extends ChangeNotifier {
   }
 
   Future<bool> createRecipe(NFT nft) async {
-    if(nft.isFreeDrop==false){
+    if (nft.isFreeDrop == false) {
       if (!await shouldMintUSDOrNot()) {
         return false;
       }
     }
-
 
     // get device cookbook id
     _cookbookId = repository.getCookbookId();
