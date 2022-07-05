@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:easel_flutter/easel_provider.dart';
 import 'package:easel_flutter/repository/repository.dart';
 import 'package:easel_flutter/screens/creator_hub/creator_hub_view_model.dart';
@@ -33,12 +35,14 @@ class HomeScreen extends StatefulWidget {
 class _HomeScreenState extends State<HomeScreen> {
   late EaselProvider easelProvider;
   var repository = GetIt.I.get<Repository>();
-  late HomeViewModel homeViewModel;
+  HomeViewModel get homeViewModel => GetIt.I.get();
 
   @override
   void initState() {
     easelProvider = Provider.of<EaselProvider>(context, listen: false);
-    homeViewModel = Provider.of<HomeViewModel>(context, listen: false);
+    super.initState();
+
+    context.read<EaselProvider>().initStore();
 
     homeViewModel.init(
       setTextField: () {
@@ -48,10 +52,6 @@ class _HomeScreenState extends State<HomeScreen> {
       },
     );
 
-    super.initState();
-    Future.delayed(const Duration(milliseconds: 10), () {
-      context.read<EaselProvider>().initStore();
-    });
   }
 
   @override
@@ -62,97 +62,106 @@ class _HomeScreenState extends State<HomeScreen> {
 
   @override
   Widget build(BuildContext context) {
-    EaselProvider easelProvider = context.read<EaselProvider>();
-
     return WillPopScope(
       onWillPop: () async {
-        await context.read<CreatorHubViewModel>().getDraftsList();
-
+        GetIt.I.get<CreatorHubViewModel>().getDraftsList();
         return true;
       },
       child: Container(
         color: EaselAppTheme.kWhite,
         child: SafeArea(
           child: Scaffold(
-            body: Column(
-              children: [
-                const VerticalSpace(20),
-                MyStepsIndicator(currentPage: homeViewModel.currentPage, currentStep: homeViewModel.currentStep),
-                const VerticalSpace(5),
-                StepLabels(currentPage: homeViewModel.currentPage, currentStep: homeViewModel.currentStep),
-                const VerticalSpace(10),
-                Stack(
-                  alignment: Alignment.center,
-                  children: [
-                    Align(
-                        alignment: Alignment.centerLeft,
-                        child: ValueListenableBuilder(
-                          valueListenable: homeViewModel.currentPage,
-                          builder: (_, int currentPage, __) => Padding(
-                              padding: EdgeInsets.only(left: 10.sp),
-                              child: IconButton(
-                                onPressed: () {
-                                  ScaffoldMessenger.of(context).hideCurrentSnackBar();
-                                  homeViewModel.pageController.previousPage(duration: const Duration(milliseconds: 300), curve: Curves.easeIn);
-                                  if (homeViewModel.currentPage.value == 0) {
-                                    context.read<CreatorHubViewModel>().getDraftsList();
-                                    Navigator.of(context).pop();
-                                  }
-                                },
-                                icon: const Icon(
-                                  Icons.arrow_back_ios,
-                                  color: EaselAppTheme.kGrey,
-                                ),
-                              )),
-                        )),
-                    ValueListenableBuilder(
-                      valueListenable: homeViewModel.currentPage,
-                      builder: (_, int currentPage, __) {
-                        return Text(
-                          homeViewModel.pageTitles[homeViewModel.currentPage.value],
-                          style: Theme.of(context).textTheme.bodyText1!.copyWith(fontSize: 18.sp, fontWeight: FontWeight.w400, color: EaselAppTheme.kDarkText),
-                        );
-                      },
-                    ),
-                  ],
-                ),
-                ScreenResponsive(
-                  mobileScreen: (context) => const VerticalSpace(6),
-                  tabletScreen: (context) => const VerticalSpace(30),
-                ),
-                Expanded(
-                  child: PageView(
-                    controller: homeViewModel.pageController,
-                    physics: const NeverScrollableScrollPhysics(),
-                    onPageChanged: (int page) {
-                      homeViewModel.currentPage.value = page;
-                      switch (page) {
-                        case 0:
-                          homeViewModel.currentStep.value = 0;
-                          break;
-                        case 1:
-                        case 2:
-                          homeViewModel.currentStep.value = 1;
-                          break;
-
-                        case 3:
-                          homeViewModel.currentStep.value = 2;
-                          break;
-                      }
-                    },
-                    children: [
-                      ChooseFormatScreen(controller: homeViewModel.pageController),
-                      DescribeScreen(controller: homeViewModel.pageController),
-                      PriceScreen(controller: homeViewModel.pageController),
-                      MintScreen(controller: homeViewModel.pageController),
-                    ],
-                  ),
-                ),
-              ],
-            ),
+            body: ChangeNotifierProvider.value(value: homeViewModel, child: const HomeScreenContent()),
           ),
         ),
       ),
+    );
+  }
+}
+
+class HomeScreenContent extends StatelessWidget {
+  const HomeScreenContent({
+    Key? key,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    final homeViewModel = context.watch<HomeViewModel>();
+    return Column(
+      children: [
+        const VerticalSpace(20),
+        MyStepsIndicator(currentPage: homeViewModel.currentPage, currentStep: homeViewModel.currentStep),
+        const VerticalSpace(5),
+        StepLabels(currentPage: homeViewModel.currentPage, currentStep: homeViewModel.currentStep),
+        const VerticalSpace(10),
+        Stack(
+          alignment: Alignment.center,
+          children: [
+            Align(
+                alignment: Alignment.centerLeft,
+                child: ValueListenableBuilder(
+                  valueListenable: homeViewModel.currentPage,
+                  builder: (_, int currentPage, __) => Padding(
+                      padding: EdgeInsets.only(left: 10.sp),
+                      child: IconButton(
+                        onPressed: () {
+                          ScaffoldMessenger.of(context).hideCurrentSnackBar();
+                          homeViewModel.pageController.previousPage(duration: const Duration(milliseconds: 300), curve: Curves.easeIn);
+                          if (homeViewModel.currentPage.value == 0) {
+                            GetIt.I.get<CreatorHubViewModel>().getDraftsList();
+                            Navigator.of(context).pop();
+                          }
+                        },
+                        icon: const Icon(
+                          Icons.arrow_back_ios,
+                          color: EaselAppTheme.kGrey,
+                        ),
+                      )),
+                )),
+            ValueListenableBuilder(
+              valueListenable: homeViewModel.currentPage,
+              builder: (_, int currentPage, __) {
+                return Text(
+                  homeViewModel.pageTitles[homeViewModel.currentPage.value],
+                  style: Theme.of(context).textTheme.bodyText1!.copyWith(fontSize: 18.sp, fontWeight: FontWeight.w400, color: EaselAppTheme.kDarkText),
+                );
+              },
+            ),
+          ],
+        ),
+        ScreenResponsive(
+          mobileScreen: (context) => const VerticalSpace(6),
+          tabletScreen: (context) => const VerticalSpace(30),
+        ),
+        Expanded(
+          child: PageView(
+            controller: homeViewModel.pageController,
+            physics: const NeverScrollableScrollPhysics(),
+            onPageChanged: (int page) {
+              homeViewModel.currentPage.value = page;
+              switch (page) {
+                case 0:
+                  homeViewModel.currentStep.value = 0;
+                  break;
+                case 1:
+                case 2:
+                  homeViewModel.currentStep.value = 1;
+                  break;
+
+                case 3:
+                  homeViewModel.currentStep.value = 2;
+                  break;
+              }
+            },
+            children: [
+              ChooseFormatScreen(controller: homeViewModel.pageController),
+              DescribeScreen(controller: homeViewModel.pageController),
+              PriceScreen(controller: homeViewModel.pageController),
+              MintScreen(controller: homeViewModel.pageController),
+            ],
+          ),
+        ),
+      ],
     );
   }
 }

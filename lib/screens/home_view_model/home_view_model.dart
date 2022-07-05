@@ -20,7 +20,7 @@ class HomeViewModel extends ChangeNotifier {
   String? from;
   final List pageTitles = ["select_nft_file".tr(), "nft_detail_text".tr(), "nft_pricing".tr(), ''];
 
-  init({required VoidCallback setTextField}) {
+  void init({required VoidCallback setTextField}) {
     from = repository.getCacheString(key: fromKey);
     repository.deleteCacheString(key: fromKey);
 

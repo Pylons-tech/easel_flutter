@@ -5,6 +5,7 @@ import 'package:easel_flutter/models/nft.dart';
 import 'package:easel_flutter/services/datasources/local_datasource.dart';
 import 'package:easel_flutter/services/datasources/remote_datasource.dart';
 import 'package:easel_flutter/repository/repository.dart';
+import 'package:easel_flutter/utils/constants.dart';
 import 'package:easel_flutter/utils/extension_util.dart';
 import 'package:easel_flutter/widgets/loading.dart';
 import 'package:easy_localization/easy_localization.dart';
@@ -67,5 +68,11 @@ class CreatorHubViewModel extends ChangeNotifier {
     nftList.removeWhere((element) => element.id == id);
 
     notifyListeners();
+  }
+
+  void saveNFT({required NFT nft}) {
+    repository.setCacheDynamicType(key: "nft", value: nft);
+    repository.setCacheString(key: "from", value:kDraft);
+
   }
 }

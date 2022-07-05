@@ -11,6 +11,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:provider/provider.dart';
+import 'package:shimmer_animation/shimmer_animation.dart';
 
 import '../../utils/dependency_injection/dependency_injection_container.dart';
 
@@ -22,14 +23,43 @@ class CreatorHubScreen extends StatefulWidget {
 }
 
 class _CreatorHubScreenState extends State<CreatorHubScreen> {
+  CreatorHubViewModel get creatorHubViewModel => sl();
+
   @override
   void initState() {
-    scheduleMicrotask(() {
-      Provider.of<CreatorHubViewModel>(context, listen: false).getDraftsList();
-    });
     super.initState();
+
+    scheduleMicrotask(() {
+      creatorHubViewModel.getDraftsList();
+    });
+
   }
 
+  @override
+  Widget build(BuildContext context) {
+      return Container(
+        color: EaselAppTheme.kWhite,
+        child: SafeArea(
+          child: Scaffold(
+            backgroundColor: EaselAppTheme.kBgWhite,
+            body: ChangeNotifierProvider.value(
+              value: creatorHubViewModel,
+              child: const CreatorHubContent(),
+            ),
+          ),
+        ),
+    );
+  }
+}
+
+class CreatorHubContent extends StatefulWidget {
+  const CreatorHubContent({Key? key}) : super(key: key);
+
+  @override
+  State<CreatorHubContent> createState() => _CreatorHubContentState();
+}
+
+class _CreatorHubContentState extends State<CreatorHubContent> {
   TextStyle titleStyle = TextStyle(
     fontSize: 18.sp,
     fontWeight: FontWeight.w800,
@@ -45,71 +75,87 @@ class _CreatorHubScreenState extends State<CreatorHubScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Consumer(builder: (context, CreatorHubViewModel viewModel, child) {
-      return Container(
-          color: EaselAppTheme.kWhite,
-          child: SafeArea(
-              child: Scaffold(
-            backgroundColor: EaselAppTheme.kBgWhite,
-            body: Padding(
-              padding: EdgeInsets.only(left: 25.w, right: 25.w, top: 30.h),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Stack(
-                    alignment: AlignmentDirectional.center,
-                    children: [
-                      Text("creator_hub".tr(), style: titleStyle),
-                      Align(
-                        alignment: Alignment.topRight,
-                        child: InkWell(
-                          onTap: () {
-                            Navigator.of(context).pushNamed(
-                              RouteUtil.ROUTE_HOME,
-                            );
-                          },
-                          child: Icon(
-                            Icons.add,
-                            size: 30.h,
-                            color: EaselAppTheme.kBlack,
-                          ),
-                        ),
-                      ),
-                    ],
+    final viewModel = context.watch<CreatorHubViewModel>();
+    return Padding(
+      padding: EdgeInsets.only(left: 25.w, right: 25.w, top: 30.h),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Stack(
+            alignment: AlignmentDirectional.center,
+            children: [
+              Text("creator_hub".tr(), style: titleStyle),
+              Align(
+                alignment: Alignment.topRight,
+                child: InkWell(
+                  onTap: () {
+                    Navigator.of(context).pushNamed(
+                      RouteUtil.ROUTE_HOME,
+                    );
+                  },
+                  child: Icon(
+                    Icons.add,
+                    size: 30.h,
+                    color: EaselAppTheme.kBlack,
                   ),
-                  SizedBox(
-                    height: 25.h,
-                  ),
-                  Row(
-                    children: [
-                      Expanded(child: buildCard(title: "for_sale".tr(), count: 0.toString(), cardColor: EaselAppTheme.kBlue, viewModel: viewModel)),
-                      SizedBox(
-                        width: 20.w,
-                      ),
-                      Expanded(child: buildCard(title: "published".tr(), count: "0", cardColor: EaselAppTheme.kDarkGreen, viewModel: viewModel)),
-                      SizedBox(
-                        width: 20.w,
-                      ),
-                      Expanded(child: buildCard(title: "draft".tr(), count: viewModel.nftList.length.toString(), cardColor: EaselAppTheme.kLightRed, viewModel: viewModel))
-                    ],
-                  ),
-                  SizedBox(height: 20.h),
-                  Expanded(
-                    child: ListView(
-                      primary: false,
-                      children: [
-                        SizedBox(height: 10.h),
-                        publishedNFTsContainer(title: "publish_total".tr(args: ["0"]), viewModel: viewModel),
-                        SizedBox(height: 20.h),
-                        draftNFTsContainer(title: "draft_total".tr(args: [viewModel.nftList.length.toString()]), viewModel: viewModel)
-                      ],
-                    ),
-                  ),
-                ],
+                ),
               ),
+            ],
+          ),
+          SizedBox(
+            height: 25.h,
+          ),
+          Row(
+            children: [
+              Expanded(child: buildCard(title: "for_sale".tr(), count: 0.toString(), cardColor: EaselAppTheme.kBlue, viewModel: viewModel)),
+              SizedBox(
+                width: 20.w,
+              ),
+              Expanded(child: buildCard(title: "published".tr(), count: "0", cardColor: EaselAppTheme.kDarkGreen, viewModel: viewModel)),
+              SizedBox(
+                width: 20.w,
+              ),
+              Expanded(child: buildCard(title: "draft".tr(), count: viewModel.nftList.length.toString(), cardColor: EaselAppTheme.kLightRed, viewModel: viewModel))
+            ],
+          ),
+          SizedBox(height: 20.h),
+          Expanded(
+            child: ListView(
+              primary: false,
+              children: [
+                SizedBox(height: 10.h),
+                publishedNFTsContainer(title: "publish_total".tr(args: ["0"]), viewModel: viewModel),
+                SizedBox(height: 20.h),
+                draftNFTsContainer(title: "draft_total".tr(args: [viewModel.nftList.length.toString()]), viewModel: viewModel)
+              ],
             ),
-          )));
-    });
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget buildCard({required String title, required String count, required Color cardColor, required CreatorHubViewModel viewModel}) {
+    return Container(
+        color: cardColor,
+        child: Padding(
+          padding: EdgeInsets.symmetric(horizontal: 10.w, vertical: 20.h),
+          child: Column(
+            children: [
+              Text(
+                title,
+                style: TextStyle(color: EaselAppTheme.kWhite, fontWeight: FontWeight.w400, fontFamily: kUniversalFontFamily, fontSize: 12.sp),
+              ),
+              SizedBox(
+                height: 10.h,
+              ),
+              Text(
+                count,
+                style: digitTextStyle,
+              )
+            ],
+          ),
+        ));
   }
 
   Widget publishedNFTsContainer({required String title, required CreatorHubViewModel viewModel}) {
@@ -241,7 +287,12 @@ class _CreatorHubScreenState extends State<CreatorHubScreen> {
                   imageUrl: nft.assetType == kImageText ? nft.url : nft.thumbnailUrl,
                   errorWidget: (a, b, c) => const Center(child: Icon(Icons.error_outline)),
                   placeholder: (context, url) => Center(
-                    child: SizedBox(height: 30.h, width: 30.h, child: const CircularProgressIndicator()),
+                    child: Shimmer(
+                        color: EaselAppTheme.cardBackground,
+                        child: SizedBox(
+                          height: 30.h,
+                          width: 30.h,
+                        )),
                   ),
                 ),
               ),
@@ -273,36 +324,13 @@ class _CreatorHubScreenState extends State<CreatorHubScreen> {
               ),
               InkWell(
                   onTap: () {
-                    final DraftsBottomSheet draftsBottomSheet = DraftsBottomSheet(buildContext: context, nft: nft, repository: sl());
+                    final DraftsBottomSheet draftsBottomSheet = DraftsBottomSheet(buildContext: context, nft: nft);
                     draftsBottomSheet.show();
                   },
                   child: Padding(
                     padding: EdgeInsets.all(4.0.w),
                     child: SvgPicture.asset(kSvgMoreOption),
                   ))
-            ],
-          ),
-        ));
-  }
-
-  Widget buildCard({required String title, required String count, required Color cardColor, required CreatorHubViewModel viewModel}) {
-    return Container(
-        color: cardColor,
-        child: Padding(
-          padding: EdgeInsets.symmetric(horizontal: 10.w, vertical: 20.h),
-          child: Column(
-            children: [
-              Text(
-                title,
-                style: TextStyle(color: EaselAppTheme.kWhite, fontWeight: FontWeight.w400, fontFamily: kUniversalFontFamily, fontSize: 12.sp),
-              ),
-              SizedBox(
-                height: 10.h,
-              ),
-              Text(
-                count,
-                style: digitTextStyle,
-              )
             ],
           ),
         ));
