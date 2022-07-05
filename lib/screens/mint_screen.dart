@@ -12,6 +12,7 @@ import 'package:easel_flutter/widgets/pylons_button.dart';
 import 'package:easel_flutter/widgets/video_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:get_it/get_it.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
 
@@ -51,32 +52,7 @@ class _MintScreenState extends State<MintScreen> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: [
-                  if (provider.nftFormat.format == kImageText) ...[
-                    ImageWidget(
-                      file: provider.file,
-                      filePath: nft.url,
-                    )
-                  ],
-                  if (provider.nftFormat.format == kVideoText) ...[
-                    VideoWidget(
-                      file: provider.file!,
-                      previewFlag: true,
-                      isForFile: true,
-                    )
-                  ],
-                  if (provider.nftFormat.format == k3dText) ...[
-                    SizedBox(
-                        height: MediaQuery.of(context).size.height * 0.3,
-                        child: Model3dViewer(
-                          file: provider.file!,
-                        ))
-                  ],
-                  if (provider.nftFormat.format == kAudioText) ...[
-                    AudioWidget(
-                      file: provider.file!,
-                      previewFlag: true,
-                    )
-                  ],
+                  buildPreviewWidget(provider , context),
                   const SizedBox(height: 10),
                   Padding(
                     padding: const EdgeInsets.symmetric(horizontal: 20),
@@ -193,5 +169,32 @@ class _MintScreenState extends State<MintScreen> {
         ],
       ),
     );
+  }
+
+  Widget buildPreviewWidget(EaselProvider provider, BuildContext context) {
+    switch (provider.nft.assetType) {
+      case kImageText:
+        return ImageWidget(file: provider.file!);
+      case kVideoText:
+        return VideoWidget(
+          file: provider.file!,
+          previewFlag: true,
+          isForFile: true,
+        );
+      case k3dText:
+        return SizedBox(
+            height: MediaQuery.of(context).size.height * 0.3,
+            width: 1.sw,
+            child: Model3dViewer(
+              path: provider.nft.url,
+              isFile: false,
+            ));
+      case kAudioText:
+        return AudioWidget(
+          file: provider.file!,
+          previewFlag: true,
+        );
+    }
+    return const SizedBox.shrink();
   }
 }

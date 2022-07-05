@@ -2,6 +2,9 @@ import 'package:easel_flutter/datasources/database.dart';
 import 'package:easel_flutter/models/nft.dart';
 import 'package:easel_flutter/utils/constants.dart';
 import 'package:easel_flutter/utils/date_utils.dart';
+import 'package:easel_flutter/utils/failure/failure.dart';
+import 'package:easy_localization/easy_localization.dart';
+import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../datasources/cache_manager.dart';
@@ -197,6 +200,7 @@ class LocalDataSourceImpl implements LocalDataSource {
       await database.nftDao.updateNFTFromPrice(id, tradePercentage, price, quantity, step, denom);
       return true;
     } catch (e) {
+      throw CacheFailure("save_error".tr());
 
       return throw "";
     }

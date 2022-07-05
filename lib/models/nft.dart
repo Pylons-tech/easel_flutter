@@ -38,6 +38,8 @@ class NFT extends Equatable {
   String assetType = AssetType.Image.name;
   String duration = "";
   String hashtags = "";
+  String fileName = "";
+  String cid = "";
 
   NFT({
     this.id,
@@ -65,6 +67,8 @@ class NFT extends Equatable {
     required this.step,
     this.duration = "",
     this.hashtags = "",
+    this.fileName = "",
+    this.cid = ""
   });
 
   factory NFT.fromRecipe(Recipe recipe) {

@@ -60,6 +60,8 @@ const kWalletAndroidId = 'tech.pylons.wallet';
 const kWalletWebLink = 'https://wallet.pylons.tech';
 const kWalletDynamicLink = 'pylons.page.link';
 
+const kEaselEmail = "easel@pylons.tech";
+
 /// ```Number constants
 const kMinNFTName = 9;
 const kMinDescription = 20;
@@ -151,7 +153,12 @@ const kUploadNFTText = 'Upload NFT file';
 const kEditNFTText = 'Edit your NFT Details';
 const kPreviewYourNFTText = 'Preview your NFT file';
 const kListNftText = 'List NFT';
+
 const kPublishNftText = 'Publish NFT';
+
+const kSelectNFTText = 'Select NFT file';
+const kDetailNftText = 'NFT Details';
+const kPriceNftText = 'NFT Pricing';
 const kUploadText = 'Upload';
 const kEditText = 'Edit';
 const kPreviewText = 'Preview';
@@ -190,7 +197,6 @@ const kRecipeCreated = 'Recipe created';
 const kErrProfileNotExist = 'profileDoesNotExist';
 const kErrProfileFetch = 'Error occurred while fetching wallet profile';
 const kErrPickFileFetch = 'Error occurred while uploading the file, please try again';
-const kErrAddAudioThumbnail = 'Please select audio thumbnail';
 const kErrUpload = 'Upload error occurred';
 const kErrFileNotPicked = 'Pick a file';
 const kErrUnsupportedFormat = 'Unsupported format';

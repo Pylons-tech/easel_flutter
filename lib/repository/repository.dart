@@ -4,6 +4,7 @@ import 'dart:io';
 import 'package:dartz/dartz.dart';
 import 'package:easel_flutter/models/api_response.dart';
 import 'package:easel_flutter/models/nft.dart';
+import 'package:easel_flutter/models/nft.dart';
 import 'package:easel_flutter/services/datasources/local_datasource.dart';
 import 'package:easel_flutter/services/datasources/remote_datasource.dart';
 
@@ -271,4 +272,14 @@ class RepositoryImp implements Repository {
       }
     }
 
+
+  @override
+  Future<Either<Failure, bool>> saveNft(NFT draft) async {
+    try {
+      await localDataSource.saveNft(draft);
+      return const Right(true);
+    } on Exception catch (_) {
+      return Left(CacheFailure("save_error".tr()));
+    }
+  }
 }
