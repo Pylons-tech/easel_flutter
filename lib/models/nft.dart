@@ -74,8 +74,8 @@ class NFT extends Equatable {
     return NFT(
       id: null,
       type: NftType.TYPE_RECIPE.name,
-      recipeID: recipe.iD,
-      cookbookID: recipe.cookbookID,
+      recipeID: recipe.id,
+      cookbookID: recipe.cookbookId,
       name: recipe.entries.itemOutputs.firstOrNull?.strings.firstWhere((strKeyValue) => strKeyValue.key == kName, orElse: () => StringParam()).value ?? "",
       url: recipe.entries.itemOutputs.firstOrNull?.strings.firstWhere((strKeyValue) => strKeyValue.key == kNFTURL, orElse: () => StringParam()).value ?? "",
       thumbnailUrl: recipe.entries.itemOutputs.firstOrNull?.strings.firstWhere((strKeyValue) => strKeyValue.key == kThumbnailUrl, orElse: () => StringParam()).value ?? "",
