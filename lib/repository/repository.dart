@@ -281,9 +281,9 @@ class RepositoryImp implements Repository {
       NFT? data = await localDataSource.getNft(id);
       if (data == null) {
         return Left(CacheFailure("something_wrong".tr()));
-      } else {
-        return Right(data);
       }
+        return Right(data);
+
     } on Exception catch (_) {
       return Left(CacheFailure("something_wrong".tr()));
     }

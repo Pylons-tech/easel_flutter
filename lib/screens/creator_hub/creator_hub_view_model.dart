@@ -48,7 +48,7 @@ class CreatorHubViewModel extends ChangeNotifier {
     return repository.getCookbookId();
   }
 
-  getTotalForSale() {
+  void getTotalForSale() {
     forSaleCount = 0;
     for (int i = 0; i < _publishedNFTsList.length; i++) {
       if (publishedNFTsList[i].isEnabled && publishedNFTsList[i].amountMinted < publishedNFTsList[i].quantity) {
@@ -95,7 +95,7 @@ class CreatorHubViewModel extends ChangeNotifier {
   List<NFT> nftList = [];
 
   Future<void> getDraftsList() async {
-    final loading = Loading().showLoading(message: "loading ...");
+    final loading = Loading().showLoading(message: "loading".tr());
 
     final getNftResponse = await repository.getNfts();
 
@@ -119,11 +119,15 @@ class CreatorHubViewModel extends ChangeNotifier {
 
     if (deleteNftResponse.isLeft()) {
       navigatorKey.currentState!.overlay!.context.show(message: "delete_error".tr());
+      return;
     }
-    else{
       nftList.removeWhere((element) => element.id == id);
       notifyListeners();
+  }
 
-    }
+  void onPublishPressed(NFT nft){
+    repository.setCacheDynamicType(key: "nft", value: nft);
+    repository.setCacheString(key: "from", value: "draft");
+
   }
 }

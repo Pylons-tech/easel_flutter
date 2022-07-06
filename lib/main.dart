@@ -51,7 +51,6 @@ class MyApp extends StatelessWidget {
     return MultiProvider(
       providers: [
         ChangeNotifierProvider(create: (_) => GetIt.I.get<EaselProvider>()),
-        ChangeNotifierProvider(create: (_) => GetIt.I.get<CreatorHubViewModel>()),
       ],
       child: ScreenUtilInit(
           minTextAdapt: true,
