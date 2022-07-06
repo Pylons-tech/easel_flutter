@@ -52,7 +52,7 @@ class _MintScreenState extends State<MintScreen> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: [
-                  buildPreviewWidget(provider , context),
+                  buildPreviewWidget(provider, context),
                   const SizedBox(height: 10),
                   Padding(
                     padding: const EdgeInsets.symmetric(horizontal: 20),
@@ -150,7 +150,6 @@ class _MintScreenState extends State<MintScreen> {
                                 return;
                               }
                               provider.disposeAudioController();
-                              widget.controller.nextPage(duration: const Duration(milliseconds: 300), curve: Curves.easeIn);
                             },
                             btnText: kListText,
                             showArrow: true,
@@ -174,10 +173,10 @@ class _MintScreenState extends State<MintScreen> {
   Widget buildPreviewWidget(EaselProvider provider, BuildContext context) {
     switch (provider.nft.assetType) {
       case kImageText:
-        return ImageWidget(file: provider.file!);
+        return ImageWidget(filePath: nft.url);
       case kVideoText:
         return VideoWidget(
-          file: provider.file!,
+          filePath: nft.url,
           previewFlag: true,
           isForFile: true,
         );

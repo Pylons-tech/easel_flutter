@@ -21,11 +21,12 @@ import '../screens/custom_widgets/step_labels.dart';
 import '../screens/custom_widgets/steps_indicator.dart';
 
 class VideoWidget extends StatefulWidget {
-  final File file;
+  final File? file;
+  final String? filePath;
   final bool previewFlag;
   final bool isForFile;
 
-  const VideoWidget({Key? key, required this.file, required this.previewFlag, required this.isForFile}) : super(key: key);
+  const VideoWidget({Key? key,  this.file,  this.filePath,required this.previewFlag, required this.isForFile}) : super(key: key);
 
   @override
   _VideoWidgetState createState() => _VideoWidgetState();
@@ -90,7 +91,7 @@ class _VideoWidgetState extends State<VideoWidget> {
               context,
               MaterialPageRoute(
                   builder: (context) => VideoWidgetFullScreen(
-                        file: widget.file,
+                        file: widget.file!,
                         easelProvider: easelProvider,
                       )),
             );

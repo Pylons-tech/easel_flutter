@@ -445,7 +445,15 @@ class EaselProvider extends ChangeNotifier {
   /// return true or false depending on the response from the wallet app
   Future<bool> createCookbook() async {
     _cookbookId = await repository.autoGenerateCookbookId();
-    var cookBook1 = Cookbook(creator: "", iD: _cookbookId, name: "Easel Cookbook", description: "Cookbook for Easel NFT", developer: artistNameController.text, version: "v0.0.1", supportEmail: "easel@pylons.tech", enabled: true);
+    var cookBook1 = Cookbook(
+        creator: "",
+        iD: _cookbookId,
+        name: "Easel Cookbook",
+        description: "Cookbook for Easel NFT",
+        developer: artistNameController.text,
+        version: "v0.0.1",
+        supportEmail: "easel@pylons.tech",
+        enabled: true);
 
     var response = await PylonsWallet.instance.txCreateCookbook(cookBook1);
     if (response.success) {
@@ -466,9 +474,11 @@ class EaselProvider extends ChangeNotifier {
 
     if (savedArtistName.isNotEmpty) {
       artistNameController.text = savedArtistName;
+      notifyListeners();
       return;
     }
     artistNameController.text = currentUsername;
+    notifyListeners();
   }
 
   /// sends a createRecipe Tx message to the wallet
@@ -497,11 +507,11 @@ class EaselProvider extends ChangeNotifier {
 
     _recipeId = repository.autoGenerateEaselId();
 
-      audioPlayerHelper.pauseAudio();
+    audioPlayerHelper.pauseAudio();
     setVideoThumbnail(null);
     setAudioThumbnail(null);
 
-      String residual = DecString.decStringFromDouble(double.parse(royaltyController.text.trim()));
+    String residual = DecString.decStringFromDouble(double.parse(royaltyController.text.trim()));
 
     String price = isFreeDrop ? "0" : (double.parse(priceController.text.replaceAll(",", "").trim()) * 1000000).toStringAsFixed(0);
     var recipe = Recipe(
@@ -529,7 +539,10 @@ class EaselProvider extends ChangeNotifier {
                 ])
               ],
               longs: [
-                LongParam(key: kQuantity, weightRanges: [IntWeightRange(lower: Int64(int.parse(noOfEditionController.text.replaceAll(",", "").trim())), upper: Int64(int.parse(noOfEditionController.text.replaceAll(",", "").trim())), weight: Int64(1))]),
+                LongParam(key: kQuantity, weightRanges: [
+                  IntWeightRange(
+                      lower: Int64(int.parse(noOfEditionController.text.replaceAll(",", "").trim())), upper: Int64(int.parse(noOfEditionController.text.replaceAll(",", "").trim())), weight: Int64(1))
+                ]),
                 LongParam(key: kWidth, weightRanges: [IntWeightRange(lower: Int64(_fileWidth), upper: Int64(_fileWidth), weight: Int64(1))]),
                 LongParam(key: kHeight, weightRanges: [IntWeightRange(lower: Int64(_fileHeight), upper: Int64(_fileHeight), weight: Int64(1))]),
                 LongParam(key: kDuration, weightRanges: [IntWeightRange(lower: Int64(_fileDuration), upper: Int64(_fileDuration), weight: Int64(1))]),
@@ -615,6 +628,8 @@ class EaselProvider extends ChangeNotifier {
         _selectedDenom = supportedDenomList.first;
       }
     }
+    artistNameController.text = currentUsername;
+    notifyListeners();
 
     return sdkResponse;
   }
@@ -736,7 +751,6 @@ class EaselProvider extends ChangeNotifier {
   late NFT nft;
 
   Future<bool> saveNftLocally(UploadStep step) async {
-
     ApiResponse uploadThumbnailResponse = ApiResponse.error(errorMessage: "");
     ApiResponse uploadUrlResponse = ApiResponse.error(errorMessage: "");
 
@@ -750,11 +764,11 @@ class EaselProvider extends ChangeNotifier {
       initilizeTextEditingControllerWithEmptyValues();
       if (nftFormat.format == kAudioText || nftFormat.format == kVideoText) {
         final uploadResponse = await repository.uploadFile(nftFormat.format == kAudioText ? audioThumbnail! : videoThumbnail!);
-        if(  uploadResponse.isLeft()){
+        if (uploadResponse.isLeft()) {
           loading.dismiss();
           return false;
         }
-        uploadThumbnailResponse= uploadResponse.getOrElse(() => uploadThumbnailResponse);
+        uploadThumbnailResponse = uploadResponse.getOrElse(() => uploadThumbnailResponse);
         if (uploadThumbnailResponse.status == Status.error) {
           loading.dismiss();
           navigatorKey.currentState!.overlay!.context.show(message: uploadThumbnailResponse.errorMessage ?? kErrUpload);
@@ -763,19 +777,19 @@ class EaselProvider extends ChangeNotifier {
       }
       audioPlayerHelper.pauseAudio();
 
-      final response  =await repository.uploadFile(_file!);
-      if(  response.isLeft()){
+      final response = await repository.uploadFile(_file!);
+      if (response.isLeft()) {
         loading.dismiss();
         return false;
       }
-     final  fileUploadResponse= response.getOrElse(() => uploadUrlResponse);
+      final fileUploadResponse = response.getOrElse(() => uploadUrlResponse);
       loading.dismiss();
       if (fileUploadResponse.status == Status.error) {
         navigatorKey.currentState!.overlay!.context.show(message: fileUploadResponse.errorMessage ?? kErrUpload);
         return false;
       }
 
-       nft = NFT(
+      nft = NFT(
         id: null,
         type: NftType.TYPE_ITEM.name,
         ibcCoins: IBCCoins.upylon.name,
@@ -795,15 +809,15 @@ class EaselProvider extends ChangeNotifier {
         price: priceController.text,
       );
 
-      final saveNftResponse = await repository.saveNft(nft) ;
+      final saveNftResponse = await repository.saveNft(nft);
 
-      if(saveNftResponse.isLeft()){
+      if (saveNftResponse.isLeft()) {
         navigatorKey.currentState!.overlay!.context.show(message: "save_error".tr());
 
         return false;
       }
 
-      id = saveNftResponse.getOrElse(() =>0);
+      id = saveNftResponse.getOrElse(() => 0);
 
       NFT _nft = NFT(
         id: id,
@@ -839,23 +853,20 @@ class EaselProvider extends ChangeNotifier {
   }
 
   Future<bool> updateNftFromDescription(int id) async {
-    final saveNftResponse =await repository.updateNftFromDescription(id, artNameController.text, descriptionController.text, artistNameController.text, UploadStep.descriptionAdded.name);
+    final saveNftResponse = await repository.updateNftFromDescription(id, artNameController.text, descriptionController.text, artistNameController.text, UploadStep.descriptionAdded.name);
 
-    if(saveNftResponse.isLeft()){
-
+    if (saveNftResponse.isLeft()) {
       navigatorKey.currentState!.overlay!.context.show(message: "save_error".tr());
 
       return false;
     }
 
     return saveNftResponse.getOrElse(() => false);
-
   }
 
   Future<bool> updateNftFromPrice(int? id) async {
-    final saveNftResponse =await repository.updateNftFromPrice(id!, royaltyController.text, priceController.text, noOfEditionController.text, UploadStep.priceAdded.name, selectedDenom.name);
-    if(saveNftResponse.isLeft()){
-
+    final saveNftResponse = await repository.updateNftFromPrice(id!, royaltyController.text, priceController.text, noOfEditionController.text, UploadStep.priceAdded.name, selectedDenom.name);
+    if (saveNftResponse.isLeft()) {
       navigatorKey.currentState!.overlay!.context.show(message: "save_error".tr());
 
       return false;

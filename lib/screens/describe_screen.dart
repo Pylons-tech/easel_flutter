@@ -44,9 +44,10 @@ class _DescribeScreenState extends State<DescribeScreen> {
   void initState() {
     super.initState();
 
-    context.read<EaselProvider>().toCheckSavedArtistName();
     WidgetsBinding.instance.addPostFrameCallback((_) async {
       nft = repository.getCacheDynamicType(key: "nft");
+      context.read<EaselProvider>().toCheckSavedArtistName();
+
       // DraftDetailDialog(context: context).show();
     });
   }

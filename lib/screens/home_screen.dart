@@ -35,6 +35,7 @@ class HomeScreen extends StatefulWidget {
 class _HomeScreenState extends State<HomeScreen> {
   late EaselProvider easelProvider;
   var repository = GetIt.I.get<Repository>();
+
   HomeViewModel get homeViewModel => GetIt.I.get();
 
   @override
@@ -42,7 +43,9 @@ class _HomeScreenState extends State<HomeScreen> {
     easelProvider = Provider.of<EaselProvider>(context, listen: false);
     super.initState();
 
-    context.read<EaselProvider>().initStore();
+    WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
+      context.read<EaselProvider>().initStore();
+    });
 
     homeViewModel.init(
       setTextField: () {
@@ -51,7 +54,6 @@ class _HomeScreenState extends State<HomeScreen> {
             royalties: homeViewModel.nft?.tradePercentage, price: homeViewModel.nft?.price, edition: homeViewModel.nft?.quantity.toString(), denom: homeViewModel.nft?.denom);
       },
     );
-
   }
 
   @override
