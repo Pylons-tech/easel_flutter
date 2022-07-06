@@ -445,14 +445,7 @@ class EaselProvider extends ChangeNotifier {
   Future<bool> createCookbook() async {
     _cookbookId = await repository.autoGenerateCookbookId();
     var cookBook1 = Cookbook(
-        creator: "",
-        iD: _cookbookId,
-        name: "Easel Cookbook",
-        description: "Cookbook for Easel NFT",
-        developer: artistNameController.text,
-        version: "v0.0.1",
-        supportEmail: "easel@pylons.tech",
-        enabled: true);
+        creator: "", id: _cookbookId, name: "Easel Cookbook", description: "Cookbook for Easel NFT", developer: artistNameController.text, version: "v0.0.1", supportEmail: kEaselEmail, enabled: true);
 
     var response = await PylonsWallet.instance.txCreateCookbook(cookBook1);
     if (response.success) {
@@ -514,9 +507,9 @@ class EaselProvider extends ChangeNotifier {
 
     String price = isFreeDrop ? "0" : (double.parse(priceController.text.replaceAll(",", "").trim()) * 1000000).toStringAsFixed(0);
     var recipe = Recipe(
-        cookbookID: _cookbookId,
-        iD: _recipeId,
-        nodeVersion: "v0.1.0",
+        cookbookId: _cookbookId,
+        id: _recipeId,
+        nodeVersion: Int64(1),
         name: artNameController.text.trim(),
         description: descriptionController.text.trim(),
         version: "v0.1.0",
@@ -527,7 +520,7 @@ class EaselProvider extends ChangeNotifier {
         costPerBlock: Coin(denom: kUpylon, amount: "0"),
         entries: EntriesList(coinOutputs: [], itemOutputs: [
           ItemOutput(
-              iD: kEaselNFT,
+              id: kEaselNFT,
               doubles: [
                 DoubleParam(key: kResidual, weightRanges: [
                   DoubleWeightRange(
@@ -564,7 +557,7 @@ class EaselProvider extends ChangeNotifier {
               quantity: Int64(int.parse(noOfEditionController.text.replaceAll(",", "").trim()))),
         ], itemModifyOutputs: []),
         outputs: [
-          WeightedOutputs(entryIDs: [kEaselNFT], weight: Int64(1))
+          WeightedOutputs(entryIds: [kEaselNFT], weight: Int64(1))
         ],
         blockInterval: Int64(0),
         enabled: true,
