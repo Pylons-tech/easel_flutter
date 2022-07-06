@@ -42,11 +42,13 @@ class _AudioWidgetState extends State<AudioWidget> with WidgetsBindingObserver {
     if (!easelProvider.isInitializedForFile) {
       if (widget.file != null) {
         easelProvider.initializeAudioPlayerForFile();
+        return;
       }
     }
     if (!easelProvider.isInitializedForNetwork) {
       if (widget.filePath != null) {
         easelProvider.initializeAudioPlayer(publishedNFTUrl: widget.filePath);
+        return;
       }
     }
 

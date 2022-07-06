@@ -62,7 +62,17 @@ class _PreviewScreenState extends State<PreviewScreen> {
                     onPressed: () async {
                       if (provider.nftFormat.format == kAudioText) {
                         if (provider.audioThumbnail == null) {
-                          context.show(message: kErrAddAudioThumbnail);
+                          context.show(message: uploadYourThumbnail);
+                          return;
+                        } else {
+                          await provider.saveNftLocally(UploadStep.assetUploaded);
+                          widget.controller.nextPage(duration: const Duration(milliseconds: 10), curve: Curves.easeIn);
+                          Navigator.of(context).pop();
+                        }
+                      } else if (provider.nftFormat.format == kVideoText) {
+                        if (provider.videoThumbnail == null) {
+                          context.show(message: uploadYourThumbnail);
+                          return;
                         } else {
                           await provider.saveNftLocally(UploadStep.assetUploaded);
                           widget.controller.nextPage(duration: const Duration(milliseconds: 10), curve: Curves.easeIn);

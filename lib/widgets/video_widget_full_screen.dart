@@ -1,21 +1,32 @@
-import 'dart:io';
 import 'dart:ui';
 
 import 'package:easel_flutter/easel_provider.dart';
+import 'package:easel_flutter/repository/repository.dart';
 import 'package:easel_flutter/utils/constants.dart';
 import 'package:easel_flutter/utils/easel_app_theme.dart';
 import 'package:easel_flutter/widgets/video_builder.dart';
 import 'package:easel_flutter/widgets/video_progress_widget.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:get_it/get_it.dart';
 import 'package:provider/provider.dart';
 import 'package:video_player/video_player.dart';
-import 'package:flutter/material.dart';
 
-class VideoWidgetFullScreen extends StatelessWidget {
-  final File file;
-  final EaselProvider easelProvider;
+class VideoWidgetFullScreen extends StatefulWidget {
+  const VideoWidgetFullScreen({Key? key}) : super(key: key);
 
-  const VideoWidgetFullScreen({Key? key, required this.file, required this.easelProvider}) : super(key: key);
+  @override
+  State<VideoWidgetFullScreen> createState() => _VideoWidgetFullScreenState();
+}
+
+class _VideoWidgetFullScreenState extends State<VideoWidgetFullScreen> {
+  EaselProvider get easelProvider => GetIt.I.get<EaselProvider>();
+  final repository = GetIt.I.get<Repository>();
+
+  @override
+  initState() {
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
