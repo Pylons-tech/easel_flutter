@@ -10,15 +10,12 @@ import 'package:easel_flutter/utils/space_utils.dart';
 import 'package:easel_flutter/widgets/video_builder.dart';
 import 'package:easel_flutter/widgets/video_progress_widget.dart';
 import 'package:easel_flutter/widgets/video_widget_full_screen.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get_it/get_it.dart';
 import 'package:provider/provider.dart';
 import 'package:video_player/video_player.dart';
-import 'package:flutter/material.dart';
-
-import '../screens/custom_widgets/step_labels.dart';
-import '../screens/custom_widgets/steps_indicator.dart';
 
 class VideoWidget extends StatefulWidget {
   final File? file;
@@ -26,7 +23,7 @@ class VideoWidget extends StatefulWidget {
   final bool previewFlag;
   final bool isForFile;
 
-  const VideoWidget({Key? key,  this.file,  this.filePath,required this.previewFlag, required this.isForFile}) : super(key: key);
+  const VideoWidget({Key? key, this.file, this.filePath, required this.previewFlag, required this.isForFile}) : super(key: key);
 
   @override
   _VideoWidgetState createState() => _VideoWidgetState();

@@ -1,20 +1,13 @@
 import 'dart:async';
 import 'dart:developer';
 import 'dart:io';
-import 'package:easel_flutter/repository/repository.dart';
-import 'package:easy_localization/easy_localization.dart';
-
-import 'package:easel_flutter/models/api_response.dart';
-import 'package:easel_flutter/models/storage_response_model.dart';
-import 'package:easel_flutter/repository/repository.dart';
-import 'package:easy_localization/easy_localization.dart';
-
-import '../utils/enums.dart';
 
 import 'package:easel_flutter/main.dart';
+import 'package:easel_flutter/models/api_response.dart';
 import 'package:easel_flutter/models/denom.dart';
 import 'package:easel_flutter/models/nft.dart';
 import 'package:easel_flutter/models/nft_format.dart';
+import 'package:easel_flutter/repository/repository.dart';
 import 'package:easel_flutter/services/third_party_services/audio_player_helper.dart';
 import 'package:easel_flutter/services/third_party_services/video_player_helper.dart';
 import 'package:easel_flutter/utils/constants.dart';
@@ -22,17 +15,20 @@ import 'package:easel_flutter/utils/enums.dart';
 import 'package:easel_flutter/utils/extension_util.dart';
 import 'package:easel_flutter/utils/file_utils_helper.dart';
 import 'package:easel_flutter/widgets/loading.dart';
+import 'package:easy_localization/easy_localization.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:fixnum/fixnum.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:just_audio/just_audio.dart';
+import 'package:media_info/media_info.dart';
 import 'package:pylons_sdk/pylons_sdk.dart';
 import 'package:pylons_sdk/src/features/models/sdk_ipc_response.dart';
 import 'package:share_plus/share_plus.dart';
-import 'package:media_info/media_info.dart';
 import 'package:video_player/video_player.dart';
+
+import '../utils/enums.dart';
 
 class EaselProvider extends ChangeNotifier {
   final VideoPlayerHelper videoPlayerHelper;
@@ -124,12 +120,15 @@ class EaselProvider extends ChangeNotifier {
 
   File? get audioThumbnail => _audioThumbnail;
 
-  bool _isInitialized = false;
+  bool _isInitializedForFile = false;
+  bool _isInitializedForNetwork = false;
 
-  bool get isInitialized => _isInitialized;
+  bool get isInitializedForFile => _isInitializedForFile;
+
+  bool get isInitializedForNetwork => _isInitializedForNetwork;
 
   set setIsInitialized(bool value) {
-    _isInitialized = value;
+    _isInitializedForFile = value;
     notifyListeners();
   }
 
@@ -426,7 +425,7 @@ class EaselProvider extends ChangeNotifier {
       return;
     }
 
-    if (_nftFormat.format == kImageText || _nftFormat.format == kVideoText) {
+    if (_nftFormat.format == kImageText) {
       _fileWidth = info['width'];
       _fileHeight = info['height'];
     }
@@ -683,7 +682,7 @@ class EaselProvider extends ChangeNotifier {
 
     setIsInitialized = await audioPlayerHelper.setFile(file: _file!.path);
 
-    if (isInitialized) {
+    if (isInitializedForFile) {
       audioPlayerHelper.playerStateStream().listen((event) {}).onData((playerState) async {
         final isPlaying = playerState.playing;
         final processingState = playerState.processingState;

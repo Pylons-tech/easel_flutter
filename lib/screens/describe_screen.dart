@@ -1,7 +1,5 @@
 import 'package:easel_flutter/easel_provider.dart';
 import 'package:easel_flutter/repository/repository.dart';
-import 'package:easel_flutter/screens/creator_hub/creator_hub_view_model.dart';
-import 'package:easel_flutter/screens/custom_widgets/initial_draft_detail_dialog.dart';
 import 'package:easel_flutter/utils/constants.dart';
 import 'package:easel_flutter/utils/easel_app_theme.dart';
 import 'package:easel_flutter/utils/space_utils.dart';
@@ -47,8 +45,6 @@ class _DescribeScreenState extends State<DescribeScreen> {
     WidgetsBinding.instance.addPostFrameCallback((_) async {
       nft = repository.getCacheDynamicType(key: "nft");
       context.read<EaselProvider>().toCheckSavedArtistName();
-
-      // DraftDetailDialog(context: context).show();
     });
   }
 

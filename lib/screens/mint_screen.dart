@@ -11,8 +11,8 @@ import 'package:easel_flutter/widgets/model_viewer.dart';
 import 'package:easel_flutter/widgets/pylons_button.dart';
 import 'package:easel_flutter/widgets/video_widget.dart';
 import 'package:flutter/material.dart';
-import 'package:get_it/get_it.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:get_it/get_it.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
 
@@ -30,10 +30,11 @@ class MintScreen extends StatefulWidget {
 class _MintScreenState extends State<MintScreen> {
   late NFT nft;
   var repository = GetIt.I.get<Repository>();
+  var easelProvider = GetIt.I.get<EaselProvider>();
 
   @override
   initState() {
-    nft = repository.getCacheDynamicType(key: "nft");
+    easelProvider.nft = repository.getCacheDynamicType(key: "nft");
     super.initState();
   }
 
@@ -173,10 +174,10 @@ class _MintScreenState extends State<MintScreen> {
   Widget buildPreviewWidget(EaselProvider provider, BuildContext context) {
     switch (provider.nft.assetType) {
       case kImageText:
-        return ImageWidget(filePath: nft.url);
+        return ImageWidget(filePath: provider.nft.url);
       case kVideoText:
         return VideoWidget(
-          filePath: nft.url,
+          filePath: provider.nft.url,
           previewFlag: true,
           isForFile: true,
         );
@@ -190,7 +191,7 @@ class _MintScreenState extends State<MintScreen> {
             ));
       case kAudioText:
         return AudioWidget(
-          file: provider.file!,
+          filePath: provider.nft.url,
           previewFlag: true,
         );
     }

@@ -1,15 +1,17 @@
 import 'dart:developer';
 import 'dart:io';
 import 'dart:ui';
+
+import 'package:audio_video_progress_bar/audio_video_progress_bar.dart';
 import 'package:easel_flutter/easel_provider.dart';
 import 'package:easel_flutter/utils/constants.dart';
 import 'package:easy_localization/easy_localization.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:get_it/get_it.dart';
-import 'package:audio_video_progress_bar/audio_video_progress_bar.dart';
-import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+
 import '../models/nft_format.dart';
 import '../screens/custom_widgets/step_labels.dart';
 import '../screens/custom_widgets/steps_indicator.dart';
@@ -19,10 +21,11 @@ import '../utils/space_utils.dart';
 import 'loading.dart';
 
 class AudioWidget extends StatefulWidget {
-  final File file;
+  final File? file;
+  final String? filePath;
   final bool previewFlag;
 
-  const AudioWidget({Key? key, required this.file, required this.previewFlag}) : super(key: key);
+  const AudioWidget({Key? key, this.file, required this.previewFlag, this.filePath}) : super(key: key);
 
   @override
   _AudioWidgetState createState() => _AudioWidgetState();
@@ -36,8 +39,15 @@ class _AudioWidgetState extends State<AudioWidget> with WidgetsBindingObserver {
   @override
   initState() {
     log("bool: ${widget.previewFlag}");
-    if (!easelProvider.isInitialized) {
-      easelProvider.initializeAudioPlayerForFile();
+    if (!easelProvider.isInitializedForFile) {
+      if (widget.file != null) {
+        easelProvider.initializeAudioPlayerForFile();
+      }
+    }
+    if (!easelProvider.isInitializedForNetwork) {
+      if (widget.filePath != null) {
+        easelProvider.initializeAudioPlayer(publishedNFTUrl: widget.filePath);
+      }
     }
 
     super.initState();
