@@ -1,7 +1,5 @@
-
 import 'package:easel_flutter/main.dart';
 import 'package:easel_flutter/models/nft.dart';
-import 'package:easel_flutter/repository/repository.dart';
 import 'package:easel_flutter/screens/creator_hub/creator_hub_view_model.dart';
 import 'package:easel_flutter/utils/constants.dart';
 import 'package:easel_flutter/utils/easel_app_theme.dart';
@@ -17,9 +15,8 @@ import '../creator_hub_view_model.dart';
 class DraftsBottomSheet {
   final BuildContext buildContext;
   final NFT nft;
-  final Repository repository;
 
-  DraftsBottomSheet({required this.buildContext, required this.nft, required this.repository});
+  DraftsBottomSheet({required this.buildContext, required this.nft,});
 
   Future<void> show() async {
     showModalBottomSheet(
@@ -28,17 +25,15 @@ class DraftsBottomSheet {
         builder: (BuildContext bc) {
           return DraftsMoreBottomSheet(
             nft: nft,
-            repository: repository,
           );
         });
   }
 }
 
 class DraftsMoreBottomSheet extends StatelessWidget {
-  const DraftsMoreBottomSheet({Key? key, required this.nft, required this.repository}) : super(key: key);
+  const DraftsMoreBottomSheet({Key? key, required this.nft,}) : super(key: key);
 
   final NFT nft;
-  final Repository repository;
 
   @override
   Widget build(BuildContext context) {
@@ -54,8 +49,7 @@ class DraftsMoreBottomSheet extends StatelessWidget {
                 title: "publish",
                 svg: kSvgPublish,
                 onPressed: () {
-                  repository.setCacheDynamicType(key: "nft", value: nft);
-                  repository.setCacheString(key: "from", value: "draft");
+                  viewModel.onPublishPressed(nft);
                   Navigator.of(context).pop();
                   Navigator.of(context).pushNamed(RouteUtil.ROUTE_HOME);
                 }),
@@ -81,7 +75,7 @@ class DraftsMoreBottomSheet extends StatelessWidget {
 }
 
 Widget moreOptionTile({required String title, required String svg, required Function onPressed}) {
-  TextStyle titleStyle = TextStyle(fontSize: isTablet? 13.sp :16.sp, fontWeight: FontWeight.w800, fontFamily: kUniversalFontFamily, color: EaselAppTheme.kBlack);
+  TextStyle titleStyle = TextStyle(fontSize: isTablet ? 13.sp : 16.sp, fontWeight: FontWeight.w800, fontFamily: kUniversalFontFamily, color: EaselAppTheme.kBlack);
 
   return Padding(
     padding: EdgeInsets.symmetric(vertical: 8.h),
