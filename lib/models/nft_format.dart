@@ -5,7 +5,7 @@ import 'package:easel_flutter/utils/easel_app_theme.dart';
 import 'package:flutter/cupertino.dart';
 
 class NftFormat {
-  final String format;
+  final NFTTypes format;
   final List<String> extensions;
   final String badge;
   final Color color;
@@ -25,23 +25,23 @@ class NftFormat {
 
   static List<NftFormat> get supportedFormats => [
         NftFormat(
-            format: kImageText,
+            format: NFTTypes.image,
             extensions: ['jpg', 'png', 'svg', 'heif'],
             badge: kSvgNftFormatImage,
             color: EaselAppTheme.kLightRed),
         NftFormat(
-            format: kVideoText,
+            format: NFTTypes.video,
             extensions: ['mp4'],
             badge: kSvgNftFormatVideo,
             color: EaselAppTheme.kDarkGreen),
         NftFormat(
-          format: k3dText,
+          format: NFTTypes.threeD,
           extensions: ['gltf', 'glb'],
           badge: kSvgNftFormat3d,
           color: EaselAppTheme.kYellow,
         ),
         NftFormat(
-            format: kAudioText,
+            format: NFTTypes.audio,
             extensions: [ 'mp3', 'flac',  'wav'],
             badge: kSvgNftFormatAudio,
             color: EaselAppTheme.kBlue),
@@ -53,5 +53,31 @@ class NftFormat {
       allExts += format.extensions;
     }
     return allExts;
+  }
+}
+
+
+
+enum NFTTypes {
+  image,
+  video,
+  audio,
+  threeD
+}
+
+extension NFTTypesDetails on NFTTypes{
+  String getTitle(){
+    switch(this){
+
+      case NFTTypes.image:
+        return kImageText;
+      case NFTTypes.video:
+        return kVideoText;
+      case NFTTypes.audio:
+        return kAudioText;
+      case NFTTypes.threeD:
+        return k3dText;
+    }
+
   }
 }

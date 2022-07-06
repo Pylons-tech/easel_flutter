@@ -31,9 +31,8 @@ class NFT extends Equatable {
   String appType = "";
   String tradeID = "";
   String ownerAddress = "";
-
+  String step = "";
   String ibcCoins = IBCCoins.upylon.name;
-
   String type = NftType.TYPE_ITEM.name;
   String assetType = AssetType.Image.name;
   String duration = "";
@@ -41,33 +40,35 @@ class NFT extends Equatable {
   String fileName = "";
   String cid = "";
 
-  NFT(
-      {this.id,
-      this.url = "",
-      this.thumbnailUrl = "",
-      this.name = "",
-      this.description = "",
-      this.denom = "",
-      this.price = "0",
-      this.type = "",
-      this.creator = "",
-      this.itemID = "",
-      this.cookbookID = "",
-      this.recipeID = "",
-      this.owner = "",
-      this.width = "",
-      this.height = "",
-      this.tradePercentage = "0",
-      this.amountMinted = 0,
-      this.quantity = 0,
-      this.appType = "",
-      required this.ibcCoins,
-      this.tradeID = "",
-      required this.assetType,
-      this.duration = "",
-      this.hashtags = "",
-      this.fileName = "",
-      this.cid = ""});
+  NFT({
+    this.id,
+    this.url = "",
+    this.thumbnailUrl = "",
+    this.name = "",
+    this.description = "",
+    this.denom = "",
+    this.price = "0",
+    this.type = "",
+    this.creator = "",
+    this.itemID = "",
+    this.cookbookID = "",
+    this.recipeID = "",
+    this.owner = "",
+    this.width = "",
+    this.height = "",
+    this.tradePercentage = "0",
+    this.amountMinted = 0,
+    this.quantity = 0,
+    this.appType = "",
+    required this.ibcCoins,
+    this.tradeID = "",
+    required this.assetType,
+    required this.step,
+    this.duration = "",
+    this.hashtags = "",
+    this.fileName = "",
+    this.cid = ""
+  });
 
   factory NFT.fromRecipe(Recipe recipe) {
     final royalties = recipe.entries.itemOutputs.firstOrNull?.tradePercentage.fromBigInt().toInt().toString();
@@ -91,7 +92,10 @@ class NFT extends Equatable {
       denom: recipe.coinInputs.firstOrNull?.coins.firstOrNull?.denom ?? "",
       ibcCoins: recipe.coinInputs.firstOrNull?.coins.firstOrNull?.denom ?? IBCCoins.upylon.name,
       assetType: recipe.entries.itemOutputs.firstOrNull?.strings.firstWhere((strKeyValue) => strKeyValue.key == kNftFormat, orElse: () => StringParam()).value ?? AssetType.Image.name,
-      duration: recipe.entries.itemOutputs.firstOrNull?.longs.firstWhere((longKeyValue) => longKeyValue.key == kDuration, orElse: () => LongParam()).weightRanges.firstOrNull?.upper.toInt().toSeconds() ?? "0",
+      duration:
+          recipe.entries.itemOutputs.firstOrNull?.longs.firstWhere((longKeyValue) => longKeyValue.key == kDuration, orElse: () => LongParam()).weightRanges.firstOrNull?.upper.toInt().toSeconds() ??
+              "0",
+      step: "",
       hashtags: recipe.entries.itemOutputs.firstOrNull?.strings.firstWhere((strKeyValue) => strKeyValue.key == kHashtags, orElse: () => StringParam()).value ?? "",
     );
   }

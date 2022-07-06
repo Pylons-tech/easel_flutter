@@ -1,11 +1,12 @@
-import 'package:easel_flutter/datasources/database.dart';
 import 'package:easel_flutter/models/nft.dart';
+import 'package:easel_flutter/services/third_party_services/database.dart';
 import 'package:easel_flutter/utils/constants.dart';
 import 'package:easel_flutter/utils/date_utils.dart';
 import 'package:easel_flutter/utils/failure/failure.dart';
 import 'package:easy_localization/easy_localization.dart';
-import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+
+import 'cache_manager.dart';
 
 abstract class LocalDataSource {
   /// This method will get the already created cookbook from the local database
@@ -47,18 +48,60 @@ abstract class LocalDataSource {
   bool getOnBoardingComplete();
 
   /// This method will save the draft of the NFT
-  /// Input: [NFT] the draft that will be saved in database
-  /// Output: [bool] returns whether the operation is successful or not
-  Future<bool> saveNft(NFT draft);
+  /// Input: [NFT] the draft that will will be saved in database
+  /// Output: [int] returns id of the inserted document
+  Future<int> saveNft(NFT draft);
 
   /// This method will get the drafts List from the local database
   /// Output: [List][NFT] returns  the List of drafts
   Future<List<NFT>> getNfts();
 
+  /// This method will update draft in the local database from description Page
+  /// Input: [id] the id of the nft,
+  /// [String] the  name of the nft , [String] the  description of the nft
+  /// [String] the  creator name of the nft , [String] the page name of the Pageview
+  /// Output: [bool] returns whether the operation is successful or not
+  Future<bool> updateNftFromDescription(int id, String nftName, String nftDescription, String creatorName, String step);
+
+  /// This method will update draft in the local database from Pricing page
+  /// Input: [id] the id of the nft, [String] the  name of the nft ,
+  /// [String] the  tradePercentage of the nft , [String] the  price of the nft
+  /// [String] the  quantity of the nft , [String] the page name of the Pageview
+  /// Output: [bool] returns whether the operation is successful or not
+  Future<bool> updateNftFromPrice(int id, String tradePercentage, String price, String quantity, String step, String name);
+
   /// This method will delete draft from the local database
   /// Input: [id] the id of the draft which the user wants to delete
   /// Output: [bool] returns whether the operation is successful or not
   Future<bool> deleteNft(int id);
+
+  /// This method will return the saved String if exists
+  /// Input: [key] the key of the value
+  /// Output: [String] the value of the key
+  String getCacheString({required String key});
+
+  /// This method will delete the value from the cache
+  /// Input: [key] the key of the value
+  /// Output: [value] will return the value that is just removed
+  String deleteCacheString({required String key});
+
+  /// This method will set the input in the cache
+  /// Input: [key] the key against which the value is to be set, [value] the value that is to be set.
+  void setCacheString({required String key, required String value});
+
+  /// This method will set the input in the cache
+  /// Input: [key] the key against which the value is to be set, [value] the value that is to be set.
+  bool setCacheDynamicType({required String key, required dynamic value});
+
+  /// This method will return the saved String if exists
+  /// Input: [key] the key of the value
+  /// Output: [String] the value of the key
+  dynamic getCacheDynamicType({required String key});
+
+  /// This method will delete the value from the cache
+  /// Input: [key] the key of the value
+  /// Output: [value] will return the value that is just removed
+  dynamic deleteCacheDynamic({required String key});
 }
 
 class LocalDataSourceImpl implements LocalDataSource {
@@ -68,7 +111,9 @@ class LocalDataSourceImpl implements LocalDataSource {
 
   final AppDatabase database;
 
-  LocalDataSourceImpl(this.sharedPreferences, this.database);
+  final CacheManager cacheManager;
+
+  LocalDataSourceImpl({required this.sharedPreferences, required this.database, required this.cacheManager});
 
   /// gets cookbookId from local storage
   ///return String or null
@@ -129,9 +174,29 @@ class LocalDataSourceImpl implements LocalDataSource {
   }
 
   @override
-  Future<bool> saveNft(NFT draft) async {
+  Future<int> saveNft(NFT draft) async {
     try {
-      await database.nftDao.insertNft(draft);
+      final result = await database.nftDao.insertNft(draft);
+      return result;
+    } catch (e) {
+      throw "save_error".tr();
+    }
+  }
+
+  @override
+  Future<bool> updateNftFromDescription(int id, String nftName, String nftDescription, String creatorName, String step) async {
+    try {
+      await database.nftDao.updateNFTFromDescription(id, nftName, nftDescription, creatorName, step);
+      return true;
+    } catch (e) {
+      return throw "save_error".tr();
+    }
+  }
+
+  @override
+  Future<bool> updateNftFromPrice(int id, String tradePercentage, String price, String quantity, String step, String denom) async {
+    try {
+      await database.nftDao.updateNFTFromPrice(id, tradePercentage, price, quantity, step, denom);
       return true;
     } catch (e) {
       throw CacheFailure("save_error".tr());
@@ -147,12 +212,40 @@ class LocalDataSourceImpl implements LocalDataSource {
   Future<bool> deleteNft(int id) async {
     try {
       await database.nftDao.delete(id);
-
       return true;
     } catch (e) {
-      debugPrint('An error occured $e');
+      throw CacheFailure("delete_error".tr());
 
-      return false;
     }
+  }
+
+  @override
+  String deleteCacheString({required String key}) {
+    return cacheManager.deleteString(key: key);
+  }
+
+  @override
+  dynamic getCacheDynamicType({required String key}) {
+    return cacheManager.getDynamicType(key: key);
+  }
+
+  @override
+  String getCacheString({required String key}) {
+    return cacheManager.getString(key: key);
+  }
+
+  @override
+  bool setCacheDynamicType({required String key, required value}) {
+    return cacheManager.setDynamicType(key: key, value: value);
+  }
+
+  @override
+  void setCacheString({required String key, required String value}) {
+    cacheManager.setString(key: key, value: value);
+  }
+
+  @override
+  deleteCacheDynamic({required String key}) {
+    cacheManager.deleteCacheDynamic(key: key);
   }
 }

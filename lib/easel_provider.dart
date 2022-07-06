@@ -1,19 +1,13 @@
 import 'dart:async';
 import 'dart:developer';
 import 'dart:io';
-import 'package:easel_flutter/models/api_response.dart';
-import 'package:easel_flutter/models/storage_response_model.dart';
-import 'package:easel_flutter/repository/repository.dart';
-import 'package:easy_localization/easy_localization.dart';
-
-import '../utils/enums.dart';
 
 import 'package:easel_flutter/main.dart';
+import 'package:easel_flutter/models/api_response.dart';
 import 'package:easel_flutter/models/denom.dart';
 import 'package:easel_flutter/models/nft.dart';
 import 'package:easel_flutter/models/nft_format.dart';
-import 'package:easel_flutter/services/datasources/local_datasource.dart';
-import 'package:easel_flutter/services/datasources/remote_datasource.dart';
+import 'package:easel_flutter/repository/repository.dart';
 import 'package:easel_flutter/services/third_party_services/audio_player_helper.dart';
 import 'package:easel_flutter/services/third_party_services/video_player_helper.dart';
 import 'package:easel_flutter/utils/constants.dart';
@@ -21,34 +15,32 @@ import 'package:easel_flutter/utils/enums.dart';
 import 'package:easel_flutter/utils/extension_util.dart';
 import 'package:easel_flutter/utils/file_utils_helper.dart';
 import 'package:easel_flutter/widgets/loading.dart';
+import 'package:easy_localization/easy_localization.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:fixnum/fixnum.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:just_audio/just_audio.dart';
+import 'package:media_info/media_info.dart';
 import 'package:pylons_sdk/pylons_sdk.dart';
 import 'package:pylons_sdk/src/features/models/sdk_ipc_response.dart';
 import 'package:share_plus/share_plus.dart';
-import 'package:media_info/media_info.dart';
 import 'package:video_player/video_player.dart';
 
+import '../utils/enums.dart';
+
 class EaselProvider extends ChangeNotifier {
-  final LocalDataSource localDataSource;
-  final RemoteDataSource remoteDataSource;
   final VideoPlayerHelper videoPlayerHelper;
   final AudioPlayerHelper audioPlayerHelper;
   final FileUtilsHelper fileUtilsHelper;
   final Repository repository;
 
   EaselProvider({
-    required this.localDataSource,
-    required this.remoteDataSource,
     required this.videoPlayerHelper,
     required this.audioPlayerHelper,
     required this.fileUtilsHelper,
-    required this.repository
-
+    required this.repository,
   });
 
   File? _file;
@@ -62,6 +54,8 @@ class EaselProvider extends ChangeNotifier {
   String? _cookbookId;
   String _recipeId = "";
   var stripeAccountExists = false;
+  bool isFreeDrop = false;
+
   Denom _selectedDenom = Denom.availableDenoms.first;
   List<Denom> supportedDenomList = [];
 
@@ -126,12 +120,15 @@ class EaselProvider extends ChangeNotifier {
 
   File? get audioThumbnail => _audioThumbnail;
 
-  bool _isInitialized = false;
+  bool _isInitializedForFile = false;
+  bool _isInitializedForNetwork = false;
 
-  bool get isInitialized => _isInitialized;
+  bool get isInitializedForFile => _isInitializedForFile;
+
+  bool get isInitializedForNetwork => _isInitializedForNetwork;
 
   set setIsInitialized(bool value) {
-    _isInitialized = value;
+    _isInitializedForFile = value;
     notifyListeners();
   }
 
@@ -195,7 +192,19 @@ class EaselProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-  bool isFreeDrop = false;
+  void setTextFieldValuesDescription({String? artName, String? description}) {
+    artNameController.text = artName ?? "";
+    descriptionController.text = description ?? "";
+    notifyListeners();
+  }
+
+  void setTextFieldValuesPrice({String? royalties, String? price, String? edition, String? denom}) {
+    royaltyController.text = royalties ?? "";
+    priceController.text = price ?? "";
+    noOfEditionController.text = edition ?? "";
+    _selectedDenom = denom != "" ? Denom.availableDenoms.firstWhere((element) => element.name == denom) : Denom.availableDenoms.first;
+    notifyListeners();
+  }
 
   void updateIsFreeDropStatus(bool val) {
     isFreeDrop = val;
@@ -416,7 +425,7 @@ class EaselProvider extends ChangeNotifier {
       return;
     }
 
-    if (_nftFormat.format == kImageText || _nftFormat.format == kVideoText) {
+    if (_nftFormat.format == kImageText) {
       _fileWidth = info['width'];
       _fileHeight = info['height'];
     }
@@ -434,13 +443,13 @@ class EaselProvider extends ChangeNotifier {
   /// send createCookBook tx message to the wallet app
   /// return true or false depending on the response from the wallet app
   Future<bool> createCookbook() async {
-    _cookbookId = await localDataSource.autoGenerateCookbookId();
-    var cookBook1 = Cookbook(creator: "", id: _cookbookId, name: "Easel Cookbook", description: "Cookbook for Easel NFT", developer: artistNameController.text, version: "v0.0.1",
-        supportEmail: kEaselEmail, enabled: true);
+    _cookbookId = await repository.autoGenerateCookbookId();
+    var cookBook1 = Cookbook(
+        creator: "", id: _cookbookId, name: "Easel Cookbook", description: "Cookbook for Easel NFT", developer: artistNameController.text, version: "v0.0.1", supportEmail: kEaselEmail, enabled: true);
 
     var response = await PylonsWallet.instance.txCreateCookbook(cookBook1);
     if (response.success) {
-      localDataSource.saveCookBookGeneratorUsername(currentUsername);
+      repository.saveCookBookGeneratorUsername(currentUsername);
       return true;
     }
 
@@ -449,17 +458,19 @@ class EaselProvider extends ChangeNotifier {
   }
 
   void saveArtistName(name) {
-    localDataSource.saveArtistName(name);
+    repository.saveArtistName(name);
   }
 
   void toCheckSavedArtistName() {
-    String savedArtistName = localDataSource.getArtistName();
+    String savedArtistName = repository.getArtistName();
 
     if (savedArtistName.isNotEmpty) {
       artistNameController.text = savedArtistName;
+      notifyListeners();
       return;
     }
     artistNameController.text = currentUsername;
+    notifyListeners();
   }
 
   /// sends a createRecipe Tx message to the wallet
@@ -470,8 +481,8 @@ class EaselProvider extends ChangeNotifier {
     }
 
     // get device cookbook id
-    _cookbookId = localDataSource.getCookbookId();
-    String savedUserName = localDataSource.getCookBookGeneratorUsername();
+    _cookbookId = repository.getCookbookId();
+    String savedUserName = repository.getCookBookGeneratorUsername();
 
     if (_cookbookId == null || isDifferentUserName(savedUserName)) {
       // create cookbook
@@ -479,15 +490,18 @@ class EaselProvider extends ChangeNotifier {
 
       if (isCookBookCreated) {
         // get device cookbook id
-        _cookbookId = localDataSource.getCookbookId();
+        _cookbookId = repository.getCookbookId();
         notifyListeners();
       } else {
         return false;
       }
     }
+
+    _recipeId = repository.autoGenerateEaselId();
+
+    audioPlayerHelper.pauseAudio();
     setVideoThumbnail(null);
     setAudioThumbnail(null);
-    _recipeId = localDataSource.autoGenerateEaselId();
 
     String residual = DecString.decStringFromDouble(double.parse(royaltyController.text.trim()));
 
@@ -517,7 +531,10 @@ class EaselProvider extends ChangeNotifier {
                 ])
               ],
               longs: [
-                LongParam(key: kQuantity, weightRanges: [IntWeightRange(lower: Int64(int.parse(noOfEditionController.text.replaceAll(",", "").trim())), upper: Int64(int.parse(noOfEditionController.text.replaceAll(",", "").trim())), weight: Int64(1))]),
+                LongParam(key: kQuantity, weightRanges: [
+                  IntWeightRange(
+                      lower: Int64(int.parse(noOfEditionController.text.replaceAll(",", "").trim())), upper: Int64(int.parse(noOfEditionController.text.replaceAll(",", "").trim())), weight: Int64(1))
+                ]),
                 LongParam(key: kWidth, weightRanges: [IntWeightRange(lower: Int64(_fileWidth), upper: Int64(_fileWidth), weight: Int64(1))]),
                 LongParam(key: kHeight, weightRanges: [IntWeightRange(lower: Int64(_fileHeight), upper: Int64(_fileHeight), weight: Int64(1))]),
                 LongParam(key: kDuration, weightRanges: [IntWeightRange(lower: Int64(_fileDuration), upper: Int64(_fileDuration), weight: Int64(1))]),
@@ -527,7 +544,7 @@ class EaselProvider extends ChangeNotifier {
                 StringParam(key: kAppType, value: kEasel),
                 StringParam(key: kDescription, value: descriptionController.text.trim()),
                 StringParam(key: kHashtags, value: hashtagsList.join('#')),
-                StringParam(key: kNFTFormat, value: _nftFormat.format),
+                StringParam(key: kNFTFormat, value: _nftFormat.format.getTitle()),
                 StringParam(key: kNFTURL, value: nft.url),
                 StringParam(key: kThumbnailUrl, value: nft.thumbnailUrl),
                 StringParam(key: kCreator, value: artistNameController.text.trim()),
@@ -603,6 +620,8 @@ class EaselProvider extends ChangeNotifier {
         _selectedDenom = supportedDenomList.first;
       }
     }
+    artistNameController.text = currentUsername;
+    notifyListeners();
 
     return sdkResponse;
   }
@@ -656,7 +675,7 @@ class EaselProvider extends ChangeNotifier {
 
     setIsInitialized = await audioPlayerHelper.setFile(file: _file!.path);
 
-    if (isInitialized) {
+    if (isInitializedForFile) {
       audioPlayerHelper.playerStateStream().listen((event) {}).onData((playerState) async {
         final isPlaying = playerState.playing;
         final processingState = playerState.processingState;
@@ -711,84 +730,141 @@ class EaselProvider extends ChangeNotifier {
     });
   }
 
-  Future<void> saveNftAsset({required EaselProvider provider, required PageController controller}) async {
-    if ( !_file!.existsSync()) {
-      navigatorKey.showMsg(message: kErrPickFileFetch);
-      return;
-    }
-      switch (nftFormat.format) {
-        case kAudioText:
-          if (audioThumbnail == null) {
-            navigatorKey.showMsg(message: "err_add_audio_thumbnail".tr());
-            return;
-          }
-          await saveNft( controller: controller);
-          break;
-
-        case kVideoText:
-          if (videoThumbnail == null) {
-            navigatorKey.showMsg(message: "err_add_video_thumbnail".tr());
-            return;
-          }
-          await saveNft( controller: controller);
-          break;
-
-        default:
-          await saveNft(controller: controller);
-      }
-    }
-
+  void initilizeTextEditingControllerWithEmptyValues() {
+    artistNameController.text = '';
+    artNameController.text = '';
+    descriptionController.text = '';
+    noOfEditionController.text = '';
+    priceController.text = '';
+    royaltyController.text = '';
+    notifyListeners();
+  }
 
   late NFT nft;
 
-  Future<void> saveNft({required PageController controller}) async {
-    final loading = Loading().showLoading(message: "uploading".tr());
-    initializeTextEditingControllerWithEmptyValues();
-    final uploadResponse = await remoteDataSource.uploadFile(file!);
-    if (uploadResponse.status == Status.error) {
-      loading.dismiss();
+  Future<bool> saveNftLocally(UploadStep step) async {
+    ApiResponse uploadThumbnailResponse = ApiResponse.error(errorMessage: "");
+    ApiResponse uploadUrlResponse = ApiResponse.error(errorMessage: "");
 
-      navigatorKey.showMsg(message: uploadResponse.errorMessage ?? kErrUpload);
+    int id = 0;
+    if (!_file!.existsSync()) {
+      navigatorKey.currentState!.overlay!.context.show(message: kErrPickFileFetch);
+      return false;
+    } else {
+      final loading = Loading().showLoading(message: kUploadingMessage);
 
-      return;
-    }
-    late ApiResponse<StorageResponseModel> uploadThumbnailResponse;
-    if (nftFormat.format == kAudioText || nftFormat.format == kVideoText) {
-      uploadThumbnailResponse = await remoteDataSource.uploadFile(nftFormat.format == kAudioText ? audioThumbnail! : videoThumbnail!);
-
-      if (uploadThumbnailResponse.status == Status.error) {
-        loading.dismiss();
-
-        navigatorKey.showMsg(message: uploadThumbnailResponse.errorMessage ?? kErrUpload);
-        return;
+      initilizeTextEditingControllerWithEmptyValues();
+      if (nftFormat.format == kAudioText || nftFormat.format == kVideoText) {
+        final uploadResponse = await repository.uploadFile(nftFormat.format == kAudioText ? audioThumbnail! : videoThumbnail!);
+        if (uploadResponse.isLeft()) {
+          loading.dismiss();
+          return false;
+        }
+        uploadThumbnailResponse = uploadResponse.getOrElse(() => uploadThumbnailResponse);
+        if (uploadThumbnailResponse.status == Status.error) {
+          loading.dismiss();
+          navigatorKey.currentState!.overlay!.context.show(message: uploadThumbnailResponse.errorMessage ?? kErrUpload);
+          return false;
+        }
       }
-    }
+      audioPlayerHelper.pauseAudio();
 
-    nft = NFT(
+      final response = await repository.uploadFile(_file!);
+      if (response.isLeft()) {
+        loading.dismiss();
+        return false;
+      }
+      final fileUploadResponse = response.getOrElse(() => uploadUrlResponse);
+      loading.dismiss();
+      if (fileUploadResponse.status == Status.error) {
+        navigatorKey.currentState!.overlay!.context.show(message: fileUploadResponse.errorMessage ?? kErrUpload);
+        return false;
+      }
+
+      nft = NFT(
         id: null,
         type: NftType.TYPE_ITEM.name,
         ibcCoins: IBCCoins.upylon.name,
-        assetType: nftFormat.format,
+        assetType: nftFormat.format.getTitle(),
         cookbookID: cookbookId ?? "",
         width: fileWidth.toString(),
+        denom: "",
+        tradePercentage: "",
         height: fileHeight.toString(),
         duration: fileDuration.toString(),
         description: descriptionController.text,
         recipeID: recipeId,
-        thumbnailUrl: (nftFormat.format == kAudioText || nftFormat.format == kVideoText) ? "$ipfsDomain/${uploadThumbnailResponse.data?.value?.cid}" : "",
+        step: step.name,
+        thumbnailUrl: (nftFormat.format == NFTTypes.audio || nftFormat.format == NFTTypes.video) ? "$ipfsDomain/${uploadThumbnailResponse.data?.value?.cid}" : "",
         name: artistNameController.text,
-        url: "$ipfsDomain/${uploadResponse.data?.value?.cid}",
+        url: "$ipfsDomain/${fileUploadResponse.data?.value?.cid}",
         price: priceController.text,
-        fileName: fileName,
-        cid: "${uploadResponse.data?.value?.cid}"
-    );
+      );
 
-    await repository.saveNft(nft);
+      final saveNftResponse = await repository.saveNft(nft);
 
-    controller.nextPage(duration: const Duration(milliseconds: 10), curve: Curves.easeIn);
-    loading.dismiss();
+      if (saveNftResponse.isLeft()) {
+        navigatorKey.currentState!.overlay!.context.show(message: "save_error".tr());
 
-    Navigator.of(navigatorKey.currentState!.overlay!.context).pop();
+        return false;
+      }
+
+      id = saveNftResponse.getOrElse(() => 0);
+
+      NFT _nft = NFT(
+        id: id,
+        type: NftType.TYPE_ITEM.name,
+        ibcCoins: IBCCoins.upylon.name,
+        assetType: nftFormat.format.getTitle(),
+        cookbookID: cookbookId ?? "",
+        width: fileWidth.toString(),
+        denom: "",
+        tradePercentage: "",
+        height: fileHeight.toString(),
+        duration: fileDuration.toString(),
+        description: descriptionController.text,
+        recipeID: recipeId,
+        step: step.name,
+        thumbnailUrl: (nftFormat.format == NFTTypes.audio || nftFormat.format == NFTTypes.video) ? "$ipfsDomain/${uploadThumbnailResponse.data?.value?.cid}" : "",
+        name: artistNameController.text,
+        url: "$ipfsDomain/${fileUploadResponse.data?.value?.cid}",
+        price: priceController.text,
+      );
+
+      if (id < 1) {
+        navigatorKey.currentState!.overlay!.context.show(message: "save_error".tr());
+        return false;
+      }
+      repository.setCacheDynamicType(key: 'nft', value: _nft);
+      setAudioThumbnail(null);
+
+      setVideoThumbnail(null);
+    }
+
+    return true;
+  }
+
+  Future<bool> updateNftFromDescription(int id) async {
+    final saveNftResponse = await repository.updateNftFromDescription(id, artNameController.text, descriptionController.text, artistNameController.text, UploadStep.descriptionAdded.name);
+
+    if (saveNftResponse.isLeft()) {
+      navigatorKey.currentState!.overlay!.context.show(message: "save_error".tr());
+
+      return false;
+    }
+
+    return saveNftResponse.getOrElse(() => false);
+  }
+
+  Future<bool> updateNftFromPrice(int? id) async {
+    final saveNftResponse = await repository.updateNftFromPrice(id!, royaltyController.text, priceController.text, noOfEditionController.text, UploadStep.priceAdded.name, selectedDenom.name);
+    if (saveNftResponse.isLeft()) {
+      navigatorKey.currentState!.overlay!.context.show(message: "save_error".tr());
+
+      return false;
+    }
+
+    return saveNftResponse.getOrElse(() => false);
   }
 }
 

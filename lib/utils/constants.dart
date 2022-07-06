@@ -210,7 +210,6 @@ const kCancel = "Cancel";
 const String videoPlayerNetworkError = 'Unable to play the video right now. Please check your internet connection and try again.';
 const kChooseFifteenSecondsOfAudio = "Choose 15s highlight of your audio for preview";
 const kUploadingThumbnailMessage = "Uploading Thumbnail";
-
 const videoPlayerError = "Some Error Occurred while playing the video. Please try again later.";
 const kCannotLaunchThisUrl = "Cannot launch this URL";
 
@@ -277,6 +276,10 @@ const String kEthereumSymbol = "weth-wei";
 const String kDefault = 'Default';
 
 const String kMyEaselNFT = 'My Easel NFT';
+const String fromKey = 'from';
+const String nftKey = 'nft';
+const String kErrAddAudioThumbnail = 'Error while uploading thumbnail';
+const String uploadYourThumbnail = 'Kindly upload thumbnail';
 
 /// Supported Formats
 
@@ -285,5 +288,4 @@ const ogg = "ogg";
 const wav = "wav";
 const aac = "aac";
 
-
-
+const kDraft = "draft";

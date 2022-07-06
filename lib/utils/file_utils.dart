@@ -19,7 +19,7 @@ class FileUtils {
     FileType _type;
     List<String>? allowedExtensions;
     switch (format.format) {
-      case kImageText:
+      case NFTTypes.image:
         if (Platform.isAndroid) {
           _type = FileType.custom;
           allowedExtensions = ["png", "jpg", "jpeg", "svg", "heif"];
@@ -27,10 +27,10 @@ class FileUtils {
           _type = FileType.image;
         }
         break;
-      case kVideoText:
+      case NFTTypes.video:
         _type = FileType.video;
         break;
-      case kAudioText:
+      case NFTTypes.audio:
         if (!Platform.isAndroid) {
           _type = FileType.custom;
           allowedExtensions = [mp3, ogg, wav, aac];

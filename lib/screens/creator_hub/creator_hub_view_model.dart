@@ -1,17 +1,17 @@
+
 import 'package:easel_flutter/main.dart';
 import 'package:easel_flutter/models/nft.dart';
-import 'package:easel_flutter/services/datasources/local_datasource.dart';
-import 'package:easel_flutter/services/datasources/remote_datasource.dart';
+import 'package:easel_flutter/repository/repository.dart';
+import 'package:easel_flutter/utils/constants.dart';
 import 'package:easel_flutter/utils/extension_util.dart';
 import 'package:easel_flutter/widgets/loading.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/cupertino.dart';
 
 class CreatorHubViewModel extends ChangeNotifier {
-  final LocalDataSource localDataSource;
-  final RemoteDataSource remoteDataSource;
+  final Repository repository;
 
-  CreatorHubViewModel(this.localDataSource, this.remoteDataSource);
+  CreatorHubViewModel(this.repository);
 
   List<NFT> nftList = [];
 
@@ -36,21 +36,40 @@ class CreatorHubViewModel extends ChangeNotifier {
   Future<void> getDraftsList() async {
     final loading = Loading().showLoading(message: "loading ...");
 
-    nftList = await localDataSource.getNfts();
+    final getNftResponse = await repository.getNfts();
+
+    if(getNftResponse.isLeft()){
+
+      loading.dismiss();
+
+      navigatorKey.currentState!.overlay!.context.show(message: "something_wrong".tr());
+
+      return;
+    }
+
+   nftList = getNftResponse.getOrElse(() => []);
 
     loading.dismiss();
 
     notifyListeners();
   }
 
+  Future<void> deleteNft(int? id) async {
+    final deleteNftResponse = await repository.deleteNft(id!);
 
-  Future<void> deleteDraft(int? id) async {
-    bool success = await localDataSource.deleteNft(id!);
-
-    if (!success) {
-      navigatorKey.showMsg(message: "delete_error".tr());
+    if (deleteNftResponse.isLeft()) {
+      navigatorKey.currentState!.overlay!.context.show(message: "delete_error".tr());
       return;
     }
-    getDraftsList();
+
+    nftList.removeWhere((element) => element.id == id);
+
+    notifyListeners();
+  }
+
+  void saveNFT({required NFT nft}) {
+    repository.setCacheDynamicType(key: "nft", value: nft);
+    repository.setCacheString(key: "from", value:kDraft);
+
   }
 }

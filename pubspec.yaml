@@ -140,8 +140,8 @@ flutter:
   assets:
     - assets/images/
     - assets/images/svg/
-    - i18n/en.json
-    - i18n/ru.json
+    - i18n/en-US.json
+    - i18n/ru-RU.json
 
 
   fonts:

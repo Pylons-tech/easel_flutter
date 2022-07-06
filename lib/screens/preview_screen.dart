@@ -1,5 +1,8 @@
 import 'package:easel_flutter/easel_provider.dart';
+import 'package:easel_flutter/models/nft_format.dart';
 import 'package:easel_flutter/utils/constants.dart';
+import 'package:easel_flutter/utils/enums.dart';
+import 'package:easel_flutter/utils/extension_util.dart';
 import 'package:easel_flutter/widgets/audio_widget.dart';
 import 'package:easel_flutter/widgets/image_widget.dart';
 import 'package:easel_flutter/widgets/model_viewer.dart';
@@ -34,7 +37,8 @@ class _PreviewScreenState extends State<PreviewScreen> {
               SizedBox(height: MediaQuery.of(context).viewPadding.top + 20.h),
               Align(
                 alignment: Alignment.center,
-                child: Text(kPreviewNoticeText, textAlign: TextAlign.center, style: Theme.of(context).textTheme.bodyText2!.copyWith(color: EaselAppTheme.kLightPurple, fontSize: 15.sp, fontWeight: FontWeight.w600)),
+                child: Text(kPreviewNoticeText,
+                    textAlign: TextAlign.center, style: Theme.of(context).textTheme.bodyText2!.copyWith(color: EaselAppTheme.kLightPurple, fontSize: 15.sp, fontWeight: FontWeight.w600)),
               ),
               Align(
                 alignment: Alignment.centerLeft,
@@ -51,16 +55,18 @@ class _PreviewScreenState extends State<PreviewScreen> {
                     )),
               )
             ]),
-            Positioned(
-              right: 25.w,
-              bottom: 30.h,
-              child: PylonsButton(
-                  onPressed: () async {
-                    provider.saveNftAsset(provider: provider, controller: widget.controller);
-                  },
-                  btnText: "upload".tr(),
-                  isBlue: false,
-                  showArrow: true),
+            Padding(
+              padding: EdgeInsets.only(bottom: 30.h, right: 25.w),
+              child: Align(
+                alignment: Alignment.bottomRight,
+                child: PylonsButton(
+                    onPressed: ()  {
+                      onUploadPressed();
+                    },
+                    btnText: "upload".tr(),
+                    isBlue: false,
+                    showArrow: true),
+              ),
             )
           ],
         ),
@@ -70,21 +76,69 @@ class _PreviewScreenState extends State<PreviewScreen> {
 
   Widget buildPreviewWidget(EaselProvider provider) {
     switch (provider.nftFormat.format) {
-      case kImageText:
+
+
+      case NFTTypes.image:
         return ImageWidget(file: provider.file!);
-      case kVideoText:
+      case NFTTypes.video:
         return VideoWidget(file: provider.file!, previewFlag: false, isForFile: true);
-      case k3dText:
-        return Model3dViewer(
-          path: provider.file!.path,
-          isFile: true,
-        );
-      case kAudioText:
+      case NFTTypes.audio:
         return AudioWidget(
           file: provider.file!,
           previewFlag: false,
         );
+      case NFTTypes.threeD:
+        return Model3dViewer(
+          path: provider.file!.path,
+          isFile: true,
+        );
     }
-    return const SizedBox.shrink();
+  }
+
+  void onUploadPressed() async {
+
+    final provider = context.read<EaselProvider>();
+
+
+    switch(provider.nftFormat.format){
+
+      case NFTTypes.image:
+        await provider.saveNftLocally(UploadStep.assetUploaded);
+
+        widget.controller.nextPage(duration: const Duration(milliseconds: 10), curve: Curves.easeIn);
+        Navigator.of(context).pop();
+        break;
+      case NFTTypes.video:
+        if (provider.videoThumbnail == null) {
+          context.show(message: uploadYourThumbnail);
+          return;
+        } else {
+          await provider.saveNftLocally(UploadStep.assetUploaded);
+          widget.controller.nextPage(duration: const Duration(milliseconds: 10), curve: Curves.easeIn);
+          Navigator.of(context).pop();
+        }
+        break;
+      case NFTTypes.audio:
+        if (provider.audioThumbnail == null) {
+          context.show(message: uploadYourThumbnail);
+          return;
+        } else {
+          await provider.saveNftLocally(UploadStep.assetUploaded);
+          widget.controller.nextPage(duration: const Duration(milliseconds: 10), curve: Curves.easeIn);
+          Navigator.of(context).pop();
+        }
+        break;
+      case NFTTypes.threeD:
+        await provider.saveNftLocally(UploadStep.assetUploaded);
+
+        widget.controller.nextPage(duration: const Duration(milliseconds: 10), curve: Curves.easeIn);
+        Navigator.of(context).pop();
+        break;
+    }
+
+
+
+
+
   }
 }
