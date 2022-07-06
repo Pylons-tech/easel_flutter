@@ -200,8 +200,6 @@ class LocalDataSourceImpl implements LocalDataSource {
       return true;
     } catch (e) {
       throw CacheFailure("save_error".tr());
-
-      return throw "";
     }
   }
 
@@ -214,10 +212,10 @@ class LocalDataSourceImpl implements LocalDataSource {
   Future<bool> deleteNft(int id) async {
     try {
       await database.nftDao.delete(id);
-
       return true;
     } catch (e) {
-      return throw "";
+      throw CacheFailure("delete_error".tr());
+
     }
   }
 

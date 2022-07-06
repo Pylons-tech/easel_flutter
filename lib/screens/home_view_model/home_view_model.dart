@@ -31,25 +31,30 @@ class HomeViewModel extends ChangeNotifier {
         setTextField.call();
       });
 
-      if (nft!.step == UploadStep.assetUploaded.name) {
-        currentPage = ValueNotifier(1);
-        currentStep = ValueNotifier(1);
-        pageController = PageController(keepPage: true, initialPage: 1);
-        return;
-      } else if (nft!.step == UploadStep.descriptionAdded.name) {
-        currentPage = ValueNotifier(1);
-        currentStep = ValueNotifier(1);
-        pageController = PageController(keepPage: true, initialPage: 2);
-        return;
-      } else if (nft!.step == UploadStep.priceAdded.name) {
-        currentPage = ValueNotifier(2);
-        currentStep = ValueNotifier(2);
-        pageController = PageController(keepPage: true, initialPage: 3);
-        return;
-      } else {
-        currentPage = ValueNotifier(0);
-        currentStep = ValueNotifier(0);
-        pageController = PageController(keepPage: true, initialPage: 0);
+      final uploadStep = nft!.step.toUploadStepEnum();
+
+      switch (uploadStep) {
+        case UploadStep.assetUploaded:
+          currentPage = ValueNotifier(1);
+          currentStep = ValueNotifier(1);
+          pageController = PageController(keepPage: true, initialPage: 1);
+          return;
+
+        case UploadStep.descriptionAdded:
+          currentPage = ValueNotifier(1);
+          currentStep = ValueNotifier(1);
+          pageController = PageController(keepPage: true, initialPage: 2);
+          break;
+        case UploadStep.priceAdded:
+          currentPage = ValueNotifier(2);
+          currentStep = ValueNotifier(2);
+          pageController = PageController(keepPage: true, initialPage: 3);
+          break;
+        case UploadStep.none:
+          currentPage = ValueNotifier(0);
+          currentStep = ValueNotifier(0);
+          pageController = PageController(keepPage: true, initialPage: 0);
+          break;
       }
     } else {
       currentPage = ValueNotifier(0);
@@ -58,7 +63,7 @@ class HomeViewModel extends ChangeNotifier {
     }
   }
 
-  disposeControllers() {
+  void disposeControllers() {
     pageController.dispose();
   }
 }

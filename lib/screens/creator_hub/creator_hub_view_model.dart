@@ -1,9 +1,6 @@
 
 import 'package:easel_flutter/main.dart';
-import 'package:easel_flutter/models/api_response.dart';
 import 'package:easel_flutter/models/nft.dart';
-import 'package:easel_flutter/services/datasources/local_datasource.dart';
-import 'package:easel_flutter/services/datasources/remote_datasource.dart';
 import 'package:easel_flutter/repository/repository.dart';
 import 'package:easel_flutter/utils/constants.dart';
 import 'package:easel_flutter/utils/extension_util.dart';

@@ -1,6 +1,5 @@
 
 import 'package:easel_flutter/models/nft.dart';
-import 'package:easel_flutter/repository/repository.dart';
 import 'package:easel_flutter/screens/creator_hub/creator_hub_view_model.dart';
 import 'package:easel_flutter/utils/constants.dart';
 import 'package:easel_flutter/utils/dependency_injection/dependency_injection_container.dart';

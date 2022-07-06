@@ -54,7 +54,7 @@ class _MintScreenState extends State<MintScreen> {
                 crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: [
                   buildPreviewWidget(provider, context),
-                  const SizedBox(height: 10),
+                  SizedBox(height: 10.h),
                   Padding(
                     padding: const EdgeInsets.symmetric(horizontal: 20),
                     child: Column(
