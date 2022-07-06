@@ -179,7 +179,7 @@ class LocalDataSourceImpl implements LocalDataSource {
       final result = await database.nftDao.insertNft(draft);
       return result;
     } catch (e) {
-      throw "";
+      throw "save_error".tr();
     }
   }
 
@@ -189,7 +189,7 @@ class LocalDataSourceImpl implements LocalDataSource {
       await database.nftDao.updateNFTFromDescription(id, nftName, nftDescription, creatorName, step);
       return true;
     } catch (e) {
-      return throw "";
+      return throw "save_error".tr();
     }
   }
 
