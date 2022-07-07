@@ -77,7 +77,7 @@ class _PriceScreenState extends State<PriceScreen> {
                               provider.updateIsFreeDropStatus(true);
                             },
                             cuttingHeight: 12.h,
-                            isShadow: false,
+                            isShadow: false, clipperType: ClipperType.bottomLeftTopRight, fontWeight: FontWeight.w500,
                           ),
                         ),
                         SizedBox(
@@ -92,7 +92,8 @@ class _PriceScreenState extends State<PriceScreen> {
                               provider.updateIsFreeDropStatus(false);
                             },
                             cuttingHeight: 12.h,
-                            isShadow: false,
+                            isShadow: false, clipperType: ClipperType.bottomLeftTopRight,
+                            fontWeight: FontWeight.w500,
                           ),
                         ),
                         SizedBox(

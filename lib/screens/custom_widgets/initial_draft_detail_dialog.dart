@@ -142,7 +142,8 @@ class _DraftDetailDialog extends StatelessWidget {
                       onPressed: () async {
                         Navigator.pop(context);
                       },
-                      cuttingHeight: 15.h,
+                      cuttingHeight: 15.h, clipperType: ClipperType.bottomLeftTopRight,
+                      fontWeight: FontWeight.w700,
                     ),
                   )
                 ],

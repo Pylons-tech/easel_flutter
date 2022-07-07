@@ -64,6 +64,8 @@ class EaselProvider extends ChangeNotifier {
 
   bool willLoadFirstTime = true;
 
+  late bool collapsed = false;
+
   void setPublishedNFTClicked(NFT nft) {
     _publishedNFTClicked = nft;
     notifyListeners();
@@ -128,7 +130,7 @@ class EaselProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-  final List<String> hashtagsList = [];
+  List<String> hashtagsList = [];
 
   String currentUsername = '';
 
@@ -175,6 +177,11 @@ class EaselProvider extends ChangeNotifier {
     hashtagsList.clear();
     willLoadFirstTime = true;
     isFreeDrop = false;
+    notifyListeners();
+  }
+
+  void toChangeCollapse() {
+    collapsed = !collapsed;
     notifyListeners();
   }
 
@@ -440,15 +447,7 @@ class EaselProvider extends ChangeNotifier {
   /// return true or false depending on the response from the wallet app
   Future<bool> createCookbook() async {
     _cookbookId = await repository.autoGenerateCookbookId();
-    var cookBook1 = Cookbook(
-        creator: "",
-        iD: _cookbookId,
-        name: "Easel Cookbook",
-        description: "Cookbook for Easel NFT",
-        developer: artistNameController.text,
-        version: "v0.0.1",
-        supportEmail: "easel@pylons.tech",
-        enabled: true);
+    var cookBook1 = Cookbook(creator: "", iD: _cookbookId, name: "Easel Cookbook", description: "Cookbook for Easel NFT", developer: artistNameController.text, version: "v0.0.1", supportEmail: "easel@pylons.tech", enabled: true);
 
     var response = await PylonsWallet.instance.txCreateCookbook(cookBook1);
     if (response.success) {
@@ -677,24 +676,24 @@ class EaselProvider extends ChangeNotifier {
       }
 
       nft = NFT(
-        id: null,
-        type: NftType.TYPE_ITEM.name,
-        ibcCoins: IBCCoins.upylon.name,
-        assetType: nftFormat.format,
-        cookbookID: cookbookId ?? "",
-        width: fileWidth.toString(),
-        denom: "",
-        tradePercentage: "",
-        height: fileHeight.toString(),
-        duration: fileDuration.toString(),
-        description: descriptionController.text,
-        recipeID: recipeId,
-        step: step.name,
-        thumbnailUrl: (nftFormat.format == kAudioText || nftFormat.format == kVideoText) ? "$ipfsDomain/${uploadThumbnailResponse.data?.value?.cid}" : "",
-        name: artistNameController.text,
-        url: "$ipfsDomain/${fileUploadResponse.data?.value?.cid}",
-        price: priceController.text,
-      );
+          id: null,
+          type: NftType.TYPE_ITEM.name,
+          ibcCoins: IBCCoins.upylon.name,
+          assetType: nftFormat.format,
+          cookbookID: cookbookId ?? "",
+          width: fileWidth.toString(),
+          denom: "",
+          tradePercentage: royaltyController.text,
+          height: fileHeight.toString(),
+          duration: fileDuration.toString(),
+          description: descriptionController.text,
+          recipeID: recipeId,
+          step: step.name,
+          thumbnailUrl: (nftFormat.format == kAudioText || nftFormat.format == kVideoText) ? "$ipfsDomain/${uploadThumbnailResponse.data?.value?.cid}" : "",
+          name: artistNameController.text,
+          url: "$ipfsDomain/${fileUploadResponse.data?.value?.cid}",
+          price: priceController.text,
+          cid: fileUploadResponse.data?.value?.cid);
 
       final saveNftResponse = await repository.saveNft(nft);
 
@@ -707,24 +706,24 @@ class EaselProvider extends ChangeNotifier {
       id = saveNftResponse.getOrElse(() => 0);
 
       NFT _nft = NFT(
-        id: id,
-        type: NftType.TYPE_ITEM.name,
-        ibcCoins: IBCCoins.upylon.name,
-        assetType: nftFormat.format,
-        cookbookID: cookbookId ?? "",
-        width: fileWidth.toString(),
-        denom: "",
-        tradePercentage: "",
-        height: fileHeight.toString(),
-        duration: fileDuration.toString(),
-        description: descriptionController.text,
-        recipeID: recipeId,
-        step: step.name,
-        thumbnailUrl: (nftFormat.format == kAudioText || nftFormat.format == kVideoText) ? "$ipfsDomain/${uploadThumbnailResponse.data?.value?.cid}" : "",
-        name: artistNameController.text,
-        url: "$ipfsDomain/${fileUploadResponse.data?.value?.cid}",
-        price: priceController.text,
-      );
+          id: id,
+          type: NftType.TYPE_ITEM.name,
+          ibcCoins: IBCCoins.upylon.name,
+          assetType: nftFormat.format,
+          cookbookID: cookbookId ?? "",
+          width: fileWidth.toString(),
+          denom: "",
+          tradePercentage: royaltyController.text,
+          height: fileHeight.toString(),
+          duration: fileDuration.toString(),
+          description: descriptionController.text,
+          recipeID: recipeId,
+          step: step.name,
+          thumbnailUrl: (nftFormat.format == kAudioText || nftFormat.format == kVideoText) ? "$ipfsDomain/${uploadThumbnailResponse.data?.value?.cid}" : "",
+          name: artistNameController.text,
+          url: "$ipfsDomain/${fileUploadResponse.data?.value?.cid}",
+          price: priceController.text,
+          cid: fileUploadResponse.data?.value?.cid);
 
       if (id < 1) {
         navigatorKey.currentState!.overlay!.context.show(message: "save_error".tr());
@@ -755,8 +754,7 @@ class EaselProvider extends ChangeNotifier {
   }
 
   Future<bool> updateNftFromPrice(int id) async {
-    final saveNftResponse = await repository.updateNftFromPrice(
-        id, royaltyController.text, priceController.text, noOfEditionController.text, UploadStep.priceAdded.name, isFreeDrop == false ? selectedDenom.name : "", isFreeDrop);
+    final saveNftResponse = await repository.updateNftFromPrice(id, royaltyController.text, priceController.text, noOfEditionController.text, UploadStep.priceAdded.name, isFreeDrop == false ? selectedDenom.name : "", isFreeDrop);
     final _nft = await repository.getNft(id);
     final dataFromLocal = _nft.getOrElse(() => nft);
     repository.setCacheDynamicType(key: 'nft', value: dataFromLocal);
@@ -770,12 +768,11 @@ class EaselProvider extends ChangeNotifier {
   }
 
   Future<bool> createRecipe(NFT nft) async {
-    if(nft.isFreeDrop==false){
+    if (nft.isFreeDrop == false) {
       if (!await shouldMintUSDOrNot()) {
         return false;
       }
     }
-
 
     // get device cookbook id
     _cookbookId = repository.getCookbookId();
@@ -828,10 +825,7 @@ class EaselProvider extends ChangeNotifier {
                 ])
               ],
               longs: [
-                LongParam(key: kQuantity, weightRanges: [
-                  IntWeightRange(
-                      lower: Int64(int.parse(nft.quantity.toString().replaceAll(",", "").trim())), upper: Int64(int.parse(nft.quantity.toString().replaceAll(",", "").trim())), weight: Int64(1))
-                ]),
+                LongParam(key: kQuantity, weightRanges: [IntWeightRange(lower: Int64(int.parse(nft.quantity.toString().replaceAll(",", "").trim())), upper: Int64(int.parse(nft.quantity.toString().replaceAll(",", "").trim())), weight: Int64(1))]),
                 LongParam(key: kWidth, weightRanges: [IntWeightRange(lower: Int64(int.parse(nft.width)), upper: Int64(int.parse(nft.width)), weight: Int64(1))]),
                 LongParam(key: kHeight, weightRanges: [IntWeightRange(lower: Int64(int.parse(nft.height)), upper: Int64(int.parse(nft.height)), weight: Int64(1))]),
                 LongParam(key: kDuration, weightRanges: [IntWeightRange(lower: Int64(int.parse(nft.duration)), upper: Int64(int.parse(nft.duration)), weight: Int64(1))]),
@@ -874,6 +868,10 @@ class EaselProvider extends ChangeNotifier {
 
   Future<void> deleteNft(int? id) async {
     await repository.deleteNft(id!);
+  }
+
+  void toHashtagList(String hashtag) {
+    hashtagsList = hashtag.split("#");
   }
 }
 

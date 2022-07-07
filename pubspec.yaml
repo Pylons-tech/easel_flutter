@@ -80,6 +80,9 @@ dependencies:
 
   internet_connection_checker: ^0.0.1+4
 
+  detectable_text_field: ^2.0.3
+
+
 
   # used for bitmap manipulation, needed for svg to png conversion
 #  bitmap: ^0.1.2

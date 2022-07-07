@@ -2,6 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 
+enum ClipperType {
+topLeftBottomRight , bottomLeftTopRight
+}
 class ClippedButton extends StatelessWidget {
 
   final VoidCallback onPressed;
@@ -9,9 +12,11 @@ class ClippedButton extends StatelessWidget {
   final Color bgColor;
   final Color textColor;
   final double cuttingHeight;
-   bool? isShadow= true;
+  final ClipperType clipperType;
+  final FontWeight fontWeight;
+  bool? isShadow= true;
 
-  ClippedButton({Key? key, required this.onPressed, required this.title, required this.bgColor, required this.textColor,required this.cuttingHeight, this.isShadow= true}) : super(key: key);
+  ClippedButton({Key? key, required this.onPressed, required this.title, required this.bgColor, required this.textColor,required this.cuttingHeight, this.isShadow= true , required this.clipperType, required this.fontWeight}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -21,12 +26,12 @@ class ClippedButton extends StatelessWidget {
         onPressed.call();
       },
       child:isShadow!? CustomPaint(
-        painter: BoxShadowPainter(cuttingHeight: cuttingHeight),
+        painter:  clipperType == ClipperType.bottomLeftTopRight?  BoxShadowPainterBottomLeftTopRight(cuttingHeight: cuttingHeight):BoxShadowPainterTopLeftBottomRight(cuttingHeight: cuttingHeight),
         child: ClipPath(
-          clipper: ButtonClipper(cuttingHeight: cuttingHeight),
+          clipper: clipperType == ClipperType.bottomLeftTopRight? ButtonClipperBottomLeftTopRight(cuttingHeight: cuttingHeight) :ButtonClipperTopLeftBottomRight(cuttingHeight: cuttingHeight) ,
           child: Container(
             color: bgColor,
-            height: 32.h,
+            height: 40.h,
             child: Center(
                 child: Text(
                   title,
@@ -36,14 +41,14 @@ class ClippedButton extends StatelessWidget {
           ),
         ),
       ):ClipPath(
-        clipper: ButtonClipper(cuttingHeight: cuttingHeight),
+        clipper: clipperType == ClipperType.bottomLeftTopRight? ButtonClipperBottomLeftTopRight(cuttingHeight: cuttingHeight) :ButtonClipperTopLeftBottomRight(cuttingHeight: cuttingHeight) ,
         child: Container(
           color: bgColor,
-          height: 30.h,
+          height: 40.h,
           child: Center(
               child: Text(
                 title,
-                style: TextStyle(color: textColor, fontSize: 16.sp, fontWeight: FontWeight.w400),
+                style: TextStyle(color: textColor, fontSize: 16.sp, fontWeight: fontWeight,),
                 textAlign: TextAlign.center,
               )),
         ),
@@ -52,9 +57,9 @@ class ClippedButton extends StatelessWidget {
   }
 }
 
-class ButtonClipper extends CustomClipper<Path> {
+class ButtonClipperBottomLeftTopRight extends CustomClipper<Path> {
   final double cuttingHeight;
-  ButtonClipper({required this.cuttingHeight});
+  ButtonClipperBottomLeftTopRight({required this.cuttingHeight});
   @override
   Path getClip(Size size) {
     final path = Path();
@@ -74,9 +79,33 @@ class ButtonClipper extends CustomClipper<Path> {
   }
 }
 
-class BoxShadowPainter extends CustomPainter {
+class ButtonClipperTopLeftBottomRight extends CustomClipper<Path> {
   final double cuttingHeight;
-  BoxShadowPainter({required this.cuttingHeight});
+  ButtonClipperTopLeftBottomRight({required this.cuttingHeight});
+  @override
+  Path getClip(Size size) {
+    final path = Path();
+    path.moveTo(0, size.height);
+    path.lineTo(0,   cuttingHeight);
+    path.lineTo( cuttingHeight,0);
+    path.lineTo(size.width, 0);
+    path.lineTo(size.width, size.height- cuttingHeight);
+    path.lineTo(size.width - cuttingHeight, size.height);
+    path.lineTo(0, size.height);
+
+    return path;
+  }
+
+  @override
+  bool shouldReclip(covariant CustomClipper<Path> oldClipper) {
+    return false;
+  }
+}
+
+
+class BoxShadowPainterBottomLeftTopRight extends CustomPainter {
+  final double cuttingHeight;
+  BoxShadowPainterBottomLeftTopRight({required this.cuttingHeight});
   @override
   void paint(Canvas canvas, Size size) {
     final Path path = Path();
@@ -86,6 +115,30 @@ class BoxShadowPainter extends CustomPainter {
     path.lineTo(size.width, cuttingHeight);
     path.lineTo(size.width - cuttingHeight, 0);
     path.lineTo(0, 0);
+
+    canvas.drawShadow(path, Colors.black45, 10.0, true);
+  }
+
+  @override
+  bool shouldRepaint(CustomPainter oldDelegate) {
+    return true;
+  }
+}
+
+class BoxShadowPainterTopLeftBottomRight extends CustomPainter {
+  final double cuttingHeight;
+  BoxShadowPainterTopLeftBottomRight({required this.cuttingHeight});
+  @override
+  void paint(Canvas canvas, Size size) {
+    final path = Path();
+    path.moveTo(0, size.height);
+    path.lineTo(0,   cuttingHeight);
+    path.lineTo( cuttingHeight,0);
+    path.lineTo(size.width, 0);
+    path.lineTo(size.width, size.height- cuttingHeight);
+    path.lineTo(size.width - cuttingHeight, size.height);
+    path.lineTo(0, size.height);
+
 
     canvas.drawShadow(path, Colors.black45, 10.0, true);
   }

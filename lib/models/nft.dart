@@ -73,7 +73,7 @@ class NFT extends Equatable {
     this.hashtags = "",
     this.fileName = "",
     this.cid = "",
-    this.isEnabled= true
+    this.isEnabled= true,
   });
 
   factory NFT.fromRecipe(Recipe recipe) {

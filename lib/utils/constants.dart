@@ -51,6 +51,7 @@ const kVideoIcon = 'assets/images/video_icon.png';
 
 const kSvgPylonsLogo = 'assets/images/svg/pylons_logo.svg';
 const kSvgViewIcon = 'assets/images/svg/view_icon.svg';
+const kOwnerVerifiedIcon = 'assets/images/svg/verified.svg';
 
 /// ```URL constants
 const ipfsDomain = 'https://ipfs.io/ipfs';
