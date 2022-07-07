@@ -289,3 +289,11 @@ const aac = "aac";
 
 const kDraft = "draft";
 const kVersion = "v0.1.0";
+
+
+
+const supportedEmail = "support@pylons.tech";
+const cookbookDesc = "Cookbook for Easel NFT";
+const cookbookName = "Easel Cookbook";
+const kVersionCookboox = "v0.0.1";
+

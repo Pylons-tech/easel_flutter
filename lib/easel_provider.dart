@@ -199,11 +199,12 @@ class EaselProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-  void setTextFieldValuesPrice({String? royalties, String? price, String? edition, String? denom}) {
+  void setTextFieldValuesPrice({String? royalties, String? price, String? edition, String? denom, bool freeDrop = false}) {
     royaltyController.text = royalties ?? "";
     priceController.text = price ?? "";
     noOfEditionController.text = edition ?? "";
     _selectedDenom = denom != "" ? Denom.availableDenoms.firstWhere((element) => element.name == denom) : Denom.availableDenoms.first;
+    isFreeDrop = freeDrop!;
     notifyListeners();
   }
 
@@ -446,14 +447,7 @@ class EaselProvider extends ChangeNotifier {
   Future<bool> createCookbook() async {
     _cookbookId = await repository.autoGenerateCookbookId();
     var cookBook1 = Cookbook(
-        creator: "",
-        id: _cookbookId,
-        name: "Easel Cookbook",
-        description: "Cookbook for Easel NFT",
-        developer: artistNameController.text,
-        version: "v0.0.1",
-        supportEmail: "easel@pylons.tech",
-        enabled: true);
+        creator: "", id: _cookbookId, name: cookbookName, description: cookbookDesc, developer: artistNameController.text, version: kVersionCookboox, supportEmail: supportedEmail, enabled: true);
 
     var response = await PylonsWallet.instance.txCreateCookbook(cookBook1);
     if (response.success) {
@@ -736,14 +730,14 @@ class EaselProvider extends ChangeNotifier {
       );
 
       if (id < 1) {
-        navigatorKey.currentState!.overlay!.context.show(message: "save_error".tr());
+        "save_error".tr().show();
         return false;
       }
       repository.setCacheDynamicType(key: nftKey, value: _nft);
       setAudioThumbnail(null);
 
       setVideoThumbnail(null);
-      Navigator.of(navigatorKey.getContext()).popUntil(ModalRoute.withName(RouteUtil.ROUTE_CREATOR_HUB));
+      Navigator.of(navigatorKey.currentState!.overlay!.context).popUntil(ModalRoute.withName(RouteUtil.ROUTE_CREATOR_HUB));
     }
 
     return true;

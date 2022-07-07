@@ -1,6 +1,5 @@
 import 'package:easel_flutter/easel_provider.dart';
 import 'package:easel_flutter/screens/creator_hub/creator_hub_screen.dart';
-import 'package:easel_flutter/screens/creator_hub/creator_hub_view_model.dart';
 import 'package:easel_flutter/screens/home_screen.dart';
 import 'package:easel_flutter/screens/preview_nft/preview_nft_full_screen.dart';
 import 'package:easel_flutter/screens/splash_screen.dart';
@@ -10,7 +9,6 @@ import 'package:easel_flutter/utils/constants.dart';
 import 'package:easel_flutter/utils/dependency_injection/dependency_injection_container.dart' as di;
 import 'package:easel_flutter/utils/easel_app_theme.dart';
 import 'package:easel_flutter/utils/route_util.dart';
-import 'package:easel_flutter/viewmodels/home_viewmodel.dart';
 import 'package:easel_flutter/widgets/video_widget_full_screen.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
@@ -53,8 +51,6 @@ class MyApp extends StatelessWidget {
     return MultiProvider(
       providers: [
         ChangeNotifierProvider(create: (_) => GetIt.I.get<EaselProvider>()),
-        ChangeNotifierProvider(create: (_) => GetIt.I.get<HomeViewModel>()),
-        ChangeNotifierProvider(create: (_) => GetIt.I.get<CreatorHubViewModel>()),
       ],
       child: ScreenUtilInit(
           minTextAdapt: true,

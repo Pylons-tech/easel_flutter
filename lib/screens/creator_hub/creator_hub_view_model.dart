@@ -1,4 +1,3 @@
-import 'package:easel_flutter/main.dart';
 import 'package:easel_flutter/models/nft.dart';
 import 'package:easel_flutter/repository/repository.dart';
 import 'package:easel_flutter/utils/constants.dart';
@@ -40,7 +39,7 @@ class CreatorHubViewModel extends ChangeNotifier {
     if (getNftResponse.isLeft()) {
       loading.dismiss();
 
-      navigatorKey.getContext().show(message: "something_wrong".tr());
+      "something_wrong".tr().show();
 
       return;
     }
@@ -56,11 +55,11 @@ class CreatorHubViewModel extends ChangeNotifier {
     final deleteNftResponse = await repository.deleteNft(id!);
 
     if (deleteNftResponse.isLeft()) {
-      navigatorKey.getContext().show(message: "delete_error".tr());
-    } else {
-      nftList.removeWhere((element) => element.id == id);
-      notifyListeners();
+      "delete_error".tr().show();
+      return;
     }
+    nftList.removeWhere((element) => element.id == id);
+    notifyListeners();
   }
 
   void saveNFT({required NFT nft}) {
