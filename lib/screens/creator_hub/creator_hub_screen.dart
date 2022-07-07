@@ -15,9 +15,7 @@ import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get_it/get_it.dart';
 import 'package:focus_detector/focus_detector.dart';
-import 'package:get_it/get_it.dart';
 import 'package:provider/provider.dart';
-import 'package:shimmer_animation/shimmer_animation.dart';
 import 'package:shimmer_animation/shimmer_animation.dart';
 
 import '../../utils/dependency_injection/dependency_injection_container.dart';
@@ -290,7 +288,7 @@ class _CreatorHubContentState extends State<CreatorHubContent> {
           Expanded(
             child: InkWell(
               onTap: () {
-                viewModel.onPublishPressed(nft);
+                viewModel.saveNFT(nft :nft);
                 Navigator.of(context).pop();
                 Navigator.of(context).pushNamed(RouteUtil.ROUTE_HOME);
               },

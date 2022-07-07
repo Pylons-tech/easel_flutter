@@ -2,6 +2,8 @@ import 'package:easel_flutter/models/nft.dart';
 import 'package:easel_flutter/services/third_party_services/database.dart';
 import 'package:easel_flutter/utils/constants.dart';
 import 'package:easel_flutter/utils/date_utils.dart';
+import 'package:easel_flutter/utils/failure/failure.dart';
+import 'package:easy_localization/easy_localization.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import 'cache_manager.dart';

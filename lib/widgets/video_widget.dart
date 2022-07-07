@@ -35,9 +35,6 @@ class VideoWidget extends StatefulWidget {
 
 class _VideoWidgetState extends State<VideoWidget> {
   EaselProvider get easelProvider => GetIt.I.get();
-
-  final ValueNotifier<int> _currentStep = ValueNotifier(0);
-  final ValueNotifier<int> _currentPage = ValueNotifier(0);
   final repository = GetIt.I.get<Repository>();
 
   @override

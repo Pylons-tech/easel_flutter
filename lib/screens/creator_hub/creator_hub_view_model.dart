@@ -93,7 +93,6 @@ class CreatorHubViewModel extends ChangeNotifier {
     publishedRecipeLength = publishedNFTsList.length;
   }
 
-  List<NFT> nftList = [];
 
   Future<void> getDraftsList() async {
     final loading = Loading().showLoading(message: "loading".tr());
