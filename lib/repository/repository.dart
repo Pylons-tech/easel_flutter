@@ -105,7 +105,8 @@ abstract class Repository {
   Future<Either<Failure, List<NFT>>> getNfts();
 
   /// This method will get the drafts List from the local database
-  /// Output: [List][NFT] returns  the List of drafts
+  /// Input: [int] the id of the nft that you want to get
+  /// Output: [NFT] returns the nft
   Future<Either<Failure, NFT>> getNft(int id);
 
   /// This method will delete draft from the local database

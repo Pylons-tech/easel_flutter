@@ -54,7 +54,6 @@ class MyApp extends StatelessWidget {
       providers: [
         ChangeNotifierProvider(create: (_) => GetIt.I.get<EaselProvider>()),
         ChangeNotifierProvider(create: (_) => GetIt.I.get<HomeViewModel>()),
-        ChangeNotifierProvider(create: (_) => GetIt.I.get<CreatorHubViewModel>()),
       ],
       child: ScreenUtilInit(
           minTextAdapt: true,

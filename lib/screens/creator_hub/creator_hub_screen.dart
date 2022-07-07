@@ -289,7 +289,6 @@ class _CreatorHubContentState extends State<CreatorHubContent> {
             child: InkWell(
               onTap: () {
                 viewModel.saveNFT(nft :nft);
-                Navigator.of(context).pop();
                 Navigator.of(context).pushNamed(RouteUtil.ROUTE_HOME);
               },
               child: SvgPicture.asset(kSvgPublish),

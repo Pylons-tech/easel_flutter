@@ -61,8 +61,7 @@ class CreatorHubViewModel extends ChangeNotifier {
   }
 
   Future<void> getPublishAndDraftData() async {
-    await getRecipesList();
-    await getDraftsList();
+   await Future.wait([ getRecipesList(), getDraftsList()]);
 
     getTotalForSale();
     notifyListeners();
@@ -91,7 +90,7 @@ class CreatorHubViewModel extends ChangeNotifier {
         _publishedNFTsList.add(nft);
     }
 
-    publishedRecipeLength = publishedNFTsList.length;
+      publishedRecipeLength = _publishedNFTsList.length;
   }
 
 

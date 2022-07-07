@@ -151,9 +151,7 @@ class _MintScreenState extends State<MintScreen> {
                                 return;
                               }
                               provider.disposeAudioController();
-                              Navigator.of(context).popUntil(ModalRoute.withName(RouteUtil.ROUTE_CREATOR_HUB));
-                              context.read<CreatorHubViewModel>().getPublishAndDraftData();
-
+                              Navigator.of(context).pushNamedAndRemoveUntil(RouteUtil.ROUTE_CREATOR_HUB, (route)=>false);
 
                             },
                             btnText: kListText,
