@@ -1,4 +1,5 @@
 import 'package:easel_flutter/easel_provider.dart';
+import 'package:easel_flutter/models/nft_format.dart';
 import 'package:easel_flutter/utils/constants.dart';
 import 'package:easel_flutter/utils/enums.dart';
 import 'package:easel_flutter/utils/extension_util.dart';
@@ -60,22 +61,8 @@ class _PreviewScreenState extends State<PreviewScreen> {
               child: Align(
                 alignment: Alignment.bottomRight,
                 child: PylonsButton(
-                    onPressed: () async {
-                      if (provider.nftFormat.format == kAudioText) {
-                        if (provider.audioThumbnail == null) {
-                          context.show(message: kErrAddAudioThumbnail);
-                        } else {
-                          final result = await provider.saveNftLocally(UploadStep.assetUploaded);
-                          if (result) {
-                            Navigator.of(context).popUntil(ModalRoute.withName(RouteUtil.ROUTE_CREATOR_HUB));
-                          }
-                        }
-                      } else {
-                        final result = await provider.saveNftLocally(UploadStep.assetUploaded);
-                        if (result) {
-                          Navigator.of(context).popUntil(ModalRoute.withName(RouteUtil.ROUTE_CREATOR_HUB));
-                        }
-                      }
+                    onPressed: ()  {
+                      onUploadPressed();
                     },
                     btnText: "upload".tr(),
                     isBlue: false,
@@ -90,21 +77,69 @@ class _PreviewScreenState extends State<PreviewScreen> {
 
   Widget buildPreviewWidget(EaselProvider provider) {
     switch (provider.nftFormat.format) {
-      case kImageText:
+
+
+      case NFTTypes.image:
         return ImageWidget(file: provider.file!);
-      case kVideoText:
+      case NFTTypes.video:
         return VideoWidget(file: provider.file!, previewFlag: false, isForFile: true);
-      case k3dText:
-        return Model3dViewer(
-          path: provider.file!.path,
-          isFile: true,
-        );
-      case kAudioText:
+      case NFTTypes.audio:
         return AudioWidget(
           file: provider.file!,
           previewFlag: false,
         );
+      case NFTTypes.threeD:
+        return Model3dViewer(
+          path: provider.file!.path,
+          isFile: true,
+        );
     }
-    return const SizedBox.shrink();
+  }
+
+  void onUploadPressed() async {
+
+    final provider = context.read<EaselProvider>();
+
+
+    switch(provider.nftFormat.format){
+
+      case NFTTypes.image:
+        await provider.saveNftLocally(UploadStep.assetUploaded);
+
+        widget.controller.nextPage(duration: const Duration(milliseconds: 10), curve: Curves.easeIn);
+        Navigator.of(context).pop();
+        break;
+      case NFTTypes.video:
+        if (provider.videoThumbnail == null) {
+          context.show(message: uploadYourThumbnail);
+          return;
+        } else {
+          await provider.saveNftLocally(UploadStep.assetUploaded);
+          widget.controller.nextPage(duration: const Duration(milliseconds: 10), curve: Curves.easeIn);
+          Navigator.of(context).pop();
+        }
+        break;
+      case NFTTypes.audio:
+        if (provider.audioThumbnail == null) {
+          context.show(message: uploadYourThumbnail);
+          return;
+        } else {
+          await provider.saveNftLocally(UploadStep.assetUploaded);
+          widget.controller.nextPage(duration: const Duration(milliseconds: 10), curve: Curves.easeIn);
+          Navigator.of(context).pop();
+        }
+        break;
+      case NFTTypes.threeD:
+        await provider.saveNftLocally(UploadStep.assetUploaded);
+
+        widget.controller.nextPage(duration: const Duration(milliseconds: 10), curve: Curves.easeIn);
+        Navigator.of(context).pop();
+        break;
+    }
+
+
+
+
+
   }
 }

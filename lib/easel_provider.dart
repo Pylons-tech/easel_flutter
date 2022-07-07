@@ -1,6 +1,8 @@
 import 'dart:async';
 import 'dart:developer';
 import 'dart:io';
+
+import 'package:easel_flutter/main.dart';
 import 'package:easel_flutter/models/save_nft.dart';
 import 'package:easel_flutter/repository/repository.dart';
 import 'package:easy_localization/easy_localization.dart';
@@ -16,6 +18,7 @@ import 'package:easel_flutter/main.dart';
 import 'package:easel_flutter/models/denom.dart';
 import 'package:easel_flutter/models/nft.dart';
 import 'package:easel_flutter/models/nft_format.dart';
+import 'package:easel_flutter/repository/repository.dart';
 import 'package:easel_flutter/services/third_party_services/audio_player_helper.dart';
 import 'package:easel_flutter/services/third_party_services/video_player_helper.dart';
 import 'package:easel_flutter/utils/constants.dart';
@@ -23,17 +26,20 @@ import 'package:easel_flutter/utils/enums.dart';
 import 'package:easel_flutter/utils/extension_util.dart';
 import 'package:easel_flutter/utils/file_utils_helper.dart';
 import 'package:easel_flutter/widgets/loading.dart';
+import 'package:easy_localization/easy_localization.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:fixnum/fixnum.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:just_audio/just_audio.dart';
+import 'package:media_info/media_info.dart';
 import 'package:pylons_sdk/pylons_sdk.dart';
 import 'package:pylons_sdk/src/features/models/sdk_ipc_response.dart';
 import 'package:share_plus/share_plus.dart';
-import 'package:media_info/media_info.dart';
 import 'package:video_player/video_player.dart';
+
+import '../utils/enums.dart';
 
 class EaselProvider extends ChangeNotifier {
   final VideoPlayerHelper videoPlayerHelper;
@@ -125,12 +131,15 @@ class EaselProvider extends ChangeNotifier {
 
   File? get audioThumbnail => _audioThumbnail;
 
-  bool _isInitialized = false;
+  bool _isInitializedForFile = false;
+  bool _isInitializedForNetwork = false;
 
-  bool get isInitialized => _isInitialized;
+  bool get isInitializedForFile => _isInitializedForFile;
+
+  bool get isInitializedForNetwork => _isInitializedForNetwork;
 
   set setIsInitialized(bool value) {
-    _isInitialized = value;
+    _isInitializedForFile = value;
     notifyListeners();
   }
 
@@ -427,7 +436,7 @@ class EaselProvider extends ChangeNotifier {
       return;
     }
 
-    if (_nftFormat.format == kImageText || _nftFormat.format == kVideoText) {
+    if (_nftFormat.format == kImageText) {
       _fileWidth = info['width'];
       _fileHeight = info['height'];
     }
@@ -475,9 +484,115 @@ class EaselProvider extends ChangeNotifier {
 
     if (savedArtistName.isNotEmpty) {
       artistNameController.text = savedArtistName;
+      notifyListeners();
       return;
     }
     artistNameController.text = currentUsername;
+    notifyListeners();
+  }
+
+  /// sends a createRecipe Tx message to the wallet
+  /// return true or false depending on the response from the wallet app
+  Future<bool> createRecipe() async {
+    if (!await shouldMintUSDOrNot()) {
+      return false;
+    }
+
+    // get device cookbook id
+    _cookbookId = repository.getCookbookId();
+    String savedUserName = repository.getCookBookGeneratorUsername();
+
+    if (_cookbookId == null || isDifferentUserName(savedUserName)) {
+      // create cookbook
+      final isCookBookCreated = await createCookbook();
+
+      if (isCookBookCreated) {
+        // get device cookbook id
+        _cookbookId = repository.getCookbookId();
+        notifyListeners();
+      } else {
+        return false;
+      }
+    }
+
+    _recipeId = repository.autoGenerateEaselId();
+
+    audioPlayerHelper.pauseAudio();
+    setVideoThumbnail(null);
+    setAudioThumbnail(null);
+
+    String residual = DecString.decStringFromDouble(double.parse(royaltyController.text.trim()));
+
+    String price = isFreeDrop ? "0" : (double.parse(priceController.text.replaceAll(",", "").trim()) * 1000000).toStringAsFixed(0);
+    var recipe = Recipe(
+        cookbookId: _cookbookId,
+        id: _recipeId,
+        nodeVersion: Int64(1),
+        name: artNameController.text.trim(),
+        description: descriptionController.text.trim(),
+        version: "v0.1.0",
+        coinInputs: [
+          isFreeDrop ? CoinInput() : CoinInput(coins: [Coin(amount: price, denom: _selectedDenom.symbol)])
+        ],
+        itemInputs: [],
+        costPerBlock: Coin(denom: kUpylon, amount: "0"),
+        entries: EntriesList(coinOutputs: [], itemOutputs: [
+          ItemOutput(
+              id: kEaselNFT,
+              doubles: [
+                DoubleParam(key: kResidual, weightRanges: [
+                  DoubleWeightRange(
+                    lower: residual,
+                    upper: residual,
+                    weight: Int64(1),
+                  )
+                ])
+              ],
+              longs: [
+                LongParam(key: kQuantity, weightRanges: [
+                  IntWeightRange(
+                      lower: Int64(int.parse(noOfEditionController.text.replaceAll(",", "").trim())), upper: Int64(int.parse(noOfEditionController.text.replaceAll(",", "").trim())), weight: Int64(1))
+                ]),
+                LongParam(key: kWidth, weightRanges: [IntWeightRange(lower: Int64(_fileWidth), upper: Int64(_fileWidth), weight: Int64(1))]),
+                LongParam(key: kHeight, weightRanges: [IntWeightRange(lower: Int64(_fileHeight), upper: Int64(_fileHeight), weight: Int64(1))]),
+                LongParam(key: kDuration, weightRanges: [IntWeightRange(lower: Int64(_fileDuration), upper: Int64(_fileDuration), weight: Int64(1))]),
+              ],
+              strings: [
+                StringParam(key: kName, value: artNameController.text.trim()),
+                StringParam(key: kAppType, value: kEasel),
+                StringParam(key: kDescription, value: descriptionController.text.trim()),
+                StringParam(key: kHashtags, value: hashtagsList.join('#')),
+                StringParam(key: kNFTFormat, value: _nftFormat.format.getTitle()),
+                StringParam(key: kNFTURL, value: nft.url),
+                StringParam(key: kThumbnailUrl, value: nft.thumbnailUrl),
+                StringParam(key: kCreator, value: artistNameController.text.trim()),
+              ],
+              mutableStrings: [],
+              transferFee: [Coin(denom: kPylonSymbol, amount: "1")],
+              tradePercentage: DecString.decStringFromDouble(double.parse(royaltyController.text.trim())),
+              tradeable: true,
+              amountMinted: Int64(0),
+              quantity: Int64(int.parse(noOfEditionController.text.replaceAll(",", "").trim()))),
+        ], itemModifyOutputs: []),
+        outputs: [
+          WeightedOutputs(entryIds: [kEaselNFT], weight: Int64(1))
+        ],
+        blockInterval: Int64(0),
+        enabled: true,
+        extraInfo: kExtraInfo);
+
+    var response = await PylonsWallet.instance.txCreateRecipe(recipe, requestResponse: false);
+
+    setVideoThumbnail(null);
+
+    if (response.success) {
+      navigatorKey.showMsg(message: kRecipeCreated);
+      log("${response.data}");
+      return true;
+    } else {
+      navigatorKey.showMsg(message: "$kErrRecipe ${response.error}");
+      return false;
+    }
   }
 
   bool isDifferentUserName(String savedUserName) => (currentUsername.isNotEmpty && savedUserName != currentUsername);
@@ -523,6 +638,8 @@ class EaselProvider extends ChangeNotifier {
         _selectedDenom = supportedDenomList.first;
       }
     }
+    artistNameController.text = currentUsername;
+    notifyListeners();
 
     return sdkResponse;
   }
@@ -576,7 +693,7 @@ class EaselProvider extends ChangeNotifier {
 
     setIsInitialized = await audioPlayerHelper.setFile(file: _file!.path);
 
-    if (isInitialized) {
+    if (isInitializedForFile) {
       audioPlayerHelper.playerStateStream().listen((event) {}).onData((playerState) async {
         final isPlaying = playerState.playing;
         final processingState = playerState.processingState;
@@ -686,7 +803,7 @@ class EaselProvider extends ChangeNotifier {
         id: null,
         type: NftType.TYPE_ITEM.name,
         ibcCoins: IBCCoins.upylon.name,
-        assetType: nftFormat.format,
+        assetType: nftFormat.format.getTitle(),
         cookbookID: cookbookId ?? "",
         width: fileWidth.toString(),
         denom: "",
@@ -696,7 +813,7 @@ class EaselProvider extends ChangeNotifier {
         description: descriptionController.text,
         recipeID: recipeId,
         step: step.name,
-        thumbnailUrl: (nftFormat.format == kAudioText || nftFormat.format == kVideoText) ? "$ipfsDomain/${uploadThumbnailResponse.data?.value?.cid}" : "",
+        thumbnailUrl: (nftFormat.format == NFTTypes.audio || nftFormat.format == NFTTypes.video) ? "$ipfsDomain/${uploadThumbnailResponse.data?.value?.cid}" : "",
         name: artistNameController.text,
         url: "$ipfsDomain/${fileUploadResponse.data?.value?.cid}",
         price: priceController.text,
@@ -716,7 +833,7 @@ class EaselProvider extends ChangeNotifier {
         id: id,
         type: NftType.TYPE_ITEM.name,
         ibcCoins: IBCCoins.upylon.name,
-        assetType: nftFormat.format,
+        assetType: nftFormat.format.getTitle(),
         cookbookID: cookbookId ?? "",
         width: fileWidth.toString(),
         denom: "",
@@ -726,7 +843,7 @@ class EaselProvider extends ChangeNotifier {
         description: descriptionController.text,
         recipeID: recipeId,
         step: step.name,
-        thumbnailUrl: (nftFormat.format == kAudioText || nftFormat.format == kVideoText) ? "$ipfsDomain/${uploadThumbnailResponse.data?.value?.cid}" : "",
+        thumbnailUrl: (nftFormat.format == NFTTypes.audio || nftFormat.format == NFTTypes.video) ? "$ipfsDomain/${uploadThumbnailResponse.data?.value?.cid}" : "",
         name: artistNameController.text,
         url: "$ipfsDomain/${fileUploadResponse.data?.value?.cid}",
         price: priceController.text,

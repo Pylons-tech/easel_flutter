@@ -1,6 +1,5 @@
 import 'package:easel_flutter/easel_provider.dart';
 import 'package:easel_flutter/screens/creator_hub/creator_hub_screen.dart';
-import 'package:easel_flutter/screens/creator_hub/creator_hub_view_model.dart';
 import 'package:easel_flutter/screens/home_screen.dart';
 import 'package:easel_flutter/screens/preview_nft/preview_nft_full_screen.dart';
 import 'package:easel_flutter/screens/splash_screen.dart';
@@ -13,7 +12,11 @@ import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:easel_flutter/utils/dependency_injection/dependency_injection_container.dart' as di;
 import 'package:easel_flutter/utils/easel_app_theme.dart';
+import 'package:easel_flutter/utils/route_util.dart';
+import 'package:easel_flutter/widgets/video_widget_full_screen.dart';
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get_it/get_it.dart';
 import 'package:provider/provider.dart';
 import 'package:pylons_sdk/pylons_sdk.dart';
@@ -79,6 +82,7 @@ class MyApp extends StatelessWidget {
                   RouteUtil.ROUTE_CREATOR_HUB: (context) => const CreatorHubScreen(),
                   RouteUtil.ROUTE_PREVIEW_NFT_FULL_SCREEN: (context) => const PreviewNFTFullScreen(),
                   RouteUtil.ROUTE_HOME: (context) => const HomeScreen(),
+                  RouteUtil.VIDEO_FULL_SCREEN: (context) => const VideoWidgetFullScreen(),
                 },
               )),
     );

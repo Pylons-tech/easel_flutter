@@ -51,7 +51,10 @@ dependencies:
 
   provider: ^6.0.1
 
-  pylons_sdk: ^0.1.1
+  pylons_sdk:
+    git:
+      url: https://github.com/Pylons-tech/pylons_dart_sdk.git
+      ref: fix/devnet
 
   google_fonts: ^2.1.0
 
