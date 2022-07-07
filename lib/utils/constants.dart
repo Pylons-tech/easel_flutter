@@ -288,3 +288,4 @@ const wav = "wav";
 const aac = "aac";
 
 const kDraft = "draft";
+const kVersion = "v0.1.0";

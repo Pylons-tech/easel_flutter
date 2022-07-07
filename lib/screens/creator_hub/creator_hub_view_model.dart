@@ -126,8 +126,8 @@ class CreatorHubViewModel extends ChangeNotifier {
   }
 
   void saveNFT({required NFT nft}) {
-    repository.setCacheDynamicType(key: "nft", value: nft);
-    repository.setCacheString(key: "from", value: kDraft);
+    repository.setCacheDynamicType(key: nftKey, value: nft);
+    repository.setCacheString(key: fromKey, value: kDraft);
   }
 
 }
