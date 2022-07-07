@@ -1,4 +1,3 @@
-import 'package:easel_flutter/easel_provider.dart';
 import 'package:easel_flutter/models/nft.dart';
 import 'package:easel_flutter/repository/repository.dart';
 import 'package:easel_flutter/utils/constants.dart';
@@ -9,7 +8,7 @@ import 'package:flutter/cupertino.dart';
 class HomeViewModel extends ChangeNotifier {
   final Repository repository;
 
-  HomeViewModel({required this.repository});
+  HomeViewModel(this.repository);
 
   late ValueNotifier<int> currentPage;
 
@@ -20,37 +19,41 @@ class HomeViewModel extends ChangeNotifier {
   String? from;
   final List pageTitles = ["select_nft_file".tr(), "nft_detail_text".tr(), "nft_pricing".tr(), ''];
 
-  init( {required VoidCallback setTextField}) {
+  void init({required VoidCallback setTextField}) {
     from = repository.getCacheString(key: fromKey);
     repository.deleteCacheString(key: fromKey);
 
-    if (from == draftKey) {
+    if (from == kDraft) {
       nft = repository.getCacheDynamicType(key: nftKey);
 
       Future.delayed(const Duration(milliseconds: 1), () {
-
         setTextField.call();
       });
 
-      if (nft!.step == UploadStep.assetUploaded.name) {
-        currentPage = ValueNotifier(1);
-        currentStep = ValueNotifier(1);
-        pageController = PageController(keepPage: true, initialPage: 1);
-        return;
-      } else if (nft!.step == UploadStep.descriptionAdded.name) {
-        currentPage = ValueNotifier(1);
-        currentStep = ValueNotifier(1);
-        pageController = PageController(keepPage: true, initialPage: 2);
-        return;
-      } else if (nft!.step == UploadStep.priceAdded.name) {
-        currentPage = ValueNotifier(2);
-        currentStep = ValueNotifier(2);
-        pageController = PageController(keepPage: true, initialPage: 3);
-        return;
-      } else {
-        currentPage = ValueNotifier(0);
-        currentStep = ValueNotifier(0);
-        pageController = PageController(keepPage: true, initialPage: 0);
+      final uploadStep = nft!.step.toUploadStepEnum();
+
+      switch (uploadStep) {
+        case UploadStep.assetUploaded:
+          currentPage = ValueNotifier(1);
+          currentStep = ValueNotifier(1);
+          pageController = PageController(keepPage: true, initialPage: 1);
+          return;
+
+        case UploadStep.descriptionAdded:
+          currentPage = ValueNotifier(1);
+          currentStep = ValueNotifier(1);
+          pageController = PageController(keepPage: true, initialPage: 2);
+          break;
+        case UploadStep.priceAdded:
+          currentPage = ValueNotifier(2);
+          currentStep = ValueNotifier(2);
+          pageController = PageController(keepPage: true, initialPage: 3);
+          break;
+        case UploadStep.none:
+          currentPage = ValueNotifier(0);
+          currentStep = ValueNotifier(0);
+          pageController = PageController(keepPage: true, initialPage: 0);
+          break;
       }
     } else {
       currentPage = ValueNotifier(0);
@@ -59,7 +62,7 @@ class HomeViewModel extends ChangeNotifier {
     }
   }
 
-  disposeControllers() {
+  void disposeControllers() {
     pageController.dispose();
   }
 }

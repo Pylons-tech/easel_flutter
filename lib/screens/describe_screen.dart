@@ -11,8 +11,8 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get_it/get_it.dart';
 import 'package:provider/provider.dart';
 
-import '../models/nft.dart';
 import '../widgets/pylons_button.dart';
+import 'custom_widgets/initial_draft_detail_dialog.dart';
 
 class DescribeScreen extends StatefulWidget {
   final PageController controller;
@@ -25,12 +25,12 @@ class DescribeScreen extends StatefulWidget {
 
 class _DescribeScreenState extends State<DescribeScreen> {
   var repository = GetIt.I.get<Repository>();
+  EaselProvider provider = GetIt.I.get<EaselProvider>();
   final _formKey = GlobalKey<FormState>();
 
   String _artNameFieldError = '';
   String _artistNameFieldError = '';
   String _descriptionFieldError = '';
-  late NFT nft;
 
   @override
   void dispose() {
@@ -43,8 +43,9 @@ class _DescribeScreenState extends State<DescribeScreen> {
     super.initState();
 
     WidgetsBinding.instance.addPostFrameCallback((_) async {
-      nft = repository.getCacheDynamicType(key: "nft");
-      context.read<EaselProvider>().toCheckSavedArtistName();
+      provider.nft = repository.getCacheDynamicType(key: "nft");
+      provider.toCheckSavedArtistName();
+      DraftDetailDialog(context: context).show();
     });
   }
 
@@ -171,7 +172,7 @@ class _DescribeScreenState extends State<DescribeScreen> {
                         FocusScope.of(context).unfocus();
                         if (_formKey.currentState!.validate()) {
                           if (_artNameFieldError.isEmpty && _artistNameFieldError.isEmpty && _descriptionFieldError.isEmpty) {
-                            context.read<EaselProvider>().updateNftFromDescription(nft.id!);
+                            context.read<EaselProvider>().updateNftFromDescription(provider.nft.id!);
 
                             context.read<EaselProvider>().saveArtistName(provider.artistNameController.text.trim());
                             widget.controller.nextPage(duration: const Duration(milliseconds: 300), curve: Curves.easeIn);

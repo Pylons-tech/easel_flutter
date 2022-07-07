@@ -1,29 +1,18 @@
 import 'package:easel_flutter/easel_provider.dart';
-import 'package:easel_flutter/easel_provider.dart';
 import 'package:easel_flutter/repository/repository.dart';
 import 'package:easel_flutter/screens/creator_hub/creator_hub_view_model.dart';
 import 'package:easel_flutter/screens/custom_widgets/step_labels.dart';
 import 'package:easel_flutter/screens/custom_widgets/steps_indicator.dart';
 import 'package:easel_flutter/screens/describe_screen.dart';
-import 'package:easel_flutter/screens/home_view_model/home_view_model.dart';
 import 'package:easel_flutter/screens/mint_screen.dart';
 import 'package:easel_flutter/screens/price_screen.dart';
-import 'package:easel_flutter/screens/published_screen.dart';
-import 'package:easel_flutter/services/datasources/local_datasource.dart';
-import 'package:easel_flutter/services/datasources/remote_datasource.dart';
-import 'package:easel_flutter/utils/constants.dart';
-import 'package:easel_flutter/screens/publish_screen.dart';
 import 'package:easel_flutter/utils/easel_app_theme.dart';
-import 'package:easel_flutter/utils/route_util.dart';
-import 'package:easel_flutter/utils/enums.dart';
 import 'package:easel_flutter/utils/screen_responsive.dart';
 import 'package:easel_flutter/utils/space_utils.dart';
 import 'package:easel_flutter/viewmodels/home_viewmodel.dart';
-import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get_it/get_it.dart';
-import 'package:provider/provider.dart';
 import 'package:provider/provider.dart';
 
 import 'choose_format_screen.dart';
@@ -74,7 +63,8 @@ class _HomeScreenState extends State<HomeScreen> {
     return WillPopScope(
       onWillPop: () async {
         GetIt.I.get<CreatorHubViewModel>().getDraftsList();
-        return true;
+        Navigator.of(context).pop();
+        return false;
       },
       child: Container(
         color: EaselAppTheme.kWhite,

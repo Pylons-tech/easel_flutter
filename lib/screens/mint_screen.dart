@@ -1,9 +1,7 @@
 import 'package:easel_flutter/easel_provider.dart';
-import 'package:easel_flutter/models/nft.dart';
 import 'package:easel_flutter/utils/constants.dart';
 import 'package:easel_flutter/utils/date_utils.dart';
 import 'package:easel_flutter/utils/easel_app_theme.dart';
-import 'package:easel_flutter/utils/route_util.dart';
 import 'package:easel_flutter/utils/space_utils.dart';
 import 'package:easel_flutter/widgets/audio_widget.dart';
 import 'package:easel_flutter/widgets/background_widget.dart';
@@ -11,9 +9,7 @@ import 'package:easel_flutter/widgets/image_widget.dart';
 import 'package:easel_flutter/widgets/model_viewer.dart';
 import 'package:easel_flutter/widgets/pylons_button.dart';
 import 'package:easel_flutter/widgets/video_widget.dart';
-import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
-import 'package:get_it/get_it.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get_it/get_it.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -31,13 +27,12 @@ class MintScreen extends StatefulWidget {
 }
 
 class _MintScreenState extends State<MintScreen> {
-  late NFT nft;
   var repository = GetIt.I.get<Repository>();
   var easelProvider = GetIt.I.get<EaselProvider>();
 
   @override
   initState() {
-    easelProvider.nft = repository.getCacheDynamicType(key: "nft");
+    easelProvider.nft = repository.getCacheDynamicType(key: nftKey);
     super.initState();
   }
 
@@ -149,7 +144,7 @@ class _MintScreenState extends State<MintScreen> {
                         Align(
                           child: PylonsButton(
                             onPressed: () async {
-                              bool isRecipeCreated = await provider.createRecipe(nft);
+                              bool isRecipeCreated = await provider.createRecipe(provider.nft);
                               if (!isRecipeCreated) {
                                 return;
                               }

@@ -1,4 +1,5 @@
 import 'dart:async';
+
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:easel_flutter/models/nft.dart';
 import 'package:easel_flutter/screens/creator_hub/creator_hub_view_model.dart';
@@ -10,6 +11,8 @@ import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:focus_detector/focus_detector.dart';
+import 'package:get_it/get_it.dart';
 import 'package:provider/provider.dart';
 import 'package:shimmer_animation/shimmer_animation.dart';
 
@@ -32,22 +35,25 @@ class _CreatorHubScreenState extends State<CreatorHubScreen> {
     scheduleMicrotask(() {
       creatorHubViewModel.getDraftsList();
     });
-
   }
 
   @override
   Widget build(BuildContext context) {
-      return Container(
-        color: EaselAppTheme.kWhite,
-        child: SafeArea(
-          child: Scaffold(
-            backgroundColor: EaselAppTheme.kBgWhite,
-            body: ChangeNotifierProvider.value(
-              value: creatorHubViewModel,
-              child: const CreatorHubContent(),
-            ),
+    return Container(
+      color: EaselAppTheme.kWhite,
+      child: SafeArea(
+        child: Scaffold(
+          backgroundColor: EaselAppTheme.kBgWhite,
+          body: ChangeNotifierProvider.value(
+            value: creatorHubViewModel,
+            child: FocusDetector(
+                onFocusGained: () {
+                  GetIt.I.get<CreatorHubViewModel>().getDraftsList();
+                },
+                child: const CreatorHubContent()),
           ),
         ),
+      ),
     );
   }
 }

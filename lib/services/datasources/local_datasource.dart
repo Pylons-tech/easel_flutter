@@ -1,4 +1,3 @@
-import 'package:easel_flutter/datasources/database.dart';
 import 'package:easel_flutter/models/nft.dart';
 import 'package:easel_flutter/services/third_party_services/database.dart';
 import 'package:easel_flutter/utils/constants.dart';
@@ -6,8 +5,6 @@ import 'package:easel_flutter/utils/date_utils.dart';
 import 'package:easel_flutter/utils/failure/failure.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-
-import '../../datasources/cache_manager.dart';
 
 import 'cache_manager.dart';
 
@@ -32,9 +29,6 @@ abstract class LocalDataSource {
   /// This method will get the username of the cookbook generator
   /// Output: [String] returns whether the operation is successful or not
   String getCookBookGeneratorUsername();
-
-
-
 
   /// This method will save the artist name
   /// Input: [name] the name of the artist which the user want to save
@@ -206,7 +200,6 @@ class LocalDataSourceImpl implements LocalDataSource {
   @override
   Future<bool> updateNftFromPrice(int id, String tradePercentage, String price, String quantity, String step, String denom, bool isFreeDrop) async {
     try {
-
       await database.nftDao.updateNFTFromPrice(id, tradePercentage, price, quantity, step, denom, isFreeDrop);
       return true;
     } catch (e) {
@@ -226,7 +219,6 @@ class LocalDataSourceImpl implements LocalDataSource {
       return true;
     } catch (e) {
       throw CacheFailure("delete_error".tr());
-
     }
   }
 
@@ -263,7 +255,7 @@ class LocalDataSourceImpl implements LocalDataSource {
   @override
   Future<NFT?> getNft(int id) async {
     try {
-      return await  database.nftDao.findNftById(id);
+      return await database.nftDao.findNftById(id);
     } catch (e) {
       return throw "";
     }
