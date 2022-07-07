@@ -66,7 +66,7 @@ class _$AppDatabase extends AppDatabase {
   Future<sqflite.Database> open(String path, List<Migration> migrations,
       [Callback? callback]) async {
     final databaseOptions = sqflite.OpenDatabaseOptions(
-      version: 1,
+      version: 2,
       onConfigure: (database) async {
         await database.execute('PRAGMA foreign_keys = ON');
         await callback?.onConfigure?.call(database);
@@ -82,7 +82,7 @@ class _$AppDatabase extends AppDatabase {
       },
       onCreate: (database, version) async {
         await database.execute(
-            'CREATE TABLE IF NOT EXISTS `NFT` (`id` INTEGER, `url` TEXT NOT NULL, `thumbnailUrl` TEXT NOT NULL, `name` TEXT NOT NULL, `description` TEXT NOT NULL, `denom` TEXT NOT NULL, `price` TEXT NOT NULL, `creator` TEXT NOT NULL, `owner` TEXT NOT NULL, `amountMinted` INTEGER NOT NULL, `quantity` INTEGER NOT NULL, `tradePercentage` TEXT NOT NULL, `cookbookID` TEXT NOT NULL, `recipeID` TEXT NOT NULL, `itemID` TEXT NOT NULL, `width` TEXT NOT NULL, `height` TEXT NOT NULL, `appType` TEXT NOT NULL, `tradeID` TEXT NOT NULL, `ownerAddress` TEXT NOT NULL, `step` TEXT NOT NULL, `ibcCoins` TEXT NOT NULL, `isFreeDrop` INTEGER NOT NULL, `type` TEXT NOT NULL, `assetType` TEXT NOT NULL, `duration` TEXT NOT NULL, `hashtags` TEXT NOT NULL, PRIMARY KEY (`id`))');
+            'CREATE TABLE IF NOT EXISTS `NFT` (`id` INTEGER, `url` TEXT NOT NULL, `thumbnailUrl` TEXT NOT NULL, `name` TEXT NOT NULL, `description` TEXT NOT NULL, `denom` TEXT NOT NULL, `price` TEXT NOT NULL, `creator` TEXT NOT NULL, `owner` TEXT NOT NULL, `amountMinted` INTEGER NOT NULL, `quantity` INTEGER NOT NULL, `tradePercentage` TEXT NOT NULL, `cookbookID` TEXT NOT NULL, `recipeID` TEXT NOT NULL, `itemID` TEXT NOT NULL, `width` TEXT NOT NULL, `height` TEXT NOT NULL, `appType` TEXT NOT NULL, `tradeID` TEXT NOT NULL, `ownerAddress` TEXT NOT NULL, `step` TEXT NOT NULL, `ibcCoins` TEXT NOT NULL, `isFreeDrop` INTEGER NOT NULL, `type` TEXT NOT NULL, `assetType` TEXT NOT NULL, `duration` TEXT NOT NULL, `hashtags` TEXT NOT NULL, `fileName` TEXT NOT NULL, `cid` TEXT NOT NULL, PRIMARY KEY (`id`))');
 
         await callback?.onCreate?.call(database, version);
       },
@@ -129,7 +129,9 @@ class _$NftDao extends NftDao {
                   'type': item.type,
                   'assetType': item.assetType,
                   'duration': item.duration,
-                  'hashtags': item.hashtags
+                  'hashtags': item.hashtags,
+                  'fileName': item.fileName,
+                  'cid': item.cid
                 });
 
   final sqflite.DatabaseExecutor database;
@@ -169,7 +171,9 @@ class _$NftDao extends NftDao {
             assetType: row['assetType'] as String,
             step: row['step'] as String,
             duration: row['duration'] as String,
-            hashtags: row['hashtags'] as String));
+            hashtags: row['hashtags'] as String,
+            fileName: row['fileName'] as String,
+            cid: row['cid'] as String));
   }
 
   @override
@@ -201,7 +205,9 @@ class _$NftDao extends NftDao {
             assetType: row['assetType'] as String,
             step: row['step'] as String,
             duration: row['duration'] as String,
-            hashtags: row['hashtags'] as String),
+            hashtags: row['hashtags'] as String,
+            fileName: row['fileName'] as String,
+            cid: row['cid'] as String),
         arguments: [id]);
   }
 

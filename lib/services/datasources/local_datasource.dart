@@ -1,10 +1,10 @@
-import 'package:easel_flutter/datasources/database.dart';
 import 'package:easel_flutter/models/nft.dart';
+import 'package:easel_flutter/services/third_party_services/database.dart';
 import 'package:easel_flutter/utils/constants.dart';
 import 'package:easel_flutter/utils/date_utils.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-import '../../datasources/cache_manager.dart';
+import 'cache_manager.dart';
 
 abstract class LocalDataSource {
   /// This method will get the already created cookbook from the local database
@@ -27,9 +27,6 @@ abstract class LocalDataSource {
   /// This method will get the username of the cookbook generator
   /// Output: [String] returns whether the operation is successful or not
   String getCookBookGeneratorUsername();
-
-
-
 
   /// This method will save the artist name
   /// Input: [name] the name of the artist which the user want to save
@@ -184,7 +181,7 @@ class LocalDataSourceImpl implements LocalDataSource {
       final result = await database.nftDao.insertNft(draft);
       return result;
     } catch (e) {
-      throw "";
+      throw "save_error".tr();
     }
   }
 
@@ -194,7 +191,7 @@ class LocalDataSourceImpl implements LocalDataSource {
       await database.nftDao.updateNFTFromDescription(id, nftName, nftDescription, creatorName, step);
       return true;
     } catch (e) {
-      return throw "";
+      return throw "save_error".tr();
     }
   }
 
@@ -204,7 +201,7 @@ class LocalDataSourceImpl implements LocalDataSource {
       await database.nftDao.updateNFTFromPrice(id, tradePercentage, price, quantity, step, denom, isFreeDrop);
       return true;
     } catch (e) {
-      return throw "";
+      throw CacheFailure("save_error".tr());
     }
   }
 
@@ -217,10 +214,9 @@ class LocalDataSourceImpl implements LocalDataSource {
   Future<bool> deleteNft(int id) async {
     try {
       await database.nftDao.delete(id);
-
       return true;
     } catch (e) {
-      return throw "";
+      throw CacheFailure("delete_error".tr());
     }
   }
 
@@ -257,7 +253,7 @@ class LocalDataSourceImpl implements LocalDataSource {
   @override
   Future<NFT?> getNft(int id) async {
     try {
-      return await  database.nftDao.findNftById(id);
+      return await database.nftDao.findNftById(id);
     } catch (e) {
       return throw "";
     }

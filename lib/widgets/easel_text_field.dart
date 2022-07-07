@@ -61,10 +61,7 @@ class EaselTextField extends StatelessWidget {
               child: Align(
                 alignment: Alignment.center,
                 child: TextFormField(
-                  style: TextStyle(
-                      fontSize: noOfLines == 1 ? 18.sp : 15.sp,
-                      fontWeight: FontWeight.w400,
-                      color: EaselAppTheme.kDarkText),
+                  style: TextStyle(fontSize: noOfLines == 1 ? 18.sp : 15.sp, fontWeight: FontWeight.w400, color: EaselAppTheme.kDarkText),
                   controller: controller,
                   validator: validator,
                   minLines: noOfLines,

@@ -1,3 +1,4 @@
+import 'package:easel_flutter/main.dart';
 import 'package:easel_flutter/models/nft.dart';
 import 'package:easel_flutter/utils/constants.dart';
 import 'package:easel_flutter/utils/enums.dart';
@@ -24,6 +25,10 @@ extension ScaffoldHelper on BuildContext? {
         duration: const Duration(seconds: 2),
       ));
   }
+}
+
+extension MyBuildContext on GlobalKey<NavigatorState> {
+  BuildContext getContext() => navigatorKey.currentState!.overlay!.context;
 }
 
 extension NavigatorKey on GlobalKey {

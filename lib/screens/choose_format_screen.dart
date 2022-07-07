@@ -164,7 +164,7 @@ class _CardWidget extends StatelessWidget {
                   Column(
                     children: [
                       Text(
-                        NftFormat.supportedFormats[typeIdx].format,
+                        NftFormat.supportedFormats[typeIdx].format.getTitle(),
                         style: Theme.of(context).textTheme.bodyText1!.copyWith(color: EaselAppTheme.kWhite, fontSize: 18.sp, fontWeight: FontWeight.w600),
                       ),
                       SizedBox(height: 3.h),

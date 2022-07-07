@@ -154,6 +154,10 @@ const kEditNFTText = 'Edit your NFT Details';
 const kPreviewYourNFTText = 'Preview your NFT file';
 const kListNftText = 'List NFT';
 const kPublishNftText = 'Publish NFT';
+
+const kSelectNFTText = 'Select NFT file';
+const kDetailNftText = 'NFT Details';
+const kPriceNftText = 'NFT Pricing';
 const kUploadText = 'Upload';
 const kEditText = 'Edit';
 const kPreviewText = 'Preview';
@@ -183,7 +187,6 @@ const kHintArtistName = 'Sarah Jackson';
 const kHintNftDesc = 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eimod tempor incididunt ut labore et dolore magna aliquaQ. Ut enim ad minim veniam, quis nostrud exercita.';
 const kHintNoEdition = '100';
 const kHintPrice = '10.87';
-const kErrAddAudioThumbnail = "Error while uploading thumbnail";
 const kHintHashtag = 'Type in';
 const kHashtagsText = 'Hashtags (optional)';
 const kAddText = 'Add';
@@ -206,7 +209,6 @@ const kCancel = "Cancel";
 const String videoPlayerNetworkError = 'Unable to play the video right now. Please check your internet connection and try again.';
 const kChooseFifteenSecondsOfAudio = "Choose 15s highlight of your audio for preview";
 const kUploadingThumbnailMessage = "Uploading Thumbnail";
-
 const videoPlayerError = "Some Error Occurred while playing the video. Please try again later.";
 const kCannotLaunchThisUrl = "Cannot launch this URL";
 
@@ -273,6 +275,10 @@ const String kEthereumSymbol = "weth-wei";
 const String kDefault = 'Default';
 
 const String kMyEaselNFT = 'My Easel NFT';
+const String fromKey = 'from';
+const String nftKey = 'nft';
+const String kErrAddAudioThumbnail = 'Error while uploading thumbnail';
+const String uploadYourThumbnail = 'Kindly upload thumbnail';
 
 /// Supported Formats
 
@@ -281,5 +287,4 @@ const ogg = "ogg";
 const wav = "wav";
 const aac = "aac";
 
-
-
+const kDraft = "draft";

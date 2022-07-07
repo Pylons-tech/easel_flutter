@@ -27,7 +27,7 @@ class PriceScreen extends StatefulWidget {
 
 class _PriceScreenState extends State<PriceScreen> {
   final _formKey = GlobalKey<FormState>();
-  var cacheManager = GetIt.I.get<Repository>();
+  var repository = GetIt.I.get<Repository>();
   NFT? nft;
   String _royaltiesFieldError = '';
   String _noOfEditionsFieldError = '';
@@ -41,7 +41,7 @@ class _PriceScreenState extends State<PriceScreen> {
 
   @override
   void initState() {
-    nft = cacheManager.getCacheDynamicType(key: "nft");
+    nft = repository.getCacheDynamicType(key: nftKey);
     super.initState();
   }
 
@@ -246,7 +246,7 @@ class _PriceScreenState extends State<PriceScreen> {
                     onPressed: () async {
                       FocusScope.of(context).unfocus();
                       if (_formKey.currentState!.validate()) {
-                        if (_royaltiesFieldError.isEmpty && _noOfEditionsFieldError.isEmpty && _priceFieldError.isEmpty) {
+                        if (checkTextFields()) {
                           context.read<EaselProvider>().updateNftFromPrice(nft!.id!);
                           widget.controller.nextPage(duration: const Duration(milliseconds: 300), curve: Curves.easeIn);
                         }
@@ -264,5 +264,13 @@ class _PriceScreenState extends State<PriceScreen> {
         }),
       ),
     );
+  }
+
+  bool checkTextFields() {
+    if (_royaltiesFieldError.isEmpty && _noOfEditionsFieldError.isEmpty && _priceFieldError.isEmpty) {
+      return true;
+    } else {
+      return false;
+    }
   }
 }

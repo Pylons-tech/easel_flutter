@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:easel_flutter/main.dart';
 import 'package:easel_flutter/models/nft.dart';
@@ -13,8 +14,12 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get_it/get_it.dart';
+import 'package:focus_detector/focus_detector.dart';
+import 'package:get_it/get_it.dart';
 import 'package:provider/provider.dart';
 import 'package:shimmer_animation/shimmer_animation.dart';
+import 'package:shimmer_animation/shimmer_animation.dart';
+
 import '../../utils/dependency_injection/dependency_injection_container.dart';
 
 class CreatorHubScreen extends StatefulWidget {
@@ -25,7 +30,46 @@ class CreatorHubScreen extends StatefulWidget {
 }
 
 class _CreatorHubScreenState extends State<CreatorHubScreen> {
+  CreatorHubViewModel get creatorHubViewModel => sl();
+
   @override
+  void initState() {
+    super.initState();
+
+    scheduleMicrotask(() {
+      creatorHubViewModel.getPublishAndDraftData();
+    });
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      color: EaselAppTheme.kWhite,
+      child: SafeArea(
+        child: Scaffold(
+          backgroundColor: EaselAppTheme.kBgWhite,
+          body: ChangeNotifierProvider.value(
+            value: creatorHubViewModel,
+            child: FocusDetector(
+                onFocusGained: () {
+                  GetIt.I.get<CreatorHubViewModel>().getDraftsList();
+                },
+                child: const CreatorHubContent()),
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+class CreatorHubContent extends StatefulWidget {
+  const CreatorHubContent({Key? key}) : super(key: key);
+
+  @override
+  State<CreatorHubContent> createState() => _CreatorHubContentState();
+}
+
+class _CreatorHubContentState extends State<CreatorHubContent> {
   TextStyle titleStyle = TextStyle(
     fontSize:  18.sp,
     fontWeight: FontWeight.w800,
@@ -40,15 +84,8 @@ class _CreatorHubScreenState extends State<CreatorHubScreen> {
   );
 
   @override
-  initState() {
-    WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
-      GetIt.I.get<CreatorHubViewModel>().getPublishAndDraftData();
-    });
-    super.initState();
-  }
-
-  @override
   Widget build(BuildContext context) {
+
     return Consumer(builder: (context, CreatorHubViewModel viewModel, child) {
       return Container(
           color: EaselAppTheme.kWhite,

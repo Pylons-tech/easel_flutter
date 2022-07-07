@@ -1,6 +1,7 @@
 import 'package:easel_flutter/main.dart';
 import 'package:easel_flutter/models/nft.dart';
 import 'package:easel_flutter/repository/repository.dart';
+import 'package:easel_flutter/utils/constants.dart';
 import 'package:easel_flutter/utils/extension_util.dart';
 import 'package:easel_flutter/widgets/loading.dart';
 import 'package:easy_localization/easy_localization.dart';
@@ -10,6 +11,8 @@ class CreatorHubViewModel extends ChangeNotifier {
   final Repository repository;
 
   CreatorHubViewModel(this.repository);
+
+  List<NFT> nftList = [];
 
   int _publishedRecipesLength = 0;
   int forSaleCount = 0;
@@ -58,7 +61,6 @@ class CreatorHubViewModel extends ChangeNotifier {
   }
 
   Future<void> getPublishAndDraftData() async {
-
     await getRecipesList();
     await getDraftsList();
 
@@ -67,7 +69,6 @@ class CreatorHubViewModel extends ChangeNotifier {
   }
 
   Future<void> getRecipesList() async {
-
     final cookBookId = getCookbookIdFromLocalDatasource();
     if (cookBookId == null) {
       return;
@@ -102,7 +103,7 @@ class CreatorHubViewModel extends ChangeNotifier {
     if (getNftResponse.isLeft()) {
       loading.dismiss();
 
-      navigatorKey.currentState!.overlay!.context.show(message: "something_wrong".tr());
+      navigatorKey.getContext().show(message: "something_wrong".tr());
 
       return;
     }
@@ -118,16 +119,16 @@ class CreatorHubViewModel extends ChangeNotifier {
     final deleteNftResponse = await repository.deleteNft(id!);
 
     if (deleteNftResponse.isLeft()) {
-      navigatorKey.currentState!.overlay!.context.show(message: "delete_error".tr());
+      navigatorKey.getContext().show(message: "delete_error".tr());
       return;
     }
-      nftList.removeWhere((element) => element.id == id);
-      notifyListeners();
+    nftList.removeWhere((element) => element.id == id);
+    notifyListeners();
   }
 
-  void onPublishPressed(NFT nft){
+  void saveNFT({required NFT nft}) {
     repository.setCacheDynamicType(key: "nft", value: nft);
-    repository.setCacheString(key: "from", value: "draft");
-
+    repository.setCacheString(key: "from", value: kDraft);
   }
+
 }
