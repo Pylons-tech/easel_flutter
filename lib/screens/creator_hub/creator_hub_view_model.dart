@@ -82,12 +82,13 @@ class CreatorHubViewModel extends ChangeNotifier {
 
     final recipesList = recipesListEither.getOrElse(() => []);
     _publishedNFTsList.clear();
-    if (recipesList.isNotEmpty) {
+    if(recipesList.isEmpty){
+      return ;
+    }
       for (final recipe in recipesList) {
         final nft = NFT.fromRecipe(recipe);
 
         _publishedNFTsList.add(nft);
-      }
     }
 
     publishedRecipeLength = publishedNFTsList.length;
