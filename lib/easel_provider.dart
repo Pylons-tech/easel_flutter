@@ -505,7 +505,7 @@ class EaselProvider extends ChangeNotifier {
 
     String residual = DecString.decStringFromDouble(double.parse(royaltyController.text.trim()));
 
-    String price = isFreeDrop ? "0" : (double.parse(priceController.text.replaceAll(",", "").trim()) * 1000000).toStringAsFixed(0);
+    String price = isFreeDrop ? "0" : _selectedDenom.formatAmount(price: priceController.text);
     var recipe = Recipe(
         cookbookId: _cookbookId,
         id: _recipeId,
@@ -754,8 +754,8 @@ class EaselProvider extends ChangeNotifier {
       final loading = Loading().showLoading(message: kUploadingMessage);
 
       initilizeTextEditingControllerWithEmptyValues();
-      if (nftFormat.format == kAudioText || nftFormat.format == kVideoText) {
-        final uploadResponse = await repository.uploadFile(nftFormat.format == kAudioText ? audioThumbnail! : videoThumbnail!);
+      if (nftFormat.format == NFTTypes.audio || nftFormat.format == NFTTypes.video) {
+        final uploadResponse = await repository.uploadFile(nftFormat.format == NFTTypes.audio ? audioThumbnail! : videoThumbnail!);
         if (uploadResponse.isLeft()) {
           loading.dismiss();
           return false;
