@@ -1,4 +1,3 @@
-
 import 'package:easel_flutter/models/nft.dart';
 import 'package:easel_flutter/screens/creator_hub/creator_hub_view_model.dart';
 import 'package:easel_flutter/utils/constants.dart';
@@ -10,13 +9,13 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:provider/provider.dart';
+
 import '../../../widgets/clippers/bottom_sheet_clipper.dart';
 import '../creator_hub_view_model.dart';
 
 class DraftsBottomSheet {
   final BuildContext buildContext;
   final NFT nft;
-
 
   CreatorHubViewModel get creatorHubViewModel => sl();
 
@@ -42,7 +41,6 @@ class DraftsMoreBottomSheet extends StatelessWidget {
 
   final NFT nft;
 
-
   @override
   Widget build(BuildContext context) {
     final viewModel = context.watch<CreatorHubViewModel>();
@@ -57,7 +55,6 @@ class DraftsMoreBottomSheet extends StatelessWidget {
                 title: "publish",
                 svg: kSvgPublish,
                 onPressed: () {
-
                   viewModel.saveNFT(nft: nft);
                   Navigator.of(context).pop();
                   Navigator.of(context).pushNamed(RouteUtil.ROUTE_HOME);

@@ -1,5 +1,4 @@
 import 'package:easel_flutter/easel_provider.dart';
-import 'package:easel_flutter/models/nft.dart';
 import 'package:easel_flutter/utils/constants.dart';
 import 'package:easel_flutter/utils/date_utils.dart';
 import 'package:easel_flutter/utils/easel_app_theme.dart';
@@ -28,13 +27,12 @@ class MintScreen extends StatefulWidget {
 }
 
 class _MintScreenState extends State<MintScreen> {
-  late NFT nft;
   var repository = GetIt.I.get<Repository>();
   var easelProvider = GetIt.I.get<EaselProvider>();
 
   @override
   initState() {
-    easelProvider.nft = repository.getCacheDynamicType(key: "nft");
+    easelProvider.nft = repository.getCacheDynamicType(key: nftKey);
     super.initState();
   }
 
@@ -146,11 +144,12 @@ class _MintScreenState extends State<MintScreen> {
                         Align(
                           child: PylonsButton(
                             onPressed: () async {
-                              bool isRecipeCreated = await provider.createRecipe();
+                              bool isRecipeCreated = await provider.createRecipe(provider.nft);
                               if (!isRecipeCreated) {
                                 return;
                               }
                               provider.disposeAudioController();
+                              Navigator.of(context).pop();
                             },
                             btnText: kListText,
                             showArrow: true,

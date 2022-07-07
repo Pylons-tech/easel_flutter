@@ -1,8 +1,9 @@
 import 'dart:core';
+
+import "package:collection/collection.dart";
 import 'package:easel_flutter/utils/constants.dart';
 import 'package:easel_flutter/utils/extension_util.dart';
 import 'package:equatable/equatable.dart';
-import "package:collection/collection.dart";
 import 'package:floor/floor.dart';
 import 'package:pylons_sdk/pylons_sdk.dart';
 
@@ -33,6 +34,8 @@ class NFT extends Equatable {
   String ownerAddress = "";
   String step = "";
   String ibcCoins = IBCCoins.upylon.name;
+  bool isFreeDrop = false;
+
   String type = NftType.TYPE_ITEM.name;
   String assetType = AssetType.Image.name;
   String duration = "";
@@ -40,35 +43,35 @@ class NFT extends Equatable {
   String fileName = "";
   String cid = "";
 
-  NFT({
-    this.id,
-    this.url = "",
-    this.thumbnailUrl = "",
-    this.name = "",
-    this.description = "",
-    this.denom = "",
-    this.price = "0",
-    this.type = "",
-    this.creator = "",
-    this.itemID = "",
-    this.cookbookID = "",
-    this.recipeID = "",
-    this.owner = "",
-    this.width = "",
-    this.height = "",
-    this.tradePercentage = "0",
-    this.amountMinted = 0,
-    this.quantity = 0,
-    this.appType = "",
-    required this.ibcCoins,
-    this.tradeID = "",
-    required this.assetType,
-    required this.step,
-    this.duration = "",
-    this.hashtags = "",
-    this.fileName = "",
-    this.cid = ""
-  });
+  NFT(
+      {this.id,
+      this.url = "",
+      this.thumbnailUrl = "",
+      this.name = "",
+      this.description = "",
+      this.denom = "",
+      this.price = "0",
+      this.type = "",
+      this.creator = "",
+      this.itemID = "",
+      this.cookbookID = "",
+      this.recipeID = "",
+      this.owner = "",
+      this.width = "",
+      this.isFreeDrop = false,
+      this.height = "",
+      this.tradePercentage = "0",
+      this.amountMinted = 0,
+      this.quantity = 0,
+      this.appType = "",
+      required this.ibcCoins,
+      this.tradeID = "",
+      required this.assetType,
+      required this.step,
+      this.duration = "",
+      this.hashtags = "",
+      this.fileName = "",
+      this.cid = ""});
 
   factory NFT.fromRecipe(Recipe recipe) {
     final royalties = recipe.entries.itemOutputs.firstOrNull?.tradePercentage.fromBigInt().toInt().toString();
@@ -96,6 +99,7 @@ class NFT extends Equatable {
           recipe.entries.itemOutputs.firstOrNull?.longs.firstWhere((longKeyValue) => longKeyValue.key == kDuration, orElse: () => LongParam()).weightRanges.firstOrNull?.upper.toInt().toSeconds() ??
               "0",
       step: "",
+      isFreeDrop: false,
       hashtags: recipe.entries.itemOutputs.firstOrNull?.strings.firstWhere((strKeyValue) => strKeyValue.key == kHashtags, orElse: () => StringParam()).value ?? "",
     );
   }

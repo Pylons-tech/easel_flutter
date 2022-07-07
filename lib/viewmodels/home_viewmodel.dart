@@ -1,4 +1,3 @@
-import 'package:easel_flutter/easel_provider.dart';
 import 'package:easel_flutter/models/nft.dart';
 import 'package:easel_flutter/repository/repository.dart';
 import 'package:easel_flutter/utils/constants.dart';

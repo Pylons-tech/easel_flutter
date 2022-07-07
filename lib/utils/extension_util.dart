@@ -1,3 +1,4 @@
+import 'package:easel_flutter/main.dart';
 import 'package:easel_flutter/models/nft.dart';
 import 'package:easel_flutter/utils/constants.dart';
 import 'package:easel_flutter/utils/enums.dart';
@@ -28,7 +29,6 @@ extension ScaffoldHelper on BuildContext? {
 
 extension NavigatorKey on GlobalKey {
   void showMsg({required String message}) {
-
     ScaffoldMessenger.maybeOf(currentState!.context)
       ?..hideCurrentSnackBar()
       ..showSnackBar(SnackBar(
@@ -52,7 +52,6 @@ extension ValueConverter on String {
     return BigInt.parse(this).toDouble() / kPrecision;
   }
 }
-
 
 extension IBCCoinsPar on String {
   IBCCoins toIBCCoinsEnum() {
@@ -91,5 +90,18 @@ extension NFTValue on NFT {
       return "0";
     }
     return recipe.coinInputs.first.coins.first.amount;
+  }
+}
+
+extension MyStringSnackBar on String {
+  void show({BuildContext? context}) {
+    ScaffoldMessenger.of(context ?? navigatorKey.currentState!.overlay!.context).showSnackBar(
+      SnackBar(
+        content: Text(
+          this,
+        ),
+        duration: const Duration(seconds: 3),
+      ),
+    );
   }
 }

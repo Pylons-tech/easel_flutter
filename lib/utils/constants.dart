@@ -153,7 +153,6 @@ const kUploadNFTText = 'Upload NFT file';
 const kEditNFTText = 'Edit your NFT Details';
 const kPreviewYourNFTText = 'Preview your NFT file';
 const kListNftText = 'List NFT';
-
 const kPublishNftText = 'Publish NFT';
 
 const kSelectNFTText = 'Select NFT file';
@@ -289,3 +288,12 @@ const wav = "wav";
 const aac = "aac";
 
 const kDraft = "draft";
+const kVersion = "v0.1.0";
+
+
+
+const supportedEmail = "support@pylons.tech";
+const cookbookDesc = "Cookbook for Easel NFT";
+const cookbookName = "Easel Cookbook";
+const kVersionCookboox = "v0.0.1";
+

@@ -60,7 +60,7 @@ class _PreviewScreenState extends State<PreviewScreen> {
               child: Align(
                 alignment: Alignment.bottomRight,
                 child: PylonsButton(
-                    onPressed: ()  {
+                    onPressed: () {
                       onUploadPressed();
                     },
                     btnText: "upload".tr(),
@@ -76,8 +76,6 @@ class _PreviewScreenState extends State<PreviewScreen> {
 
   Widget buildPreviewWidget(EaselProvider provider) {
     switch (provider.nftFormat.format) {
-
-
       case NFTTypes.image:
         return ImageWidget(file: provider.file!);
       case NFTTypes.video:
@@ -96,17 +94,12 @@ class _PreviewScreenState extends State<PreviewScreen> {
   }
 
   void onUploadPressed() async {
-
     final provider = context.read<EaselProvider>();
 
-
-    switch(provider.nftFormat.format){
-
+    switch (provider.nftFormat.format) {
       case NFTTypes.image:
         await provider.saveNftLocally(UploadStep.assetUploaded);
 
-        widget.controller.nextPage(duration: const Duration(milliseconds: 10), curve: Curves.easeIn);
-        Navigator.of(context).pop();
         break;
       case NFTTypes.video:
         if (provider.videoThumbnail == null) {
@@ -114,8 +107,6 @@ class _PreviewScreenState extends State<PreviewScreen> {
           return;
         } else {
           await provider.saveNftLocally(UploadStep.assetUploaded);
-          widget.controller.nextPage(duration: const Duration(milliseconds: 10), curve: Curves.easeIn);
-          Navigator.of(context).pop();
         }
         break;
       case NFTTypes.audio:
@@ -124,21 +115,11 @@ class _PreviewScreenState extends State<PreviewScreen> {
           return;
         } else {
           await provider.saveNftLocally(UploadStep.assetUploaded);
-          widget.controller.nextPage(duration: const Duration(milliseconds: 10), curve: Curves.easeIn);
-          Navigator.of(context).pop();
         }
         break;
       case NFTTypes.threeD:
         await provider.saveNftLocally(UploadStep.assetUploaded);
-
-        widget.controller.nextPage(duration: const Duration(milliseconds: 10), curve: Curves.easeIn);
-        Navigator.of(context).pop();
         break;
     }
-
-
-
-
-
   }
 }

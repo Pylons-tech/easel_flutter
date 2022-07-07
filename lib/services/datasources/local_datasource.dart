@@ -56,6 +56,10 @@ abstract class LocalDataSource {
   /// Output: [List][NFT] returns  the List of drafts
   Future<List<NFT>> getNfts();
 
+  /// This method will get the drafts List from the local database
+  /// Output: [List][NFT] returns  the List of drafts
+  Future<NFT?> getNft(int id);
+
   /// This method will update draft in the local database from description Page
   /// Input: [id] the id of the nft,
   /// [String] the  name of the nft , [String] the  description of the nft
@@ -68,7 +72,7 @@ abstract class LocalDataSource {
   /// [String] the  tradePercentage of the nft , [String] the  price of the nft
   /// [String] the  quantity of the nft , [String] the page name of the Pageview
   /// Output: [bool] returns whether the operation is successful or not
-  Future<bool> updateNftFromPrice(int id, String tradePercentage, String price, String quantity, String step, String name);
+  Future<bool> updateNftFromPrice(int id, String tradePercentage, String price, String quantity, String step, String name, bool isFreeDrop);
 
   /// This method will delete draft from the local database
   /// Input: [id] the id of the draft which the user wants to delete
@@ -194,9 +198,9 @@ class LocalDataSourceImpl implements LocalDataSource {
   }
 
   @override
-  Future<bool> updateNftFromPrice(int id, String tradePercentage, String price, String quantity, String step, String denom) async {
+  Future<bool> updateNftFromPrice(int id, String tradePercentage, String price, String quantity, String step, String denom, bool isFreeDrop) async {
     try {
-      await database.nftDao.updateNFTFromPrice(id, tradePercentage, price, quantity, step, denom);
+      await database.nftDao.updateNFTFromPrice(id, tradePercentage, price, quantity, step, denom, isFreeDrop);
       return true;
     } catch (e) {
       throw CacheFailure("save_error".tr());
@@ -215,7 +219,6 @@ class LocalDataSourceImpl implements LocalDataSource {
       return true;
     } catch (e) {
       throw CacheFailure("delete_error".tr());
-
     }
   }
 
@@ -247,5 +250,14 @@ class LocalDataSourceImpl implements LocalDataSource {
   @override
   deleteCacheDynamic({required String key}) {
     cacheManager.deleteCacheDynamic(key: key);
+  }
+
+  @override
+  Future<NFT?> getNft(int id) async {
+    try {
+      return await database.nftDao.findNftById(id);
+    } catch (e) {
+      throw CacheFailure("get_error".tr());
+    }
   }
 }
