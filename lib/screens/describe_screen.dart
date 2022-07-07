@@ -43,7 +43,7 @@ class _DescribeScreenState extends State<DescribeScreen> {
     super.initState();
 
     WidgetsBinding.instance.addPostFrameCallback((_) async {
-      provider.nft = repository.getCacheDynamicType(key: "nft");
+      provider.nft = repository.getCacheDynamicType(key: nftKey);
       provider.toCheckSavedArtistName();
       DraftDetailDialog(context: context).show();
     });

@@ -827,7 +827,7 @@ class EaselProvider extends ChangeNotifier {
         nodeVersion: Int64(1),
         name: nft.name.trim(),
         description: nft.description.trim(),
-        version: "v0.1.0",
+        version: kVersion,
         coinInputs: [
           nft.isFreeDrop ? CoinInput() : CoinInput(coins: [Coin(amount: price, denom: nft.denom)])
         ],
