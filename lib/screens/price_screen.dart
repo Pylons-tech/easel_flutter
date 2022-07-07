@@ -1,11 +1,11 @@
 import 'package:easel_flutter/easel_provider.dart';
 import 'package:easel_flutter/models/nft.dart';
 import 'package:easel_flutter/repository/repository.dart';
-import 'package:easel_flutter/widgets/clipped_button.dart';
 import 'package:easel_flutter/utils/amount_formatter.dart';
 import 'package:easel_flutter/utils/constants.dart';
 import 'package:easel_flutter/utils/easel_app_theme.dart';
 import 'package:easel_flutter/utils/space_utils.dart';
+import 'package:easel_flutter/widgets/clipped_button.dart';
 import 'package:easel_flutter/widgets/easel_price_input_field.dart';
 import 'package:easel_flutter/widgets/easel_text_field.dart';
 import 'package:easy_localization/easy_localization.dart';
@@ -14,6 +14,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get_it/get_it.dart';
 import 'package:provider/provider.dart';
+
 import '../widgets/pylons_button.dart';
 
 class PriceScreen extends StatefulWidget {
@@ -27,7 +28,7 @@ class PriceScreen extends StatefulWidget {
 
 class _PriceScreenState extends State<PriceScreen> {
   final _formKey = GlobalKey<FormState>();
-  var cacheManager = GetIt.I.get<Repository>();
+  var repository = GetIt.I.get<Repository>();
   NFT? nft;
   String _royaltiesFieldError = '';
   String _noOfEditionsFieldError = '';
@@ -41,7 +42,7 @@ class _PriceScreenState extends State<PriceScreen> {
 
   @override
   void initState() {
-    nft = cacheManager.getCacheDynamicType(key: "nft");
+    nft = repository.getCacheDynamicType(key: nftKey);
     super.initState();
   }
 
@@ -246,8 +247,8 @@ class _PriceScreenState extends State<PriceScreen> {
                     onPressed: () async {
                       FocusScope.of(context).unfocus();
                       if (_formKey.currentState!.validate()) {
-                        if (_royaltiesFieldError.isEmpty && _noOfEditionsFieldError.isEmpty && _priceFieldError.isEmpty) {
-                          context.read<EaselProvider>().updateNftFromPrice(nft?.id);
+                        if (checkTextFields()) {
+                          context.read<EaselProvider>().updateNftFromPrice(nft!.id!);
                           widget.controller.nextPage(duration: const Duration(milliseconds: 300), curve: Curves.easeIn);
                         }
                       }
@@ -265,4 +266,6 @@ class _PriceScreenState extends State<PriceScreen> {
       ),
     );
   }
+
+  bool checkTextFields() => _royaltiesFieldError.isEmpty && _noOfEditionsFieldError.isEmpty && _priceFieldError.isEmpty;
 }

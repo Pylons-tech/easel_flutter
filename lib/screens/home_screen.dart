@@ -4,12 +4,12 @@ import 'package:easel_flutter/screens/creator_hub/creator_hub_view_model.dart';
 import 'package:easel_flutter/screens/custom_widgets/step_labels.dart';
 import 'package:easel_flutter/screens/custom_widgets/steps_indicator.dart';
 import 'package:easel_flutter/screens/describe_screen.dart';
-import 'package:easel_flutter/screens/home_view_model/home_view_model.dart';
 import 'package:easel_flutter/screens/mint_screen.dart';
 import 'package:easel_flutter/screens/price_screen.dart';
 import 'package:easel_flutter/utils/easel_app_theme.dart';
 import 'package:easel_flutter/utils/screen_responsive.dart';
 import 'package:easel_flutter/utils/space_utils.dart';
+import 'package:easel_flutter/viewmodels/home_viewmodel.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get_it/get_it.dart';
@@ -47,7 +47,11 @@ class _HomeScreenState extends State<HomeScreen> {
       setTextField: () {
         easelProvider.setTextFieldValuesDescription(artName: homeViewModel.nft?.name, description: homeViewModel.nft?.description);
         easelProvider.setTextFieldValuesPrice(
-            royalties: homeViewModel.nft?.tradePercentage, price: homeViewModel.nft?.price, edition: homeViewModel.nft?.quantity.toString(), denom: homeViewModel.nft?.denom);
+            royalties: homeViewModel.nft?.tradePercentage,
+            price: homeViewModel.nft?.price,
+            edition: homeViewModel.nft?.quantity.toString(),
+            denom: homeViewModel.nft?.denom,
+            freeDrop: homeViewModel.nft!.isFreeDrop);
       },
     );
   }
@@ -63,7 +67,8 @@ class _HomeScreenState extends State<HomeScreen> {
     return WillPopScope(
       onWillPop: () async {
         GetIt.I.get<CreatorHubViewModel>().getDraftsList();
-        return true;
+        Navigator.of(context).pop();
+        return false;
       },
       child: Container(
         color: EaselAppTheme.kWhite,

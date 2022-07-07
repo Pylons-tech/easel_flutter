@@ -10,6 +10,7 @@
   "view": "View On IPFS",
   "delete_error": "Failed to delete draft",
   "save_error": "Failed to save draft",
+  "get_error": "Failed to get draft",
   "upload": "Upload",
   "upload_to_ipfs": "Upload to IPFS",
   "content_id": "Content ID",
@@ -39,6 +40,5 @@
   "could_not_uploaded": "{} could not be uploaded",
   "something_wrong": "something went wrong",
   "err_add_audio_thumbnail": "Please select audio thumbnail",
-  "err_add_video_thumbnail": "Please select video thumbnail",
-  "delete_error" : "Delete error"
+  "err_add_video_thumbnail": "Please select video thumbnail"
 }

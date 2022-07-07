@@ -1,5 +1,3 @@
-
-import 'package:easel_flutter/main.dart';
 import 'package:easel_flutter/models/nft.dart';
 import 'package:easel_flutter/repository/repository.dart';
 import 'package:easel_flutter/utils/constants.dart';
@@ -38,16 +36,15 @@ class CreatorHubViewModel extends ChangeNotifier {
 
     final getNftResponse = await repository.getNfts();
 
-    if(getNftResponse.isLeft()){
-
+    if (getNftResponse.isLeft()) {
       loading.dismiss();
 
-      navigatorKey.currentState!.overlay!.context.show(message: "something_wrong".tr());
+      "something_wrong".tr().show();
 
       return;
     }
 
-   nftList = getNftResponse.getOrElse(() => []);
+    nftList = getNftResponse.getOrElse(() => []);
 
     loading.dismiss();
 
@@ -58,18 +55,15 @@ class CreatorHubViewModel extends ChangeNotifier {
     final deleteNftResponse = await repository.deleteNft(id!);
 
     if (deleteNftResponse.isLeft()) {
-      navigatorKey.currentState!.overlay!.context.show(message: "delete_error".tr());
+      "delete_error".tr().show();
       return;
     }
-
     nftList.removeWhere((element) => element.id == id);
-
     notifyListeners();
   }
 
   void saveNFT({required NFT nft}) {
-    repository.setCacheDynamicType(key: "nft", value: nft);
-    repository.setCacheString(key: "from", value:kDraft);
-
+    repository.setCacheDynamicType(key: nftKey, value: nft);
+    repository.setCacheString(key: fromKey, value: kDraft);
   }
 }
