@@ -104,7 +104,7 @@ class _CurrencyDropDown extends StatelessWidget {
                         items: provider.supportedDenomList.map((Denom value) {
                           return DropdownMenuItem<String>(
                             value: value.symbol,
-                            child: Row(mainAxisAlignment: MainAxisAlignment.start, children: [Image.asset(value.icon), SizedBox(width: 15.w), Text(value.name)]),
+                            child: Row(mainAxisAlignment: MainAxisAlignment.start, children: [value.getIconWidget(), SizedBox(width: 15.w), Text(value.name)]),
                           );
                         }).toList(),
                       ),

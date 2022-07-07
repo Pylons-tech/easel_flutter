@@ -16,6 +16,7 @@ const kIconDenomAtom = 'assets/images/denom_atom.png';
 const kIconDenomEmoney = 'assets/images/denom_emoney.png';
 const kIconDenomAgoric = 'assets/images/denom_agoric.png';
 const kIconDenomJuno = 'assets/images/denom_juno.png';
+const kIconDenomETH = 'assets/images/denom_eth.png';
 const kTextFieldSingleLine = 'assets/images/text_field_single_line.png';
 const kTextFieldMultiLine = 'assets/images/text_field_multi_line.png';
 const kTextFieldButton = 'assets/images/text_field_button.png';
@@ -65,7 +66,7 @@ const kEaselEmail = "easel@pylons.tech";
 /// ```Number constants
 const kMinNFTName = 9;
 const kMinDescription = 20;
-const kMinValue = 1;
+const kMinValue = 0.01;
 const kMaxDescription = 256;
 const kMaxEdition = 10000;
 const kMinRoyalty = 0;
@@ -80,6 +81,11 @@ const int kFileCompressQuality = 50;
 
 const double kPrecision = 100000000000000000;
 
+const int kBigIntBase = 1000000;
+const int kEthIntBase = 1000000000000000000;
+
+
+
 const suffixes = ["B", "KB", "MB", "GB", "TB"];
 
 /// ````Reserved words, symbols, IDs etc
@@ -93,6 +99,7 @@ const kAtomSymbol = 'uatom';
 const kEuroSymbol = 'eeur';
 const kAgoricSymbol = 'urun';
 const kJunoSymbol = 'ujunox';
+const String kEthereumSymbol = "weth-wei";
 
 const kPylonText = 'Pylon';
 const kUSDText = 'USD';
@@ -100,6 +107,7 @@ const kAtomText = 'Atom';
 const kEurText = 'EEur';
 const kAgoricText = 'Agoric';
 const kJunoText = 'Juno';
+const kEthereum = "Ethereum";
 const kNone = 'None';
 const kPleaseWait = 'Please Wait';
 const kBack = 'Back';
@@ -271,7 +279,7 @@ const String kAgoricAbr = "RUN";
 const String kAtomAbr = "ATOM";
 const String kLunaAbr = "Luna";
 const String kEthereumAbr = "ETH";
-const String kEthereumSymbol = "weth-wei";
+
 const String kDefault = 'Default';
 
 const String kMyEaselNFT = 'My Easel NFT';
