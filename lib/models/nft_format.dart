@@ -31,7 +31,7 @@ class NftFormat {
             color: EaselAppTheme.kLightRed),
         NftFormat(
             format: NFTTypes.video,
-            extensions: ['mp4',  'mov', 'm4v', 'avi'],
+            extensions: ['mp4',  'mov', 'm4v', 'avi', 'hevc'],
             badge: kSvgNftFormatVideo,
             color: EaselAppTheme.kDarkGreen),
         NftFormat(
