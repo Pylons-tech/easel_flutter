@@ -57,7 +57,7 @@ class DraftsMoreBottomSheet extends StatelessWidget {
                 onPressed: () {
                   viewModel.saveNFT(nft: nft);
                   Navigator.of(context).pop();
-                  Navigator.of(context).pushNamed(RouteUtil.ROUTE_HOME);
+                  Navigator.of(context).pushNamed(RouteUtil.kRouteHome);
                 }),
             const Divider(
               color: EaselAppTheme.kGrey,

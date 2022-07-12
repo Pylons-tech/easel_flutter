@@ -59,7 +59,7 @@ class _VideoWidgetState extends State<VideoWidget> {
         clipper: CustomTriangleClipper(),
         child: InkWell(
           onTap: () {
-            Navigator.pushNamed(context, RouteUtil.VIDEO_FULL_SCREEN);
+            Navigator.pushNamed(context, RouteUtil.kVideoFullScreen);
           },
           child: Container(
             width: 30.w,

@@ -32,7 +32,7 @@ class _PreviewNFTFullScreenState extends State<PreviewNFTFullScreen> {
   }
 
   onBackPressed({required BuildContext context}) {
-    if (easelProvider.publishedNFTClicked.assetType == AssetType.Video && easelProvider.videoPlayerController.value.isInitialized) {
+    if (easelProvider.publishedNFTClicked.assetType == AssetType.Video.name && easelProvider.videoPlayerController.value.isInitialized) {
       if (easelProvider.videoPlayerController.value.isPlaying) {
         easelProvider.videoPlayerController.pause();
       }

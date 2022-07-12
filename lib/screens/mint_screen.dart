@@ -1,4 +1,5 @@
 import 'package:easel_flutter/easel_provider.dart';
+import 'package:easel_flutter/models/nft_format.dart';
 import 'package:easel_flutter/utils/constants.dart';
 import 'package:easel_flutter/utils/date_utils.dart';
 import 'package:easel_flutter/utils/easel_app_theme.dart';
@@ -18,9 +19,7 @@ import 'package:provider/provider.dart';
 import '../repository/repository.dart';
 
 class MintScreen extends StatefulWidget {
-  final PageController controller;
-
-  const MintScreen({Key? key, required this.controller}) : super(key: key);
+  const MintScreen({Key? key}) : super(key: key);
 
   @override
   State<MintScreen> createState() => _MintScreenState();
@@ -101,7 +100,7 @@ class _MintScreenState extends State<MintScreen> {
                                 fontSize: 14,
                               ),
                         ),
-                        if (provider.nftFormat.format != kAudioText) ...[
+                        if (provider.nftFormat.format != NFTTypes.audio) ...[
                           Text(
                             "$kSizeText: ${provider.fileWidth} x ${provider.fileHeight}px ${provider.fileExtension.toUpperCase()}",
                             style: Theme.of(context).textTheme.caption!.copyWith(
@@ -109,7 +108,7 @@ class _MintScreenState extends State<MintScreen> {
                                 ),
                           )
                         ],
-                        if (provider.nftFormat.format == kVideoText || provider.nftFormat.format == kAudioText) ...[
+                        if (provider.nftFormat.format == NFTTypes.video || provider.nftFormat.format == NFTTypes.audio) ...[
                           Text(
                             "$kDurationText: ${provider.fileDuration / kSecInMillis} sec",
                             style: Theme.of(context).textTheme.caption!.copyWith(

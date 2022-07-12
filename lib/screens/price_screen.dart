@@ -5,6 +5,7 @@ import 'package:easel_flutter/utils/amount_formatter.dart';
 import 'package:easel_flutter/utils/constants.dart';
 import 'package:easel_flutter/utils/easel_app_theme.dart';
 import 'package:easel_flutter/utils/space_utils.dart';
+import 'package:easel_flutter/viewmodels/home_viewmodel.dart';
 import 'package:easel_flutter/widgets/clipped_button.dart';
 import 'package:easel_flutter/widgets/easel_price_input_field.dart';
 import 'package:easel_flutter/widgets/easel_text_field.dart';
@@ -18,9 +19,8 @@ import 'package:provider/provider.dart';
 import '../widgets/pylons_button.dart';
 
 class PriceScreen extends StatefulWidget {
-  final PageController controller;
 
-  const PriceScreen({Key? key, required this.controller}) : super(key: key);
+  const PriceScreen({Key? key}) : super(key: key);
 
   @override
   State<PriceScreen> createState() => _PriceScreenState();
@@ -208,8 +208,8 @@ class _PriceScreenState extends State<PriceScreen> {
                               _noOfEditionsFieldError = kEnterEditionText;
                               return;
                             }
-                            if (int.parse(value.replaceAll(",", "")) < kMinValue) {
-                              _noOfEditionsFieldError = "$kMinIsText $kMinValue";
+                            if (int.parse(value.replaceAll(",", "")) < kMinEditionValue) {
+                              _noOfEditionsFieldError = "$kMinIsText $kMinEditionValue";
                               return;
                             }
                             if (int.parse(value.replaceAll(",", "")) > kMaxEdition) {
@@ -249,7 +249,7 @@ class _PriceScreenState extends State<PriceScreen> {
                       if (_formKey.currentState!.validate()) {
                         if (checkTextFields()) {
                           context.read<EaselProvider>().updateNftFromPrice(nft!.id!);
-                          widget.controller.nextPage(duration: const Duration(milliseconds: 300), curve: Curves.easeIn);
+                          context.read<HomeViewModel>().pageController.nextPage(duration: const Duration(milliseconds: kPageAnimationTimeInMillis), curve: Curves.easeIn);
                         }
                       }
                     },

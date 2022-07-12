@@ -3,6 +3,7 @@ import 'package:easel_flutter/repository/repository.dart';
 import 'package:easel_flutter/utils/constants.dart';
 import 'package:easel_flutter/utils/easel_app_theme.dart';
 import 'package:easel_flutter/utils/space_utils.dart';
+import 'package:easel_flutter/viewmodels/home_viewmodel.dart';
 import 'package:easel_flutter/widgets/easel_hashtag_input_field.dart';
 import 'package:easel_flutter/widgets/easel_text_field.dart';
 import 'package:flutter/material.dart';
@@ -15,9 +16,7 @@ import '../widgets/pylons_button.dart';
 import 'custom_widgets/initial_draft_detail_dialog.dart';
 
 class DescribeScreen extends StatefulWidget {
-  final PageController controller;
-
-  const DescribeScreen({Key? key, required this.controller}) : super(key: key);
+  const DescribeScreen({Key? key}) : super(key: key);
 
   @override
   State<DescribeScreen> createState() => _DescribeScreenState();
@@ -175,7 +174,8 @@ class _DescribeScreenState extends State<DescribeScreen> {
                             context.read<EaselProvider>().updateNftFromDescription(provider.nft.id!);
 
                             context.read<EaselProvider>().saveArtistName(provider.artistNameController.text.trim());
-                            widget.controller.nextPage(duration: const Duration(milliseconds: 300), curve: Curves.easeIn);
+
+                            context.read<HomeViewModel>().pageController.nextPage(duration: const Duration(milliseconds: kPageAnimationTimeInMillis), curve: Curves.easeIn);
                           }
                         }
                       },

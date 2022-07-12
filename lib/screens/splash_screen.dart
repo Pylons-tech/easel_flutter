@@ -36,10 +36,10 @@ class SplashScreen extends StatelessWidget {
               onPressed: () {
                 var onBoardingComplete = GetIt.I.get<LocalDataSource>().getOnBoardingComplete();
                 if (onBoardingComplete) {
-                  Navigator.of(context).pushNamed(RouteUtil.ROUTE_WELCOME);
+                  Navigator.of(context).pushNamed(RouteUtil.kRouteWelcome);
                   return;
                 }
-                Navigator.of(context).pushNamed(RouteUtil.ROUTE_TUTORIAL);
+                Navigator.of(context).pushNamed(RouteUtil.kRouteTutorial);
               },
               btnText: kGetStarted,
             ),
@@ -81,10 +81,10 @@ class SplashScreen extends StatelessWidget {
               onPressed: () {
                 var onBoardingComplete = GetIt.I.get<LocalDataSource>().getOnBoardingComplete();
                 if (onBoardingComplete) {
-                  Navigator.of(context).pushNamed(RouteUtil.ROUTE_WELCOME);
+                  Navigator.of(context).pushNamed(RouteUtil.kRouteWelcome);
                   return;
                 }
-                Navigator.of(context).pushNamed(RouteUtil.ROUTE_TUTORIAL);
+                Navigator.of(context).pushNamed(RouteUtil.kRouteTutorial);
               },
               btnText: kGetStarted,
             ),

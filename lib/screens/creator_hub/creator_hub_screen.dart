@@ -96,7 +96,7 @@ class _CreatorHubContentState extends State<CreatorHubContent> {
                 child: InkWell(
                   onTap: () {
                     Navigator.of(context).pushNamed(
-                      RouteUtil.ROUTE_HOME,
+                      RouteUtil.kRouteHome,
                     );
                   },
                   child: Icon(

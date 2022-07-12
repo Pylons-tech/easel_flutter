@@ -158,7 +158,7 @@ class _TutorialScreenState extends State<TutorialScreen> {
 
                       GetIt.I.get<LocalDataSource>().saveOnBoardingComplete();
 
-                      Navigator.of(context).pushNamed(RouteUtil.ROUTE_WELCOME);
+                      Navigator.of(context).pushNamed(RouteUtil.kRouteWelcome);
                     },
                     btnText: kContinue,
                     isBlue: false,

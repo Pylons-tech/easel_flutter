@@ -16,9 +16,8 @@ import 'package:provider/provider.dart';
 import '../utils/easel_app_theme.dart';
 
 class PreviewScreen extends StatefulWidget {
-  final PageController controller;
-
-  const PreviewScreen({Key? key, required this.controller}) : super(key: key);
+  final VoidCallback onMoveToNextScreen;
+  const PreviewScreen({Key? key, required this.onMoveToNextScreen}) : super(key: key);
 
   @override
   State<PreviewScreen> createState() => _PreviewScreenState();
@@ -31,7 +30,7 @@ class _PreviewScreenState extends State<PreviewScreen> {
       body: Consumer<EaselProvider>(
         builder: (_, provider, __) => Stack(
           children: [
-            buildPreviewWidget(provider),
+            if (provider.file != null) buildPreviewWidget(provider),
             Image.asset(kPreviewGradient, width: 1.sw, fit: BoxFit.fill),
             Column(children: [
               SizedBox(height: MediaQuery.of(context).viewPadding.top + 20.h),
@@ -98,28 +97,37 @@ class _PreviewScreenState extends State<PreviewScreen> {
 
     switch (provider.nftFormat.format) {
       case NFTTypes.image:
-        await provider.saveNftLocally(UploadStep.assetUploaded);
-
+        saveToUpload();
         break;
       case NFTTypes.video:
         if (provider.videoThumbnail == null) {
           context.show(message: uploadYourThumbnail);
           return;
-        } else {
-          await provider.saveNftLocally(UploadStep.assetUploaded);
         }
+
+        saveToUpload();
+
         break;
       case NFTTypes.audio:
         if (provider.audioThumbnail == null) {
           context.show(message: uploadYourThumbnail);
           return;
-        } else {
-          await provider.saveNftLocally(UploadStep.assetUploaded);
         }
+        saveToUpload();
         break;
       case NFTTypes.threeD:
-        await provider.saveNftLocally(UploadStep.assetUploaded);
+        saveToUpload();
+
         break;
     }
+  }
+
+  void saveToUpload() async {
+    final provider = context.read<EaselProvider>();
+    if (!await provider.saveNftLocally(UploadStep.assetUploaded)) {
+      return;
+    }
+
+    widget.onMoveToNextScreen();
   }
 }

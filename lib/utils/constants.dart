@@ -67,6 +67,7 @@ const kEaselEmail = "easel@pylons.tech";
 const kMinNFTName = 9;
 const kMinDescription = 20;
 const kMinValue = 0.01;
+const kMinEditionValue = 1;
 const kMaxDescription = 256;
 const kMaxEdition = 10000;
 const kMinRoyalty = 0;
@@ -273,7 +274,7 @@ const String kNftFormat = "NFT_Format";
 /// Currency ABRR
 const String kEmoneyAbb = "EEUR";
 const String kAGoricAbb = "run";
-const String kPYLN_ABBREVATION = 'PYLN';
+const String kPYLNAbbrevation = 'PYLN';
 const String kStripeUSD_ABR = 'USD';
 const String kAgoricAbr = "RUN";
 const String kAtomAbr = "ATOM";
@@ -305,3 +306,4 @@ const cookbookDesc = "Cookbook for Easel NFT";
 const cookbookName = "Easel Cookbook";
 const kVersionCookboox = "v0.0.1";
 
+const int  kPageAnimationTimeInMillis= 300;

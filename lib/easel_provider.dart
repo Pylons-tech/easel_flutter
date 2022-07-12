@@ -14,7 +14,6 @@ import 'package:easel_flutter/utils/constants.dart';
 import 'package:easel_flutter/utils/enums.dart';
 import 'package:easel_flutter/utils/extension_util.dart';
 import 'package:easel_flutter/utils/file_utils_helper.dart';
-import 'package:easel_flutter/utils/route_util.dart';
 import 'package:easel_flutter/widgets/loading.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:file_picker/file_picker.dart';
@@ -56,6 +55,7 @@ class EaselProvider extends ChangeNotifier {
   String _recipeId = "";
   var stripeAccountExists = false;
   bool isFreeDrop = false;
+
 
   Denom _selectedDenom = Denom.availableDenoms.first;
   List<Denom> supportedDenomList = [];
@@ -427,14 +427,21 @@ class EaselProvider extends ChangeNotifier {
       return;
     }
 
-    if (_nftFormat.format == kImageText) {
-      _fileWidth = info['width'];
-      _fileHeight = info['height'];
+
+    switch(_nftFormat.format){
+
+      case NFTTypes.image:
+        _fileWidth = info['width'];
+        _fileHeight = info['height'];
+        break;
+      case NFTTypes.video:
+      case NFTTypes.audio:
+        _fileDuration = info['durationMs'];
+        break;
+      case NFTTypes.threeD:
+        break;
     }
 
-    if (_nftFormat.format == kAudioText || _nftFormat.format == kVideoText) {
-      _fileDuration = info['durationMs'];
-    }
   }
 
   void setSelectedDenom(Denom value) {
@@ -578,7 +585,6 @@ class EaselProvider extends ChangeNotifier {
       return false;
     }
   }
-
 
   bool isDifferentUserName(String savedUserName) => (currentUsername.isNotEmpty && savedUserName != currentUsername);
 
@@ -733,8 +739,6 @@ class EaselProvider extends ChangeNotifier {
     });
   }
 
-
-
   late NFT nft;
 
   Future<bool> saveNftLocally(UploadStep step) async {
@@ -745,97 +749,100 @@ class EaselProvider extends ChangeNotifier {
     if (!_file!.existsSync()) {
       navigatorKey.currentState!.overlay!.context.show(message: kErrPickFileFetch);
       return false;
-    } else {
-      final loading = Loading().showLoading(message: kUploadingMessage);
+    }
+    final loading = Loading().showLoading(message: kUploadingMessage);
 
-      initializeTextEditingControllerWithEmptyValues();
-      if (nftFormat.format == NFTTypes.audio || nftFormat.format == NFTTypes.video) {
-        final uploadResponse = await repository.uploadFile(nftFormat.format == NFTTypes.audio ? audioThumbnail! : videoThumbnail!);
-        if (uploadResponse.isLeft()) {
-          loading.dismiss();
-          return false;
-        }
-        uploadThumbnailResponse = uploadResponse.getOrElse(() => uploadThumbnailResponse);
-        if (uploadThumbnailResponse.status == Status.error) {
-          loading.dismiss();
-          navigatorKey.currentState!.overlay!.context.show(message: uploadThumbnailResponse.errorMessage ?? kErrUpload);
-          return false;
-        }
-      }
-      audioPlayerHelper.pauseAudio();
-
-      final response = await repository.uploadFile(_file!);
-      if (response.isLeft()) {
+    initializeTextEditingControllerWithEmptyValues();
+    if (nftFormat.format == NFTTypes.audio || nftFormat.format == NFTTypes.video) {
+      final uploadResponse = await repository.uploadFile(nftFormat.format == NFTTypes.audio ? audioThumbnail! : videoThumbnail!);
+      if (uploadResponse.isLeft()) {
         loading.dismiss();
         return false;
       }
-      final fileUploadResponse = response.getOrElse(() => uploadUrlResponse);
-      loading.dismiss();
-      if (fileUploadResponse.status == Status.error) {
-        navigatorKey.currentState!.overlay!.context.show(message: fileUploadResponse.errorMessage ?? kErrUpload);
+      uploadThumbnailResponse = uploadResponse.getOrElse(() => uploadThumbnailResponse);
+      if (uploadThumbnailResponse.status == Status.error) {
+        loading.dismiss();
+        navigatorKey.currentState!.overlay!.context.show(message: uploadThumbnailResponse.errorMessage ?? kErrUpload);
         return false;
       }
-
-      nft = NFT(
-        id: null,
-        type: NftType.TYPE_ITEM.name,
-        ibcCoins: IBCCoins.upylon.name,
-        assetType: nftFormat.format.getTitle(),
-        cookbookID: cookbookId ?? "",
-        width: fileWidth.toString(),
-        denom: "",
-        tradePercentage: "",
-        height: fileHeight.toString(),
-        duration: fileDuration.toString(),
-        description: descriptionController.text,
-        recipeID: recipeId,
-        step: step.name,
-        thumbnailUrl: (nftFormat.format == NFTTypes.audio || nftFormat.format == NFTTypes.video) ? "$ipfsDomain/${uploadThumbnailResponse.data?.value?.cid}" : "",
-        name: artistNameController.text,
-        url: "$ipfsDomain/${fileUploadResponse.data?.value?.cid}",
-        price: priceController.text,
-      );
-
-      final saveNftResponse = await repository.saveNft(nft);
-
-      if (saveNftResponse.isLeft()) {
-        navigatorKey.currentState!.overlay!.context.show(message: "save_error".tr());
-
-        return false;
-      }
-
-      id = saveNftResponse.getOrElse(() => 0);
-
-      NFT _nft = NFT(
-        id: id,
-        type: NftType.TYPE_ITEM.name,
-        ibcCoins: IBCCoins.upylon.name,
-        assetType: nftFormat.format.getTitle(),
-        cookbookID: cookbookId ?? "",
-        width: fileWidth.toString(),
-        denom: "",
-        tradePercentage: "",
-        height: fileHeight.toString(),
-        duration: fileDuration.toString(),
-        description: descriptionController.text,
-        recipeID: recipeId,
-        step: step.name,
-        thumbnailUrl: (nftFormat.format == NFTTypes.audio || nftFormat.format == NFTTypes.video) ? "$ipfsDomain/${uploadThumbnailResponse.data?.value?.cid}" : "",
-        name: artistNameController.text,
-        url: "$ipfsDomain/${fileUploadResponse.data?.value?.cid}",
-        price: priceController.text,
-      );
-
-      if (id < 1) {
-        "save_error".tr().show();
-        return false;
-      }
-      repository.setCacheDynamicType(key: nftKey, value: _nft);
-      setAudioThumbnail(null);
-
-      setVideoThumbnail(null);
-      Navigator.of(navigatorKey.currentState!.overlay!.context).popUntil(ModalRoute.withName(RouteUtil.ROUTE_CREATOR_HUB));
     }
+    audioPlayerHelper.pauseAudio();
+
+    final response = await repository.uploadFile(_file!);
+    if (response.isLeft()) {
+      loading.dismiss();
+      return false;
+    }
+    final fileUploadResponse = response.getOrElse(() => uploadUrlResponse);
+    loading.dismiss();
+    if (fileUploadResponse.status == Status.error) {
+      navigatorKey.currentState!.overlay!.context.show(message: fileUploadResponse.errorMessage ?? kErrUpload);
+      return false;
+    }
+
+    nft = NFT(
+      id: null,
+      type: NftType.TYPE_ITEM.name,
+      ibcCoins: IBCCoins.upylon.name,
+      assetType: nftFormat.format.getTitle(),
+      cookbookID: cookbookId ?? "",
+      width: fileWidth.toString(),
+      denom: "",
+      tradePercentage: "",
+      height: fileHeight.toString(),
+      duration: fileDuration.toString(),
+      description: descriptionController.text,
+      recipeID: recipeId,
+      fileName: _file!.path.split("/").last,
+      cid: fileUploadResponse.data?.value?.cid,
+      step: step.name,
+      thumbnailUrl: (nftFormat.format == NFTTypes.audio || nftFormat.format == NFTTypes.video) ? "$ipfsDomain/${uploadThumbnailResponse.data?.value?.cid}" : "",
+      name: artistNameController.text,
+      url: "$ipfsDomain/${fileUploadResponse.data?.value?.cid}",
+      price: priceController.text,
+    );
+
+    final saveNftResponse = await repository.saveNft(nft);
+
+    if (saveNftResponse.isLeft()) {
+      navigatorKey.currentState!.overlay!.context.show(message: "save_error".tr());
+
+      return false;
+    }
+
+    id = saveNftResponse.getOrElse(() => 0);
+
+    NFT _nft = NFT(
+      id: id,
+      type: NftType.TYPE_ITEM.name,
+      ibcCoins: IBCCoins.upylon.name,
+      assetType: nftFormat.format.getTitle(),
+      cookbookID: cookbookId ?? "",
+      width: fileWidth.toString(),
+      denom: "",
+      tradePercentage: "",
+      height: fileHeight.toString(),
+      duration: fileDuration.toString(),
+      description: descriptionController.text,
+      recipeID: recipeId,
+      step: step.name,
+      fileName: _file!.path.split("/").last,
+      cid: fileUploadResponse.data?.value?.cid,
+      thumbnailUrl: (nftFormat.format == NFTTypes.audio || nftFormat.format == NFTTypes.video) ? "$ipfsDomain/${uploadThumbnailResponse.data?.value?.cid}" : "",
+      name: artistNameController.text,
+      url: "$ipfsDomain/${fileUploadResponse.data?.value?.cid}",
+      price: priceController.text,
+    );
+
+    if (id < 1) {
+      "save_error".tr().show();
+      return false;
+    }
+    repository.setCacheDynamicType(key: nftKey, value: _nft);
+    setAudioThumbnail(null);
+
+    setVideoThumbnail(null);
+    Navigator.of(navigatorKey.currentState!.overlay!.context).pop();
 
     return true;
   }
@@ -864,7 +871,7 @@ class EaselProvider extends ChangeNotifier {
         price: priceController.text,
         quantity: noOfEditionController.text,
         step: UploadStep.priceAdded.name,
-        denomName: isFreeDrop == false ? selectedDenom.name : "",
+        denomName: isFreeDrop == false ? selectedDenom.symbol : "",
         isFreeDrop: isFreeDrop);
     final saveNftResponse = await repository.updateNftFromPrice(saveNft: saveNftForPrice);
     final _nft = await repository.getNft(id);
