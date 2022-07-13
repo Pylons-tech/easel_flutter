@@ -1,3 +1,4 @@
+import 'package:auto_size_text/auto_size_text.dart';
 import 'package:easel_flutter/utils/constants.dart';
 import 'package:easel_flutter/utils/easel_app_theme.dart';
 import 'package:flutter/material.dart';
@@ -56,7 +57,7 @@ class _HashtagInputFieldState extends State<EaselHashtagInputField> {
                             alignment: Alignment.center,
                             child: TextFormField(
                               style: TextStyle(
-                                  fontSize: 18.sp, fontWeight: FontWeight.w400, color: EaselAppTheme.kDarkText),
+                                  fontSize: isTablet ?  16.sp: 18.sp, fontWeight: FontWeight.w400, color: EaselAppTheme.kDarkText),
                               controller: _inputController,
                               minLines: 1,
                               maxLines: 1,
@@ -64,7 +65,7 @@ class _HashtagInputFieldState extends State<EaselHashtagInputField> {
                               textCapitalization: TextCapitalization.none,
                               decoration: InputDecoration(
                                   hintText: kHintHashtag,
-                                  hintStyle: TextStyle(fontSize: 18.sp, color: EaselAppTheme.kGrey),
+                                  hintStyle: TextStyle(fontSize: isTablet ? 16.sp : 18.sp, color: EaselAppTheme.kGrey),
                                   border: const OutlineInputBorder(borderSide: BorderSide.none),
                                   floatingLabelBehavior: FloatingLabelBehavior.always,
                                   contentPadding: EdgeInsets.fromLTRB(10.w, 0.h, 10.w, 0.h)),
@@ -86,7 +87,7 @@ class _HashtagInputFieldState extends State<EaselHashtagInputField> {
                             _inputController.clear();
                           });
                         },
-                        child: Text(kAddText,
+                        child: AutoSizeText(kAddText,
                             textAlign: TextAlign.center,
                             style:
                                 TextStyle(fontSize: 18.sp, fontWeight: FontWeight.w400, color: EaselAppTheme.kWhite)),
