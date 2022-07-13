@@ -1,3 +1,4 @@
+import 'package:easel_flutter/main.dart';
 import 'package:easel_flutter/utils/amount_formatter.dart';
 import 'package:easel_flutter/utils/constants.dart';
 import 'package:flutter/material.dart';
@@ -43,12 +44,27 @@ class Denom {
       case kPylonSymbol:
       case kAtomSymbol:
       case kEuroSymbol:
-      case kAgoricSymbol:
       case kJunoSymbol:
-        return Image.asset(icon);
+        return Image.asset(
+          icon,
+          height: 20.h,
+          fit: BoxFit.contain,
+          width: 20.w,
+        );
       case kEthereumSymbol:
-        return Container(padding: EdgeInsets.symmetric(vertical: 10.h), child: Image.asset(icon));
-
+        return Container(
+            padding: EdgeInsets.symmetric(vertical: isTablet ? 5.h : 10.h),
+            child: Image.asset(
+              icon,
+              height: 20.h,
+            ));
+      case kAgoricSymbol:
+        return Image.asset(
+          icon,
+          height: 15.h,
+          width: 15.w,
+          fit: BoxFit.contain,
+        );
       default:
         return Image.asset(icon);
     }
