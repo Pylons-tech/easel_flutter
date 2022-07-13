@@ -489,11 +489,11 @@ class EaselProvider extends ChangeNotifier {
 
     if (!isPylonsExist) {
       ShowWalletInstallDialog showWalletInstallDialog = ShowWalletInstallDialog(
-          context: context,
+          context: navigatorKey.currentState!.overlay!.context,
           errorMessage: 'download_pylons_description'.tr(),
           buttonMessage: 'download_pylons_app'.tr(),
           onClose: () {
-            Navigator.of(context).pop();
+            Navigator.of(navigatorKey.currentState!.overlay!.context).pop();
           });
 
       showWalletInstallDialog.show();
@@ -505,11 +505,11 @@ class EaselProvider extends ChangeNotifier {
 
     if (response.errorCode == kErrProfileNotExist) {
       ShowWalletInstallDialog showWalletInstallDialog = ShowWalletInstallDialog(
-          context: context,
+          context: navigatorKey.currentState!.overlay!.context,
           errorMessage: 'create_username_description'.tr(),
           buttonMessage: 'open_pylons_app'.tr(),
           onClose: () {
-            Navigator.of(context).pop();
+            Navigator.of(navigatorKey.currentState!.overlay!.context).pop();
           });
       showWalletInstallDialog.show();
 
