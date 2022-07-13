@@ -85,8 +85,6 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
       return;
     }
 
-    log("response: $response");
-
 
     if (response.errorCode == kErrProfileNotExist) {
       ShowWalletInstallDialog showWalletInstallDialog = ShowWalletInstallDialog(
