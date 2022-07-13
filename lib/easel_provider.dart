@@ -487,23 +487,38 @@ class EaselProvider extends ChangeNotifier {
   Future<bool> verifyPylonsAndMint({required NFT nft,}) async {
     final isPylonsExist = await PylonsWallet.instance.exists();
 
-    if (isPylonsExist) {
-      final response = await getProfile();
+    if (!isPylonsExist) {
+      ShowWalletInstallDialog showWalletInstallDialog = ShowWalletInstallDialog(
+          context: context,
+          errorMessage: 'download_pylons_description'.tr(),
+          buttonMessage: 'download_pylons_app'.tr(),
+          onClose: () {
+            Navigator.of(context).pop();
+          });
 
-      if (response.success) {
-        return await createRecipe(nft: nft);
-      }
+      showWalletInstallDialog.show();
+
+      return false;
     }
 
-    ShowWalletInstallDialog showWalletInstallDialog = ShowWalletInstallDialog(
-        context: context,
-        errorMessage: 'download_pylons_description'.tr(),
-        buttonMessage: 'download_pylons_app'.tr(),
-        onClose: () {
-          Navigator.of(context).pop();
-        });
+    final response = await getProfile();
 
-    showWalletInstallDialog.show();
+    if (response.errorCode == kErrProfileNotExist) {
+      ShowWalletInstallDialog showWalletInstallDialog = ShowWalletInstallDialog(
+          context: context,
+          errorMessage: 'create_username_description'.tr(),
+          buttonMessage: 'open_pylons_app'.tr(),
+          onClose: () {
+            Navigator.of(context).pop();
+          });
+      showWalletInstallDialog.show();
+
+      return false;
+    }
+
+    if (response.success) {
+      return await createRecipe(nft: nft);
+    }
 
     return false;
   }
@@ -599,7 +614,6 @@ class EaselProvider extends ChangeNotifier {
         blockInterval: Int64(0),
         enabled: true,
         extraInfo: kExtraInfo);
-
 
     var response = await PylonsWallet.instance.txCreateRecipe(recipe, requestResponse: false);
 
