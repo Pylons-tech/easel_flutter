@@ -90,7 +90,7 @@ abstract class Repository {
   Future<Either<Failure, bool>> updateNftFromDescription({required SaveNft saveNft});
 
   /// This method will update draft in the local database from Pricing page
-  /// Input:[SaveNft] this model data contains bring [id],[tradePercentage],[price],[quantity],[step],[denomSymbol],[isFreeDrop]
+  /// Input: [saveNft] contains data to be updated
   /// Output: [bool] returns whether the operation is successful or not
   Future<Either<Failure, bool>> updateNftFromPrice({required SaveNft saveNft});
 
@@ -104,8 +104,8 @@ abstract class Repository {
   Future<Either<Failure, List<NFT>>> getNfts();
 
   /// This method will get the drafts List from the local database
-  /// Input: [int] the id of the nft that you want to get
-  /// Output: [NFT] returns the nft
+  /// Input: [id] identifier of the NFt
+  /// Output: [NFT] returns the nft else will return [Failure]
   Future<Either<Failure, NFT>> getNft(int id);
 
   /// This method will delete draft from the local database

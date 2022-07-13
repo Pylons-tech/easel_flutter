@@ -35,10 +35,7 @@ class SplashScreen extends StatelessWidget {
             child: PylonsButton(
               onPressed: () {
 
-                Navigator.of(context).pushNamed(RouteUtil.kRouteTutorial);
 
-
-                /// TODO remove the above line after testing
                 var onBoardingComplete = GetIt.I.get<LocalDataSource>().getOnBoardingComplete();
                 if (onBoardingComplete) {
                   Navigator.of(context).pushNamed(RouteUtil.kRouteWelcome);
@@ -84,9 +81,7 @@ class SplashScreen extends StatelessWidget {
             alignment: Alignment.center,
             child: PylonsButton(
               onPressed: () {
-                Navigator.of(context).pushNamed(RouteUtil.kRouteTutorial);
 
-                /// TODO remove the above line after testing
                 var onBoardingComplete = GetIt.I.get<LocalDataSource>().getOnBoardingComplete();
                 if (onBoardingComplete) {
                   Navigator.of(context).pushNamed(RouteUtil.kRouteWelcome);

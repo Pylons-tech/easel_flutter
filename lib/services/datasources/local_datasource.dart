@@ -63,16 +63,12 @@ abstract class LocalDataSource {
   Future<NFT?> getNft(int id);
 
   /// This method will update draft in the local database from description Page
-  /// Input: [id] the id of the nft,
-  /// [String] the  name of the nft , [String] the  description of the nft
-  /// [String] the  creator name of the nft , [String] the page name of the Pageview
+  /// Input: [saveNft] contains the details to be updated in the NFT
   /// Output: [bool] returns whether the operation is successful or not
   Future<bool> updateNftFromDescription(SaveNft saveNft);
 
   /// This method will update draft in the local database from Pricing page
-  /// Input: [id] the id of the nft, [String] the  name of the nft ,
-  /// [String] the  tradePercentage of the nft , [String] the  price of the nft
-  /// [String] the  quantity of the nft , [String] the page name of the Pageview
+  /// Input: [saveNft] contains the details to be updated in the NFT
   /// Output: [bool] returns whether the operation is successful or not
   Future<bool> updateNftFromPrice(SaveNft saveNft);
 

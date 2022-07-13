@@ -35,7 +35,7 @@ class PylonsButton extends StatelessWidget {
                   Positioned(
                       top: 0,
                       bottom: 0,
-                      right: 2.w,
+                      right: isTablet ? 2.w : 8.w,
                       child: Icon(
                         Icons.arrow_forward,
                         color: EaselAppTheme.kWhite,
