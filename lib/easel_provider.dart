@@ -484,7 +484,7 @@ class EaselProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-  Future<bool> verifyPylonsAndMint({required NFT nft, required BuildContext context}) async {
+  Future<bool> verifyPylonsAndMint({required NFT nft,}) async {
     final isPylonsExist = await PylonsWallet.instance.exists();
 
     if (isPylonsExist) {
