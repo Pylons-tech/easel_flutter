@@ -6,6 +6,7 @@ import 'package:easel_flutter/utils/extension_util.dart';
 import 'package:easel_flutter/utils/route_util.dart';
 import 'package:easel_flutter/utils/screen_responsive.dart';
 import 'package:easel_flutter/widgets/pylons_button.dart';
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get_it/get_it.dart';
@@ -276,7 +277,7 @@ class _TutorialScreenState extends State<TutorialScreen> {
                   onPressed: () async {
                     await onDownloadNowPressed(context);
                   },
-                  btnText: kDownloadPylons,
+                  btnText: 'download_pylons_app'.tr(),
                 ),
               ),
               tabletScreen: (BuildContext context) => Center(
@@ -286,7 +287,7 @@ class _TutorialScreenState extends State<TutorialScreen> {
                     onPressed: () async {
                       await onDownloadNowPressed(context);
                     },
-                    btnText: kDownloadPylons,
+                    btnText: 'download_pylons_app'.tr(),
                   ),
                 ),
               ),

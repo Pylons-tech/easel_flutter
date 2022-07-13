@@ -40,5 +40,10 @@
   "could_not_uploaded": "{} could not be uploaded",
   "something_wrong": "something went wrong",
   "err_add_audio_thumbnail": "Please select audio thumbnail",
-  "err_add_video_thumbnail": "Please select video thumbnail"
+  "err_add_video_thumbnail": "Please select video thumbnail",
+  "download_pylons_app": "Download Pylons app",
+  "open_pylons_app": "Open Pylons app",
+  "download_pylons_description": "Please download the Pylons app and create a username to publish a NFT in Easel.",
+  "create_username_description": "Please Open Pylons app and create a username to publish a NFT in Easel."
+
 }
