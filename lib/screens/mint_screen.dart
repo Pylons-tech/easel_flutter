@@ -18,7 +18,6 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
 
 import '../repository/repository.dart';
-import 'creator_hub/creator_hub_view_model.dart';
 
 class MintScreen extends StatefulWidget {
   const MintScreen({Key? key}) : super(key: key);
@@ -150,8 +149,7 @@ class _MintScreenState extends State<MintScreen> {
                                 return;
                               }
                               provider.disposeAudioController();
-                              Navigator.of(context).pushNamedAndRemoveUntil(RouteUtil.ROUTE_CREATOR_HUB, (route)=>false);
-
+                              Navigator.of(context).pushNamedAndRemoveUntil(RouteUtil.kRouteCreatorHub, (route) => false);
                             },
                             btnText: kListText,
                             showArrow: true,

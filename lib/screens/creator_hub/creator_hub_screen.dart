@@ -1,4 +1,5 @@
 import 'dart:async';
+
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:easel_flutter/main.dart';
 import 'package:easel_flutter/models/nft.dart';
@@ -13,8 +14,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:get_it/get_it.dart';
 import 'package:focus_detector/focus_detector.dart';
+import 'package:get_it/get_it.dart';
 import 'package:provider/provider.dart';
 import 'package:shimmer_animation/shimmer_animation.dart';
 
@@ -69,7 +70,7 @@ class CreatorHubContent extends StatefulWidget {
 
 class _CreatorHubContentState extends State<CreatorHubContent> {
   TextStyle titleStyle = TextStyle(
-    fontSize: isTablet ?  14.sp: 18.sp,
+    fontSize: isTablet ? 14.sp : 18.sp,
     fontWeight: FontWeight.w800,
     color: EaselAppTheme.kBlack,
     fontFamily: kUniversalFontFamily,
@@ -83,7 +84,6 @@ class _CreatorHubContentState extends State<CreatorHubContent> {
 
   @override
   Widget build(BuildContext context) {
-
     return Consumer(builder: (context, CreatorHubViewModel viewModel, child) {
       return Container(
           color: EaselAppTheme.kWhite,
@@ -104,7 +104,7 @@ class _CreatorHubContentState extends State<CreatorHubContent> {
                         child: InkWell(
                           onTap: () {
                             Navigator.of(context).pushNamed(
-                              RouteUtil.ROUTE_HOME,
+                              RouteUtil.kRouteHome,
                             );
                           },
                           child: Icon(
@@ -176,7 +176,13 @@ class _CreatorHubContentState extends State<CreatorHubContent> {
                   onTap: () {
                     viewModel.publishCollapse = !viewModel.publishCollapse;
                   },
-                  child: SizedBox(height: isTablet ? 30.h : 20.h, width: isTablet ? 30.w :20.w, child: Icon(viewModel.publishCollapse ? Icons.add : Icons.remove, size: isTablet ? 15.w :20.w,)),
+                  child: SizedBox(
+                      height: isTablet ? 30.h : 20.h,
+                      width: isTablet ? 30.w : 20.w,
+                      child: Icon(
+                        viewModel.publishCollapse ? Icons.add : Icons.remove,
+                        size: isTablet ? 15.w : 20.w,
+                      )),
                 )
               ],
             ),
@@ -214,7 +220,7 @@ class _CreatorHubContentState extends State<CreatorHubContent> {
                   child: Text(
                     title,
                     maxLines: 1,
-                    style: titleStyle.copyWith(fontSize:  15.sp),
+                    style: titleStyle.copyWith(fontSize: 15.sp),
                   ),
                 ),
                 SizedBox(
@@ -225,7 +231,13 @@ class _CreatorHubContentState extends State<CreatorHubContent> {
                   onTap: () {
                     viewModel.draftCollapse = !viewModel.draftCollapse;
                   },
-                  child: SizedBox(height: isTablet ? 30.h : 20.h, width: isTablet ? 30.w :20.w, child: Icon(viewModel.draftCollapse ? Icons.add : Icons.remove, size: isTablet ? 15.w :20.w,)),
+                  child: SizedBox(
+                      height: isTablet ? 30.h : 20.h,
+                      width: isTablet ? 30.w : 20.w,
+                      child: Icon(
+                        viewModel.draftCollapse ? Icons.add : Icons.remove,
+                        size: isTablet ? 15.w : 20.w,
+                      )),
                 )
               ],
             ),
@@ -288,8 +300,8 @@ class _CreatorHubContentState extends State<CreatorHubContent> {
           Expanded(
             child: InkWell(
               onTap: () {
-                viewModel.saveNFT(nft :nft);
-                Navigator.of(context).pushNamed(RouteUtil.ROUTE_HOME);
+                viewModel.saveNFT(nft: nft);
+                Navigator.of(context).pushNamed(RouteUtil.kRouteHome);
               },
               child: SvgPicture.asset(kSvgPublish),
             ),
@@ -328,7 +340,7 @@ class _CreatorHubContentState extends State<CreatorHubContent> {
                     children: [
                       Text(
                         "nft_name".tr(args: [nft.name.isNotEmpty ? nft.name : 'Nft Name']),
-                        style: titleStyle.copyWith(fontSize: isTablet? 13.sp :18.sp),
+                        style: titleStyle.copyWith(fontSize: isTablet ? 13.sp : 18.sp),
                         maxLines: 1,
                         overflow: TextOverflow.ellipsis,
                       ),
@@ -337,7 +349,7 @@ class _CreatorHubContentState extends State<CreatorHubContent> {
                       ),
                       Text(
                         "draft".tr(),
-                        style: titleStyle.copyWith(color: EaselAppTheme.kLightRed, fontSize:isTablet? 8.sp :  13.sp),
+                        style: titleStyle.copyWith(color: EaselAppTheme.kLightRed, fontSize: isTablet ? 8.sp : 13.sp),
                       ),
                     ],
                   ),
@@ -347,7 +359,10 @@ class _CreatorHubContentState extends State<CreatorHubContent> {
                 ),
                 InkWell(
                     onTap: () {
-                      final DraftsBottomSheet draftsBottomSheet = DraftsBottomSheet(buildContext: context, nft: nft,);
+                      final DraftsBottomSheet draftsBottomSheet = DraftsBottomSheet(
+                        buildContext: context,
+                        nft: nft,
+                      );
                       draftsBottomSheet.show();
                     },
                     child: Padding(

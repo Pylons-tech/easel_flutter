@@ -44,8 +44,6 @@
   "download_pylons_app": "Download Pylons app",
   "open_pylons_app": "Open Pylons app",
   "download_pylons_description": "Please download the Pylons app and create a username to publish a NFT in Easel.",
-  "create_username_description": "Please Open Pylons app and create a username to publish a NFT in Easel."
-
-  "err_add_video_thumbnail": "Please select video thumbnail",
+  "create_username_description": "Please Open Pylons app and create a username to publish a NFT in Easel.",
   "loading": "loading ..."
 }

@@ -3,7 +3,6 @@ import 'package:easel_flutter/utils/easel_app_theme.dart';
 import 'package:easel_flutter/utils/extension_util.dart';
 import 'package:easel_flutter/utils/screen_responsive.dart';
 import 'package:easel_flutter/widgets/pylons_button.dart';
-import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/flutter_svg.dart';
@@ -17,7 +16,7 @@ class ShowWalletInstallDialog {
   String buttonMessage;
   VoidCallback onClose;
 
-  ShowWalletInstallDialog({required this.context, required this.errorMessage,required this.buttonMessage, required this.onClose});
+  ShowWalletInstallDialog({required this.context, required this.errorMessage, required this.buttonMessage, required this.onClose});
 
   Future show() {
     return showDialog(
@@ -26,7 +25,6 @@ class ShowWalletInstallDialog {
           return Dialog(
             elevation: 0,
             backgroundColor: Colors.transparent,
-
             child: ScreenResponsive(
               mobileScreen: (context) => buildMobile(context),
               tabletScreen: (context) => buildTablet(context),
@@ -129,7 +127,7 @@ class ShowWalletInstallDialog {
                 padding: EdgeInsets.symmetric(horizontal: 0.1.sw),
                 height: 40.h,
                 child: PylonsButton(
-                    btnText: 'download_pylons_app'.tr(),
+                    btnText: buttonMessage,
                     onPressed: () {
                       onDownloadNowPressed(context);
                       Navigator.of(context).pop();
@@ -154,7 +152,6 @@ class ShowWalletInstallDialog {
                   onClose();
                 },
               ),
-
               SizedBox(height: 30.h),
             ],
           ),
@@ -172,4 +169,3 @@ class ShowWalletInstallDialog {
     }
   }
 }
-
