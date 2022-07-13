@@ -6,6 +6,7 @@ import 'package:easel_flutter/utils/failure/failure.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+import '../../models/save_nft.dart';
 import 'cache_manager.dart';
 
 abstract class LocalDataSource {
@@ -65,14 +66,14 @@ abstract class LocalDataSource {
   /// [String] the  name of the nft , [String] the  description of the nft
   /// [String] the  creator name of the nft , [String] the page name of the Pageview
   /// Output: [bool] returns whether the operation is successful or not
-  Future<bool> updateNftFromDescription(int id, String nftName, String nftDescription, String creatorName, String step, String hashtags);
+  Future<bool> updateNftFromDescription(SaveNft saveNft);
 
   /// This method will update draft in the local database from Pricing page
   /// Input: [id] the id of the nft, [String] the  name of the nft ,
   /// [String] the  tradePercentage of the nft , [String] the  price of the nft
   /// [String] the  quantity of the nft , [String] the page name of the Pageview
   /// Output: [bool] returns whether the operation is successful or not
-  Future<bool> updateNftFromPrice(int id, String tradePercentage, String price, String quantity, String step, String name, bool isFreeDrop);
+  Future<bool> updateNftFromPrice(SaveNft saveNft);
 
   /// This method will delete draft from the local database
   /// Input: [id] the id of the draft which the user wants to delete
@@ -187,10 +188,17 @@ class LocalDataSourceImpl implements LocalDataSource {
     }
   }
 
+  bool checkValuesForDescription({required SaveNft saveNft}) =>
+      saveNft.id != null && saveNft.nftName != null && saveNft.nftDescription != null && saveNft.creatorName != null && saveNft.step != null && saveNft.hashtags != null;
+
+  bool checkValuesForPrice({required SaveNft saveNft}) =>
+      saveNft.id != null && saveNft.tradePercentage != null && saveNft.price != null && saveNft.quantity != null && saveNft.step != null && saveNft.denomSymbol != null && saveNft.isFreeDrop != null;
+
   @override
-  Future<bool> updateNftFromDescription(int id, String nftName, String nftDescription, String creatorName, String step, String hashtags) async {
+  Future<bool> updateNftFromDescription(SaveNft saveNft) async {
     try {
-      await database.nftDao.updateNFTFromDescription(id, nftName, nftDescription, creatorName, step, hashtags);
+      if (!checkValuesForDescription(saveNft: saveNft)) return false;
+      await database.nftDao.updateNFTFromDescription(saveNft.id!, saveNft.nftName!, saveNft.nftDescription!, saveNft.creatorName!, saveNft.step!, saveNft.hashtags!);
       return true;
     } catch (e) {
       return throw "save_error".tr();
@@ -198,9 +206,10 @@ class LocalDataSourceImpl implements LocalDataSource {
   }
 
   @override
-  Future<bool> updateNftFromPrice(int id, String tradePercentage, String price, String quantity, String step, String denom, bool isFreeDrop) async {
+  Future<bool> updateNftFromPrice(SaveNft saveNft) async {
     try {
-      await database.nftDao.updateNFTFromPrice(id, tradePercentage, price, quantity, step, denom, isFreeDrop);
+      if (!checkValuesForPrice(saveNft: saveNft)) return false;
+      await database.nftDao.updateNFTFromPrice(saveNft.id!, saveNft.tradePercentage!, saveNft.price!, saveNft.quantity!, saveNft.step!, saveNft.denomSymbol!, saveNft.isFreeDrop!);
       return true;
     } catch (e) {
       throw CacheFailure("save_error".tr());

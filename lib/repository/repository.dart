@@ -90,7 +90,7 @@ abstract class Repository {
   Future<Either<Failure, bool>> updateNftFromDescription({required SaveNft saveNft});
 
   /// This method will update draft in the local database from Pricing page
-  /// Input:[SaveNft] this model data contains bring [id],[tradePercentage],[price],[quantity],[step],[denomName],[isFreeDrop]
+  /// Input:[SaveNft] this model data contains bring [id],[tradePercentage],[price],[quantity],[step],[denomSymbol],[isFreeDrop]
   /// Output: [bool] returns whether the operation is successful or not
   Future<Either<Failure, bool>> updateNftFromPrice({required SaveNft saveNft});
 
@@ -215,7 +215,7 @@ class RepositoryImp implements Repository {
   @override
   Future<Either<Failure, bool>> updateNftFromDescription({required SaveNft saveNft}) async {
     try {
-      bool result = await localDataSource.updateNftFromDescription(saveNft.id!, saveNft.nftName!, saveNft.nftDescription!, saveNft.creatorName!, saveNft.step!, saveNft.hashtags!);
+      bool result = await localDataSource.updateNftFromDescription(saveNft);
 
       if (!result) {
         return Left(CacheFailure("save_error".tr()));
@@ -229,7 +229,7 @@ class RepositoryImp implements Repository {
   @override
   Future<Either<Failure, bool>> updateNftFromPrice({required SaveNft saveNft}) async {
     try {
-      bool result = await localDataSource.updateNftFromPrice(saveNft.id!, saveNft.tradePercentage!, saveNft.price!, saveNft.quantity!, saveNft.step!, saveNft.denomName!, saveNft.isFreeDrop!);
+      bool result = await localDataSource.updateNftFromPrice(saveNft);
 
       return Right(result);
     } on Exception catch (_) {

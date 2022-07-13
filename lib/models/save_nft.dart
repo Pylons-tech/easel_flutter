@@ -6,7 +6,7 @@ class SaveNft {
   final String? tradePercentage;
   final String? price;
   final String? quantity;
-  final String? denomName;
+  final String? denomSymbol;
   final bool? isFreeDrop;
   final String? step;
   final String? hashtags;
@@ -17,7 +17,7 @@ class SaveNft {
     this.price,
     this.tradePercentage,
     this.quantity,
-    this.denomName,
+    this.denomSymbol,
     this.step,
     this.creatorName,
     this.nftDescription,

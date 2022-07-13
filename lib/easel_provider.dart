@@ -196,8 +196,8 @@ class EaselProvider extends ChangeNotifier {
   void setTextFieldValuesDescription({String? artName, String? description, String? hashtags}) {
     artNameController.text = artName ?? "";
     descriptionController.text = description ?? "";
-    if (hashtags != "") {
-      hashtagsList = hashtags!.split(',');
+    if (hashtags!.isNotEmpty) {
+      hashtagsList = hashtags.split(',');
     }
     notifyListeners();
   }
@@ -206,7 +206,7 @@ class EaselProvider extends ChangeNotifier {
     royaltyController.text = royalties ?? "";
     priceController.text = price ?? "";
     noOfEditionController.text = edition ?? "";
-    _selectedDenom = denom != "" ? Denom.availableDenoms.firstWhere((element) => element.name == denom) : Denom.availableDenoms.first;
+    _selectedDenom = denom != "" ? Denom.availableDenoms.firstWhere((element) => element.symbol == denom) : Denom.availableDenoms.first;
     isFreeDrop = freeDrop;
     notifyListeners();
   }
@@ -875,7 +875,7 @@ class EaselProvider extends ChangeNotifier {
       price: priceController.text,
       quantity: noOfEditionController.text,
       step: UploadStep.priceAdded.name,
-      denomName: isFreeDrop == false ? selectedDenom.symbol : "",
+      denomSymbol: isFreeDrop == false ? selectedDenom.symbol : "",
       isFreeDrop: isFreeDrop,
     );
     final saveNftResponse = await repository.updateNftFromPrice(saveNft: saveNftForPrice);
