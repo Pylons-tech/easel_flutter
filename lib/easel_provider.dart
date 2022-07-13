@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:developer';
 import 'dart:io';
 
 import 'package:easel_flutter/main.dart';
@@ -10,6 +11,7 @@ import 'package:easel_flutter/models/nft.dart';
 import 'package:easel_flutter/models/nft_format.dart';
 import 'package:easel_flutter/models/save_nft.dart';
 import 'package:easel_flutter/repository/repository.dart';
+import 'package:easel_flutter/screens/welcome_screen/widgets/show_wallet_install_dialog.dart';
 import 'package:easel_flutter/services/third_party_services/audio_player_helper.dart';
 import 'package:easel_flutter/services/third_party_services/video_player_helper.dart';
 import 'package:easel_flutter/utils/constants.dart';
@@ -122,7 +124,7 @@ class EaselProvider extends ChangeNotifier {
   File? get audioThumbnail => _audioThumbnail;
 
   bool _isInitializedForFile = false;
-  bool _isInitializedForNetwork = false;
+  final bool _isInitializedForNetwork = false;
 
   bool get isInitializedForFile => _isInitializedForFile;
 
@@ -483,9 +485,48 @@ class EaselProvider extends ChangeNotifier {
     notifyListeners();
   }
 
+  Future<bool> verifyPylonsAndMint({required NFT nft,}) async {
+    final isPylonsExist = await PylonsWallet.instance.exists();
+
+    if (!isPylonsExist) {
+      ShowWalletInstallDialog showWalletInstallDialog = ShowWalletInstallDialog(
+          context: context,
+          errorMessage: 'download_pylons_description'.tr(),
+          buttonMessage: 'download_pylons_app'.tr(),
+          onClose: () {
+            Navigator.of(context).pop();
+          });
+
+      showWalletInstallDialog.show();
+
+      return false;
+    }
+
+    final response = await getProfile();
+
+    if (response.errorCode == kErrProfileNotExist) {
+      ShowWalletInstallDialog showWalletInstallDialog = ShowWalletInstallDialog(
+          context: context,
+          errorMessage: 'create_username_description'.tr(),
+          buttonMessage: 'open_pylons_app'.tr(),
+          onClose: () {
+            Navigator.of(context).pop();
+          });
+      showWalletInstallDialog.show();
+
+      return false;
+    }
+
+    if (response.success) {
+      return await createRecipe(nft: nft);
+    }
+
+    return false;
+  }
+
   /// sends a createRecipe Tx message to the wallet
   /// return true or false depending on the response from the wallet app
-  Future<bool> createRecipe(NFT nft) async {
+  Future<bool> createRecipe({required NFT nft}) async {
     if (nft.isFreeDrop == false) {
       if (!await shouldMintUSDOrNot()) {
         return false;
@@ -526,7 +567,7 @@ class EaselProvider extends ChangeNotifier {
         description: nft.description.trim(),
         version: kVersion,
         coinInputs: [
-          nft.isFreeDrop ? CoinInput() : CoinInput(coins: [Coin(amount: price, denom: nft.denom)])
+          nft.isFreeDrop ? CoinInput() : CoinInput(coins: [Coin(amount: price, denom: _selectedDenom.symbol)])
         ],
         itemInputs: [],
         costPerBlock: Coin(denom: kUpylon, amount: "0"),
@@ -607,6 +648,14 @@ class EaselProvider extends ChangeNotifier {
     loading.dismiss();
   }
 
+  void populateCoinsIfPylonsNotExists() {
+    supportedDenomList = Denom.availableDenoms;
+
+    if (supportedDenomList.isNotEmpty) {
+      _selectedDenom = supportedDenomList.first;
+    }
+  }
+
   @override
   void dispose() {
     artistNameController.dispose();
@@ -626,7 +675,7 @@ class EaselProvider extends ChangeNotifier {
 
       supportedDenomList = Denom.availableDenoms.where((Denom e) => sdkResponse.data.supportedCoins.contains(e.symbol)).toList();
 
-      if (supportedDenomList.isNotEmpty) {
+      if (supportedDenomList.isNotEmpty && selectedDenom.symbol.isEmpty) {
         _selectedDenom = supportedDenomList.first;
       }
     }

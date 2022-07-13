@@ -38,7 +38,6 @@ class _AudioWidgetState extends State<AudioWidget> with WidgetsBindingObserver {
 
   @override
   initState() {
-    log("bool: ${widget.previewFlag}");
     if (!easelProvider.isInitializedForFile) {
       if (widget.file != null) {
         easelProvider.initializeAudioPlayerForFile();
