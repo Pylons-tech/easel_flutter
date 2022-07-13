@@ -27,13 +27,8 @@ extension ScaffoldHelper on BuildContext? {
   }
 }
 
-extension MyBuildContext on GlobalKey<NavigatorState> {
-  BuildContext getContext() => navigatorKey.currentState!.overlay!.context;
-}
-
 extension NavigatorKey on GlobalKey {
   void showMsg({required String message}) {
-
     ScaffoldMessenger.maybeOf(currentState!.context)
       ?..hideCurrentSnackBar()
       ..showSnackBar(SnackBar(
@@ -57,7 +52,6 @@ extension ValueConverter on String {
     return BigInt.parse(this).toDouble() / kPrecision;
   }
 }
-
 
 extension IBCCoinsPar on String {
   IBCCoins toIBCCoinsEnum() {
@@ -96,5 +90,18 @@ extension NFTValue on NFT {
       return "0";
     }
     return recipe.coinInputs.first.coins.first.amount;
+  }
+}
+
+extension MyStringSnackBar on String {
+  void show({BuildContext? context}) {
+    ScaffoldMessenger.of(context ?? navigatorKey.currentState!.overlay!.context).showSnackBar(
+      SnackBar(
+        content: Text(
+          this,
+        ),
+        duration: const Duration(seconds: 3),
+      ),
+    );
   }
 }

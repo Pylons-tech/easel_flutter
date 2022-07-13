@@ -258,7 +258,7 @@ class LocalDataSourceImpl implements LocalDataSource {
     try {
       return await database.nftDao.findNftById(id);
     } catch (e) {
-      throw "something_wrong".tr();
+      throw CacheFailure("get_error".tr());
     }
   }
 }

@@ -7,7 +7,6 @@ import 'package:easel_flutter/models/nft.dart';
 import 'package:easel_flutter/models/save_nft.dart';
 import 'package:easel_flutter/services/datasources/local_datasource.dart';
 import 'package:easel_flutter/services/datasources/remote_datasource.dart';
-
 import 'package:easel_flutter/services/third_party_services/network_info.dart';
 import 'package:easel_flutter/utils/constants.dart';
 import 'package:easel_flutter/utils/failure/failure.dart';
@@ -101,7 +100,7 @@ abstract class Repository {
   Future<Either<Failure, ApiResponse>> uploadFile(File file);
 
   /// This method will get the drafts List from the local database
-  /// Output: [List][NFT] returns  the List of drafts
+  /// Output: [List] returns that contains a number of [NFT]
   Future<Either<Failure, List<NFT>>> getNfts();
 
   /// This method will get the drafts List from the local database
@@ -110,7 +109,7 @@ abstract class Repository {
   Future<Either<Failure, NFT>> getNft(int id);
 
   /// This method will delete draft from the local database
-  /// Input: [id] the id of the draft which the user wants to delete
+  /// Input: [id] the id of the nft which the user wants to delete
   /// Output: [bool] returns whether the operation is successful or not
   Future<Either<Failure, bool>> deleteNft(int id);
 }

@@ -47,7 +47,11 @@ class _HomeScreenState extends State<HomeScreen> {
       setTextField: () {
         easelProvider.setTextFieldValuesDescription(artName: homeViewModel.nft?.name, description: homeViewModel.nft?.description);
         easelProvider.setTextFieldValuesPrice(
-            royalties: homeViewModel.nft?.tradePercentage, price: homeViewModel.nft?.price, edition: homeViewModel.nft?.quantity.toString(), denom: homeViewModel.nft?.denom);
+            royalties: homeViewModel.nft?.tradePercentage,
+            price: homeViewModel.nft?.price,
+            edition: homeViewModel.nft?.quantity.toString(),
+            denom: homeViewModel.nft?.denom,
+            freeDrop: homeViewModel.nft!.isFreeDrop);
       },
     );
   }
