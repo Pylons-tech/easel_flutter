@@ -5,6 +5,7 @@ import 'package:easel_flutter/utils/extension_util.dart';
 import 'package:easel_flutter/widgets/loading.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:pylons_sdk/pylons_sdk.dart';
 
 class CreatorHubViewModel extends ChangeNotifier {
   final Repository repository;
@@ -60,13 +61,18 @@ class CreatorHubViewModel extends ChangeNotifier {
   }
 
   Future<void> getPublishAndDraftData() async {
-   await Future.wait([ getRecipesList(), getDraftsList()]);
+    await Future.wait([getRecipesList(), getDraftsList()]);
 
     getTotalForSale();
     notifyListeners();
   }
 
   Future<void> getRecipesList() async {
+    final isPylonsExist = await PylonsWallet.instance.exists();
+
+    if (!isPylonsExist) {
+      return;
+    }
     final cookBookId = getCookbookIdFromLocalDatasource();
     if (cookBookId == null) {
       return;
@@ -80,18 +86,17 @@ class CreatorHubViewModel extends ChangeNotifier {
 
     final recipesList = recipesListEither.getOrElse(() => []);
     _publishedNFTsList.clear();
-    if(recipesList.isEmpty){
-      return ;
+    if (recipesList.isEmpty) {
+      return;
     }
-      for (final recipe in recipesList) {
-        final nft = NFT.fromRecipe(recipe);
+    for (final recipe in recipesList) {
+      final nft = NFT.fromRecipe(recipe);
 
-        _publishedNFTsList.add(nft);
+      _publishedNFTsList.add(nft);
     }
 
-      publishedRecipeLength = _publishedNFTsList.length;
+    publishedRecipeLength = _publishedNFTsList.length;
   }
-
 
   Future<void> getDraftsList() async {
     final loading = Loading().showLoading(message: "loading".tr());
@@ -128,5 +133,4 @@ class CreatorHubViewModel extends ChangeNotifier {
     repository.setCacheDynamicType(key: nftKey, value: nft);
     repository.setCacheString(key: fromKey, value: kDraft);
   }
-
 }

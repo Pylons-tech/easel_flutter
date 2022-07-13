@@ -1,22 +1,20 @@
 import 'package:easel_flutter/screens/welcome_screen/widgets/common/dialog_clipper.dart';
+import 'package:easel_flutter/utils/constants.dart';
 import 'package:easel_flutter/utils/easel_app_theme.dart';
-import 'package:easel_flutter/utils/extension_util.dart';
 import 'package:easel_flutter/utils/screen_responsive.dart';
 import 'package:easel_flutter/widgets/pylons_button.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:pylons_sdk/pylons_sdk.dart';
-
-import '../../../utils/constants.dart';
 
 class ShowWalletInstallDialog {
   BuildContext context;
   String errorMessage;
   String buttonMessage;
   VoidCallback onClose;
+  VoidCallback onDownloadPressed;
 
-  ShowWalletInstallDialog({required this.context, required this.errorMessage, required this.buttonMessage, required this.onClose});
+  ShowWalletInstallDialog({required this.context, required this.errorMessage, required this.buttonMessage, required this.onClose, required this.onDownloadPressed});
 
   Future show() {
     return showDialog(
@@ -62,7 +60,8 @@ class ShowWalletInstallDialog {
               child: PylonsButton(
                   btnText: buttonMessage,
                   onPressed: () {
-                    onDownloadNowPressed(context);
+                    onDownloadPressed();
+                    Navigator.of(context).pop();
                   }),
             ),
             SizedBox(height: 10.h),
@@ -129,7 +128,7 @@ class ShowWalletInstallDialog {
                 child: PylonsButton(
                     btnText: buttonMessage,
                     onPressed: () {
-                      onDownloadNowPressed(context);
+                      onDownloadPressed();
                       Navigator.of(context).pop();
                     }),
               ),
@@ -158,14 +157,5 @@ class ShowWalletInstallDialog {
         ),
       ),
     );
-  }
-
-  Future<void> onDownloadNowPressed(BuildContext context) async {
-    final appAlreadyInstalled = await PylonsWallet.instance.exists();
-    if (!appAlreadyInstalled) {
-      PylonsWallet.instance.goToInstall();
-    } else {
-      context.show(message: kPylonsAlreadyInstalled);
-    }
   }
 }

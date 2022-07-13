@@ -85,12 +85,14 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
       return;
     }
 
-
     if (response.errorCode == kErrProfileNotExist) {
       ShowWalletInstallDialog showWalletInstallDialog = ShowWalletInstallDialog(
           context: context,
           errorMessage: 'create_username_description'.tr(),
           buttonMessage: 'open_pylons_app'.tr(),
+          onDownloadPressed: () {
+            PylonsWallet.instance.goToPylons();
+          },
           onClose: () {
             Navigator.of(context).pop();
           });

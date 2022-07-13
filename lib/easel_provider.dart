@@ -32,7 +32,6 @@ import 'package:pylons_sdk/src/features/models/sdk_ipc_response.dart';
 import 'package:share_plus/share_plus.dart';
 import 'package:video_player/video_player.dart';
 
-
 class EaselProvider extends ChangeNotifier {
   final VideoPlayerHelper videoPlayerHelper;
   final AudioPlayerHelper audioPlayerHelper;
@@ -485,7 +484,9 @@ class EaselProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-  Future<bool> verifyPylonsAndMint({required NFT nft,}) async {
+  Future<bool> verifyPylonsAndMint({
+    required NFT nft,
+  }) async {
     final isPylonsExist = await PylonsWallet.instance.exists();
 
     if (!isPylonsExist) {
@@ -493,6 +494,9 @@ class EaselProvider extends ChangeNotifier {
           context: navigatorKey.currentState!.overlay!.context,
           errorMessage: 'download_pylons_description'.tr(),
           buttonMessage: 'download_pylons_app'.tr(),
+          onDownloadPressed: () {
+            PylonsWallet.instance.goToInstall();
+          },
           onClose: () {
             Navigator.of(navigatorKey.currentState!.overlay!.context).pop();
           });
@@ -509,6 +513,9 @@ class EaselProvider extends ChangeNotifier {
           context: navigatorKey.currentState!.overlay!.context,
           errorMessage: 'create_username_description'.tr(),
           buttonMessage: 'open_pylons_app'.tr(),
+          onDownloadPressed: () {
+            PylonsWallet.instance.goToPylons();
+          },
           onClose: () {
             Navigator.of(navigatorKey.currentState!.overlay!.context).pop();
           });
