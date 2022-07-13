@@ -258,6 +258,6 @@ class _PriceScreenState extends State<PriceScreen> {
       ),
     );
   }
-
   bool checkTextFields() => _royaltiesFieldError.isEmpty && _noOfEditionsFieldError.isEmpty && _priceFieldError.isEmpty;
+
 }

@@ -3,6 +3,7 @@ import 'package:easel_flutter/models/nft_format.dart';
 import 'package:easel_flutter/utils/constants.dart';
 import 'package:easel_flutter/utils/date_utils.dart';
 import 'package:easel_flutter/utils/easel_app_theme.dart';
+import 'package:easel_flutter/utils/route_util.dart';
 import 'package:easel_flutter/utils/space_utils.dart';
 import 'package:easel_flutter/widgets/audio_widget.dart';
 import 'package:easel_flutter/widgets/background_widget.dart';
@@ -17,6 +18,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
 
 import '../repository/repository.dart';
+import 'creator_hub/creator_hub_view_model.dart';
 
 class MintScreen extends StatefulWidget {
   const MintScreen({Key? key}) : super(key: key);
@@ -148,7 +150,8 @@ class _MintScreenState extends State<MintScreen> {
                                 return;
                               }
                               provider.disposeAudioController();
-                              Navigator.of(context).pop();
+                              Navigator.of(context).pushNamedAndRemoveUntil(RouteUtil.ROUTE_CREATOR_HUB, (route)=>false);
+
                             },
                             btnText: kListText,
                             showArrow: true,

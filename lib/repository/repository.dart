@@ -104,8 +104,8 @@ abstract class Repository {
   Future<Either<Failure, List<NFT>>> getNfts();
 
   /// This method will get the drafts List from the local database
-  /// Input: [id] the id of the nft which the user wants to get
-  /// Output: [NFT] returns  the List of drafts
+  /// Input: [int] the id of the nft that you want to get
+  /// Output: [NFT] returns the nft
   Future<Either<Failure, NFT>> getNft(int id);
 
   /// This method will delete draft from the local database
@@ -275,9 +275,9 @@ class RepositoryImp implements Repository {
       NFT? data = await localDataSource.getNft(id);
       if (data == null) {
         return Left(CacheFailure("something_wrong".tr()));
-      } else {
-        return Right(data);
       }
+        return Right(data);
+
     } on Exception catch (_) {
       return Left(CacheFailure("something_wrong".tr()));
     }
