@@ -49,7 +49,7 @@ class _DraftDetailDialog extends StatelessWidget {
                 height: 60.h,
                 width: 60.h,
                 child: ClipPath(
-                  clipper: RightTriangleClipper(orientation: clipper.Orientation.Orientation_NW),
+                  clipper: RightTriangleClipper(orientation: clipper.Orientation.orientationNW),
                   child: Container(
                     color: EaselAppTheme.kLightRed,
                   ),
@@ -63,7 +63,7 @@ class _DraftDetailDialog extends StatelessWidget {
                 height: 60.h,
                 width: 60.h,
                 child: ClipPath(
-                  clipper: RightTriangleClipper(orientation: clipper.Orientation.Orientation_SE),
+                  clipper: RightTriangleClipper(orientation: clipper.Orientation.orientationSE),
                   child: Container(
                     color: EaselAppTheme.kLightRed,
                   ),
@@ -82,28 +82,29 @@ class _DraftDetailDialog extends StatelessWidget {
                   SizedBox(
                     height: 100.h,
                     width: 100.h,
-                    child: easelProvider.nft.assetType == k3dText
+                    child:
+                    easelProvider.nft.assetType == k3dText
                         ? ModelViewer(
-                            src: easelProvider.nft.url,
-                            ar: false,
-                            autoRotate: false,
-                            cameraControls: false,
-                          )
+                      src: easelProvider.nft.url,
+                      ar: false,
+                      autoRotate: false,
+                      cameraControls: false,
+                    )
                         : CachedNetworkImage(
-                            fit: BoxFit.contain,
-                            imageUrl: getImageUrl(easelProvider),
-                            errorWidget: (a, b, c) => const Center(
-                                child: Icon(
-                              Icons.error_outline,
-                              color: Colors.white,
-                            )),
-                            placeholder: (context, url) => Shimmer(
-                                color: EaselAppTheme.cardBackground,
-                                child: SizedBox(
-                                  height: 100.h,
-                                  width: 100.h,
-                                )),
-                          ),
+                      fit: BoxFit.contain,
+                      imageUrl: getImageUrl(easelProvider),
+                      errorWidget: (a, b, c) => const Center(
+                          child: Icon(
+                            Icons.error_outline,
+                            color: Colors.white,
+                          )),
+                      placeholder: (context, url) => Shimmer(
+                          color: EaselAppTheme.cardBackground,
+                          child: SizedBox(
+                            height: 100.h,
+                            width: 100.h,
+                          )),
+                    ),
                   ),
                   SizedBox(
                     height: 30.h,
@@ -156,7 +157,7 @@ class _DraftDetailDialog extends StatelessWidget {
   void navigateToPreviewScreen({required BuildContext context, required NFT nft}) {
     context.read<EaselProvider>().setPublishedNFTClicked(nft);
     context.read<EaselProvider>().setPublishedNFTDuration(nft.duration);
-    Navigator.of(context).pushReplacementNamed(RouteUtil.ROUTE_PREVIEW_NFT_FULL_SCREEN);
+    Navigator.of(context).pushReplacementNamed(RouteUtil.kRoutePreviewNFTFullScreen);
   }
 
   String getImageUrl(EaselProvider easelProvider) {

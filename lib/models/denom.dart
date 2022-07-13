@@ -4,6 +4,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
+import '../main.dart';
+
 class Denom {
   final String name;
   final String symbol;
@@ -43,12 +45,27 @@ class Denom {
       case kPylonSymbol:
       case kAtomSymbol:
       case kEuroSymbol:
-      case kAgoricSymbol:
       case kJunoSymbol:
-        return Image.asset(icon);
+        return Image.asset(
+          icon,
+          height: 20.h,
+          fit: BoxFit.contain,
+          width: 20.w,
+        );
       case kEthereumSymbol:
-        return Container(padding: EdgeInsets.symmetric(vertical: 10.h), child: Image.asset(icon));
-
+        return Container(
+            padding: EdgeInsets.symmetric(vertical: isTablet ? 5.h : 10.h),
+            child: Image.asset(
+              icon,
+              height: 20.h,
+            ));
+      case kAgoricSymbol:
+        return Image.asset(
+          icon,
+          height: 15.h,
+          width: 15.w,
+          fit: BoxFit.contain,
+        );
       default:
         return Image.asset(icon);
     }

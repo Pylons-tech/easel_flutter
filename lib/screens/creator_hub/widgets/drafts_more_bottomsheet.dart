@@ -1,3 +1,4 @@
+import 'package:easel_flutter/main.dart';
 import 'package:easel_flutter/models/nft.dart';
 import 'package:easel_flutter/screens/creator_hub/creator_hub_view_model.dart';
 import 'package:easel_flutter/utils/constants.dart';
@@ -57,7 +58,7 @@ class DraftsMoreBottomSheet extends StatelessWidget {
                 onPressed: () {
                   viewModel.saveNFT(nft: nft);
                   Navigator.of(context).pop();
-                  Navigator.of(context).pushNamed(RouteUtil.ROUTE_HOME);
+                  Navigator.of(context).pushNamed(RouteUtil.kRouteHome);
                 }),
             const Divider(
               color: EaselAppTheme.kGrey,
@@ -81,7 +82,7 @@ class DraftsMoreBottomSheet extends StatelessWidget {
 }
 
 Widget moreOptionTile({required String title, required String svg, required VoidCallback onPressed}) {
-  TextStyle titleStyle = TextStyle(fontSize: 18.sp, fontWeight: FontWeight.w800, fontFamily: kUniversalFontFamily, color: EaselAppTheme.kBlack);
+  TextStyle titleStyle = TextStyle(fontSize: isTablet ? 13.sp : 16.sp, fontWeight: FontWeight.w800, fontFamily: kUniversalFontFamily, color: EaselAppTheme.kBlack);
 
   return Padding(
     padding: EdgeInsets.symmetric(vertical: 8.h),

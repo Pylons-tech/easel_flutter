@@ -5,6 +5,7 @@ import 'package:easel_flutter/utils/extension_util.dart';
 import 'package:easel_flutter/widgets/loading.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:pylons_sdk/pylons_sdk.dart';
 
 class CreatorHubViewModel extends ChangeNotifier {
   final Repository repository;
@@ -12,6 +13,17 @@ class CreatorHubViewModel extends ChangeNotifier {
   CreatorHubViewModel(this.repository);
 
   List<NFT> nftList = [];
+
+  int _publishedRecipesLength = 0;
+  int forSaleCount = 0;
+
+  get publishedRecipesLength => _publishedRecipesLength;
+
+  set publishedRecipeLength(int value) {
+    _publishedRecipesLength = value;
+
+    notifyListeners();
+  }
 
   bool _publishCollapse = true;
 
@@ -31,8 +43,63 @@ class CreatorHubViewModel extends ChangeNotifier {
     notifyListeners();
   }
 
+  final List<NFT> _publishedNFTsList = [];
+
+  List<NFT> get publishedNFTsList => _publishedNFTsList;
+
+  String? getCookbookIdFromLocalDatasource() {
+    return repository.getCookbookId();
+  }
+
+  void getTotalForSale() {
+    forSaleCount = 0;
+    for (int i = 0; i < _publishedNFTsList.length; i++) {
+      if (publishedNFTsList[i].isEnabled && publishedNFTsList[i].amountMinted < publishedNFTsList[i].quantity) {
+        forSaleCount++;
+      }
+    }
+  }
+
+  Future<void> getPublishAndDraftData() async {
+    await Future.wait([getRecipesList(), getDraftsList()]);
+
+    getTotalForSale();
+    notifyListeners();
+  }
+
+  Future<void> getRecipesList() async {
+    final isPylonsExist = await PylonsWallet.instance.exists();
+
+    if (!isPylonsExist) {
+      return;
+    }
+    final cookBookId = getCookbookIdFromLocalDatasource();
+    if (cookBookId == null) {
+      return;
+    }
+
+    final recipesListEither = await repository.getRecipesBasedOnCookBookId(cookBookId: cookBookId);
+
+    if (recipesListEither.isLeft()) {
+      return;
+    }
+
+    final recipesList = recipesListEither.getOrElse(() => []);
+    _publishedNFTsList.clear();
+    if (recipesList.isEmpty) {
+      return;
+    }
+    for (final recipe in recipesList) {
+      final nft = NFT.fromRecipe(recipe);
+
+      _publishedNFTsList.add(nft);
+    }
+
+    publishedRecipeLength = _publishedNFTsList.length;
+  }
+
   Future<void> getDraftsList() async {
-    final loading = Loading().showLoading(message: "loading ...");
+    final loading = Loading().showLoading(message: "loading".tr());
 
     final getNftResponse = await repository.getNfts();
 

@@ -90,7 +90,7 @@ abstract class Repository {
   Future<Either<Failure, bool>> updateNftFromDescription({required SaveNft saveNft});
 
   /// This method will update draft in the local database from Pricing page
-  /// Input:[SaveNft] this model data contains bring [id],[tradePercentage],[price],[quantity],[step],[denomName],[isFreeDrop]
+  /// Input: [saveNft] contains data to be updated
   /// Output: [bool] returns whether the operation is successful or not
   Future<Either<Failure, bool>> updateNftFromPrice({required SaveNft saveNft});
 
@@ -104,8 +104,8 @@ abstract class Repository {
   Future<Either<Failure, List<NFT>>> getNfts();
 
   /// This method will get the drafts List from the local database
-  /// Input: [id] the id of the nft which the user wants to get
-  /// Output: [NFT] returns  the List of drafts
+  /// Input: [id] identifier of the NFt
+  /// Output: [NFT] returns the nft else will return [Failure]
   Future<Either<Failure, NFT>> getNft(int id);
 
   /// This method will delete draft from the local database
@@ -215,7 +215,7 @@ class RepositoryImp implements Repository {
   @override
   Future<Either<Failure, bool>> updateNftFromDescription({required SaveNft saveNft}) async {
     try {
-      bool result = await localDataSource.updateNftFromDescription(saveNft.id!, saveNft.nftName!, saveNft.nftDescription!, saveNft.creatorName!, saveNft.step!);
+      bool result = await localDataSource.updateNftFromDescription(saveNft);
 
       if (!result) {
         return Left(CacheFailure("save_error".tr()));
@@ -229,7 +229,7 @@ class RepositoryImp implements Repository {
   @override
   Future<Either<Failure, bool>> updateNftFromPrice({required SaveNft saveNft}) async {
     try {
-      bool result = await localDataSource.updateNftFromPrice(saveNft.id!, saveNft.tradePercentage!, saveNft.price!, saveNft.quantity!, saveNft.step!, saveNft.denomName!, saveNft.isFreeDrop!);
+      bool result = await localDataSource.updateNftFromPrice(saveNft);
 
       return Right(result);
     } on Exception catch (_) {
@@ -275,9 +275,9 @@ class RepositoryImp implements Repository {
       NFT? data = await localDataSource.getNft(id);
       if (data == null) {
         return Left(CacheFailure("something_wrong".tr()));
-      } else {
-        return Right(data);
       }
+        return Right(data);
+
     } on Exception catch (_) {
       return Left(CacheFailure("something_wrong".tr()));
     }

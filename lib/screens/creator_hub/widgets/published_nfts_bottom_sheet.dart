@@ -1,4 +1,5 @@
 import 'package:easel_flutter/easel_provider.dart';
+import 'package:easel_flutter/main.dart';
 import 'package:easel_flutter/models/nft.dart';
 import 'package:easel_flutter/utils/constants.dart';
 import 'package:easel_flutter/utils/easel_app_theme.dart';
@@ -22,7 +23,7 @@ class BuildPublishedNFTsBottomSheet {
       child: InkWell(
         onTap: () => onPressed(),
         child: Row(
-          children: [SvgPicture.asset(svg), SizedBox(width: 30.w), Text(title.tr(), style: EaselAppTheme.titleStyle.copyWith(fontSize: 16.sp))],
+          children: [SvgPicture.asset(svg), SizedBox(width: 30.w), Text(title.tr(), style: EaselAppTheme.titleStyle.copyWith(fontSize: isTablet? 13.sp :16.sp))],
         ),
       ),
     );
@@ -31,7 +32,7 @@ class BuildPublishedNFTsBottomSheet {
   void navigateToPreviewScreen({required BuildContext context, required NFT nft}) {
     easelProvider.setPublishedNFTClicked(nft);
     easelProvider.setPublishedNFTDuration(nft.duration);
-    Navigator.of(context).pushReplacementNamed(RouteUtil.ROUTE_PREVIEW_NFT_FULL_SCREEN);
+    Navigator.of(context).pushReplacementNamed(RouteUtil.kRoutePreviewNFTFullScreen);
   }
 
   void onViewOnPylonsPressed({required NFT nft}) async {
@@ -59,7 +60,7 @@ class BuildPublishedNFTsBottomSheet {
                       onPressed: () {
                         navigateToPreviewScreen(context: context, nft: nft);
                       },
-                      title: "view_on_ipfs".tr(),
+                      title: "view".tr(),
                       svg: kSvgViewIcon),
                   Divider(thickness: 1.h),
                   moreOptionTile(

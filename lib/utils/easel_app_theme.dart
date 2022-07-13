@@ -46,7 +46,7 @@ class EaselAppTheme {
   static Color cardBackgroundSelected = const Color(0x801212C4).withOpacity(0.2);
 
   static TextStyle titleStyle = TextStyle(
-    fontSize: 18.sp,
+    fontSize:  18.sp,
     fontWeight: FontWeight.w800,
     color: EaselAppTheme.kBlack,
     fontFamily: universalSansFamily,

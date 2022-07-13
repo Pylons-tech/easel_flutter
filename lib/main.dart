@@ -71,12 +71,12 @@ class MyApp extends StatelessWidget {
                 initialRoute: '/',
                 routes: {
                   '/': (context) => const SplashScreen(),
-                  RouteUtil.ROUTE_TUTORIAL: (context) => const TutorialScreen(),
-                  RouteUtil.ROUTE_WELCOME: (context) => const WelcomeScreen(),
-                  RouteUtil.ROUTE_CREATOR_HUB: (context) => const CreatorHubScreen(),
-                  RouteUtil.ROUTE_PREVIEW_NFT_FULL_SCREEN: (context) => const PreviewNFTFullScreen(),
-                  RouteUtil.ROUTE_HOME: (context) => const HomeScreen(),
-                  RouteUtil.VIDEO_FULL_SCREEN: (context) => const VideoWidgetFullScreen(),
+                  RouteUtil.kRouteTutorial: (context) => const TutorialScreen(),
+                  RouteUtil.kRouteWelcome: (context) => const WelcomeScreen(),
+                  RouteUtil.kRouteCreatorHub: (context) => const CreatorHubScreen(),
+                  RouteUtil.kRoutePreviewNFTFullScreen: (context) => const PreviewNFTFullScreen(),
+                  RouteUtil.kRouteHome: (context) => const HomeScreen(),
+                  RouteUtil.kVideoFullScreen: (context) => const VideoWidgetFullScreen(),
                 },
               )),
     );

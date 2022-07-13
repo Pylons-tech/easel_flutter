@@ -35,7 +35,6 @@ class NFT extends Equatable {
   String step = "";
   String ibcCoins = IBCCoins.upylon.name;
   bool isFreeDrop = false;
-
   String type = NftType.TYPE_ITEM.name;
   String assetType = AssetType.Image.name;
   String duration = "";
@@ -43,35 +42,39 @@ class NFT extends Equatable {
   String fileName = "";
   String cid = "";
 
-  NFT(
-      {this.id,
-      this.url = "",
-      this.thumbnailUrl = "",
-      this.name = "",
-      this.description = "",
-      this.denom = "",
-      this.price = "0",
-      this.type = "",
-      this.creator = "",
-      this.itemID = "",
-      this.cookbookID = "",
-      this.recipeID = "",
-      this.owner = "",
-      this.width = "",
-      this.isFreeDrop = false,
-      this.height = "",
-      this.tradePercentage = "0",
-      this.amountMinted = 0,
-      this.quantity = 0,
-      this.appType = "",
-      required this.ibcCoins,
-      this.tradeID = "",
-      required this.assetType,
-      required this.step,
-      this.duration = "",
-      this.hashtags = "",
-      this.fileName = "",
-      this.cid = ""});
+  bool isEnabled = true;
+
+  NFT({
+    this.id,
+    this.url = "",
+    this.thumbnailUrl = "",
+    this.name = "",
+    this.description = "",
+    this.denom = "",
+    this.price = "0",
+    this.type = "",
+    this.creator = "",
+    this.itemID = "",
+    this.cookbookID = "",
+    this.recipeID = "",
+    this.owner = "",
+    this.width = "",
+    this.isFreeDrop = false,
+    this.height = "",
+    this.tradePercentage = "0",
+    this.amountMinted = 0,
+    this.quantity = 0,
+    this.appType = "",
+    required this.ibcCoins,
+    this.tradeID = "",
+    required this.assetType,
+    required this.step,
+    this.duration = "",
+    this.hashtags = "",
+    this.fileName = "",
+    this.cid = "",
+    this.isEnabled= true
+  });
 
   factory NFT.fromRecipe(Recipe recipe) {
     final royalties = recipe.entries.itemOutputs.firstOrNull?.tradePercentage.fromBigInt().toInt().toString();
@@ -101,6 +104,8 @@ class NFT extends Equatable {
       step: "",
       isFreeDrop: false,
       hashtags: recipe.entries.itemOutputs.firstOrNull?.strings.firstWhere((strKeyValue) => strKeyValue.key == kHashtags, orElse: () => StringParam()).value ?? "",
+
+      isEnabled: recipe.enabled,
     );
   }
 
