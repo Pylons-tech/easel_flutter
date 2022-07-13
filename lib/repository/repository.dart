@@ -215,7 +215,7 @@ class RepositoryImp implements Repository {
   @override
   Future<Either<Failure, bool>> updateNftFromDescription({required SaveNft saveNft}) async {
     try {
-      bool result = await localDataSource.updateNftFromDescription(saveNft.id!, saveNft.nftName!, saveNft.nftDescription!, saveNft.creatorName!, saveNft.step!);
+      bool result = await localDataSource.updateNftFromDescription(saveNft.id!, saveNft.nftName!, saveNft.nftDescription!, saveNft.creatorName!, saveNft.step!, saveNft.hashtags!);
 
       if (!result) {
         return Left(CacheFailure("save_error".tr()));

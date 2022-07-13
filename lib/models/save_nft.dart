@@ -9,6 +9,19 @@ class SaveNft {
   final String? denomName;
   final bool? isFreeDrop;
   final String? step;
+  final String? hashtags;
 
-  SaveNft({this.id, this.isFreeDrop, this.price, this.tradePercentage, this.quantity, this.denomName, this.step, this.creatorName, this.nftDescription, this.nftName});
+  SaveNft({
+    this.id,
+    this.isFreeDrop,
+    this.price,
+    this.tradePercentage,
+    this.quantity,
+    this.denomName,
+    this.step,
+    this.creatorName,
+    this.nftDescription,
+    this.nftName,
+    this.hashtags,
+  });
 }

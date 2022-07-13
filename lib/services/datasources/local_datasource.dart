@@ -65,7 +65,7 @@ abstract class LocalDataSource {
   /// [String] the  name of the nft , [String] the  description of the nft
   /// [String] the  creator name of the nft , [String] the page name of the Pageview
   /// Output: [bool] returns whether the operation is successful or not
-  Future<bool> updateNftFromDescription(int id, String nftName, String nftDescription, String creatorName, String step);
+  Future<bool> updateNftFromDescription(int id, String nftName, String nftDescription, String creatorName, String step, String hashtags);
 
   /// This method will update draft in the local database from Pricing page
   /// Input: [id] the id of the nft, [String] the  name of the nft ,
@@ -188,9 +188,9 @@ class LocalDataSourceImpl implements LocalDataSource {
   }
 
   @override
-  Future<bool> updateNftFromDescription(int id, String nftName, String nftDescription, String creatorName, String step) async {
+  Future<bool> updateNftFromDescription(int id, String nftName, String nftDescription, String creatorName, String step, String hashtags) async {
     try {
-      await database.nftDao.updateNFTFromDescription(id, nftName, nftDescription, creatorName, step);
+      await database.nftDao.updateNFTFromDescription(id, nftName, nftDescription, creatorName, step, hashtags);
       return true;
     } catch (e) {
       return throw "save_error".tr();

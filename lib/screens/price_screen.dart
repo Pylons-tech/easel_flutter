@@ -7,7 +7,6 @@ import 'package:easel_flutter/utils/easel_app_theme.dart';
 import 'package:easel_flutter/utils/space_utils.dart';
 import 'package:easel_flutter/viewmodels/home_viewmodel.dart';
 import 'package:easel_flutter/widgets/clipped_button.dart';
-import 'package:easel_flutter/widgets/easel_price_input_field.dart';
 import 'package:easel_flutter/widgets/easel_text_field.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
@@ -16,10 +15,10 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get_it/get_it.dart';
 import 'package:provider/provider.dart';
 
+import '../widgets/easel_price_input_field.dart';
 import '../widgets/pylons_button.dart';
 
 class PriceScreen extends StatefulWidget {
-
   const PriceScreen({Key? key}) : super(key: key);
 
   @override
@@ -237,28 +236,28 @@ class _PriceScreenState extends State<PriceScreen> {
                         "${NumberFormat.decimalPattern().format(kMaxEdition)} $kMaxText",
                         style: TextStyle(color: EaselAppTheme.kLightPurple, fontSize: 14.sp, fontWeight: FontWeight.w800),
                       ),
+                      VerticalSpace(20.h),
+                      Align(
+                        alignment: Alignment.centerRight,
+                        child: PylonsButton(
+                          onPressed: () async {
+                            FocusScope.of(context).unfocus();
+                            if (_formKey.currentState!.validate()) {
+                              if (checkTextFields()) {
+                                context.read<EaselProvider>().updateNftFromPrice(nft!.id!);
+                                context.read<HomeViewModel>().pageController.nextPage(duration: const Duration(milliseconds: kPageAnimationTimeInMillis), curve: Curves.easeIn);
+                              }
+                            }
+                          },
+                          btnText: kContinue,
+                          showArrow: true,
+                          isBlue: false,
+                        ),
+                      ),
+                      VerticalSpace(20.h),
                     ],
                   ),
                 ),
-                VerticalSpace(20.h),
-                Align(
-                  alignment: Alignment.centerRight,
-                  child: PylonsButton(
-                    onPressed: () async {
-                      FocusScope.of(context).unfocus();
-                      if (_formKey.currentState!.validate()) {
-                        if (checkTextFields()) {
-                          context.read<EaselProvider>().updateNftFromPrice(nft!.id!);
-                          context.read<HomeViewModel>().pageController.nextPage(duration: const Duration(milliseconds: kPageAnimationTimeInMillis), curve: Curves.easeIn);
-                        }
-                      }
-                    },
-                    btnText: kContinue,
-                    showArrow: true,
-                    isBlue: false,
-                  ),
-                ),
-                VerticalSpace(20.h),
               ],
             ),
           );

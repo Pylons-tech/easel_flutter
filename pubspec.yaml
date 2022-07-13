@@ -67,6 +67,8 @@ dependencies:
 
   flutter_svg_provider: ^1.0.3
 
+  device_preview: 1.1.0
+
 
 
   share_plus: ^4.0.4  # Used for sharing the NFT link.

@@ -46,7 +46,7 @@ class _HomeScreenState extends State<HomeScreen> {
 
     homeViewModel.init(
       setTextField: () {
-        easelProvider.setTextFieldValuesDescription(artName: homeViewModel.nft?.name, description: homeViewModel.nft?.description);
+        easelProvider.setTextFieldValuesDescription(artName: homeViewModel.nft?.name, description: homeViewModel.nft?.description, hashtags: homeViewModel.nft?.hashtags);
         easelProvider.setTextFieldValuesPrice(
             royalties: homeViewModel.nft?.tradePercentage,
             price: homeViewModel.nft?.price,
@@ -110,7 +110,7 @@ class HomeScreenContent extends StatelessWidget {
                       child: IconButton(
                         onPressed: () {
                           ScaffoldMessenger.of(context).hideCurrentSnackBar();
-                          homeViewModel.pageController.previousPage(duration:  const Duration(milliseconds: kPageAnimationTimeInMillis), curve: Curves.easeIn);
+                          homeViewModel.pageController.previousPage(duration: const Duration(milliseconds: kPageAnimationTimeInMillis), curve: Curves.easeIn);
                           if (homeViewModel.currentPage.value == 0) {
                             GetIt.I.get<CreatorHubViewModel>().getDraftsList();
                             Navigator.of(context).pop();
@@ -158,8 +158,6 @@ class HomeScreenContent extends StatelessWidget {
               }
             },
             itemBuilder: (BuildContext context, int index) {
-
-
               final map = {0: chooseFormatScreen, 1: describeScreen, 2: priceScreen, 3: mintScreen};
 
               return map[index]?.call() ?? const SizedBox();
