@@ -134,7 +134,7 @@ class EaselProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-  final List<String> hashtagsList = [];
+  List<String> hashtagsList = [];
 
   String currentUsername = '';
 
@@ -191,12 +191,16 @@ class EaselProvider extends ChangeNotifier {
     noOfEditionController.text = '';
     priceController.text = '';
     royaltyController.text = '';
+    hashtagsList.clear();
     notifyListeners();
   }
 
-  void setTextFieldValuesDescription({String? artName, String? description}) {
+  void setTextFieldValuesDescription({String? artName, String? description, String? hashtags}) {
     artNameController.text = artName ?? "";
     descriptionController.text = description ?? "";
+    if (hashtags!.isNotEmpty) {
+      hashtagsList = hashtags.split(',');
+    }
     notifyListeners();
   }
 
@@ -204,7 +208,7 @@ class EaselProvider extends ChangeNotifier {
     royaltyController.text = royalties ?? "";
     priceController.text = price ?? "";
     noOfEditionController.text = edition ?? "";
-    _selectedDenom = denom != "" ? Denom.availableDenoms.firstWhere((element) => element.name == denom) : Denom.availableDenoms.first;
+    _selectedDenom = denom != "" ? Denom.availableDenoms.firstWhere((element) => element.symbol == denom) : Denom.availableDenoms.first;
     isFreeDrop = freeDrop;
     notifyListeners();
   }
@@ -879,8 +883,12 @@ class EaselProvider extends ChangeNotifier {
   }
 
   Future<bool> updateNftFromDescription(int id) async {
-    SaveNft saveNftForDescription =
-        SaveNft(id: id, nftDescription: descriptionController.text, nftName: artNameController.text, creatorName: artistNameController.text, step: UploadStep.descriptionAdded.name);
+    String _hashtags = "";
+    if (hashtagsList.isNotEmpty) {
+      _hashtags = hashtagsList.join(',');
+    }
+    SaveNft saveNftForDescription = SaveNft(
+        id: id, nftDescription: descriptionController.text, nftName: artNameController.text, creatorName: artistNameController.text, step: UploadStep.descriptionAdded.name, hashtags: _hashtags);
     final saveNftResponse = await repository.updateNftFromDescription(saveNft: saveNftForDescription);
 
     final _nft = await repository.getNft(id);
@@ -897,23 +905,22 @@ class EaselProvider extends ChangeNotifier {
 
   Future<bool> updateNftFromPrice(int id) async {
     SaveNft saveNftForPrice = SaveNft(
-        id: id,
-        tradePercentage: royaltyController.text,
-        price: priceController.text,
-        quantity: noOfEditionController.text,
-        step: UploadStep.priceAdded.name,
-        denomName: isFreeDrop == false ? selectedDenom.symbol : "",
-        isFreeDrop: isFreeDrop);
+      id: id,
+      tradePercentage: royaltyController.text,
+      price: priceController.text,
+      quantity: noOfEditionController.text,
+      step: UploadStep.priceAdded.name,
+      denomSymbol: isFreeDrop == false ? selectedDenom.symbol : "",
+      isFreeDrop: isFreeDrop,
+    );
     final saveNftResponse = await repository.updateNftFromPrice(saveNft: saveNftForPrice);
     final _nft = await repository.getNft(id);
     final dataFromLocal = _nft.getOrElse(() => nft);
     repository.setCacheDynamicType(key: nftKey, value: dataFromLocal);
     if (saveNftResponse.isLeft()) {
       navigatorKey.currentState!.overlay!.context.show(message: "save_error".tr());
-
       return false;
     }
-
     return saveNftResponse.getOrElse(() => false);
   }
 

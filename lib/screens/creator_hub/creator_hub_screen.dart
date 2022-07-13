@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:easel_flutter/main.dart';
 import 'package:easel_flutter/models/nft.dart';
 import 'package:easel_flutter/screens/creator_hub/creator_hub_view_model.dart';
 import 'package:easel_flutter/screens/creator_hub/widgets/drafts_more_bottomsheet.dart';
@@ -67,7 +68,7 @@ class CreatorHubContent extends StatefulWidget {
 
 class _CreatorHubContentState extends State<CreatorHubContent> {
   TextStyle titleStyle = TextStyle(
-    fontSize: 18.sp,
+    fontSize: isTablet ?  14.sp: 18.sp,
     fontWeight: FontWeight.w800,
     color: EaselAppTheme.kBlack,
     fontFamily: kUniversalFontFamily,
@@ -174,7 +175,7 @@ class _CreatorHubContentState extends State<CreatorHubContent> {
               children: [
                 SizedBox(
                   width: 120.w,
-                  height: 23.h,
+                  height: isTablet ? 30.h : 23.h,
                   child: Text(
                     title,
                     maxLines: 1,
@@ -189,7 +190,7 @@ class _CreatorHubContentState extends State<CreatorHubContent> {
                   onTap: () {
                     viewModel.publishCollapse = !viewModel.publishCollapse;
                   },
-                  child: SizedBox(height: 20.h, width: 20.w, child: Icon(viewModel.publishCollapse ? Icons.add : Icons.remove)),
+                  child: SizedBox(height: isTablet ? 30.h : 20.h, width: isTablet ? 30.w :20.w, child: Icon(viewModel.publishCollapse ? Icons.add : Icons.remove, size: isTablet ? 15.w :20.w,)),
                 )
               ],
             ),
@@ -223,11 +224,11 @@ class _CreatorHubContentState extends State<CreatorHubContent> {
               children: [
                 SizedBox(
                   width: 120.w,
-                  height: 23.h,
+                  height: isTablet ? 30.h : 23.h,
                   child: Text(
                     title,
                     maxLines: 1,
-                    style: titleStyle.copyWith(fontSize: 15.sp),
+                    style: titleStyle.copyWith(fontSize:  15.sp),
                   ),
                 ),
                 SizedBox(
@@ -238,7 +239,7 @@ class _CreatorHubContentState extends State<CreatorHubContent> {
                   onTap: () {
                     viewModel.draftCollapse = !viewModel.draftCollapse;
                   },
-                  child: SizedBox(height: 20.h, width: 20.w, child: Icon(viewModel.draftCollapse ? Icons.add : Icons.remove)),
+                  child: SizedBox(height: isTablet ? 30.h : 20.h, width: isTablet ? 30.w :20.w, child: Icon(viewModel.draftCollapse ? Icons.add : Icons.remove, size: isTablet ? 15.w :20.w,)),
                 )
               ],
             ),
@@ -316,7 +317,7 @@ class _CreatorHubContentState extends State<CreatorHubContent> {
                       overflow: TextOverflow.ellipsis,
                     ),
                     SizedBox(
-                      height: 11.h,
+                      height: isTablet ? 5.h : 11.h,
                     ),
                     Text(
                       "draft".tr(),

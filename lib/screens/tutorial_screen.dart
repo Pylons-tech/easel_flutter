@@ -1,3 +1,4 @@
+import 'package:auto_size_text/auto_size_text.dart';
 import 'package:bottom_drawer/bottom_drawer.dart';
 import 'package:easel_flutter/services/datasources/local_datasource.dart';
 import 'package:easel_flutter/main.dart';
@@ -82,9 +83,10 @@ class _TutorialScreenState extends State<TutorialScreen> {
                           decoration: const BoxDecoration(
                             image: DecorationImage(image: AssetImage(kTooltipBalloon), fit: BoxFit.contain),
                           ),
-                          child: Text(
+                          child: const AutoSizeText(
                             kWhyAppNeeded,
-                            style: TextStyle(fontSize: 12.sp, fontWeight: FontWeight.w400, color: EaselAppTheme.kWhite),
+                            maxFontSize: 18,
+                            style: TextStyle(fontSize: 18, fontWeight: FontWeight.w400, color: EaselAppTheme.kWhite),
                           ),
                         ),
                         onTap: () {
@@ -95,7 +97,7 @@ class _TutorialScreenState extends State<TutorialScreen> {
                   ),
                   RichText(
                     text: TextSpan(
-                      style: TextStyle(fontSize: 18.sp, fontWeight: FontWeight.w800, color: EaselAppTheme.kDartGrey),
+                      style: TextStyle(fontSize: isTablet ? 16.sp: 18.sp, fontWeight: FontWeight.w800, color: EaselAppTheme.kDartGrey),
                       children: <TextSpan>[
                         TextSpan(text: item['header']),
                         TextSpan(text: item['header1'], style: const TextStyle(color: EaselAppTheme.kPurple02)),
@@ -105,7 +107,7 @@ class _TutorialScreenState extends State<TutorialScreen> {
                 ] else ...[
                   SizedBox(height: 0.15.sh),
                   Text(item['header'],
-                      style: TextStyle(fontSize: 18.sp, fontWeight: FontWeight.w800, color: EaselAppTheme.kDartGrey),
+                      style: TextStyle(fontSize: isTablet ? 16.sp: 18.sp, fontWeight: FontWeight.w800, color: EaselAppTheme.kDartGrey),
                       textAlign: TextAlign.center),
                 ],
                 const SizedBox(height: 15),

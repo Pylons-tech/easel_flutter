@@ -218,11 +218,16 @@ class _$NftDao extends NftDao {
   }
 
   @override
-  Future<void> updateNFTFromDescription(int id, String nftName,
-      String nftDescription, String creatorName, String step) async {
+  Future<void> updateNFTFromDescription(
+      int id,
+      String nftName,
+      String nftDescription,
+      String creatorName,
+      String step,
+      String hashtags) async {
     await _queryAdapter.queryNoReturn(
-        'UPDATE nft SET name = ?2, description= ?3, creator = ?4, step = ?5 WHERE id = ?1',
-        arguments: [id, nftName, nftDescription, creatorName, step]);
+        'UPDATE nft SET name = ?2, description= ?3, creator = ?4, step = ?5,hashtags = ?6 WHERE id = ?1',
+        arguments: [id, nftName, nftDescription, creatorName, step, hashtags]);
   }
 
   @override

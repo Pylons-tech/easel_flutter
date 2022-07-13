@@ -21,48 +21,39 @@ class EaselPriceInputField extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        SizedBox(
-          height: 22.h,
-          child: Text(
-            kPriceText,
-            textAlign: TextAlign.start,
-            style: TextStyle(fontSize: 18.sp, fontWeight: FontWeight.w500),
-          ),
+        Text(
+          kPriceText,
+          textAlign: TextAlign.start,
+          style: TextStyle(fontSize: 18.sp, fontWeight: FontWeight.w500),
         ),
         SizedBox(height: 4.h),
         Stack(
           children: [
-            Image.asset(kTextFieldSingleLine, width: 1.sw, height: isTablet ? 32.h : 40.h, fit: BoxFit.fill),
+            Positioned(
+              child: Image.asset(kTextFieldSingleLine, width: 1.sw, height: isTablet ? 32.h : 40.h, fit: BoxFit.fill),
+            ),
             Row(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Flexible(
-                  child: SizedBox(
-                    height: isTablet ? 32.h : 40.h,
-                    child: Align(
-                      alignment: Alignment.center,
-                      child: TextFormField(
-                          style: TextStyle(fontSize: 18.sp, fontWeight: FontWeight.w400, color: EaselAppTheme.kDarkText),
-                          controller: controller,
-                          validator: validator,
-                          minLines: 1,
-                          maxLines: 1,
-                          keyboardType: TextInputType.number,
-                          textCapitalization: TextCapitalization.none,
-                          inputFormatters: inputFormatters,
-                          decoration: InputDecoration(
-                              hintText: kHintPrice,
-                              hintStyle: TextStyle(fontSize: 18.sp, color: EaselAppTheme.kGrey),
-                              border: const OutlineInputBorder(borderSide: BorderSide.none),
-                              floatingLabelBehavior: FloatingLabelBehavior.always,
-                              contentPadding: EdgeInsets.fromLTRB(10.w, 0.h, 10.w, 0.h)
-                          )),
-                    ),
-                  ),
-                ),
+                Expanded(
+                    child: TextFormField(
+                        style: TextStyle(fontSize: 18.sp, fontWeight: FontWeight.w400, color: EaselAppTheme.kDarkText),
+                        controller: controller,
+                        validator: validator,
+                        minLines: 1,
+                        maxLines: 1,
+                        keyboardType: TextInputType.number,
+                        textCapitalization: TextCapitalization.none,
+                        inputFormatters: inputFormatters,
+                        decoration: InputDecoration(
+                            hintText: kHintPrice,
+                            hintStyle: TextStyle(fontSize: 18.sp, color: EaselAppTheme.kGrey),
+                            border: const OutlineInputBorder(borderSide: BorderSide.none),
+                            floatingLabelBehavior: FloatingLabelBehavior.always,
+                            contentPadding: EdgeInsets.fromLTRB(10.w, 0.h, 10.w, 0.h)))),
                 const _CurrencyDropDown()
               ],
-            )
+            ),
           ],
         ),
       ],
@@ -79,8 +70,9 @@ class _CurrencyDropDown extends StatelessWidget {
         builder: (_, provider, __) => Stack(
               alignment: Alignment.center,
               children: [
-                Image.asset(kTextFieldButton, height: isTablet ? 32.h : 40.h, fit: BoxFit.fill),
-                SizedBox(
+                Positioned(left: 0, top: 0, bottom: 0, right: 0, child: Image.asset(kTextFieldButton, height: isTablet ? 32.h : 40.h, fit: BoxFit.fill)),
+                Container(
+                  padding: EdgeInsets.only(left: 5.w),
                     height: isTablet ? 32.h : 40.h,
                     child: Align(
                       alignment: Alignment.center,
@@ -104,7 +96,7 @@ class _CurrencyDropDown extends StatelessWidget {
                         items: provider.supportedDenomList.map((Denom value) {
                           return DropdownMenuItem<String>(
                             value: value.symbol,
-                            child: Row(mainAxisAlignment: MainAxisAlignment.start, children: [value.getIconWidget(), SizedBox(width: 15.w), Text(value.name)]),
+                            child: Row(mainAxisAlignment: MainAxisAlignment.start, children: [value.getIconWidget(), SizedBox(width:isTablet ? 10.w  : 15.w), Text(value.name, style: TextStyle(fontSize: isTablet ? 16.sp : 18.sp),)]),
                           );
                         }).toList(),
                       ),
