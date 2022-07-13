@@ -232,9 +232,7 @@ class _PriceScreenState extends State<PriceScreen> {
                   "${NumberFormat.decimalPattern().format(kMaxEdition)} $kMaxText",
                   style: TextStyle(color: EaselAppTheme.kLightPurple, fontSize: 14.sp, fontWeight: FontWeight.w800),
                 ),
-
                 VerticalSpace(20.h),
-
                 Align(
                   alignment: Alignment.centerRight,
                   child: PylonsButton(
@@ -252,9 +250,7 @@ class _PriceScreenState extends State<PriceScreen> {
                     isBlue: false,
                   ),
                 ),
-
                 VerticalSpace(20.h),
-
               ],
             ),
           );
