@@ -89,7 +89,7 @@ class _CreatorHubContentState extends State<CreatorHubContent> {
     color: EaselAppTheme.kWhite,
     fontFamily: kUniversalFontFamily,
   );
-  TextStyle subTextStyle = TextStyle(color: EaselAppTheme.kWhite, fontWeight: FontWeight.w700, fontFamily: kUniversalFontFamily, fontSize: 11.sp);
+  TextStyle subTextStyle = TextStyle(color: EaselAppTheme.kWhite, fontWeight: FontWeight.w700, fontFamily: kUniversalFontFamily, fontSize:isTablet? 9.sp: 11.sp);
   EaselProvider get easelProvider=> sl();
 
   @override
@@ -150,7 +150,7 @@ class _CreatorHubContentState extends State<CreatorHubContent> {
                     padding: EdgeInsets.symmetric(horizontal: 20.w),
                     child: Text(
                       "welcome_msg".tr(),
-                      style: titleStyle.copyWith(color: EaselAppTheme.kTextGrey, fontSize: 15.sp),
+                      style: titleStyle.copyWith(color: EaselAppTheme.kTextGrey, fontSize:isTablet? 12.sp: 15.sp),
                     ),
                   ),
                   SizedBox(height: 50.h),
@@ -185,6 +185,7 @@ class _CreatorHubContentState extends State<CreatorHubContent> {
                     ),
                   ),
                   SizedBox(height: 30.h),
+                  viewModel.nftList.isNotEmpty?
                   Expanded(
                       child: viewModel.viewType == ViewType.viewList
                           ? Padding(
@@ -194,7 +195,7 @@ class _CreatorHubContentState extends State<CreatorHubContent> {
                                   itemCount: viewModel.nftList.length,
                                   itemBuilder: (context, index) {
                                     final nft = viewModel.nftList[index];
-                                    return viewModel.selectedCollectionType == CollectionType.draft ? buildListTile(nft: viewModel.nftdraftList[index], viewModel: viewModel) : NFTsListTile(publishedNFT: nft);
+                                    return viewModel.selectedCollectionType == CollectionType.draft ? buildListTile(nft:nft, viewModel: viewModel) : NFTsListTile(publishedNFT: nft);
                                   }),
                             )
                           : GridView.builder(
@@ -208,7 +209,11 @@ class _CreatorHubContentState extends State<CreatorHubContent> {
                               itemBuilder: (context, index) {
                                 final nft = viewModel.nftList[index];
                                 return NftGridViewItem(nft: nft);
-                              })),
+                              })):
+                      Padding(
+                        padding:  EdgeInsets.symmetric(horizontal: 20.w),
+                        child: Text("no_nft_created".tr(), style: TextStyle(fontWeight: FontWeight.w700, color: EaselAppTheme.kLightGrey, fontSize:isTablet? 12.sp: 15.sp),),
+                      )
                 ],
               ),
             ),
@@ -296,7 +301,7 @@ class _CreatorHubContentState extends State<CreatorHubContent> {
                   height: 45.h,
                   width: 45.h,
                   child: CachedNetworkImage(
-                    fit: BoxFit.fill,
+                    fit: BoxFit.cover,
                     imageUrl: nft.assetType == kImageText ? nft.url : nft.thumbnailUrl,
                     errorWidget: (a, b, c) => const Center(child: Icon(Icons.error_outline)),
                     placeholder: (context, url) => Shimmer(color: EaselAppTheme.cardBackground, child: const SizedBox.expand()),

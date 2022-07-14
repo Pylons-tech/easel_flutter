@@ -47,5 +47,6 @@
   "create_username_description": "Please Open Pylons app and create a username to publish a NFT in Easel.",
   "loading": "loading ...",
   "welcome_msg":"Welcome to Easel, where you can manage your NFT listings and drafts.",
-  "hello": "Hello, "
+  "hello": "Hello, ",
+  "no_nft_created":"There are no NFTs created."
 }

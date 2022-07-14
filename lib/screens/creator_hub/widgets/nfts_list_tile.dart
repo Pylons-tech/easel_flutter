@@ -44,8 +44,8 @@ class NFTsListTile extends StatelessWidget {
           child: Row(
             children: [
               SizedBox(
-                  height: 45.w,
-                  width: 45.w,
+                  height: 45.h,
+                  width: 45.h,
                   child: LeadingBuilder(
                     onImage: (context) => CachedNetworkImage(
                       errorWidget: (context, url, error) => Align(
