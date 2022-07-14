@@ -1,4 +1,3 @@
-import 'dart:developer';
 import 'dart:io';
 import 'dart:ui';
 
@@ -222,7 +221,7 @@ class _AudioWidgetState extends State<AudioWidget> with WidgetsBindingObserver {
   void audioThumbnailPicker() async {
     final result = await FileUtils.pickFile(NftFormat.supportedFormats[0]);
     if (result != null) {
-      final loading = Loading().showLoading(message: "compressing_thumbnail".tr());
+      final loading = Loading()..showLoading(message: "compressing_thumbnail".tr());
       final file = await FileUtils.compressAndGetFile(File(result.path!));
       easelProvider.setAudioThumbnail(file);
       loading.dismiss();

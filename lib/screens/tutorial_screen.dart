@@ -1,5 +1,8 @@
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:bottom_drawer/bottom_drawer.dart';
+import 'package:easel_flutter/easel_provider.dart';
+import 'package:easel_flutter/screens/welcome_screen/widgets/show_something_wrong_dialog.dart';
+import 'package:easel_flutter/screens/welcome_screen/widgets/show_wallet_install_dialog.dart';
 import 'package:easel_flutter/services/datasources/local_datasource.dart';
 import 'package:easel_flutter/main.dart';
 import 'package:easel_flutter/utils/easel_app_theme.dart';
@@ -11,6 +14,7 @@ import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get_it/get_it.dart';
+import 'package:provider/provider.dart';
 import 'package:pylons_sdk/pylons_sdk.dart';
 
 import '../utils/constants.dart';
@@ -83,10 +87,10 @@ class _TutorialScreenState extends State<TutorialScreen> {
                           decoration: const BoxDecoration(
                             image: DecorationImage(image: AssetImage(kTooltipBalloon), fit: BoxFit.contain),
                           ),
-                          child: const AutoSizeText(
+                          child:  AutoSizeText(
                             kWhyAppNeeded,
-                            maxFontSize: 18,
-                            style: TextStyle(fontSize: 18, fontWeight: FontWeight.w400, color: EaselAppTheme.kWhite),
+                            maxFontSize: isTablet ? 18 : 14,
+                            style: TextStyle(fontSize: isTablet ? 18 : 14, fontWeight: FontWeight.w400, color: EaselAppTheme.kWhite),
                           ),
                         ),
                         onTap: () {
@@ -149,7 +153,6 @@ class _TutorialScreenState extends State<TutorialScreen> {
                   children: indicator(),
                 ),
               )
-              //  ),
               ),
           if (isLastPage()) ...[
             Align(
@@ -161,7 +164,8 @@ class _TutorialScreenState extends State<TutorialScreen> {
 
                       GetIt.I.get<LocalDataSource>().saveOnBoardingComplete();
 
-                      Navigator.of(context).pushNamed(RouteUtil.kRouteWelcome);
+
+                      checkPylonsAppExistsOrNot();
                     },
                     btnText: kContinue,
                     isBlue: false,
@@ -310,6 +314,56 @@ class _TutorialScreenState extends State<TutorialScreen> {
       PylonsWallet.instance.goToInstall();
     } else {
       context.show(message: kPylonsAlreadyInstalled);
+    }
+  }
+
+
+
+  void checkPylonsAppExistsOrNot() async {
+    final isExist = await PylonsWallet.instance.exists();
+
+    if (isExist) {
+      getProfile();
+      return;
+    }
+
+    context.read<EaselProvider>().populateCoinsIfPylonsNotExists();
+
+    navigatorKey.currentState!.pushReplacementNamed(RouteUtil.kRouteCreatorHub);
+  }
+
+  Future<void> getProfile() async {
+    final response = await context.read<EaselProvider>().getProfile();
+
+    if (response.success) {
+      await Future.delayed(const Duration(
+        milliseconds: 500,
+      ));
+
+      navigatorKey.currentState!.pushReplacementNamed(RouteUtil.kRouteCreatorHub);
+      return;
+    }
+
+    if (response.errorCode == kErrProfileNotExist) {
+      ShowWalletInstallDialog showWalletInstallDialog = ShowWalletInstallDialog(
+          context: context,
+          errorMessage: 'create_username_description'.tr(),
+          buttonMessage: 'open_pylons_app'.tr(),
+          onDownloadPressed: () {
+            PylonsWallet.instance.goToPylons();
+          },
+          onClose: () {
+            Navigator.of(context).pop();
+          });
+      showWalletInstallDialog.show();
+    } else {
+      ShowSomethingWentWrongDialog somethingWentWrongDialog = ShowSomethingWentWrongDialog(
+          context: context,
+          errorMessage: kPleaseTryAgain,
+          onClose: () {
+            Navigator.of(context).pop();
+          });
+      somethingWentWrongDialog.show();
     }
   }
 }
