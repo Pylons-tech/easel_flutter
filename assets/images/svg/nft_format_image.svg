@@ -1,6 +1,6 @@
-<svg width="52" height="49" viewBox="0 0 52 49" fill="none" xmlns="http://www.w3.org/2000/svg">
-<path d="M2.82446 2H49.9676V35.75L38.6533 47H2.82446V2Z" stroke="white" stroke-width="4"/>
-<path d="M11.052 46.9997L28.2439 28.9997L43.1436 44.5997" stroke="white" stroke-width="4"/>
-<path d="M2 38.3747L7.05105 33.6872L12.1021 28.9997L20.8573 37.1247" stroke="white" stroke-width="4"/>
-<rect x="36.5619" y="9.36563" width="5.76004" height="5.72727" fill="white"/>
+<svg width="68" height="66" viewBox="0 0 68 66" fill="none" xmlns="http://www.w3.org/2000/svg">
+<path fill-rule="evenodd" clip-rule="evenodd" d="M0 0H68V48.8569L51.2569 65.6H0V0ZM8 8V57.6H47.9431L60 45.5431V8H8Z" fill="white"/>
+<path fill-rule="evenodd" clip-rule="evenodd" d="M36.2798 32.8281L56.7084 53.2568L51.0516 58.9136L36.4277 44.2897L17.3737 64.3534L11.5728 58.8444L36.2798 32.8281Z" fill="white"/>
+<path fill-rule="evenodd" clip-rule="evenodd" d="M15.8095 33.0879L29.6816 46.0352L24.223 51.8837L15.8095 44.031L12.1606 47.4366L7.09097 52.5063L1.43408 46.8494L6.6012 41.6823L15.8095 33.0879Z" fill="white"/>
+<path d="M46.9385 13.4277H54.2694V20.7586H46.9385V13.4277Z" fill="white"/>
 </svg>
