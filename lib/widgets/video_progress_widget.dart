@@ -33,10 +33,12 @@ class VideoProgressWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final easelProvider = context.watch<EaselProvider>();
+
+
     return Padding(
         padding: EdgeInsets.only(right: 10.w, bottom: 10.h, top: 10.h, left: 5.w),
-        child: Consumer<EaselProvider>(builder: (context, EaselProvider easelProvider, child) {
-          return Padding(
+        child: Padding(
             padding: EdgeInsets.symmetric(horizontal: 20.w),
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
@@ -107,7 +109,7 @@ class VideoProgressWidget extends StatelessWidget {
                               }
                             }),
                         Text(
-                          isForFile ? formatDuration(easelProvider.fileDuration ~/ kSecInMillis) : easelProvider.publishedNFTDuration,
+                          isForFile ? formatDuration(easelProvider.fileDuration ~/ kSecInMillis) :  formatDuration(easelProvider.videoPlayerController.value.duration.inSeconds) ,
                           style: TextStyle(color: darkMode ? EaselAppTheme.kWhite : EaselAppTheme.kBlack),
                         ),
                       ],
@@ -115,7 +117,6 @@ class VideoProgressWidget extends StatelessWidget {
                   ),
               ],
             ),
-          );
-        }));
+        ));
   }
 }

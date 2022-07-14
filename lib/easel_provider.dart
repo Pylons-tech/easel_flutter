@@ -1,5 +1,4 @@
 import 'dart:async';
-import 'dart:developer';
 import 'dart:io';
 
 import 'package:easel_flutter/main.dart';
@@ -254,8 +253,10 @@ class EaselProvider extends ChangeNotifier {
     videoPlayerController.addListener(() {
       if (videoPlayerController.value.hasError) {
         videoLoadingError = videoPlayerController.value.errorDescription!;
+        notifyListeners();
       }
-      notifyListeners();
+
+
     });
   }
 
@@ -649,7 +650,7 @@ class EaselProvider extends ChangeNotifier {
     final result = await fileUtilsHelper.pickFile(NftFormat.supportedFormats[0]);
 
     if (result == null) return;
-    final loading = Loading().showLoading(message: kCompressingMessage);
+    final loading = Loading()..showLoading(message: kCompressingMessage);
     final file = await fileUtilsHelper.compressAndGetFile(File(result.path!));
     setVideoThumbnail(file);
     loading.dismiss();
@@ -807,7 +808,7 @@ class EaselProvider extends ChangeNotifier {
       navigatorKey.currentState!.overlay!.context.show(message: kErrPickFileFetch);
       return false;
     }
-    final loading = Loading().showLoading(message: kUploadingMessage);
+    final loading = Loading()..showLoading(message: kUploadingMessage);
 
     initializeTextEditingControllerWithEmptyValues();
     if (nftFormat.format == NFTTypes.audio || nftFormat.format == NFTTypes.video) {

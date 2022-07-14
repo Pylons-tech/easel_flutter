@@ -2,7 +2,7 @@ import 'dart:async';
 import 'dart:io';
 
 import 'package:easel_flutter/easel_provider.dart';
-import 'package:easel_flutter/repository/repository.dart';
+
 import 'package:easel_flutter/screens/clippers/custom_triangle_clipper.dart';
 import 'package:easel_flutter/screens/clippers/small_bottom_corner_clipper.dart';
 import 'package:easel_flutter/utils/constants.dart';
@@ -37,7 +37,7 @@ class _VideoWidgetState extends State<VideoWidget> {
   EaselProvider get easelProvider => GetIt.I.get();
 
 
-  final repository = GetIt.I.get<Repository>();
+
 
   @override
   void initState() {

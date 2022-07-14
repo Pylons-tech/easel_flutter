@@ -175,6 +175,7 @@ const kImageText = 'Image';
 const kVideoText = 'Video';
 const kAudioText = 'Audio';
 const k3dText = '3D';
+const String kThreeDText = "ThreeD";
 const kGetStarted = 'Get Started';
 const kContinue = 'Continue';
 const kWhyAppNeeded = 'Why the app is\nneeded?        \u21E9';

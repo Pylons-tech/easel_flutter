@@ -1,51 +1,39 @@
+import 'dart:async';
+
 import 'package:easel_flutter/main.dart';
-import 'package:easel_flutter/utils/constants.dart';
-import 'package:easel_flutter/utils/space_utils.dart';
+import 'package:easel_flutter/utils/image_util.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
+
+
 
 class Loading {
   Loading();
 
   void dismiss() {
-    navigatorKey.currentState!.pop();
+    navigatorKey.currentState?.pop();
   }
 
-  Loading showLoading({String message = kLoadingMessage}) {
-    showDialog(
+  Future showLoading({String? message}) {
+    if (navigatorKey.currentState?.overlay == null) {
+      return Completer()
+          .future; // return a fake future if state is screwy - this only ever happens during testing. todo: eliminate this hack
+    }
+    return showDialog(
       context: navigatorKey.currentState!.overlay!.context,
       barrierDismissible: true,
-      builder: (ctx) =>
-          WillPopScope(
-            onWillPop: ()async{
-              return Future.value(false);
-            },
-            child: AlertDialog(
-              content: Wrap(
-                children: [
-                  Row(
-                    children: [
-                      const SizedBox(
-                        width: 30,
-                        height: 30,
-                        child: CircularProgressIndicator(),
-                      ),
-                      const HorizontalSpace(10),
-                      Text(
-                        message,
-                        style:
-                        Theme
-                            .of(ctx)
-                            .textTheme
-                            .subtitle2!
-                            .copyWith(fontSize: 12),
-                      ),
-                    ],
-                  )
-                ],
-              ),
-            ),
-          ),
+      barrierColor: Colors.white.withOpacity(0),
+      builder: (ctx) => WillPopScope(
+        onWillPop: () async => false,
+        child: AlertDialog(
+          elevation: 0,
+          backgroundColor: Colors.transparent,
+          content: SizedBox(
+              height: 100.h,
+              width: 100.h,
+              child: Image.asset(ImageUtil.LOADING_GIF)),
+        ),
+      ),
     );
-    return this;
   }
 }

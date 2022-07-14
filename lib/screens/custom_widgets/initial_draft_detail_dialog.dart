@@ -31,8 +31,49 @@ class DraftDetailDialog {
   dialogAlreadyShown(EaselProvider provider) => provider.nft.isDialogShown;
 }
 
-class _DraftDetailDialog extends StatelessWidget {
+class _DraftDetailDialog extends StatefulWidget {
   const _DraftDetailDialog({Key? key}) : super(key: key);
+
+  @override
+  State<_DraftDetailDialog> createState() => _DraftDetailDialogState();
+}
+
+class _DraftDetailDialogState extends State<_DraftDetailDialog> {
+  Widget previewWidget = const SizedBox();
+
+  @override
+  void initState() {
+    super.initState();
+    selectPreviewWidgetBasedOnType();
+  }
+
+  void selectPreviewWidgetBasedOnType() {
+    EaselProvider easelProvider = context.read<EaselProvider>();
+    if (easelProvider.nft.assetType == k3dText) {
+      previewWidget = ModelViewer(
+        src: easelProvider.nft.url,
+        ar: false,
+        autoRotate: false,
+        cameraControls: false,
+      );
+      return;
+    }
+    previewWidget = CachedNetworkImage(
+      fit: BoxFit.contain,
+      imageUrl: getImageUrl(easelProvider),
+      errorWidget: (a, b, c) => const Center(
+          child: Icon(
+        Icons.error_outline,
+        color: Colors.white,
+      )),
+      placeholder: (context, url) => Shimmer(
+          color: EaselAppTheme.cardBackground,
+          child: SizedBox(
+            height: 100.h,
+            width: 100.h,
+          )),
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -86,28 +127,7 @@ class _DraftDetailDialog extends StatelessWidget {
                   SizedBox(
                     height: 100.h,
                     width: 100.h,
-                    child: easelProvider.nft.assetType == k3dText
-                        ? ModelViewer(
-                            src: easelProvider.nft.url,
-                            ar: false,
-                            autoRotate: false,
-                            cameraControls: false,
-                          )
-                        : CachedNetworkImage(
-                            fit: BoxFit.contain,
-                            imageUrl: getImageUrl(easelProvider),
-                            errorWidget: (a, b, c) => const Center(
-                                child: Icon(
-                              Icons.error_outline,
-                              color: Colors.white,
-                            )),
-                            placeholder: (context, url) => Shimmer(
-                                color: EaselAppTheme.cardBackground,
-                                child: SizedBox(
-                                  height: 100.h,
-                                  width: 100.h,
-                                )),
-                          ),
+                    child: previewWidget,
                   ),
                   SizedBox(
                     height: 30.h,
