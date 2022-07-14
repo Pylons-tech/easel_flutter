@@ -1,5 +1,5 @@
 import 'package:easel_flutter/easel_provider.dart';
-import 'package:easel_flutter/models/nft.dart';
+import 'package:easel_flutter/models/nft_format.dart';
 import 'package:easel_flutter/utils/constants.dart';
 import 'package:easel_flutter/utils/date_utils.dart';
 import 'package:easel_flutter/utils/easel_app_theme.dart';
@@ -12,30 +12,27 @@ import 'package:easel_flutter/widgets/model_viewer.dart';
 import 'package:easel_flutter/widgets/pylons_button.dart';
 import 'package:easel_flutter/widgets/video_widget.dart';
 import 'package:flutter/material.dart';
-import 'package:get_it/get_it.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:get_it/get_it.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
 
 import '../repository/repository.dart';
-import 'creator_hub/creator_hub_view_model.dart';
 
 class MintScreen extends StatefulWidget {
-  final PageController controller;
-
-  const MintScreen({Key? key, required this.controller}) : super(key: key);
+  const MintScreen({Key? key}) : super(key: key);
 
   @override
   State<MintScreen> createState() => _MintScreenState();
 }
 
 class _MintScreenState extends State<MintScreen> {
-  late NFT nft;
   var repository = GetIt.I.get<Repository>();
+  var easelProvider = GetIt.I.get<EaselProvider>();
 
   @override
   initState() {
-    nft = repository.getCacheDynamicType(key: "nft");
+    easelProvider.nft = repository.getCacheDynamicType(key: nftKey);
     super.initState();
   }
 
@@ -54,34 +51,8 @@ class _MintScreenState extends State<MintScreen> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: [
-                  if (provider.nftFormat.format == kImageText) ...[
-                    ImageWidget(
-                      file: provider.file,
-                      filePath: nft.url,
-                    )
-                  ],
-                  if (provider.nftFormat.format == kVideoText) ...[
-                    VideoWidget(
-                      file: provider.file!,
-                      previewFlag: true,
-                      isForFile: true,
-                    )
-                  ],
-                  if (provider.nftFormat.format == k3dText) ...[
-                    SizedBox(
-                        height: MediaQuery.of(context).size.height * 0.3,
-                        child: Model3dViewer(
-                          path: provider.file!.path,
-                           isFile: true,
-                        ))
-                  ],
-                  if (provider.nftFormat.format == kAudioText) ...[
-                    AudioWidget(
-                      file: provider.file!,
-                      previewFlag: true,
-                    )
-                  ],
-                  const SizedBox(height: 10),
+                  buildPreviewWidget(provider, context),
+                  SizedBox(height: 10.h),
                   Padding(
                     padding: const EdgeInsets.symmetric(horizontal: 20),
                     child: Column(
@@ -130,7 +101,7 @@ class _MintScreenState extends State<MintScreen> {
                                 fontSize: 14,
                               ),
                         ),
-                        if (provider.nftFormat.format != kAudioText) ...[
+                        if (provider.nftFormat.format != NFTTypes.audio) ...[
                           Text(
                             "$kSizeText: ${provider.fileWidth} x ${provider.fileHeight}px ${provider.fileExtension.toUpperCase()}",
                             style: Theme.of(context).textTheme.caption!.copyWith(
@@ -138,7 +109,7 @@ class _MintScreenState extends State<MintScreen> {
                                 ),
                           )
                         ],
-                        if (provider.nftFormat.format == kVideoText || provider.nftFormat.format == kAudioText) ...[
+                        if (provider.nftFormat.format == NFTTypes.video || provider.nftFormat.format == NFTTypes.audio) ...[
                           Text(
                             "$kDurationText: ${provider.fileDuration / kSecInMillis} sec",
                             style: Theme.of(context).textTheme.caption!.copyWith(
@@ -173,15 +144,12 @@ class _MintScreenState extends State<MintScreen> {
                         Align(
                           child: PylonsButton(
                             onPressed: () async {
-                              bool isRecipeCreated = await provider.createRecipe(nft);
+                              bool isRecipeCreated = await provider.verifyPylonsAndMint(nft: provider.nft);
                               if (!isRecipeCreated) {
                                 return;
                               }
                               provider.disposeAudioController();
-                              Navigator.of(context).popUntil(ModalRoute.withName(RouteUtil.ROUTE_CREATOR_HUB));
-                              context.read<CreatorHubViewModel>().getPublishAndDraftData();
-
-
+                              Navigator.of(context).pushNamedAndRemoveUntil(RouteUtil.kRouteCreatorHub, (route) => false);
                             },
                             btnText: kListText,
                             showArrow: true,
@@ -205,10 +173,10 @@ class _MintScreenState extends State<MintScreen> {
   Widget buildPreviewWidget(EaselProvider provider, BuildContext context) {
     switch (provider.nft.assetType) {
       case kImageText:
-        return ImageWidget(file: provider.file!);
+        return ImageWidget(filePath: provider.nft.url);
       case kVideoText:
         return VideoWidget(
-          file: provider.file!,
+          filePath: provider.nft.url,
           previewFlag: true,
           isForFile: true,
         );
@@ -222,7 +190,7 @@ class _MintScreenState extends State<MintScreen> {
             ));
       case kAudioText:
         return AudioWidget(
-          file: provider.file!,
+          filePath: provider.nft.url,
           previewFlag: true,
         );
     }

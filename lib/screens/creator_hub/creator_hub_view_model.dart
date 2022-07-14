@@ -1,15 +1,18 @@
-import 'package:easel_flutter/main.dart';
 import 'package:easel_flutter/models/nft.dart';
 import 'package:easel_flutter/repository/repository.dart';
+import 'package:easel_flutter/utils/constants.dart';
 import 'package:easel_flutter/utils/extension_util.dart';
 import 'package:easel_flutter/widgets/loading.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:pylons_sdk/pylons_sdk.dart';
 
 class CreatorHubViewModel extends ChangeNotifier {
   final Repository repository;
 
   CreatorHubViewModel(this.repository);
+
+  List<NFT> nftList = [];
 
   int _publishedRecipesLength = 0;
   int forSaleCount = 0;
@@ -58,16 +61,18 @@ class CreatorHubViewModel extends ChangeNotifier {
   }
 
   Future<void> getPublishAndDraftData() async {
-
-    await getRecipesList();
-    await getDraftsList();
+    await Future.wait([getRecipesList(), getDraftsList()]);
 
     getTotalForSale();
     notifyListeners();
   }
 
   Future<void> getRecipesList() async {
+    final isPylonsExist = await PylonsWallet.instance.exists();
 
+    if (!isPylonsExist) {
+      return;
+    }
     final cookBookId = getCookbookIdFromLocalDatasource();
     if (cookBookId == null) {
       return;
@@ -81,18 +86,17 @@ class CreatorHubViewModel extends ChangeNotifier {
 
     final recipesList = recipesListEither.getOrElse(() => []);
     _publishedNFTsList.clear();
-    if (recipesList.isNotEmpty) {
-      for (final recipe in recipesList) {
-        final nft = NFT.fromRecipe(recipe);
+    if (recipesList.isEmpty) {
+      return;
+    }
+    for (final recipe in recipesList) {
+      final nft = NFT.fromRecipe(recipe);
 
-        _publishedNFTsList.add(nft);
-      }
+      _publishedNFTsList.add(nft);
     }
 
-    publishedRecipeLength = publishedNFTsList.length;
+    publishedRecipeLength = _publishedNFTsList.length;
   }
-
-  List<NFT> nftList = [];
 
   Future<void> getDraftsList() async {
     final loading = Loading().showLoading(message: "loading".tr());
@@ -102,7 +106,7 @@ class CreatorHubViewModel extends ChangeNotifier {
     if (getNftResponse.isLeft()) {
       loading.dismiss();
 
-      navigatorKey.currentState!.overlay!.context.show(message: "something_wrong".tr());
+      "something_wrong".tr().show();
 
       return;
     }
@@ -118,16 +122,15 @@ class CreatorHubViewModel extends ChangeNotifier {
     final deleteNftResponse = await repository.deleteNft(id!);
 
     if (deleteNftResponse.isLeft()) {
-      navigatorKey.currentState!.overlay!.context.show(message: "delete_error".tr());
+      "delete_error".tr().show();
       return;
     }
-      nftList.removeWhere((element) => element.id == id);
-      notifyListeners();
+    nftList.removeWhere((element) => element.id == id);
+    notifyListeners();
   }
 
-  void onPublishPressed(NFT nft){
-    repository.setCacheDynamicType(key: "nft", value: nft);
-    repository.setCacheString(key: "from", value: "draft");
-
+  void saveNFT({required NFT nft}) {
+    repository.setCacheDynamicType(key: nftKey, value: nft);
+    repository.setCacheString(key: fromKey, value: kDraft);
   }
 }

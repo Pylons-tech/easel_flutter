@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:easel_flutter/main.dart';
 import 'package:easel_flutter/models/nft.dart';
@@ -12,9 +14,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:focus_detector/focus_detector.dart';
 import 'package:get_it/get_it.dart';
 import 'package:provider/provider.dart';
 import 'package:shimmer_animation/shimmer_animation.dart';
+
 import '../../utils/dependency_injection/dependency_injection_container.dart';
 
 class CreatorHubScreen extends StatefulWidget {
@@ -25,9 +29,48 @@ class CreatorHubScreen extends StatefulWidget {
 }
 
 class _CreatorHubScreenState extends State<CreatorHubScreen> {
+  CreatorHubViewModel get creatorHubViewModel => sl();
+
   @override
+  void initState() {
+    super.initState();
+
+    scheduleMicrotask(() {
+      creatorHubViewModel.getPublishAndDraftData();
+    });
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      color: EaselAppTheme.kWhite,
+      child: SafeArea(
+        child: Scaffold(
+          backgroundColor: EaselAppTheme.kBgWhite,
+          body: ChangeNotifierProvider.value(
+            value: creatorHubViewModel,
+            child: FocusDetector(
+                onFocusGained: () {
+                  GetIt.I.get<CreatorHubViewModel>().getDraftsList();
+                },
+                child: const CreatorHubContent()),
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+class CreatorHubContent extends StatefulWidget {
+  const CreatorHubContent({Key? key}) : super(key: key);
+
+  @override
+  State<CreatorHubContent> createState() => _CreatorHubContentState();
+}
+
+class _CreatorHubContentState extends State<CreatorHubContent> {
   TextStyle titleStyle = TextStyle(
-    fontSize:  18.sp,
+    fontSize: isTablet ? 14.sp : 18.sp,
     fontWeight: FontWeight.w800,
     color: EaselAppTheme.kBlack,
     fontFamily: kUniversalFontFamily,
@@ -38,14 +81,6 @@ class _CreatorHubScreenState extends State<CreatorHubScreen> {
     color: EaselAppTheme.kWhite,
     fontFamily: kUniversalFontFamily,
   );
-
-  @override
-  initState() {
-    WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
-      GetIt.I.get<CreatorHubViewModel>().getPublishAndDraftData();
-    });
-    super.initState();
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -69,7 +104,7 @@ class _CreatorHubScreenState extends State<CreatorHubScreen> {
                         child: InkWell(
                           onTap: () {
                             Navigator.of(context).pushNamed(
-                              RouteUtil.ROUTE_HOME,
+                              RouteUtil.kRouteHome,
                             );
                           },
                           child: Icon(
@@ -126,7 +161,7 @@ class _CreatorHubScreenState extends State<CreatorHubScreen> {
               children: [
                 SizedBox(
                   width: 120.w,
-                  height: 23.h,
+                  height: isTablet ? 30.h : 23.h,
                   child: Text(
                     title,
                     maxLines: 1,
@@ -141,7 +176,13 @@ class _CreatorHubScreenState extends State<CreatorHubScreen> {
                   onTap: () {
                     viewModel.publishCollapse = !viewModel.publishCollapse;
                   },
-                  child: SizedBox(height: 20.h, width: 20.w, child: Icon(viewModel.publishCollapse ? Icons.add : Icons.remove)),
+                  child: SizedBox(
+                      height: isTablet ? 30.h : 20.h,
+                      width: isTablet ? 30.w : 20.w,
+                      child: Icon(
+                        viewModel.publishCollapse ? Icons.add : Icons.remove,
+                        size: isTablet ? 15.w : 20.w,
+                      )),
                 )
               ],
             ),
@@ -175,7 +216,7 @@ class _CreatorHubScreenState extends State<CreatorHubScreen> {
               children: [
                 SizedBox(
                   width: 120.w,
-                  height: 23.h,
+                  height: isTablet ? 30.h : 23.h,
                   child: Text(
                     title,
                     maxLines: 1,
@@ -190,7 +231,13 @@ class _CreatorHubScreenState extends State<CreatorHubScreen> {
                   onTap: () {
                     viewModel.draftCollapse = !viewModel.draftCollapse;
                   },
-                  child: SizedBox(height: 20.h, width: 20.w, child: Icon(viewModel.draftCollapse ? Icons.add : Icons.remove)),
+                  child: SizedBox(
+                      height: isTablet ? 30.h : 20.h,
+                      width: isTablet ? 30.w : 20.w,
+                      child: Icon(
+                        viewModel.draftCollapse ? Icons.add : Icons.remove,
+                        size: isTablet ? 15.w : 20.w,
+                      )),
                 )
               ],
             ),
@@ -253,9 +300,8 @@ class _CreatorHubScreenState extends State<CreatorHubScreen> {
           Expanded(
             child: InkWell(
               onTap: () {
-                viewModel.onPublishPressed(nft);
-                Navigator.of(context).pop();
-                Navigator.of(context).pushNamed(RouteUtil.ROUTE_HOME);
+                viewModel.saveNFT(nft: nft);
+                Navigator.of(context).pushNamed(RouteUtil.kRouteHome);
               },
               child: SvgPicture.asset(kSvgPublish),
             ),
@@ -294,7 +340,7 @@ class _CreatorHubScreenState extends State<CreatorHubScreen> {
                     children: [
                       Text(
                         "nft_name".tr(args: [nft.name.isNotEmpty ? nft.name : 'Nft Name']),
-                        style: titleStyle.copyWith(fontSize: isTablet? 13.sp :18.sp),
+                        style: titleStyle.copyWith(fontSize: isTablet ? 13.sp : 18.sp),
                         maxLines: 1,
                         overflow: TextOverflow.ellipsis,
                       ),
@@ -303,7 +349,7 @@ class _CreatorHubScreenState extends State<CreatorHubScreen> {
                       ),
                       Text(
                         "draft".tr(),
-                        style: titleStyle.copyWith(color: EaselAppTheme.kLightRed, fontSize:isTablet? 8.sp :  13.sp),
+                        style: titleStyle.copyWith(color: EaselAppTheme.kLightRed, fontSize: isTablet ? 8.sp : 13.sp),
                       ),
                     ],
                   ),
@@ -313,7 +359,10 @@ class _CreatorHubScreenState extends State<CreatorHubScreen> {
                 ),
                 InkWell(
                     onTap: () {
-                      final DraftsBottomSheet draftsBottomSheet = DraftsBottomSheet(buildContext: context, nft: nft,);
+                      final DraftsBottomSheet draftsBottomSheet = DraftsBottomSheet(
+                        buildContext: context,
+                        nft: nft,
+                      );
                       draftsBottomSheet.show();
                     },
                     child: Padding(

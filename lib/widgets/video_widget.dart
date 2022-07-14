@@ -2,27 +2,32 @@ import 'dart:async';
 import 'dart:io';
 
 import 'package:easel_flutter/easel_provider.dart';
+import 'package:easel_flutter/repository/repository.dart';
 import 'package:easel_flutter/screens/clippers/custom_triangle_clipper.dart';
 import 'package:easel_flutter/screens/clippers/small_bottom_corner_clipper.dart';
 import 'package:easel_flutter/utils/constants.dart';
 import 'package:easel_flutter/utils/easel_app_theme.dart';
+import 'package:easel_flutter/utils/route_util.dart';
 import 'package:easel_flutter/utils/space_utils.dart';
 import 'package:easel_flutter/widgets/video_builder.dart';
 import 'package:easel_flutter/widgets/video_progress_widget.dart';
-import 'package:easel_flutter/widgets/video_widget_full_screen.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get_it/get_it.dart';
 import 'package:provider/provider.dart';
 import 'package:video_player/video_player.dart';
-import 'package:flutter/material.dart';
+
+
+
 
 class VideoWidget extends StatefulWidget {
-  final File file;
+  final File? file;
+  final String? filePath;
   final bool previewFlag;
   final bool isForFile;
 
-  const VideoWidget({Key? key, required this.file, required this.previewFlag, required this.isForFile}) : super(key: key);
+  const VideoWidget({Key? key, this.file, this.filePath, required this.previewFlag, required this.isForFile}) : super(key: key);
 
   @override
   _VideoWidgetState createState() => _VideoWidgetState();
@@ -31,15 +36,50 @@ class VideoWidget extends StatefulWidget {
 class _VideoWidgetState extends State<VideoWidget> {
   EaselProvider get easelProvider => GetIt.I.get();
 
-  final ValueNotifier<int> _currentStep = ValueNotifier(0);
-  final ValueNotifier<int> _currentPage = ValueNotifier(0);
+
+  final repository = GetIt.I.get<Repository>();
 
   @override
   void initState() {
     scheduleMicrotask(() {
-      easelProvider.initializeVideoPlayerWithFile();
+      if (widget.file != null) {
+        easelProvider.initializeVideoPlayerWithFile();
+      } else {
+        easelProvider.initializeVideoPlayerWithUrl(publishedNftUrl: widget.filePath!);
+      }
     });
     super.initState();
+  }
+
+  Widget _buildVideoFullScreenIcon() {
+    return Positioned(
+      right: -1,
+      bottom: 0,
+      child: ClipPath(
+        clipper: CustomTriangleClipper(),
+        child: InkWell(
+          onTap: () {
+            Navigator.pushNamed(context, RouteUtil.kVideoFullScreen);
+          },
+          child: Container(
+            width: 30.w,
+            height: 30.w,
+            alignment: Alignment.bottomRight,
+            color: EaselAppTheme.kLightRed,
+            child: Padding(
+              padding: EdgeInsets.all(5.w),
+              child: SvgPicture.asset(
+                kFullScreenIcon,
+                fit: BoxFit.fill,
+                width: 8.w,
+                height: 8.w,
+                alignment: Alignment.bottomRight,
+              ),
+            ),
+          ),
+        ),
+      ),
+    );
   }
 
   Widget _buildThumbnailButton() {
@@ -69,44 +109,6 @@ class _VideoWidgetState extends State<VideoWidget> {
                         )),
                   )
                 : SvgPicture.asset(kUploadThumbnail),
-          ),
-        ),
-      ),
-    );
-  }
-
-  Widget _buildVideoFullScreenIcon() {
-    return Positioned(
-      right: -1,
-      bottom: 0,
-      child: ClipPath(
-        clipper: CustomTriangleClipper(),
-        child: InkWell(
-          onTap: () {
-            Navigator.push(
-              context,
-              MaterialPageRoute(
-                  builder: (context) => VideoWidgetFullScreen(
-                        file: widget.file,
-                        easelProvider: easelProvider,
-                      )),
-            );
-          },
-          child: Container(
-            width: 30.w,
-            height: 30.w,
-            alignment: Alignment.bottomRight,
-            color: EaselAppTheme.kLightRed,
-            child: Padding(
-              padding: EdgeInsets.all(5.w),
-              child: SvgPicture.asset(
-                kFullScreenIcon,
-                fit: BoxFit.fill,
-                width: 8.w,
-                height: 8.w,
-                alignment: Alignment.bottomRight,
-              ),
-            ),
           ),
         ),
       ),

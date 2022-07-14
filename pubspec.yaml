@@ -15,7 +15,7 @@ publish_to: 'none' # Remove this line if you wish to publish to pub.dev
 # In iOS, build-name is used as CFBundleShortVersionString while build-number used as CFBundleVersion.
 # Read more about iOS versioning at
 # https://developer.apple.com/library/archive/documentation/General/Reference/InfoPlistKeyReference/Articles/CoreFoundationKeys.html
-version: 1.0.1+48
+version: 1.0.1+51
 
 environment:
   sdk: ">=2.12.0 <3.0.0"
@@ -51,7 +51,9 @@ dependencies:
 
   provider: ^6.0.1
 
-  pylons_sdk: ^0.1.1
+  pylons_sdk:
+    git:
+      url: https://github.com/Pylons-tech/pylons_dart_sdk.git
 
   google_fonts: ^2.1.0
 
@@ -64,6 +66,8 @@ dependencies:
   intl: ^0.17.0
 
   flutter_svg_provider: ^1.0.3
+
+  device_preview: 1.1.0
 
 
 
@@ -105,6 +109,8 @@ dependencies:
 
 
   flutter_image_compress: 1.1.0
+
+  auto_size_text: 3.0.0
 
   flutter_slidable: 1.3.0
 

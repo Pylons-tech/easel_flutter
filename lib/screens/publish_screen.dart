@@ -1,5 +1,6 @@
 
 import 'package:easel_flutter/easel_provider.dart';
+import 'package:easel_flutter/models/nft_format.dart';
 import 'package:easel_flutter/utils/constants.dart';
 import 'package:easel_flutter/utils/date_utils.dart';
 import 'package:easel_flutter/utils/easel_app_theme.dart';
@@ -109,7 +110,7 @@ class _PublishScreenState extends State<PublishScreen> {
                                   fontSize: 14,
                                 ),
                           ),
-                          if (provider.nftFormat.format != kAudioText) ...[
+                          if (provider.nftFormat.format != NFTTypes.audio) ...[
                             Text(
                               "$kSizeText: ${provider.fileWidth} x ${provider.fileHeight}px ${provider.fileExtension.toUpperCase()}",
                               style: Theme.of(context).textTheme.caption!.copyWith(
@@ -117,7 +118,7 @@ class _PublishScreenState extends State<PublishScreen> {
                                   ),
                             )
                           ],
-                          if (provider.nftFormat.format == kVideoText || provider.nftFormat.format == kAudioText) ...[
+                          if (provider.nftFormat.format == NFTTypes.audio || provider.nftFormat.format == NFTTypes.video) ...[
                             Text(
                               "$kDurationText: ${provider.fileDuration / kSecInMillis} sec",
                               style: Theme.of(context).textTheme.caption!.copyWith(

@@ -6,6 +6,7 @@ import 'package:easel_flutter/screens/preview_screen.dart';
 import 'package:easel_flutter/utils/constants.dart';
 import 'package:easel_flutter/utils/easel_app_theme.dart';
 import 'package:easel_flutter/utils/screen_responsive.dart';
+import 'package:easel_flutter/viewmodels/home_viewmodel.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
@@ -15,9 +16,7 @@ import 'package:flutter_svg_provider/flutter_svg_provider.dart' as svg_provider;
 import 'package:provider/provider.dart';
 
 class ChooseFormatScreen extends StatefulWidget {
-  final PageController controller;
-
-  const ChooseFormatScreen({Key? key, required this.controller}) : super(key: key);
+  const ChooseFormatScreen({Key? key}) : super(key: key);
 
   @override
   State<ChooseFormatScreen> createState() => _ChooseFormatScreenState();
@@ -29,29 +28,35 @@ class _ChooseFormatScreenState extends State<ChooseFormatScreen> {
   void proceedToNext({required PlatformFile? result, required EaselProvider easelProvider}) async {
     EaselProvider provider = context.read();
 
-    if (result != null) {
-      if (!provider.nftFormat.extensions.contains(result.extension)) {
-        errorText.value = kErrUnsupportedFormat;
-        showErrorDialog();
-        return;
-      }
-
-      provider.resolveNftFormat(context, result.extension!);
-      if (easelProvider.fileUtilsHelper.getFileSizeInGB(File(result.path!).lengthSync()) <= kFileSizeLimitInGB) {
-        await provider.setFile(context, result);
-
-        Navigator.push(
-          context,
-          MaterialPageRoute(builder: (context) => PreviewScreen(controller: widget.controller)),
-        );
-      } else {
-        errorText.value = 'could_not_uploaded'.tr(args: [result.name]);
-        showErrorDialog();
-      }
-    } else {
+    if (result == null) {
       errorText.value = kErrFileNotPicked;
       showErrorDialog();
+      return;
     }
+
+    if (!provider.nftFormat.extensions.contains(result.extension)) {
+      errorText.value = kErrUnsupportedFormat;
+      showErrorDialog();
+      return;
+    }
+
+    provider.resolveNftFormat(context, result.extension!);
+
+    if (easelProvider.fileUtilsHelper.getFileSizeInGB(File(result.path!).lengthSync()) > kFileSizeLimitInGB) {
+      errorText.value = 'could_not_uploaded'.tr(args: [result.name]);
+      showErrorDialog();
+      return;
+    }
+
+    await provider.setFile(context, result);
+
+    Navigator.of(context).push(MaterialPageRoute(builder: (_) =>  PreviewScreen(onMoveToNextScreen: () {
+      context.read<HomeViewModel>().pageController.nextPage(duration: const Duration(milliseconds: kPageAnimationTimeInMillis), curve: Curves.easeIn);
+
+    },)));
+
+
+
   }
 
   void showErrorDialog() {
@@ -164,7 +169,7 @@ class _CardWidget extends StatelessWidget {
                   Column(
                     children: [
                       Text(
-                        NftFormat.supportedFormats[typeIdx].format,
+                        NftFormat.supportedFormats[typeIdx].format.getTitle(),
                         style: Theme.of(context).textTheme.bodyText1!.copyWith(color: EaselAppTheme.kWhite, fontSize: 18.sp, fontWeight: FontWeight.w600),
                       ),
                       SizedBox(height: 3.h),

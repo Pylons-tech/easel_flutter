@@ -1,3 +1,4 @@
+import 'package:auto_size_text/auto_size_text.dart';
 import 'package:bottom_drawer/bottom_drawer.dart';
 import 'package:easel_flutter/services/datasources/local_datasource.dart';
 import 'package:easel_flutter/main.dart';
@@ -6,6 +7,7 @@ import 'package:easel_flutter/utils/extension_util.dart';
 import 'package:easel_flutter/utils/route_util.dart';
 import 'package:easel_flutter/utils/screen_responsive.dart';
 import 'package:easel_flutter/widgets/pylons_button.dart';
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get_it/get_it.dart';
@@ -81,9 +83,10 @@ class _TutorialScreenState extends State<TutorialScreen> {
                           decoration: const BoxDecoration(
                             image: DecorationImage(image: AssetImage(kTooltipBalloon), fit: BoxFit.contain),
                           ),
-                          child: Text(
+                          child: const AutoSizeText(
                             kWhyAppNeeded,
-                            style: TextStyle(fontSize: 12.sp, fontWeight: FontWeight.w400, color: EaselAppTheme.kWhite),
+                            maxFontSize: 18,
+                            style: TextStyle(fontSize: 18, fontWeight: FontWeight.w400, color: EaselAppTheme.kWhite),
                           ),
                         ),
                         onTap: () {
@@ -94,7 +97,7 @@ class _TutorialScreenState extends State<TutorialScreen> {
                   ),
                   RichText(
                     text: TextSpan(
-                      style: TextStyle(fontSize: 18.sp, fontWeight: FontWeight.w800, color: EaselAppTheme.kDartGrey),
+                      style: TextStyle(fontSize: isTablet ? 16.sp: 18.sp, fontWeight: FontWeight.w800, color: EaselAppTheme.kDartGrey),
                       children: <TextSpan>[
                         TextSpan(text: item['header']),
                         TextSpan(text: item['header1'], style: const TextStyle(color: EaselAppTheme.kPurple02)),
@@ -104,7 +107,7 @@ class _TutorialScreenState extends State<TutorialScreen> {
                 ] else ...[
                   SizedBox(height: 0.15.sh),
                   Text(item['header'],
-                      style: TextStyle(fontSize: 18.sp, fontWeight: FontWeight.w800, color: EaselAppTheme.kDartGrey),
+                      style: TextStyle(fontSize: isTablet ? 16.sp: 18.sp, fontWeight: FontWeight.w800, color: EaselAppTheme.kDartGrey),
                       textAlign: TextAlign.center),
                 ],
                 const SizedBox(height: 15),
@@ -158,7 +161,7 @@ class _TutorialScreenState extends State<TutorialScreen> {
 
                       GetIt.I.get<LocalDataSource>().saveOnBoardingComplete();
 
-                      Navigator.of(context).pushNamed(RouteUtil.ROUTE_WELCOME);
+                      Navigator.of(context).pushNamed(RouteUtil.kRouteWelcome);
                     },
                     btnText: kContinue,
                     isBlue: false,
@@ -276,7 +279,7 @@ class _TutorialScreenState extends State<TutorialScreen> {
                   onPressed: () async {
                     await onDownloadNowPressed(context);
                   },
-                  btnText: kDownloadPylons,
+                  btnText: 'download_pylons_app'.tr(),
                 ),
               ),
               tabletScreen: (BuildContext context) => Center(
@@ -286,7 +289,7 @@ class _TutorialScreenState extends State<TutorialScreen> {
                     onPressed: () async {
                       await onDownloadNowPressed(context);
                     },
-                    btnText: kDownloadPylons,
+                    btnText: 'download_pylons_app'.tr(),
                   ),
                 ),
               ),

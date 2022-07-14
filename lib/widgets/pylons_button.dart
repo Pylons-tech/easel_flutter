@@ -11,9 +11,7 @@ class PylonsButton extends StatelessWidget {
   final bool showArrow;
   final bool isBlue;
 
-  const PylonsButton(
-      {Key? key, this.isBlue = true, this.showArrow = false, required this.btnText, required this.onPressed})
-      : super(key: key);
+  const PylonsButton({Key? key, this.isBlue = true, this.showArrow = false, required this.btnText, required this.onPressed}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -33,22 +31,20 @@ class PylonsButton extends StatelessWidget {
                   bottom: 0,
                   child: SvgPicture.asset(isBlue ? kSvgRectBlue : kSvgRectRed, fit: BoxFit.cover),
                 ),
+                if (showArrow)
+                  Positioned(
+                      top: 0,
+                      bottom: 0,
+                      right: isTablet ? 2.w : 8.w,
+                      child: Icon(
+                        Icons.arrow_forward,
+                        color: EaselAppTheme.kWhite,
+                        size: isTablet ? 15.w : 20.w,
+                      )),
                 Center(
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Text(
-                        btnText,
-                        style: Theme.of(context)
-                            .textTheme
-                            .bodyText1!
-                            .copyWith(fontSize: 15.sp, color: EaselAppTheme.kWhite, fontWeight: FontWeight.w600),
-                      ),
-                      if (showArrow) ...[
-                        const SizedBox(width: 6),
-                        const Icon(Icons.arrow_forward, color: EaselAppTheme.kWhite),
-                      ]
-                    ],
+                  child: Text(
+                    btnText,
+                    style: Theme.of(context).textTheme.bodyText1!.copyWith(fontSize: 15.sp, color: EaselAppTheme.kWhite, fontWeight: FontWeight.w600),
                   ),
                 )
               ],

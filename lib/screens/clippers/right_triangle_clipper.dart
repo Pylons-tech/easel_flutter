@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 enum Orientation {
-  Orientation_SE,
-  Orientation_NE,
-  Orientation_NW,
-  Orientation_SW,
+  orientationSE,
+  orientationNE,
+  orientationNW,
+  orientationSW,
 }
 class RightTriangleClipper extends CustomClipper<Path> {
   final Orientation orientation;
@@ -15,20 +15,20 @@ class RightTriangleClipper extends CustomClipper<Path> {
     final path = Path();
 
     switch (orientation) {
-      case Orientation.Orientation_SW:
+      case Orientation.orientationSW:
         path.lineTo(size.width, size.height);
         path.lineTo(size.width, 0);
         break;
-      case Orientation.Orientation_SE:
+      case Orientation.orientationSE:
         path.lineTo(0, size.height);
         path.lineTo(size.width, 0);
         break;
-      case Orientation.Orientation_NW:
+      case Orientation.orientationNW:
         path.moveTo(size.width, 0);
         path.lineTo(size.width, size.height);
         path.lineTo(0, size.height);
         break;
-      case Orientation.Orientation_NE:
+      case Orientation.orientationNE:
         path.lineTo(size.width, size.height);
         path.lineTo(0, size.height);
         break;
@@ -38,7 +38,7 @@ class RightTriangleClipper extends CustomClipper<Path> {
   }
 
   @override
-  bool shouldReclip(CustomClipper old) {
-    return old != this;
+  bool shouldReclip(CustomClipper oldClipper) {
+    return oldClipper != this;
   }
 }

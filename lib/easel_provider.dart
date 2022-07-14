@@ -1,15 +1,17 @@
 import 'dart:async';
+import 'dart:developer';
 import 'dart:io';
-import 'package:easel_flutter/repository/repository.dart';
-import 'package:easy_localization/easy_localization.dart';
 
+import 'package:easel_flutter/main.dart';
 import 'package:easel_flutter/models/api_response.dart';
 import '../utils/enums.dart';
 
-import 'package:easel_flutter/main.dart';
 import 'package:easel_flutter/models/denom.dart';
 import 'package:easel_flutter/models/nft.dart';
 import 'package:easel_flutter/models/nft_format.dart';
+import 'package:easel_flutter/models/save_nft.dart';
+import 'package:easel_flutter/repository/repository.dart';
+import 'package:easel_flutter/screens/welcome_screen/widgets/show_wallet_install_dialog.dart';
 import 'package:easel_flutter/services/third_party_services/audio_player_helper.dart';
 import 'package:easel_flutter/services/third_party_services/video_player_helper.dart';
 import 'package:easel_flutter/utils/constants.dart';
@@ -17,16 +19,17 @@ import 'package:easel_flutter/utils/enums.dart';
 import 'package:easel_flutter/utils/extension_util.dart';
 import 'package:easel_flutter/utils/file_utils_helper.dart';
 import 'package:easel_flutter/widgets/loading.dart';
+import 'package:easy_localization/easy_localization.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:fixnum/fixnum.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:just_audio/just_audio.dart';
+import 'package:media_info/media_info.dart';
 import 'package:pylons_sdk/pylons_sdk.dart';
 import 'package:pylons_sdk/src/features/models/sdk_ipc_response.dart';
 import 'package:share_plus/share_plus.dart';
-import 'package:media_info/media_info.dart';
 import 'package:video_player/video_player.dart';
 
 class EaselProvider extends ChangeNotifier {
@@ -121,12 +124,15 @@ class EaselProvider extends ChangeNotifier {
 
   File? get audioThumbnail => _audioThumbnail;
 
-  bool _isInitialized = false;
+  bool _isInitializedForFile = false;
+  final bool _isInitializedForNetwork = false;
 
-  bool get isInitialized => _isInitialized;
+  bool get isInitializedForFile => _isInitializedForFile;
+
+  bool get isInitializedForNetwork => _isInitializedForNetwork;
 
   set setIsInitialized(bool value) {
-    _isInitialized = value;
+    _isInitializedForFile = value;
     notifyListeners();
   }
 
@@ -192,20 +198,25 @@ class EaselProvider extends ChangeNotifier {
     noOfEditionController.text = '';
     priceController.text = '';
     royaltyController.text = '';
+    hashtagsList.clear();
     notifyListeners();
   }
 
-  void setTextFieldValuesDescription({String? artName, String? description}) {
+  void setTextFieldValuesDescription({String? artName, String? description, String? hashtags}) {
     artNameController.text = artName ?? "";
     descriptionController.text = description ?? "";
+    if (hashtags!.isNotEmpty) {
+      hashtagsList = hashtags.split(',');
+    }
     notifyListeners();
   }
 
-  void setTextFieldValuesPrice({String? royalties, String? price, String? edition, String? denom}) {
+  void setTextFieldValuesPrice({String? royalties, String? price, String? edition, String? denom, bool freeDrop = false}) {
     royaltyController.text = royalties ?? "";
     priceController.text = price ?? "";
     noOfEditionController.text = edition ?? "";
-    _selectedDenom = denom != "" ? Denom.availableDenoms.firstWhere((element) => element.name == denom) : Denom.availableDenoms.first;
+    _selectedDenom = denom != "" ? Denom.availableDenoms.firstWhere((element) => element.symbol == denom) : Denom.availableDenoms.first;
+    isFreeDrop = freeDrop;
     notifyListeners();
   }
 
@@ -428,13 +439,17 @@ class EaselProvider extends ChangeNotifier {
       return;
     }
 
-    if (_nftFormat.format == kImageText || _nftFormat.format == kVideoText) {
-      _fileWidth = info['width'];
-      _fileHeight = info['height'];
-    }
-
-    if (_nftFormat.format == kAudioText || _nftFormat.format == kVideoText) {
-      _fileDuration = info['durationMs'];
+    switch (_nftFormat.format) {
+      case NFTTypes.image:
+        _fileWidth = info['width'];
+        _fileHeight = info['height'];
+        break;
+      case NFTTypes.video:
+      case NFTTypes.audio:
+        _fileDuration = info['durationMs'];
+        break;
+      case NFTTypes.threeD:
+        break;
     }
   }
 
@@ -447,7 +462,8 @@ class EaselProvider extends ChangeNotifier {
   /// return true or false depending on the response from the wallet app
   Future<bool> createCookbook() async {
     _cookbookId = await repository.autoGenerateCookbookId();
-    var cookBook1 = Cookbook(creator: "", iD: _cookbookId, name: "Easel Cookbook", description: "Cookbook for Easel NFT", developer: artistNameController.text, version: "v0.0.1", supportEmail: "easel@pylons.tech", enabled: true);
+    var cookBook1 = Cookbook(
+        creator: "", id: _cookbookId, name: cookbookName, description: cookbookDesc, developer: artistNameController.text, version: kVersionCookboox, supportEmail: supportedEmail, enabled: true);
 
     var response = await PylonsWallet.instance.txCreateCookbook(cookBook1);
     if (response.success) {
@@ -468,9 +484,162 @@ class EaselProvider extends ChangeNotifier {
 
     if (savedArtistName.isNotEmpty) {
       artistNameController.text = savedArtistName;
+      notifyListeners();
       return;
     }
     artistNameController.text = currentUsername;
+    notifyListeners();
+  }
+
+  Future<bool> verifyPylonsAndMint({
+    required NFT nft,
+  }) async {
+    final isPylonsExist = await PylonsWallet.instance.exists();
+
+    if (!isPylonsExist) {
+      ShowWalletInstallDialog showWalletInstallDialog = ShowWalletInstallDialog(
+          context: navigatorKey.currentState!.overlay!.context,
+          errorMessage: 'download_pylons_description'.tr(),
+          buttonMessage: 'download_pylons_app'.tr(),
+          onDownloadPressed: () {
+            PylonsWallet.instance.goToInstall();
+          },
+          onClose: () {
+            Navigator.of(navigatorKey.currentState!.overlay!.context).pop();
+          });
+
+      showWalletInstallDialog.show();
+
+      return false;
+    }
+
+    final response = await getProfile();
+
+    if (response.errorCode == kErrProfileNotExist) {
+      ShowWalletInstallDialog showWalletInstallDialog = ShowWalletInstallDialog(
+          context: navigatorKey.currentState!.overlay!.context,
+          errorMessage: 'create_username_description'.tr(),
+          buttonMessage: 'open_pylons_app'.tr(),
+          onDownloadPressed: () {
+            PylonsWallet.instance.goToPylons();
+          },
+          onClose: () {
+            Navigator.of(navigatorKey.currentState!.overlay!.context).pop();
+          });
+      showWalletInstallDialog.show();
+
+      return false;
+    }
+
+    if (response.success) {
+      return await createRecipe(nft: nft);
+    }
+
+    return false;
+  }
+
+  /// sends a createRecipe Tx message to the wallet
+  /// return true or false depending on the response from the wallet app
+  Future<bool> createRecipe({required NFT nft}) async {
+    if (nft.isFreeDrop == false) {
+      if (!await shouldMintUSDOrNot()) {
+        return false;
+      }
+    }
+
+    // get device cookbook id
+    _cookbookId = repository.getCookbookId();
+    String savedUserName = repository.getCookBookGeneratorUsername();
+
+    if (_cookbookId == null || isDifferentUserName(savedUserName)) {
+      // create cookbook
+      final isCookBookCreated = await createCookbook();
+
+      if (isCookBookCreated) {
+        // get device cookbook id
+        _cookbookId = repository.getCookbookId();
+        notifyListeners();
+      } else {
+        return false;
+      }
+    }
+
+    _recipeId = repository.autoGenerateEaselId();
+
+    audioPlayerHelper.pauseAudio();
+    setVideoThumbnail(null);
+    setAudioThumbnail(null);
+
+    String residual = nft.tradePercentage.trim();
+
+    String price = isFreeDrop ? "0" : _selectedDenom.formatAmount(price: priceController.text);
+    var recipe = Recipe(
+        cookbookId: _cookbookId,
+        id: _recipeId,
+        nodeVersion: Int64(1),
+        name: nft.name.trim(),
+        description: nft.description.trim(),
+        version: kVersion,
+        coinInputs: [
+          nft.isFreeDrop ? CoinInput() : CoinInput(coins: [Coin(amount: price, denom: _selectedDenom.symbol)])
+        ],
+        itemInputs: [],
+        costPerBlock: Coin(denom: kUpylon, amount: "0"),
+        entries: EntriesList(coinOutputs: [], itemOutputs: [
+          ItemOutput(
+              id: kEaselNFT,
+              doubles: [
+                DoubleParam(key: kResidual, weightRanges: [
+                  DoubleWeightRange(
+                    lower: residual,
+                    upper: residual,
+                    weight: Int64(1),
+                  )
+                ])
+              ],
+              longs: [
+                LongParam(key: kQuantity, weightRanges: [
+                  IntWeightRange(
+                      lower: Int64(int.parse(nft.quantity.toString().replaceAll(",", "").trim())), upper: Int64(int.parse(nft.quantity.toString().replaceAll(",", "").trim())), weight: Int64(1))
+                ]),
+                LongParam(key: kWidth, weightRanges: [IntWeightRange(lower: Int64(int.parse(nft.width)), upper: Int64(int.parse(nft.width)), weight: Int64(1))]),
+                LongParam(key: kHeight, weightRanges: [IntWeightRange(lower: Int64(int.parse(nft.height)), upper: Int64(int.parse(nft.height)), weight: Int64(1))]),
+                LongParam(key: kDuration, weightRanges: [IntWeightRange(lower: Int64(int.parse(nft.duration)), upper: Int64(int.parse(nft.duration)), weight: Int64(1))]),
+              ],
+              strings: [
+                StringParam(key: kName, value: nft.name.trim()),
+                StringParam(key: kAppType, value: kEasel),
+                StringParam(key: kDescription, value: nft.description.trim()),
+                StringParam(key: kHashtags, value: hashtagsList.join('#')),
+                StringParam(key: kNFTFormat, value: nft.assetType),
+                StringParam(key: kNFTURL, value: nft.url),
+                StringParam(key: kThumbnailUrl, value: nft.thumbnailUrl),
+                StringParam(key: kCreator, value: nft.creator.trim()),
+              ],
+              mutableStrings: [],
+              transferFee: [Coin(denom: kPylonSymbol, amount: "1")],
+              tradePercentage: nft.tradePercentage.trim(),
+              tradeable: true,
+              amountMinted: Int64(0),
+              quantity: Int64(int.parse(nft.quantity.toString().replaceAll(",", "").trim()))),
+        ], itemModifyOutputs: []),
+        outputs: [
+          WeightedOutputs(entryIds: [kEaselNFT], weight: Int64(1))
+        ],
+        blockInterval: Int64(0),
+        enabled: true,
+        extraInfo: kExtraInfo);
+
+    var response = await PylonsWallet.instance.txCreateRecipe(recipe, requestResponse: false);
+
+    if (response.success) {
+      navigatorKey.currentState!.overlay!.context.show(message: kRecipeCreated);
+      deleteNft(nft.id);
+      return true;
+    } else {
+      navigatorKey.currentState!.overlay!.context.show(message: "$kErrRecipe ${response.error}");
+      return false;
+    }
   }
 
   bool isDifferentUserName(String savedUserName) => (currentUsername.isNotEmpty && savedUserName != currentUsername);
@@ -493,6 +662,14 @@ class EaselProvider extends ChangeNotifier {
     loading.dismiss();
   }
 
+  void populateCoinsIfPylonsNotExists() {
+    supportedDenomList = Denom.availableDenoms;
+
+    if (supportedDenomList.isNotEmpty) {
+      _selectedDenom = supportedDenomList.first;
+    }
+  }
+
   @override
   void dispose() {
     artistNameController.dispose();
@@ -512,10 +689,12 @@ class EaselProvider extends ChangeNotifier {
 
       supportedDenomList = Denom.availableDenoms.where((Denom e) => sdkResponse.data.supportedCoins.contains(e.symbol)).toList();
 
-      if (supportedDenomList.isNotEmpty) {
+      if (supportedDenomList.isNotEmpty && selectedDenom.symbol.isEmpty) {
         _selectedDenom = supportedDenomList.first;
       }
     }
+    artistNameController.text = currentUsername;
+    notifyListeners();
 
     return sdkResponse;
   }
@@ -569,7 +748,7 @@ class EaselProvider extends ChangeNotifier {
 
     setIsInitialized = await audioPlayerHelper.setFile(file: _file!.path);
 
-    if (isInitialized) {
+    if (isInitializedForFile) {
       audioPlayerHelper.playerStateStream().listen((event) {}).onData((playerState) async {
         final isPlaying = playerState.playing;
         final processingState = playerState.processingState;
@@ -624,16 +803,6 @@ class EaselProvider extends ChangeNotifier {
     });
   }
 
-  void initilizeTextEditingControllerWithEmptyValues() {
-    artistNameController.text = '';
-    artNameController.text = '';
-    descriptionController.text = '';
-    noOfEditionController.text = '';
-    priceController.text = '';
-    royaltyController.text = '';
-    notifyListeners();
-  }
-
   late NFT nft;
 
   Future<bool> saveNftLocally(UploadStep step) async {
@@ -644,106 +813,116 @@ class EaselProvider extends ChangeNotifier {
     if (!_file!.existsSync()) {
       navigatorKey.currentState!.overlay!.context.show(message: kErrPickFileFetch);
       return false;
-    } else {
-      final loading = Loading().showLoading(message: kUploadingMessage);
+    }
+    final loading = Loading().showLoading(message: kUploadingMessage);
 
-      initilizeTextEditingControllerWithEmptyValues();
-      if (nftFormat.format == kAudioText || nftFormat.format == kVideoText) {
-        final uploadResponse = await repository.uploadFile(nftFormat.format == kAudioText ? audioThumbnail! : videoThumbnail!);
-        if (uploadResponse.isLeft()) {
-          loading.dismiss();
-          return false;
-        }
-        uploadThumbnailResponse = uploadResponse.getOrElse(() => uploadThumbnailResponse);
-        if (uploadThumbnailResponse.status == Status.error) {
-          loading.dismiss();
-          navigatorKey.currentState!.overlay!.context.show(message: uploadThumbnailResponse.errorMessage ?? kErrUpload);
-          return false;
-        }
-      }
-      audioPlayerHelper.pauseAudio();
-
-      final response = await repository.uploadFile(_file!);
-      if (response.isLeft()) {
+    initializeTextEditingControllerWithEmptyValues();
+    if (nftFormat.format == NFTTypes.audio || nftFormat.format == NFTTypes.video) {
+      final uploadResponse = await repository.uploadFile(nftFormat.format == NFTTypes.audio ? audioThumbnail! : videoThumbnail!);
+      if (uploadResponse.isLeft()) {
         loading.dismiss();
         return false;
       }
-      final fileUploadResponse = response.getOrElse(() => uploadUrlResponse);
-      loading.dismiss();
-      if (fileUploadResponse.status == Status.error) {
-        navigatorKey.currentState!.overlay!.context.show(message: fileUploadResponse.errorMessage ?? kErrUpload);
+      uploadThumbnailResponse = uploadResponse.getOrElse(() => uploadThumbnailResponse);
+      if (uploadThumbnailResponse.status == Status.error) {
+        loading.dismiss();
+        navigatorKey.currentState!.overlay!.context.show(message: uploadThumbnailResponse.errorMessage ?? kErrUpload);
         return false;
       }
-
-      nft = NFT(
-          id: null,
-          type: NftType.TYPE_ITEM.name,
-          ibcCoins: IBCCoins.upylon.name,
-          assetType: nftFormat.format,
-          cookbookID: cookbookId ?? "",
-          width: fileWidth.toString(),
-          denom: "",
-          tradePercentage: royaltyController.text,
-          height: fileHeight.toString(),
-          duration: fileDuration.toString(),
-          description: descriptionController.text,
-          recipeID: recipeId,
-          step: step.name,
-          thumbnailUrl: (nftFormat.format == kAudioText || nftFormat.format == kVideoText) ? "$ipfsDomain/${uploadThumbnailResponse.data?.value?.cid}" : "",
-          name: artistNameController.text,
-          url: "$ipfsDomain/${fileUploadResponse.data?.value?.cid}",
-          price: priceController.text,
-          cid: fileUploadResponse.data?.value?.cid);
-
-      final saveNftResponse = await repository.saveNft(nft);
-
-      if (saveNftResponse.isLeft()) {
-        navigatorKey.currentState!.overlay!.context.show(message: "save_error".tr());
-
-        return false;
-      }
-
-      id = saveNftResponse.getOrElse(() => 0);
-
-      NFT _nft = NFT(
-          id: id,
-          type: NftType.TYPE_ITEM.name,
-          ibcCoins: IBCCoins.upylon.name,
-          assetType: nftFormat.format,
-          cookbookID: cookbookId ?? "",
-          width: fileWidth.toString(),
-          denom: "",
-          tradePercentage: royaltyController.text,
-          height: fileHeight.toString(),
-          duration: fileDuration.toString(),
-          description: descriptionController.text,
-          recipeID: recipeId,
-          step: step.name,
-          thumbnailUrl: (nftFormat.format == kAudioText || nftFormat.format == kVideoText) ? "$ipfsDomain/${uploadThumbnailResponse.data?.value?.cid}" : "",
-          name: artistNameController.text,
-          url: "$ipfsDomain/${fileUploadResponse.data?.value?.cid}",
-          price: priceController.text,
-          cid: fileUploadResponse.data?.value?.cid);
-
-      if (id < 1) {
-        navigatorKey.currentState!.overlay!.context.show(message: "save_error".tr());
-        return false;
-      }
-      repository.setCacheDynamicType(key: 'nft', value: _nft);
-      setAudioThumbnail(null);
-
-      setVideoThumbnail(null);
     }
+    audioPlayerHelper.pauseAudio();
+
+    final response = await repository.uploadFile(_file!);
+    if (response.isLeft()) {
+      loading.dismiss();
+      return false;
+    }
+    final fileUploadResponse = response.getOrElse(() => uploadUrlResponse);
+    loading.dismiss();
+    if (fileUploadResponse.status == Status.error) {
+      navigatorKey.currentState!.overlay!.context.show(message: fileUploadResponse.errorMessage ?? kErrUpload);
+      return false;
+    }
+
+    nft = NFT(
+      id: null,
+      type: NftType.TYPE_ITEM.name,
+      ibcCoins: IBCCoins.upylon.name,
+      assetType: nftFormat.format.getTitle(),
+      cookbookID: cookbookId ?? "",
+      width: fileWidth.toString(),
+      denom: "",
+      tradePercentage: royaltyController.text,
+      height: fileHeight.toString(),
+      duration: fileDuration.toString(),
+      description: descriptionController.text,
+      recipeID: recipeId,
+      fileName: _file!.path.split("/").last,
+      cid: fileUploadResponse.data?.value?.cid,
+      step: step.name,
+      thumbnailUrl: (nftFormat.format == NFTTypes.audio || nftFormat.format == NFTTypes.video) ? "$ipfsDomain/${uploadThumbnailResponse.data?.value?.cid}" : "",
+      name: artistNameController.text,
+      url: "$ipfsDomain/${fileUploadResponse.data?.value?.cid}",
+      price: priceController.text,
+    );
+
+    final saveNftResponse = await repository.saveNft(nft);
+
+    if (saveNftResponse.isLeft()) {
+      navigatorKey.currentState!.overlay!.context.show(message: "save_error".tr());
+
+      return false;
+    }
+
+    id = saveNftResponse.getOrElse(() => 0);
+
+    NFT _nft = NFT(
+      id: id,
+      type: NftType.TYPE_ITEM.name,
+      ibcCoins: IBCCoins.upylon.name,
+      assetType: nftFormat.format.getTitle(),
+      cookbookID: cookbookId ?? "",
+      width: fileWidth.toString(),
+      denom: "",
+      tradePercentage: royaltyController.text,
+      height: fileHeight.toString(),
+      duration: fileDuration.toString(),
+      description: descriptionController.text,
+      recipeID: recipeId,
+      step: step.name,
+      fileName: _file!.path.split("/").last,
+      cid: fileUploadResponse.data?.value?.cid,
+      thumbnailUrl: (nftFormat.format == NFTTypes.audio || nftFormat.format == NFTTypes.video) ? "$ipfsDomain/${uploadThumbnailResponse.data?.value?.cid}" : "",
+      name: artistNameController.text,
+      url: "$ipfsDomain/${fileUploadResponse.data?.value?.cid}",
+      price: priceController.text,
+    );
+
+    if (id < 1) {
+      "save_error".tr().show();
+      return false;
+    }
+    repository.setCacheDynamicType(key: nftKey, value: _nft);
+    setAudioThumbnail(null);
+
+    setVideoThumbnail(null);
+    Navigator.of(navigatorKey.currentState!.overlay!.context).pop();
 
     return true;
   }
 
   Future<bool> updateNftFromDescription(int id) async {
-    final saveNftResponse = await repository.updateNftFromDescription(id, artNameController.text, descriptionController.text, artistNameController.text, UploadStep.descriptionAdded.name);
+    String _hashtags = "";
+    if (hashtagsList.isNotEmpty) {
+      _hashtags = hashtagsList.join(',');
+    }
+    SaveNft saveNftForDescription = SaveNft(
+        id: id, nftDescription: descriptionController.text, nftName: artNameController.text, creatorName: artistNameController.text, step: UploadStep.descriptionAdded.name, hashtags: _hashtags);
+    final saveNftResponse = await repository.updateNftFromDescription(saveNft: saveNftForDescription);
 
     final _nft = await repository.getNft(id);
     final dataFromLocal = _nft.getOrElse(() => nft);
-    repository.setCacheDynamicType(key: 'nft', value: dataFromLocal);
+    repository.setCacheDynamicType(key: nftKey, value: dataFromLocal);
     if (saveNftResponse.isLeft()) {
       navigatorKey.currentState!.overlay!.context.show(message: "save_error".tr());
 
@@ -754,116 +933,24 @@ class EaselProvider extends ChangeNotifier {
   }
 
   Future<bool> updateNftFromPrice(int id) async {
-    final saveNftResponse = await repository.updateNftFromPrice(id, royaltyController.text, priceController.text, noOfEditionController.text, UploadStep.priceAdded.name, isFreeDrop == false ? selectedDenom.name : "", isFreeDrop);
+    SaveNft saveNftForPrice = SaveNft(
+      id: id,
+      tradePercentage: royaltyController.text,
+      price: priceController.text,
+      quantity: noOfEditionController.text,
+      step: UploadStep.priceAdded.name,
+      denomSymbol: isFreeDrop == false ? selectedDenom.symbol : "",
+      isFreeDrop: isFreeDrop,
+    );
+    final saveNftResponse = await repository.updateNftFromPrice(saveNft: saveNftForPrice);
     final _nft = await repository.getNft(id);
     final dataFromLocal = _nft.getOrElse(() => nft);
-    repository.setCacheDynamicType(key: 'nft', value: dataFromLocal);
+    repository.setCacheDynamicType(key: nftKey, value: dataFromLocal);
     if (saveNftResponse.isLeft()) {
       navigatorKey.currentState!.overlay!.context.show(message: "save_error".tr());
-
       return false;
     }
-
     return saveNftResponse.getOrElse(() => false);
-  }
-
-  Future<bool> createRecipe(NFT nft) async {
-    if (nft.isFreeDrop == false) {
-      if (!await shouldMintUSDOrNot()) {
-        return false;
-      }
-    }
-
-    // get device cookbook id
-    _cookbookId = repository.getCookbookId();
-    String savedUserName = repository.getCookBookGeneratorUsername();
-
-    if (_cookbookId == null || isDifferentUserName(savedUserName)) {
-      // create cookbook
-      final isCookBookCreated = await createCookbook();
-
-      if (isCookBookCreated) {
-        // get device cookbook id
-        _cookbookId = repository.getCookbookId();
-        notifyListeners();
-      } else {
-        return false;
-      }
-    }
-
-    _recipeId = repository.autoGenerateEaselId();
-
-    audioPlayerHelper.pauseAudio();
-    setVideoThumbnail(null);
-    setAudioThumbnail(null);
-
-    String residual = nft.tradePercentage.trim();
-
-    String price = nft.isFreeDrop == false ? (double.parse(nft.price.replaceAll(",", "").trim()) * 1000000).toStringAsFixed(0) : "0";
-    var recipe = Recipe(
-        cookbookID: _cookbookId,
-        iD: _recipeId,
-        nodeVersion: "v0.1.0",
-        name: nft.name.trim(),
-        description: nft.description.trim(),
-        version: "v0.1.0",
-        coinInputs: [
-          nft.isFreeDrop ? CoinInput() : CoinInput(coins: [Coin(amount: price, denom: nft.denom)])
-        ],
-        itemInputs: [],
-        costPerBlock: Coin(denom: kUpylon, amount: "0"),
-        entries: EntriesList(coinOutputs: [], itemOutputs: [
-          ItemOutput(
-              iD: kEaselNFT,
-              doubles: [
-                DoubleParam(key: kResidual, weightRanges: [
-                  DoubleWeightRange(
-                    lower: residual,
-                    upper: residual,
-                    weight: Int64(1),
-                  )
-                ])
-              ],
-              longs: [
-                LongParam(key: kQuantity, weightRanges: [IntWeightRange(lower: Int64(int.parse(nft.quantity.toString().replaceAll(",", "").trim())), upper: Int64(int.parse(nft.quantity.toString().replaceAll(",", "").trim())), weight: Int64(1))]),
-                LongParam(key: kWidth, weightRanges: [IntWeightRange(lower: Int64(int.parse(nft.width)), upper: Int64(int.parse(nft.width)), weight: Int64(1))]),
-                LongParam(key: kHeight, weightRanges: [IntWeightRange(lower: Int64(int.parse(nft.height)), upper: Int64(int.parse(nft.height)), weight: Int64(1))]),
-                LongParam(key: kDuration, weightRanges: [IntWeightRange(lower: Int64(int.parse(nft.duration)), upper: Int64(int.parse(nft.duration)), weight: Int64(1))]),
-              ],
-              strings: [
-                StringParam(key: kName, value: nft.name.trim()),
-                StringParam(key: kAppType, value: kEasel),
-                StringParam(key: kDescription, value: nft.description.trim()),
-                StringParam(key: kHashtags, value: hashtagsList.join('#')),
-                StringParam(key: kNFTFormat, value: nft.assetType),
-                StringParam(key: kNFTURL, value: nft.url),
-                StringParam(key: kThumbnailUrl, value: nft.thumbnailUrl),
-                StringParam(key: kCreator, value: nft.creator.trim()),
-              ],
-              mutableStrings: [],
-              transferFee: [Coin(denom: kPylonSymbol, amount: "1")],
-              tradePercentage: nft.tradePercentage.trim(),
-              tradeable: true,
-              amountMinted: Int64(0),
-              quantity: Int64(int.parse(nft.quantity.toString().replaceAll(",", "").trim()))),
-        ], itemModifyOutputs: []),
-        outputs: [
-          WeightedOutputs(entryIDs: [kEaselNFT], weight: Int64(1))
-        ],
-        blockInterval: Int64(0),
-        enabled: true,
-        extraInfo: kExtraInfo);
-
-    var response = await PylonsWallet.instance.txCreateRecipe(recipe, requestResponse: false);
-
-    if (response.success) {
-      navigatorKey.currentState!.overlay!.context.show(message: kRecipeCreated);
-      deleteNft(nft.id);
-      return true;
-    } else {
-      navigatorKey.currentState!.overlay!.context.show(message: "$kErrRecipe ${response.error}");
-      return false;
-    }
   }
 
   Future<void> deleteNft(int? id) async {

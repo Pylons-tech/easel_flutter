@@ -1,8 +1,9 @@
 import 'dart:core';
+
+import "package:collection/collection.dart";
 import 'package:easel_flutter/utils/constants.dart';
 import 'package:easel_flutter/utils/extension_util.dart';
 import 'package:equatable/equatable.dart';
-import "package:collection/collection.dart";
 import 'package:floor/floor.dart';
 import 'package:pylons_sdk/pylons_sdk.dart';
 
@@ -34,7 +35,6 @@ class NFT extends Equatable {
   String step = "";
   String ibcCoins = IBCCoins.upylon.name;
   bool isFreeDrop = false;
-
   String type = NftType.TYPE_ITEM.name;
   String assetType = AssetType.Image.name;
   String duration = "";
@@ -81,8 +81,8 @@ class NFT extends Equatable {
     return NFT(
       id: null,
       type: NftType.TYPE_RECIPE.name,
-      recipeID: recipe.iD,
-      cookbookID: recipe.cookbookID,
+      recipeID: recipe.id,
+      cookbookID: recipe.cookbookId,
       name: recipe.entries.itemOutputs.firstOrNull?.strings.firstWhere((strKeyValue) => strKeyValue.key == kName, orElse: () => StringParam()).value ?? "",
       url: recipe.entries.itemOutputs.firstOrNull?.strings.firstWhere((strKeyValue) => strKeyValue.key == kNFTURL, orElse: () => StringParam()).value ?? "",
       thumbnailUrl: recipe.entries.itemOutputs.firstOrNull?.strings.firstWhere((strKeyValue) => strKeyValue.key == kThumbnailUrl, orElse: () => StringParam()).value ?? "",

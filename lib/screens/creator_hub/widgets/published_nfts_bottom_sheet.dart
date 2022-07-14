@@ -32,7 +32,7 @@ class BuildPublishedNFTsBottomSheet {
   void navigateToPreviewScreen({required BuildContext context, required NFT nft}) {
     easelProvider.setPublishedNFTClicked(nft);
     easelProvider.setPublishedNFTDuration(nft.duration);
-    Navigator.of(context).pushReplacementNamed(RouteUtil.ROUTE_PREVIEW_NFT_FULL_SCREEN);
+    Navigator.of(context).pushReplacementNamed(RouteUtil.kRoutePreviewNFTFullScreen);
   }
 
   void onViewOnPylonsPressed({required NFT nft}) async {

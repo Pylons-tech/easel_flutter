@@ -58,7 +58,7 @@ class FileUtilsHelperImpl implements FileUtilsHelper {
     FileType _type;
     List<String>? allowedExtensions;
     switch (format.format) {
-      case kImageText:
+      case NFTTypes.image:
         if (Platform.isAndroid) {
           _type = FileType.custom;
           allowedExtensions = imageAllowedExtsAndroid;
@@ -67,11 +67,11 @@ class FileUtilsHelperImpl implements FileUtilsHelper {
         _type = FileType.image;
         break;
 
-      case kVideoText:
+      case NFTTypes.video:
         _type = FileType.video;
         break;
 
-      case kAudioText:
+      case NFTTypes.audio:
         if (Platform.isAndroid) {
           _type = FileType.audio;
           break;

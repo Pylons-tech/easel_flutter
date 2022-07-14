@@ -1,9 +1,12 @@
+import 'dart:developer';
+
 import 'package:easel_flutter/easel_provider.dart';
 import 'package:easel_flutter/main.dart';
 import 'package:easel_flutter/screens/welcome_screen/widgets/show_something_wrong_dialog.dart';
 import 'package:easel_flutter/screens/welcome_screen/widgets/show_wallet_install_dialog.dart';
 import 'package:easel_flutter/utils/easel_app_theme.dart';
 import 'package:easel_flutter/utils/route_util.dart';
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:easel_flutter/widgets/pylons_button.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -64,14 +67,9 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
       return;
     }
 
-    ShowWalletInstallDialog showWalletInstallDialog = ShowWalletInstallDialog(
-        context: context,
-        errorMessage: kAppNotInstalled,
-        onClose: () {
-          Navigator.of(context).pop();
-        });
+    context.read<EaselProvider>().populateCoinsIfPylonsNotExists();
 
-    showWalletInstallDialog.show();
+    navigatorKey.currentState!.pushReplacementNamed(RouteUtil.kRouteCreatorHub);
   }
 
   Future<void> getProfile() async {
@@ -82,7 +80,7 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
         milliseconds: 500,
       ));
 
-      navigatorKey.currentState!.pushReplacementNamed(RouteUtil.ROUTE_CREATOR_HUB);
+      navigatorKey.currentState!.pushReplacementNamed(RouteUtil.kRouteCreatorHub);
 
       return;
     }
@@ -90,7 +88,11 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
     if (response.errorCode == kErrProfileNotExist) {
       ShowWalletInstallDialog showWalletInstallDialog = ShowWalletInstallDialog(
           context: context,
-          errorMessage: kAppNotInstalled,
+          errorMessage: 'create_username_description'.tr(),
+          buttonMessage: 'open_pylons_app'.tr(),
+          onDownloadPressed: () {
+            PylonsWallet.instance.goToPylons();
+          },
           onClose: () {
             Navigator.of(context).pop();
           });

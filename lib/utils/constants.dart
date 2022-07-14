@@ -16,6 +16,7 @@ const kIconDenomAtom = 'assets/images/denom_atom.png';
 const kIconDenomEmoney = 'assets/images/denom_emoney.png';
 const kIconDenomAgoric = 'assets/images/denom_agoric.png';
 const kIconDenomJuno = 'assets/images/denom_juno.png';
+const kIconDenomETH = 'assets/images/denom_eth.png';
 const kTextFieldSingleLine = 'assets/images/text_field_single_line.png';
 const kTextFieldMultiLine = 'assets/images/text_field_multi_line.png';
 const kTextFieldButton = 'assets/images/text_field_button.png';
@@ -66,7 +67,8 @@ const kEaselEmail = "easel@pylons.tech";
 /// ```Number constants
 const kMinNFTName = 9;
 const kMinDescription = 20;
-const kMinValue = 1;
+const kMinValue = 0.01;
+const kMinEditionValue = 1;
 const kMaxDescription = 256;
 const kMaxEdition = 10000;
 const kMinRoyalty = 0;
@@ -81,6 +83,11 @@ const int kFileCompressQuality = 50;
 
 const double kPrecision = 100000000000000000;
 
+const int kBigIntBase = 1000000;
+const int kEthIntBase = 1000000000000000000;
+
+
+
 const suffixes = ["B", "KB", "MB", "GB", "TB"];
 
 /// ````Reserved words, symbols, IDs etc
@@ -94,6 +101,7 @@ const kAtomSymbol = 'uatom';
 const kEuroSymbol = 'eeur';
 const kAgoricSymbol = 'urun';
 const kJunoSymbol = 'ujunox';
+const String kEthereumSymbol = "weth-wei";
 
 const kPylonText = 'Pylon';
 const kUSDText = 'USD';
@@ -101,6 +109,7 @@ const kAtomText = 'Atom';
 const kEurText = 'EEur';
 const kAgoricText = 'Agoric';
 const kJunoText = 'Juno';
+const kEthereum = "Ethereum";
 const kNone = 'None';
 const kPleaseWait = 'Please Wait';
 const kBack = 'Back';
@@ -155,6 +164,10 @@ const kEditNFTText = 'Edit your NFT Details';
 const kPreviewYourNFTText = 'Preview your NFT file';
 const kListNftText = 'List NFT';
 const kPublishNftText = 'Publish NFT';
+
+const kSelectNFTText = 'Select NFT file';
+const kDetailNftText = 'NFT Details';
+const kPriceNftText = 'NFT Pricing';
 const kUploadText = 'Upload';
 const kEditText = 'Edit';
 const kPreviewText = 'Preview';
@@ -166,7 +179,6 @@ const k3dText = '3D';
 const kGetStarted = 'Get Started';
 const kContinue = 'Continue';
 const kWhyAppNeeded = 'Why the app is\nneeded?        \u21E9';
-const kDownloadPylons = 'Download Pylons app';
 const kWhyAppNeededDesc1 = 'Your Pylons app is your gateway to the Pylons ecosystem';
 const kWhyAppNeededDescSummary1 = 'Discover new NFTs, apps & adventures';
 const kWhyAppNeededDesc2 = 'It makes managing your crypto easy';
@@ -184,7 +196,6 @@ const kHintArtistName = 'Sarah Jackson';
 const kHintNftDesc = 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eimod tempor incididunt ut labore et dolore magna aliquaQ. Ut enim ad minim veniam, quis nostrud exercita.';
 const kHintNoEdition = '100';
 const kHintPrice = '10.87';
-const kErrAddAudioThumbnail = "Error while uploading thumbnail";
 const kHintHashtag = 'Type in';
 const kHashtagsText = 'Hashtags (optional)';
 const kAddText = 'Add';
@@ -201,13 +212,11 @@ const kErrFileMetaParse = 'Error occurred while parsing the chosen media file:';
 const kErrRecipe = 'Recipe error :';
 const kErrNoStripeAccount = 'Kindly register Stripe account in wallet';
 const kTryAgain = "Try again";
-const kAppNotInstalled = "Please download the Pylons app and create a username to publish a NFT in Easel.";
 const kPleaseTryAgain = "Something went wrong.\n Please try again.";
 const kCancel = "Cancel";
 const String videoPlayerNetworkError = 'Unable to play the video right now. Please check your internet connection and try again.';
 const kChooseFifteenSecondsOfAudio = "Choose 15s highlight of your audio for preview";
 const kUploadingThumbnailMessage = "Uploading Thumbnail";
-
 const videoPlayerError = "Some Error Occurred while playing the video. Please try again later.";
 const kCannotLaunchThisUrl = "Cannot launch this URL";
 
@@ -264,16 +273,20 @@ const String kNftFormat = "NFT_Format";
 /// Currency ABRR
 const String kEmoneyAbb = "EEUR";
 const String kAGoricAbb = "run";
-const String kPYLN_ABBREVATION = 'PYLN';
+const String kPYLNAbbrevation = 'PYLN';
 const String kStripeUSD_ABR = 'USD';
 const String kAgoricAbr = "RUN";
 const String kAtomAbr = "ATOM";
 const String kLunaAbr = "Luna";
 const String kEthereumAbr = "ETH";
-const String kEthereumSymbol = "weth-wei";
+
 const String kDefault = 'Default';
 
 const String kMyEaselNFT = 'My Easel NFT';
+const String fromKey = 'from';
+const String nftKey = 'nft';
+const String kErrAddAudioThumbnail = 'Error while uploading thumbnail';
+const String uploadYourThumbnail = 'Kindly upload thumbnail';
 
 /// Supported Formats
 
@@ -282,5 +295,14 @@ const ogg = "ogg";
 const wav = "wav";
 const aac = "aac";
 
+const kDraft = "draft";
+const kVersion = "v0.1.0";
 
 
+
+const supportedEmail = "support@pylons.tech";
+const cookbookDesc = "Cookbook for Easel NFT";
+const cookbookName = "Easel Cookbook";
+const kVersionCookboox = "v0.0.1";
+
+const int  kPageAnimationTimeInMillis= 300;

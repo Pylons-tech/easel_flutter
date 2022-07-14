@@ -1,10 +1,11 @@
 import 'dart:async';
-import 'package:easel_flutter/datasources/nft_dao.dart';
+
 import 'package:easel_flutter/models/nft.dart';
+import 'package:easel_flutter/services/third_party_services/nft_dao.dart';
 import 'package:floor/floor.dart';
 import 'package:sqflite/sqflite.dart' as sqflite;
 
-part 'database.g.dart'; // the generated code will be there
+part 'database.g.dart';
 
 @Database(version: 2, entities: [NFT])
 abstract class AppDatabase extends FloorDatabase {
