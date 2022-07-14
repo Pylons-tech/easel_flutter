@@ -45,5 +45,7 @@
   "open_pylons_app": "Open Pylons app",
   "download_pylons_description": "Please download the Pylons app and create a username to publish a NFT in Easel.",
   "create_username_description": "Please Open Pylons app and create a username to publish a NFT in Easel.",
-  "loading": "loading ..."
+  "loading": "loading ...",
+  "welcome_msg":"Welcome to Easel, where you can manage your NFT listings and drafts.",
+  "hello": "Hello, "
 }

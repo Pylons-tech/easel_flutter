@@ -1,3 +1,4 @@
+import 'package:easel_flutter/easel_provider.dart';
 import 'package:easel_flutter/main.dart';
 import 'package:easel_flutter/models/nft.dart';
 import 'package:easel_flutter/screens/creator_hub/creator_hub_view_model.dart';
@@ -13,6 +14,7 @@ import 'package:provider/provider.dart';
 
 import '../../../widgets/clippers/bottom_sheet_clipper.dart';
 import '../creator_hub_view_model.dart';
+TextStyle titleStyle = TextStyle(fontSize: isTablet ? 13.sp : 16.sp, fontWeight: FontWeight.w800, fontFamily: kUniversalFontFamily, color: EaselAppTheme.kBlack);
 
 class DraftsBottomSheet {
   final BuildContext buildContext;
@@ -41,6 +43,7 @@ class DraftsMoreBottomSheet extends StatelessWidget {
   const DraftsMoreBottomSheet({Key? key, required this.nft}) : super(key: key);
 
   final NFT nft;
+  EaselProvider get easelProvider => sl();
 
   @override
   Widget build(BuildContext context) {
@@ -73,16 +76,43 @@ class DraftsMoreBottomSheet extends StatelessWidget {
             const Divider(
               color: EaselAppTheme.kGrey,
             ),
-            moreOptionTile(title: "view", svg: kSvgView, onPressed: () {}),
+          Padding(
+            padding: EdgeInsets.symmetric(vertical: 8.h),
+            child: InkWell(
+              onTap: () {
+                navigateToPreviewScreen(context: context, nft: nft);
+
+              },
+              child: Row(
+                children: [
+                  Image.asset(
+                    kViewIpfs,
+                  ),
+
+                  SizedBox(
+                    width: 30.w,
+                  ),
+                  Text(
+                    "view".tr(),
+                    style: titleStyle.copyWith(fontSize: 16.sp),
+                  )
+                ],
+              ),
+            ),
+          ),
           ],
         ),
       ),
     );
   }
+  void navigateToPreviewScreen({required BuildContext context, required NFT nft}) {
+    easelProvider.setPublishedNFTClicked(nft);
+    easelProvider.setPublishedNFTDuration(nft.duration);
+    Navigator.of(context).pushReplacementNamed(RouteUtil.kRoutePreviewNFTFullScreen);
+  }
 }
 
 Widget moreOptionTile({required String title, required String svg, required VoidCallback onPressed}) {
-  TextStyle titleStyle = TextStyle(fontSize: isTablet ? 13.sp : 16.sp, fontWeight: FontWeight.w800, fontFamily: kUniversalFontFamily, color: EaselAppTheme.kBlack);
 
   return Padding(
     padding: EdgeInsets.symmetric(vertical: 8.h),

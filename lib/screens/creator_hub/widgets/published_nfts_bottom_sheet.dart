@@ -56,12 +56,31 @@ class BuildPublishedNFTsBottomSheet {
               padding: EdgeInsets.symmetric(horizontal: 30.w, vertical: 30.h),
               child: Wrap(
                 children: [
-                  moreOptionTile(
-                      onPressed: () {
+                  Padding(
+                    padding: EdgeInsets.symmetric(vertical: 8.h),
+                    child: InkWell(
+                      onTap: () {
                         navigateToPreviewScreen(context: context, nft: nft);
+
                       },
-                      title: "view".tr(),
-                      svg: kSvgViewIcon),
+                      child: Row(
+                        children: [
+                          Image.asset(
+                            kViewIpfs,
+                          ),
+
+                          SizedBox(
+                            width: 30.w,
+                          ),
+                          Text(
+                            "view".tr(),
+                            style: EaselAppTheme.titleStyle.copyWith(fontSize: isTablet? 13.sp :16.sp),
+                          )
+                        ],
+                      ),
+                    ),
+                  ),
+
                   Divider(thickness: 1.h),
                   moreOptionTile(
                       onPressed: () {

@@ -6,13 +6,22 @@ import 'package:easel_flutter/widgets/loading.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:pylons_sdk/pylons_sdk.dart';
+enum ViewType{
+  viewGrid, viewList
+}
 
+enum CollectionType{
+  draft, published, forSale
+}
 class CreatorHubViewModel extends ChangeNotifier {
   final Repository repository;
 
   CreatorHubViewModel(this.repository);
 
-  List<NFT> nftList = [];
+  CollectionType selectedCollectionType = CollectionType.draft;
+  List<NFT> nftdraftList = [];
+
+  ViewType viewType =ViewType.viewList;
 
   int _publishedRecipesLength = 0;
   int forSaleCount = 0;
@@ -23,6 +32,26 @@ class CreatorHubViewModel extends ChangeNotifier {
     _publishedRecipesLength = value;
 
     notifyListeners();
+  }
+
+  changeSelectedCollection(CollectionType collectionType) {
+    switch (collectionType) {
+      case CollectionType.draft:
+        selectedCollectionType=CollectionType.draft;
+        nftList= nftdraftList;
+        notifyListeners();
+        break;
+      case CollectionType.published:
+        selectedCollectionType=CollectionType.published;
+        nftList= publishedNFTsList;
+        notifyListeners();
+        break;
+      case CollectionType.forSale:
+        selectedCollectionType=CollectionType.forSale;
+        nftList= forSaleList;
+        notifyListeners();
+        break;
+    }
   }
 
   bool _publishCollapse = true;
@@ -43,6 +72,10 @@ class CreatorHubViewModel extends ChangeNotifier {
     notifyListeners();
   }
 
+  List<NFT> nftList = [];
+
+  List<NFT> forSaleList = [];
+
   final List<NFT> _publishedNFTsList = [];
 
   List<NFT> get publishedNFTsList => _publishedNFTsList;
@@ -53,9 +86,11 @@ class CreatorHubViewModel extends ChangeNotifier {
 
   void getTotalForSale() {
     forSaleCount = 0;
+    forSaleList=[];
     for (int i = 0; i < _publishedNFTsList.length; i++) {
       if (publishedNFTsList[i].isEnabled && publishedNFTsList[i].amountMinted < publishedNFTsList[i].quantity) {
         forSaleCount++;
+        forSaleList.add(publishedNFTsList[i]);
       }
     }
   }
@@ -64,6 +99,7 @@ class CreatorHubViewModel extends ChangeNotifier {
     await Future.wait([getRecipesList(), getDraftsList()]);
 
     getTotalForSale();
+    nftList = nftdraftList;
     notifyListeners();
   }
 
@@ -111,7 +147,7 @@ class CreatorHubViewModel extends ChangeNotifier {
       return;
     }
 
-    nftList = getNftResponse.getOrElse(() => []);
+    nftdraftList = getNftResponse.getOrElse(() => []);
 
     loading.dismiss();
 
@@ -125,12 +161,18 @@ class CreatorHubViewModel extends ChangeNotifier {
       "delete_error".tr().show();
       return;
     }
-    nftList.removeWhere((element) => element.id == id);
+    nftdraftList.removeWhere((element) => element.id == id);
     notifyListeners();
   }
 
   void saveNFT({required NFT nft}) {
     repository.setCacheDynamicType(key: nftKey, value: nft);
     repository.setCacheString(key: fromKey, value: kDraft);
+  }
+
+  void updateViewType(ViewType selectedViewType){
+
+    viewType= selectedViewType;
+    notifyListeners();
   }
 }
