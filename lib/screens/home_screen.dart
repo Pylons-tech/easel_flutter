@@ -172,16 +172,15 @@ class HomeScreenContent extends StatelessWidget {
     return const ChooseFormatScreen();
   }
 
-      case 1:
-        easelProvider.willLoadFirstTime = true;
-        break;
-      case 2:
-        easelProvider.willLoadFirstTime = false;
-        break;
-    }
+  Widget describeScreen() {
+    return const DescribeScreen();
+  }
+
+  Widget priceScreen() {
+    return const PriceScreen();
   }
 
   Widget mintScreen() {
-    return const MintScreen();
+    return const PublishedScreen();
   }
 }
