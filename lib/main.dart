@@ -72,7 +72,6 @@ class MyApp extends StatelessWidget {
                 routes: {
                   '/': (context) => const SplashScreen(),
                   RouteUtil.kRouteTutorial: (context) => const TutorialScreen(),
-                  RouteUtil.kRouteWelcome: (context) => const WelcomeScreen(),
                   RouteUtil.kRouteCreatorHub: (context) => const CreatorHubScreen(),
                   RouteUtil.kRoutePreviewNFTFullScreen: (context) => const PreviewNFTFullScreen(),
                   RouteUtil.kRouteHome: (context) => const HomeScreen(),

@@ -37,7 +37,6 @@ void init() {
 void _registerExternalDependencies() {
   sl.registerSingletonAsync<SharedPreferences>(() => SharedPreferences.getInstance());
 
-  log(apiKey); //your nft.storage api key
   sl.registerLazySingleton<Dio>(
     () => Dio(
       BaseOptions(

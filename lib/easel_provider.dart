@@ -254,8 +254,10 @@ class EaselProvider extends ChangeNotifier {
     videoPlayerController.addListener(() {
       if (videoPlayerController.value.hasError) {
         videoLoadingError = videoPlayerController.value.errorDescription!;
+        notifyListeners();
       }
-      notifyListeners();
+
+
     });
   }
 

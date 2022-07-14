@@ -48,7 +48,6 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
             alignment: Alignment.topLeft,
             child: PylonsButton(
               onPressed: () {
-                checkPylonsAppExistsOrNot();
               },
               btnText: kGetStarted,
               isBlue: false,
@@ -59,54 +58,6 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
     ));
   }
 
-  void checkPylonsAppExistsOrNot() async {
-    final isExist = await PylonsWallet.instance.exists();
 
-    if (isExist) {
-      getProfile();
-      return;
-    }
-
-    context.read<EaselProvider>().populateCoinsIfPylonsNotExists();
-
-    navigatorKey.currentState!.pushReplacementNamed(RouteUtil.kRouteCreatorHub);
-  }
-
-  Future<void> getProfile() async {
-    final response = await context.read<EaselProvider>().getProfile();
-
-    if (response.success) {
-      await Future.delayed(const Duration(
-        milliseconds: 500,
-      ));
-
-      navigatorKey.currentState!.pushReplacementNamed(RouteUtil.kRouteCreatorHub);
-
-      return;
-    }
-
-    if (response.errorCode == kErrProfileNotExist) {
-      ShowWalletInstallDialog showWalletInstallDialog = ShowWalletInstallDialog(
-          context: context,
-          errorMessage: 'create_username_description'.tr(),
-          buttonMessage: 'open_pylons_app'.tr(),
-          onDownloadPressed: () {
-            PylonsWallet.instance.goToPylons();
-          },
-          onClose: () {
-            Navigator.of(context).pop();
-          });
-      showWalletInstallDialog.show();
-    } else {
-      ShowSomethingWentWrongDialog somethingWentWrongDialog = ShowSomethingWentWrongDialog(
-          context: context,
-          errorMessage: kPleaseTryAgain,
-          onClose: () {
-            Navigator.of(context).pop();
-          });
-      somethingWentWrongDialog.show();
-    }
-  }
 }
 
-enum RoutingScreenState { initial, appNotInstalled, accountNotCreated, somethingWentWrong, showUsername }
