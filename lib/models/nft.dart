@@ -41,6 +41,7 @@ class NFT extends Equatable {
   String hashtags = "";
   String fileName = "";
   String cid = "";
+  bool isDialogShown = false;
 
   bool isEnabled = true;
 
@@ -73,7 +74,8 @@ class NFT extends Equatable {
     this.hashtags = "",
     this.fileName = "",
     this.cid = "",
-    this.isEnabled= true
+    this.isEnabled = true,
+    this.isDialogShown = false,
   });
 
   factory NFT.fromRecipe(Recipe recipe) {
@@ -104,7 +106,6 @@ class NFT extends Equatable {
       step: "",
       isFreeDrop: false,
       hashtags: recipe.entries.itemOutputs.firstOrNull?.strings.firstWhere((strKeyValue) => strKeyValue.key == kHashtags, orElse: () => StringParam()).value ?? "",
-
       isEnabled: recipe.enabled,
     );
   }

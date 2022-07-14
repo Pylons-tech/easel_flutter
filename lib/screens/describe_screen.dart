@@ -44,10 +44,15 @@ class _DescribeScreenState extends State<DescribeScreen> {
 
     WidgetsBinding.instance.addPostFrameCallback((_) async {
       provider.nft = repository.getCacheDynamicType(key: nftKey);
+      repository.updateNFTDialogShown(id: provider.nft.id!);
+
       provider.toCheckSavedArtistName();
+      if (dialogAlreadyShown()) return;
       DraftDetailDialog(context: context).show();
     });
   }
+
+  dialogAlreadyShown() => provider.nft.isDialogShown;
 
   @override
   Widget build(BuildContext context) {

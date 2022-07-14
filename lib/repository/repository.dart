@@ -89,6 +89,12 @@ abstract class Repository {
   /// Output: [bool] returns whether the operation is successful or not
   Future<Either<Failure, bool>> updateNftFromDescription({required SaveNft saveNft});
 
+  /// This method will update the draft of the NFT
+  /// Input: [id] of the draft that will be updating
+  /// Output: [bool] returns that draft is update or not
+  /// will return error in the form of failure
+  Future<Either<Failure, bool>> updateNFTDialogShown({required int id});
+
   /// This method will update draft in the local database from Pricing page
   /// Input: [saveNft] contains data to be updated
   /// Output: [bool] returns whether the operation is successful or not
@@ -227,6 +233,20 @@ class RepositoryImp implements Repository {
   }
 
   @override
+  Future<Either<Failure, bool>> updateNFTDialogShown({required int id}) async {
+    try {
+      bool result = await localDataSource.updateNFTDialogShown(id);
+
+      if (!result) {
+        return Left(CacheFailure("save_error".tr()));
+      }
+      return Right(result);
+    } on Exception catch (_) {
+      return Left(CacheFailure("save_error".tr()));
+    }
+  }
+
+  @override
   Future<Either<Failure, bool>> updateNftFromPrice({required SaveNft saveNft}) async {
     try {
       bool result = await localDataSource.updateNftFromPrice(saveNft);
@@ -276,8 +296,7 @@ class RepositoryImp implements Repository {
       if (data == null) {
         return Left(CacheFailure("something_wrong".tr()));
       }
-        return Right(data);
-
+      return Right(data);
     } on Exception catch (_) {
       return Left(CacheFailure("something_wrong".tr()));
     }
