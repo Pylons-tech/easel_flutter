@@ -10,6 +10,7 @@
   "view": "View On IPFS",
   "delete_error": "Failed to delete draft",
   "save_error": "Failed to save draft",
+  "upload_error": "Failed to upload draft",
   "get_error": "Failed to get draft",
   "upload": "Upload",
   "upload_to_ipfs": "Upload to IPFS",

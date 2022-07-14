@@ -203,7 +203,7 @@ class LocalDataSourceImpl implements LocalDataSource {
       await database.nftDao.updateNFTFromDescription(saveNft.id!, saveNft.nftName!, saveNft.nftDescription!, saveNft.creatorName!, saveNft.step!, saveNft.hashtags!);
       return true;
     } catch (e) {
-      return throw "save_error".tr();
+      return throw "upload_error".tr();
     }
   }
 
@@ -214,7 +214,7 @@ class LocalDataSourceImpl implements LocalDataSource {
       await database.nftDao.updateNFTFromPrice(saveNft.id!, saveNft.tradePercentage!, saveNft.price!, saveNft.quantity!, saveNft.step!, saveNft.denomSymbol!, saveNft.isFreeDrop!);
       return true;
     } catch (e) {
-      throw CacheFailure("save_error".tr());
+      throw CacheFailure("upload_error".tr());
     }
   }
 
@@ -224,7 +224,7 @@ class LocalDataSourceImpl implements LocalDataSource {
       await database.nftDao.updateNFTDialogShown(id);
       return true;
     } catch (e) {
-      throw CacheFailure("save_error".tr());
+      throw CacheFailure("upload_error".tr());
     }
   }
 
