@@ -89,9 +89,8 @@ abstract class Repository {
   Future<Either<Failure, bool>> updateNftFromDescription({required SaveNft saveNft});
 
   /// This method will update the draft of the NFT
-  /// Input: [id] of the draft that will be updating
-  /// Output: [bool] returns that draft is update or not & will return error in the form of [Failure]
-
+  /// Input: [id] of the draft that will be updated
+  /// Output: [bool] returns that draft that is  updated or not & will return error in the form of [Failure]
   Future<Either<Failure, bool>> updateNFTDialogShown({required int id});
 
   /// This method will update draft in the local database from Pricing page
