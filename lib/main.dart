@@ -4,7 +4,6 @@ import 'package:easel_flutter/screens/home_screen.dart';
 import 'package:easel_flutter/screens/preview_nft/preview_nft_full_screen.dart';
 import 'package:easel_flutter/screens/splash_screen.dart';
 import 'package:easel_flutter/screens/tutorial_screen.dart';
-import 'package:easel_flutter/screens/welcome_screen/welcome_screen.dart';
 import 'package:easel_flutter/utils/constants.dart';
 import 'package:easel_flutter/utils/dependency_injection/dependency_injection_container.dart' as di;
 import 'package:easel_flutter/utils/easel_app_theme.dart';
