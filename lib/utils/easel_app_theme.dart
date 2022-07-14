@@ -14,6 +14,7 @@ class EaselAppTheme {
   static const Color kBlue = Color(0xFF1212C4);
   static const Color kDarkText = Color(0xFF080830);
   static const Color kLightText = Color(0xFF464545);
+  static const Color kNightBlue = Color(0xFF0A004A);
   static const Color kRed = Color(0xFFFC4403);
   static const Color kWhite02 = Color.fromRGBO(255, 255, 255, 0.2);
   static const Color kWhite03 = Color(0xFFFBFBFB);
@@ -30,8 +31,6 @@ class EaselAppTheme {
   static const Color kpurpleButtonColor = Color(0xFF8F8FCE);
   static const Color kLightGreyColor = Color(0xFFE5E5E5);
 
-
-
   static const String universalSansFamily = "UniversalSans";
 
   static ThemeData theme(BuildContext context) => ThemeData(
@@ -46,7 +45,7 @@ class EaselAppTheme {
   static Color cardBackgroundSelected = const Color(0x801212C4).withOpacity(0.2);
 
   static TextStyle titleStyle = TextStyle(
-    fontSize:  18.sp,
+    fontSize: 18.sp,
     fontWeight: FontWeight.w800,
     color: EaselAppTheme.kBlack,
     fontFamily: universalSansFamily,
