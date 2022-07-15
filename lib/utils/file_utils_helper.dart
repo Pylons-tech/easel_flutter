@@ -173,18 +173,30 @@ class FileUtilsHelperImpl implements FileUtilsHelper {
   }
 
   Future<String> cropImage({required String filePath}) async {
-    CroppedFile? croppedFile = await ImageCropper().cropImage(
-      sourcePath: filePath,
-      aspectRatioPresets: [CropAspectRatioPreset.square, CropAspectRatioPreset.ratio3x2, CropAspectRatioPreset.original, CropAspectRatioPreset.ratio4x3, CropAspectRatioPreset.ratio16x9],
-      uiSettings: [
-        AndroidUiSettings(toolbarTitle: 'Pylons', toolbarColor: EaselAppTheme.kBlue, toolbarWidgetColor: Colors.white, initAspectRatio: CropAspectRatioPreset.original, lockAspectRatio: false),
-        IOSUiSettings(
-          title: 'Pylons',
-        ),
-      ],
-    );
 
-    return croppedFile?.path ?? "";
+
+    try {
+      CroppedFile? croppedFile = await ImageCropper().cropImage(
+        sourcePath: filePath,
+        aspectRatioPresets: [CropAspectRatioPreset.square, CropAspectRatioPreset.ratio3x2, CropAspectRatioPreset.original, CropAspectRatioPreset.ratio4x3, CropAspectRatioPreset.ratio16x9],
+        uiSettings: [
+          AndroidUiSettings(toolbarTitle: 'Pylons',
+              toolbarColor: EaselAppTheme.kBlue,
+              toolbarWidgetColor: Colors.white,
+              initAspectRatio: CropAspectRatioPreset.original,
+              lockAspectRatio: false),
+          IOSUiSettings(
+            title: 'Pylons',
+          ),
+        ],
+      );
+      return croppedFile?.path ?? "";
+    } catch(e){
+      print(e);
+      return "";
+    }
+
+
   }
 
   @override
