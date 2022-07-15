@@ -72,6 +72,8 @@ class DeleteDialog {
                               title: "yes".tr(),
                               bgColor: EaselAppTheme.kPurple,
                               textColor: EaselAppTheme.kWhite,
+                              fontWeight: FontWeight.w300,
+                              clipperType: ClipperType.bottomLeftTopRight,
                               onPressed: () async {
                                 Navigator.of(_).pop();
                                 creatorHubViewModel.deleteNft(nft.id);
@@ -91,6 +93,8 @@ class DeleteDialog {
                                 Navigator.of(_).pop();
                               },
                               cuttingHeight: 12.h,
+                              fontWeight: FontWeight.w300,
+                              clipperType: ClipperType.bottomLeftTopRight,
                             ),
                           ),
                         ],

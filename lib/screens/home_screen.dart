@@ -5,7 +5,6 @@ import 'package:easel_flutter/screens/custom_widgets/step_labels.dart';
 import 'package:easel_flutter/screens/custom_widgets/steps_indicator.dart';
 import 'package:easel_flutter/screens/describe_screen.dart';
 import 'package:easel_flutter/screens/price_screen.dart';
-import 'package:easel_flutter/utils/constants.dart';
 import 'package:easel_flutter/screens/published_screen.dart';
 import 'package:easel_flutter/utils/easel_app_theme.dart';
 import 'package:easel_flutter/utils/screen_responsive.dart';
@@ -184,6 +183,6 @@ class HomeScreenContent extends StatelessWidget {
   }
 
   Widget mintScreen() {
-    return const MintScreen();
+    return const PublishedScreen();
   }
 }
