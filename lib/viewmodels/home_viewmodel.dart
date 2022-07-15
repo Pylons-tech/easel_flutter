@@ -17,7 +17,7 @@ class HomeViewModel extends ChangeNotifier {
 
   NFT? nft;
   String? from;
-  final List pageTitles = ["select_nft_file".tr(), "nft_detail_text".tr(), "nft_pricing".tr(), ''];
+  final List pageTitles = ["upload".tr(), "nft_detail_text".tr(), "nft_pricing".tr(), ''];
 
   void init({required VoidCallback setTextField}) {
     from = repository.getCacheString(key: fromKey);
@@ -60,6 +60,16 @@ class HomeViewModel extends ChangeNotifier {
       currentStep = ValueNotifier(0);
       pageController = PageController(keepPage: true, initialPage: 0);
     }
+  }
+
+  void nextPage() async {
+    await pageController.nextPage(duration: const Duration(milliseconds: kPageAnimationTimeInMillis), curve: Curves.easeIn);
+    notifyListeners();
+  }
+
+  void previousPage() async {
+    await pageController.previousPage(duration: const Duration(milliseconds: kPageAnimationTimeInMillis), curve: Curves.easeIn);
+    notifyListeners();
   }
 
   void disposeControllers() {

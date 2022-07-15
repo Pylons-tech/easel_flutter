@@ -5,6 +5,7 @@ import 'package:easel_flutter/utils/enums.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:pylons_sdk/pylons_sdk.dart';
+import 'constants.dart';
 
 extension ScaffoldHelper on BuildContext? {
   void show({required String message}) {
@@ -67,8 +68,14 @@ extension IBCCoinsPar on String {
 
 extension AssetTypePar on String {
   AssetType toAssetTypeEnum() {
-    return AssetType.values.firstWhere((e) => e.toString() == 'AssetType.$this', orElse: () => AssetType.Image);
+    var value = this;
+    if(value == k3dText){
+      value = kThreeDText;
+    }
+
+    return AssetType.values.firstWhere((e) => e.toString() == 'AssetType.$value', orElse: () => AssetType.Image);
   }
+
 }
 
 extension DurationConverter on int {

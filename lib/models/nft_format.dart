@@ -24,27 +24,15 @@ class NftFormat {
   }
 
   static List<NftFormat> get supportedFormats => [
-        NftFormat(
-            format: NFTTypes.image,
-            extensions: ['jpg', 'png', 'svg', 'heif',  'jpeg'],
-            badge: kSvgNftFormatImage,
-            color: EaselAppTheme.kLightRed),
-        NftFormat(
-            format: NFTTypes.video,
-            extensions: ['mp4',  'mov', 'm4v', 'avi', 'hevc'],
-            badge: kSvgNftFormatVideo,
-            color: EaselAppTheme.kDarkGreen),
+        NftFormat(format: NFTTypes.image, extensions: ['jpg', 'png', 'svg', 'heif', 'jpeg'], badge: kSvgNftFormatImage, color: EaselAppTheme.kBlue),
+        NftFormat(format: NFTTypes.video, extensions: ['mp4', 'mov', 'm4v', 'avi', 'hevc'], badge: kSvgNftFormatVideo, color: EaselAppTheme.kDarkGreen),
         NftFormat(
           format: NFTTypes.threeD,
           extensions: ['gltf', 'glb'],
           badge: kSvgNftFormat3d,
           color: EaselAppTheme.kYellow,
         ),
-        NftFormat(
-            format: NFTTypes.audio,
-            extensions: ['wav', 'aiff', 'alac', 'flac', 'mp3', 'aac', 'wma', 'ogg'],
-            badge: kSvgNftFormatAudio,
-            color: EaselAppTheme.kBlue),
+        NftFormat(format: NFTTypes.audio, extensions: ['wav', 'aiff', 'alac', 'flac', 'mp3', 'aac', 'wma', 'ogg'], badge: kSvgNftFormatAudio, color: EaselAppTheme.kLightRed),
       ];
 
   static List<String> getAllSupportedExts() {
@@ -56,19 +44,11 @@ class NftFormat {
   }
 }
 
+enum NFTTypes { image, video, audio, threeD }
 
-
-enum NFTTypes {
-  image,
-  video,
-  audio,
-  threeD
-}
-
-extension NFTTypesDetails on NFTTypes{
-  String getTitle(){
-    switch(this){
-
+extension NFTTypesDetails on NFTTypes {
+  String getTitle() {
+    switch (this) {
       case NFTTypes.image:
         return kImageText;
       case NFTTypes.video:
@@ -78,6 +58,5 @@ extension NFTTypesDetails on NFTTypes{
       case NFTTypes.threeD:
         return k3dText;
     }
-
   }
 }

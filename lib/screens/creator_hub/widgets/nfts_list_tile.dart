@@ -8,6 +8,7 @@ import 'package:easel_flutter/utils/constants.dart';
 import 'package:easel_flutter/utils/easel_app_theme.dart';
 import 'package:easel_flutter/utils/enums.dart';
 import 'package:easel_flutter/utils/extension_util.dart';
+import 'package:easel_flutter/widgets/model_viewer.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -63,10 +64,7 @@ class NFTsListTile extends StatelessWidget {
                       kSvgNftFormatAudio,
                       color: EaselAppTheme.kBlack,
                     ),
-                    on3D: (context) => SvgPicture.asset(
-                      kSvgNftFormat3d,
-                      color: EaselAppTheme.kBlack,
-                    ),
+                    on3D: (context) => Model3dViewer(isFile: false, path: publishedNFT.url),
                     assetType: publishedNFT.assetType.toAssetTypeEnum(),
                   )),
               SizedBox(
@@ -156,6 +154,8 @@ class LeadingBuilder extends StatelessWidget {
         return onImage(context);
       case AssetType.Video:
         return onVideo(context);
+      case AssetType.ThreeD:
+        return on3D(context);
     }
   }
 }

@@ -135,7 +135,7 @@ class CreatorHubViewModel extends ChangeNotifier {
   }
 
   Future<void> getDraftsList() async {
-    final loading = Loading().showLoading(message: "loading".tr());
+    final loading = Loading()..showLoading(message: "loading".tr());
 
     final getNftResponse = await repository.getNfts();
 

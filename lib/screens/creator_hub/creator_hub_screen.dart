@@ -40,7 +40,7 @@ class _CreatorHubScreenState extends State<CreatorHubScreen> {
   @override
   Widget build(BuildContext context) {
     return Container(
-      color: EaselAppTheme.kWhite,
+      color: EaselAppTheme.kBgWhite,
       child: SafeArea(
         child: Scaffold(
           backgroundColor: EaselAppTheme.kBgWhite,

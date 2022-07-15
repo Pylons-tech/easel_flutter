@@ -39,6 +39,7 @@ const kSvgUploadErrorBG = 'assets/images/svg/upload_error_background.svg';
 const kSvgCloseIcon = 'assets/images/svg/close_icon.svg';
 const kSvgCloseButton = 'assets/images/svg/close_button.svg';
 const kSvgNftFormatImage = 'assets/images/svg/nft_format_image.svg';
+const kSvgForwardArrowIcon = 'assets/images/svg/forward_arrow.svg';
 const kSvgNftFormatVideo = 'assets/images/svg/nft_format_video.svg';
 const kSvgNftFormat3d = 'assets/images/svg/nft_format_3d.svg';
 const kSvgNftFormatAudio = 'assets/images/svg/nft_format_audio.svg';
@@ -88,8 +89,6 @@ const double kPrecision = 100000000000000000;
 
 const int kBigIntBase = 1000000;
 const int kEthIntBase = 1000000000000000000;
-
-
 
 const suffixes = ["B", "KB", "MB", "GB", "TB"];
 
@@ -179,6 +178,7 @@ const kImageText = 'Image';
 const kVideoText = 'Video';
 const kAudioText = 'Audio';
 const k3dText = '3D';
+const String kThreeDText = "ThreeD";
 const kGetStarted = 'Get Started';
 const kContinue = 'Continue';
 const kWhyAppNeeded = 'Why the app is\nneeded?        \u21E9';
@@ -302,11 +302,9 @@ const kDraft = "Draft";
 
 const kVersion = "v0.1.0";
 
-
-
 const supportedEmail = "support@pylons.tech";
 const cookbookDesc = "Cookbook for Easel NFT";
 const cookbookName = "Easel Cookbook";
 const kVersionCookboox = "v0.0.1";
 
-const int  kPageAnimationTimeInMillis= 300;
+const int kPageAnimationTimeInMillis = 300;
