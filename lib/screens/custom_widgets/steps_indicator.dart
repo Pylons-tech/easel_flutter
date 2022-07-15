@@ -5,12 +5,11 @@ import 'package:steps_indicator/steps_indicator.dart';
 
 class MyStepsIndicator extends StatelessWidget {
   final ValueNotifier<int> currentStep;
-  final ValueNotifier<int> currentPage;
 
   const MyStepsIndicator({
     Key? key,
-    required this.currentPage,
     required this.currentStep,
+
   }) : super(key: key);
 
   final int _numSteps = 3;

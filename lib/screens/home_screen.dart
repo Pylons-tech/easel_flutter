@@ -95,7 +95,7 @@ class HomeScreenContent extends StatelessWidget {
       children: [
         if (homeViewModel.currentPage.value != 0) ...[
           const VerticalSpace(20),
-          MyStepsIndicator(currentPage: homeViewModel.currentPage, currentStep: homeViewModel.currentStep),
+          MyStepsIndicator(currentStep: homeViewModel.currentStep),
           const VerticalSpace(5),
           StepLabels(currentPage: homeViewModel.currentPage, currentStep: homeViewModel.currentStep),
           const VerticalSpace(10),

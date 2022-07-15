@@ -101,7 +101,7 @@ class _PublishedNewScreenState extends State<PublishedNewScreen> {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      MyStepsIndicator(currentPage: homeViewModel.currentPage, currentStep: homeViewModel.currentStep),
+                      MyStepsIndicator(currentStep: homeViewModel.currentStep),
                       VerticalSpace(5.h),
                       StepLabels(currentPage: homeViewModel.currentPage, currentStep: homeViewModel.currentStep),
                       VerticalSpace(10.h),
