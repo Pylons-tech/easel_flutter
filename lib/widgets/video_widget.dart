@@ -9,6 +9,7 @@ import 'package:easel_flutter/utils/easel_app_theme.dart';
 import 'package:easel_flutter/utils/route_util.dart';
 import 'package:easel_flutter/utils/space_utils.dart';
 import 'package:easel_flutter/widgets/video_builder.dart';
+import 'package:easel_flutter/widgets/video_progress_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/flutter_svg.dart';
@@ -125,9 +126,11 @@ class _VideoWidgetState extends State<VideoWidget> {
           child: SingleChildScrollView(
             child: Column(
               children: [
-                SizedBox(
-                  height: 50.0.h,
-                ),
+                (!shouldShowThumbnailButtonOrStepsOrNot())
+                    ? SizedBox(
+                        height: 50.0.h,
+                      )
+                    : const SizedBox(),
                 SizedBox(height: MediaQuery.of(context).viewPadding.top + 20.h),
                 if (shouldShowThumbnailButtonOrStepsOrNot()) ...[
                   VerticalSpace(50.h),
@@ -135,33 +138,85 @@ class _VideoWidgetState extends State<VideoWidget> {
                 SizedBox(
                   height: 20.w,
                 ),
-                SizedBox(
-                  height: 300.0.h,
-                  child: VideoBuilder(
-                      onVideoLoading: (BuildContext context) => const Center(
-                            child: CircularProgressIndicator(
-                              strokeWidth: 2,
-                              valueColor: AlwaysStoppedAnimation<Color>(EaselAppTheme.kBlack),
+                if (!shouldShowThumbnailButtonOrStepsOrNot()) ...[
+                  SizedBox(
+                    height: 300.0.h,
+                    child: VideoBuilder(
+                        onVideoLoading: (BuildContext context) => const Center(
+                              child: CircularProgressIndicator(
+                                strokeWidth: 2,
+                                valueColor: AlwaysStoppedAnimation<Color>(EaselAppTheme.kBlack),
+                              ),
                             ),
+                        onVideoHasError: (BuildContext context) => Center(
+                                child: Padding(
+                              padding: const EdgeInsets.all(10),
+                              child: Text(
+                                videoPlayerError,
+                                style: TextStyle(fontSize: 18.sp, color: EaselAppTheme.kBlack),
+                              ),
+                            )),
+                        onVideoInitialized: (BuildContext context) => SizedBox(
+                              height: 420.h,
+                              width: 1.sw,
+                              child: AspectRatio(
+                                aspectRatio: easelProvider.videoPlayerController.value.aspectRatio,
+                                child: VideoPlayer(easelProvider.videoPlayerController),
+                              ),
+                            ),
+                        easelProvider: easelProvider),
+                  )
+                ],
+                if (shouldShowThumbnailButtonOrStepsOrNot()) ...[
+                  SizedBox(
+                    width: 280.w,
+                    child: Column(
+                      children: [
+                        SizedBox(
+                          height: 200.h,
+                          child: Stack(
+                            children: [
+                              VideoBuilder(
+                                  onVideoLoading: (BuildContext context) => const Center(
+                                        child: CircularProgressIndicator(
+                                          strokeWidth: 2,
+                                          valueColor: AlwaysStoppedAnimation<Color>(EaselAppTheme.kBlack),
+                                        ),
+                                      ),
+                                  onVideoHasError: (BuildContext context) => Center(
+                                          child: Padding(
+                                        padding: const EdgeInsets.all(10),
+                                        child: Text(
+                                          videoPlayerError,
+                                          style: TextStyle(fontSize: 18.sp, color: EaselAppTheme.kBlack),
+                                        ),
+                                      )),
+                                  onVideoInitialized: (BuildContext context) => Center(
+                                        child: Stack(
+                                          children: [
+                                            AspectRatio(
+                                              aspectRatio: easelProvider.videoPlayerController.value.aspectRatio,
+                                              child: VideoPlayer(easelProvider.videoPlayerController),
+                                            ),
+                                            _buildVideoFullScreenIcon(),
+                                          ],
+                                        ),
+                                      ),
+                                  easelProvider: easelProvider),
+                            ],
                           ),
-                      onVideoHasError: (BuildContext context) => Center(
-                              child: Padding(
-                            padding: const EdgeInsets.all(10),
-                            child: Text(
-                              videoPlayerError,
-                              style: TextStyle(fontSize: 18.sp, color: EaselAppTheme.kBlack),
-                            ),
-                          )),
-                      onVideoInitialized: (BuildContext context) => SizedBox(
-                            height: 420.h,
-                            width: 1.sw,
-                            child: AspectRatio(
-                              aspectRatio: easelProvider.videoPlayerController.value.aspectRatio,
-                              child: VideoPlayer(easelProvider.videoPlayerController),
-                            ),
-                          ),
-                      easelProvider: easelProvider),
-                ),
+                        ),
+                      ],
+                    ),
+                  ),
+                  SizedBox(
+                    height: 10.w,
+                  ),
+                  Padding(
+                    padding: EdgeInsets.only(bottom: 70.h),
+                    child: VideoProgressWidget(darkMode: true, isForFile: widget.isForFile),
+                  ),
+                ],
                 SizedBox(
                   height: 10.w,
                 ),
