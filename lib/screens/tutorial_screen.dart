@@ -1,5 +1,8 @@
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:bottom_drawer/bottom_drawer.dart';
+import 'package:easel_flutter/easel_provider.dart';
+import 'package:easel_flutter/screens/welcome_screen/widgets/show_something_wrong_dialog.dart';
+import 'package:easel_flutter/screens/welcome_screen/widgets/show_wallet_install_dialog.dart';
 import 'package:easel_flutter/services/datasources/local_datasource.dart';
 import 'package:easel_flutter/main.dart';
 import 'package:easel_flutter/utils/easel_app_theme.dart';
@@ -11,6 +14,7 @@ import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get_it/get_it.dart';
+import 'package:provider/provider.dart';
 import 'package:pylons_sdk/pylons_sdk.dart';
 
 import '../utils/constants.dart';
@@ -83,10 +87,10 @@ class _TutorialScreenState extends State<TutorialScreen> {
                           decoration: const BoxDecoration(
                             image: DecorationImage(image: AssetImage(kTooltipBalloon), fit: BoxFit.contain),
                           ),
-                          child: const AutoSizeText(
+                          child: AutoSizeText(
                             kWhyAppNeeded,
-                            maxFontSize: 18,
-                            style: TextStyle(fontSize: 18, fontWeight: FontWeight.w400, color: EaselAppTheme.kWhite),
+                            maxFontSize: isTablet ? 18 : 14,
+                            style: TextStyle(fontSize: isTablet ? 18 : 14, fontWeight: FontWeight.w400, color: EaselAppTheme.kWhite),
                           ),
                         ),
                         onTap: () {
@@ -97,7 +101,7 @@ class _TutorialScreenState extends State<TutorialScreen> {
                   ),
                   RichText(
                     text: TextSpan(
-                      style: TextStyle(fontSize: isTablet ? 16.sp: 18.sp, fontWeight: FontWeight.w800, color: EaselAppTheme.kDartGrey),
+                      style: TextStyle(fontSize: isTablet ? 16.sp : 18.sp, fontWeight: FontWeight.w800, color: EaselAppTheme.kDartGrey),
                       children: <TextSpan>[
                         TextSpan(text: item['header']),
                         TextSpan(text: item['header1'], style: const TextStyle(color: EaselAppTheme.kPurple02)),
@@ -106,16 +110,12 @@ class _TutorialScreenState extends State<TutorialScreen> {
                   )
                 ] else ...[
                   SizedBox(height: 0.15.sh),
-                  Text(item['header'],
-                      style: TextStyle(fontSize: isTablet ? 16.sp: 18.sp, fontWeight: FontWeight.w800, color: EaselAppTheme.kDartGrey),
-                      textAlign: TextAlign.center),
+                  Text(item['header'], style: TextStyle(fontSize: isTablet ? 16.sp : 18.sp, fontWeight: FontWeight.w800, color: EaselAppTheme.kDartGrey), textAlign: TextAlign.center),
                 ],
                 const SizedBox(height: 15),
                 Container(
                     padding: EdgeInsets.symmetric(horizontal: 20.w),
-                    child: Text(item['description'],
-                        style: TextStyle(color: Colors.black, fontSize: 16.sp, fontWeight: FontWeight.w400),
-                        textAlign: TextAlign.center)),
+                    child: Text(item['description'], style: TextStyle(color: Colors.black, fontSize: 16.sp, fontWeight: FontWeight.w400), textAlign: TextAlign.center)),
               ],
             ))
         .toList();
@@ -148,9 +148,7 @@ class _TutorialScreenState extends State<TutorialScreen> {
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: indicator(),
                 ),
-              )
-              //  ),
-              ),
+              )),
           if (isLastPage()) ...[
             Align(
                 alignment: Alignment.bottomRight,
@@ -158,10 +156,9 @@ class _TutorialScreenState extends State<TutorialScreen> {
                   margin: EdgeInsets.only(right: 25.w, bottom: 40.h),
                   child: PylonsButton(
                     onPressed: () async {
-
                       GetIt.I.get<LocalDataSource>().saveOnBoardingComplete();
 
-                      Navigator.of(context).pushNamed(RouteUtil.kRouteWelcome);
+                      populateCoinsAndMoveForward();
                     },
                     btnText: kContinue,
                     isBlue: false,
@@ -204,12 +201,9 @@ class _TutorialScreenState extends State<TutorialScreen> {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Text(kWhyAppNeededDesc1,
-                          style: TextStyle(fontSize: 14.sp, fontWeight: FontWeight.w800, color: Colors.black)),
+                      Text(kWhyAppNeededDesc1, style: TextStyle(fontSize: 14.sp, fontWeight: FontWeight.w800, color: Colors.black)),
                       SizedBox(height: 8.h),
-                      Text(kWhyAppNeededDescSummary1,
-                          style:
-                              TextStyle(fontSize: 13.sp, fontWeight: FontWeight.w400, color: EaselAppTheme.kLightGrey))
+                      Text(kWhyAppNeededDescSummary1, style: TextStyle(fontSize: 13.sp, fontWeight: FontWeight.w400, color: EaselAppTheme.kLightGrey))
                     ],
                   ),
                 )
@@ -232,12 +226,9 @@ class _TutorialScreenState extends State<TutorialScreen> {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Text(kWhyAppNeededDesc2,
-                          style: TextStyle(fontSize: 14.sp, fontWeight: FontWeight.w800, color: Colors.black)),
+                      Text(kWhyAppNeededDesc2, style: TextStyle(fontSize: 14.sp, fontWeight: FontWeight.w800, color: Colors.black)),
                       SizedBox(height: 8.h),
-                      Text(kWhyAppNeededDescSummary2,
-                          style:
-                              TextStyle(fontSize: 13.sp, fontWeight: FontWeight.w400, color: EaselAppTheme.kLightGrey))
+                      Text(kWhyAppNeededDescSummary2, style: TextStyle(fontSize: 13.sp, fontWeight: FontWeight.w400, color: EaselAppTheme.kLightGrey))
                     ],
                   ),
                 )
@@ -260,12 +251,9 @@ class _TutorialScreenState extends State<TutorialScreen> {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Text(kWhyAppNeededDesc3,
-                          style: TextStyle(fontSize: 14.sp, fontWeight: FontWeight.w800, color: Colors.black)),
+                      Text(kWhyAppNeededDesc3, style: TextStyle(fontSize: 14.sp, fontWeight: FontWeight.w800, color: Colors.black)),
                       SizedBox(height: 8.h),
-                      Text(kWhyAppNeededDescSummary3,
-                          style:
-                              TextStyle(fontSize: 13.sp, fontWeight: FontWeight.w400, color: EaselAppTheme.kLightGrey))
+                      Text(kWhyAppNeededDescSummary3, style: TextStyle(fontSize: 13.sp, fontWeight: FontWeight.w400, color: EaselAppTheme.kLightGrey))
                     ],
                   ),
                 )
@@ -311,5 +299,11 @@ class _TutorialScreenState extends State<TutorialScreen> {
     } else {
       context.show(message: kPylonsAlreadyInstalled);
     }
+  }
+
+  void populateCoinsAndMoveForward() async {
+    context.read<EaselProvider>().populateCoinsIfPylonsNotExists();
+
+    navigatorKey.currentState!.pushReplacementNamed(RouteUtil.kRouteCreatorHub);
   }
 }

@@ -1,6 +1,7 @@
 import 'package:easel_flutter/main.dart';
 import 'package:easel_flutter/models/nft.dart';
 import 'package:easel_flutter/screens/creator_hub/creator_hub_view_model.dart';
+import 'package:easel_flutter/screens/creator_hub/widgets/delete_confirmation_dialog.dart';
 import 'package:easel_flutter/utils/constants.dart';
 import 'package:easel_flutter/utils/dependency_injection/dependency_injection_container.dart';
 import 'package:easel_flutter/utils/easel_app_theme.dart';
@@ -68,7 +69,10 @@ class DraftsMoreBottomSheet extends StatelessWidget {
                 svg: kSvgDelete,
                 onPressed: () {
                   Navigator.of(context).pop();
-                  viewModel.deleteNft(nft.id);
+
+                  final DeleteDialog deleteDialog = DeleteDialog(contextt: context, nft: nft);
+
+                  deleteDialog.show();
                 }),
             const Divider(
               color: EaselAppTheme.kGrey,
