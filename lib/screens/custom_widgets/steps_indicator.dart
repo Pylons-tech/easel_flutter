@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:easel_flutter/utils/easel_app_theme.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -18,26 +20,28 @@ class MyStepsIndicator extends StatelessWidget {
   Widget build(BuildContext context) {
     return ValueListenableBuilder(
       valueListenable: currentStep,
-      builder: (_, int value, __) => StepsIndicator(
-        selectedStep: currentStep.value,
-        nbSteps: _numSteps,
-        lineLength: 0.68.sw / _numSteps,
-        doneLineColor: EaselAppTheme.kDarkGreen,
-        undoneLineColor: EaselAppTheme.kLightGrey,
-        doneLineThickness: 1.5,
-        undoneLineThickness: 1.5,
-        unselectedStepColorIn: EaselAppTheme.kLightGrey,
-        unselectedStepColorOut: EaselAppTheme.kLightGrey,
-        doneStepColor: EaselAppTheme.kDarkGreen,
-        selectedStepColorIn: EaselAppTheme.kDarkGreen,
-        selectedStepColorOut: EaselAppTheme.kDarkGreen,
-        enableLineAnimation: true,
-        enableStepAnimation: true,
-        lineLengthCustomStep: const [],
-        doneStepWidget: Container(width: 12.w, height: 12.h, decoration: const BoxDecoration(color: EaselAppTheme.kDarkGreen)),
-        unselectedStepWidget: Container(width: 12.w, height: 12.h, decoration: const BoxDecoration(color: EaselAppTheme.kLightGrey)),
-        selectedStepWidget: Container(width: 12.w, height: 12.h, decoration: const BoxDecoration(color: EaselAppTheme.kDarkGreen)),
-      ),
+      builder: (_, int value, __) {
+        return StepsIndicator(
+          selectedStep: currentStep.value,
+          nbSteps: _numSteps,
+          lineLength: 0.68.sw / _numSteps,
+          doneLineColor: EaselAppTheme.kDarkGreen,
+          undoneLineColor: EaselAppTheme.kLightGrey,
+          doneLineThickness: 1.5,
+          undoneLineThickness: 1.5,
+          unselectedStepColorIn: EaselAppTheme.kLightGrey,
+          unselectedStepColorOut: EaselAppTheme.kLightGrey,
+          doneStepColor: EaselAppTheme.kDarkGreen,
+          selectedStepColorIn: EaselAppTheme.kDarkGreen,
+          selectedStepColorOut: EaselAppTheme.kDarkGreen,
+          enableLineAnimation: true,
+          enableStepAnimation: true,
+          lineLengthCustomStep: const [],
+          doneStepWidget: Container(width: 12.w, height: 12.h, decoration: const BoxDecoration(color: EaselAppTheme.kDarkGreen)),
+          unselectedStepWidget: Container(width: 12.w, height: 12.h, decoration: const BoxDecoration(color: EaselAppTheme.kLightGrey)),
+          selectedStepWidget: Container(width: 12.w, height: 12.h, decoration: const BoxDecoration(color: EaselAppTheme.kDarkGreen)),
+        );
+      }
     );
   }
 }
