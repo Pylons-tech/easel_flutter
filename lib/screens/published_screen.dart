@@ -89,43 +89,40 @@ class _PublishedNewScreenState extends State<PublishedNewScreen> {
       child: Consumer<EaselProvider>(builder: (_, easelProvider, __) {
         return Scaffold(
           backgroundColor: EaselAppTheme.kBlack,
-          body: GestureDetector(
-            onTap: () {},
-            child: Padding(
-              padding: EdgeInsets.only(top: MediaQuery.of(context).viewPadding.top + 10),
-              child: Stack(
-                children: [
-                  buildPreviewWidget(easelProvider),
-                  Image.asset(kPreviewGradient, width: 1.sw, fit: BoxFit.fill),
-                  SizedBox(
-                    height: 120.h,
-                    width: double.infinity,
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        MyStepsIndicator(currentPage: ValueNotifier(2), currentStep: ValueNotifier(2)),
-                        VerticalSpace(5.h),
-                        StepLabels(currentPage: ValueNotifier(2), currentStep: ValueNotifier(2)),
-                        VerticalSpace(10.h),
-                      ],
-                    ),
+          body: Padding(
+            padding: EdgeInsets.only(top: MediaQuery.of(context).viewPadding.top + 10),
+            child: Stack(
+              children: [
+                buildPreviewWidget(easelProvider),
+                Image.asset(kPreviewGradient, width: 1.sw, fit: BoxFit.fill),
+                SizedBox(
+                  height: 120.h,
+                  width: double.infinity,
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      MyStepsIndicator(currentPage: ValueNotifier(2), currentStep: ValueNotifier(2)),
+                      VerticalSpace(5.h),
+                      StepLabels(currentPage: ValueNotifier(2), currentStep: ValueNotifier(2)),
+                      VerticalSpace(10.h),
+                    ],
                   ),
-                  Positioned(
-                      left: 10.w,
-                      top: 60.h,
-                      child: IconButton(
-                        onPressed: () {
-                          homeViewModel.pageController.previousPage(duration: const Duration(milliseconds: 300), curve: Curves.easeIn);
-                          Navigator.of(context).pop();
-                        },
-                        icon: const Icon(
-                          Icons.arrow_back_ios,
-                          color: EaselAppTheme.kWhite,
-                        ),
-                      )),
-                  Align(alignment: Alignment.bottomCenter, child: OwnerBottomDrawer(nft: easelProvider.nft))
-                ],
-              ),
+                ),
+                Positioned(
+                    left: 10.w,
+                    top: 60.h,
+                    child: IconButton(
+                      onPressed: () {
+                        homeViewModel.pageController.previousPage(duration: const Duration(milliseconds: 300), curve: Curves.easeIn);
+                        Navigator.of(context).pop();
+                      },
+                      icon: const Icon(
+                        Icons.arrow_back_ios,
+                        color: EaselAppTheme.kWhite,
+                      ),
+                    )),
+                Align(alignment: Alignment.bottomCenter, child: OwnerBottomDrawer(nft: easelProvider.nft))
+              ],
             ),
           ),
         );

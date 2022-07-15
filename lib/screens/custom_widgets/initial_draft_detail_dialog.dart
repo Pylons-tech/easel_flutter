@@ -154,7 +154,7 @@ class _DraftDetailDialogState extends State<_DraftDetailDialog> {
                       title: "tx_receipt".tr(),
                       subtitle: "view".tr(),
                       onPressed: () {
-                        navigateToPreviewScreen(context: context, nft: easelProvider.nft);
+                        onViewOnIPFSPressed(provider: easelProvider);
                       }),
                   SizedBox(
                     height: 50.h,
@@ -184,10 +184,9 @@ class _DraftDetailDialogState extends State<_DraftDetailDialog> {
     );
   }
 
-  void navigateToPreviewScreen({required BuildContext context, required NFT nft}) {
-    context.read<EaselProvider>().setPublishedNFTClicked(nft);
-    context.read<EaselProvider>().setPublishedNFTDuration(nft.duration);
-    Navigator.of(context).pushReplacementNamed(RouteUtil.kRoutePreviewNFTFullScreen);
+  void onViewOnIPFSPressed({ required EaselProvider provider}) async {
+    await provider.fileUtilsHelper.launchMyUrl(url: provider.nft.url);
+
   }
 
   String getImageUrl(EaselProvider easelProvider) {
