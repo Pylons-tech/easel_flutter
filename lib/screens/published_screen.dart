@@ -47,7 +47,7 @@ class _PublishedScreenState extends State<PublishedScreen> {
     WidgetsBinding.instance.addPostFrameCallback((_) async {
       Navigator.of(context).push(
         MaterialPageRoute(
-          builder: (BuildContext context) => PublishedNewScreen(),
+          builder: (BuildContext context) => const PublishedNewScreen(),
         ),
       );
     });

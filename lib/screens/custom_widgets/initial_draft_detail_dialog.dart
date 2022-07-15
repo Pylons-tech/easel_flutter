@@ -34,8 +34,6 @@ class DraftDetailDialog {
 }
 
 class _DraftDetailDialog extends StatefulWidget {
-  const _DraftDetailDialog({Key? key}) : super(key: key);
-class _DraftDetailDialog extends StatelessWidget {
   final VoidCallback onClose;
 
   const _DraftDetailDialog({Key? key, required this.onClose}) : super(key: key);
@@ -170,7 +168,7 @@ class _DraftDetailDialogState extends State<_DraftDetailDialog> {
                       textColor: EaselAppTheme.kWhite,
                       onPressed: () async {
                         Navigator.popUntil(context, ModalRoute.withName(RouteUtil.kRouteHome));
-                        onClose();
+                        widget.onClose();
                       },
                       cuttingHeight: 15.h,
                       clipperType: ClipperType.bottomLeftTopRight,
