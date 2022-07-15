@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:easel_flutter/easel_provider.dart';
 import 'package:easel_flutter/repository/repository.dart';
 import 'package:easel_flutter/screens/custom_widgets/initial_draft_detail_dialog.dart';
@@ -42,10 +44,14 @@ class _DescribeScreenState extends State<DescribeScreen> {
   void initState() {
     super.initState();
 
-    WidgetsBinding.instance.addPostFrameCallback((_) async {
-      provider.nft = repository.getCacheDynamicType(key: nftKey);
+    provider.nft = repository.getCacheDynamicType(key: nftKey);
+
+    scheduleMicrotask(() {
+      if (provider.nft.id != null) {
+        repository.updateNFTDialogShown(id: provider.nft.id!);
+      }
       provider.toCheckSavedArtistName();
-      DraftDetailDialog(context: context).show();
+      DraftDetailDialog(context: context, easelProvider: provider).show();
     });
   }
 

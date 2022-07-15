@@ -66,7 +66,7 @@ class _$AppDatabase extends AppDatabase {
   Future<sqflite.Database> open(String path, List<Migration> migrations,
       [Callback? callback]) async {
     final databaseOptions = sqflite.OpenDatabaseOptions(
-      version: 2,
+      version: 3,
       onConfigure: (database) async {
         await database.execute('PRAGMA foreign_keys = ON');
         await callback?.onConfigure?.call(database);
@@ -82,7 +82,7 @@ class _$AppDatabase extends AppDatabase {
       },
       onCreate: (database, version) async {
         await database.execute(
-            'CREATE TABLE IF NOT EXISTS `NFT` (`id` INTEGER, `url` TEXT NOT NULL, `thumbnailUrl` TEXT NOT NULL, `name` TEXT NOT NULL, `description` TEXT NOT NULL, `denom` TEXT NOT NULL, `price` TEXT NOT NULL, `creator` TEXT NOT NULL, `owner` TEXT NOT NULL, `amountMinted` INTEGER NOT NULL, `quantity` INTEGER NOT NULL, `tradePercentage` TEXT NOT NULL, `cookbookID` TEXT NOT NULL, `recipeID` TEXT NOT NULL, `itemID` TEXT NOT NULL, `width` TEXT NOT NULL, `height` TEXT NOT NULL, `appType` TEXT NOT NULL, `tradeID` TEXT NOT NULL, `ownerAddress` TEXT NOT NULL, `step` TEXT NOT NULL, `ibcCoins` TEXT NOT NULL, `isFreeDrop` INTEGER NOT NULL, `type` TEXT NOT NULL, `assetType` TEXT NOT NULL, `duration` TEXT NOT NULL, `hashtags` TEXT NOT NULL, `fileName` TEXT NOT NULL, `cid` TEXT NOT NULL, PRIMARY KEY (`id`))');
+            'CREATE TABLE IF NOT EXISTS `NFT` (`id` INTEGER, `url` TEXT NOT NULL, `thumbnailUrl` TEXT NOT NULL, `name` TEXT NOT NULL, `description` TEXT NOT NULL, `denom` TEXT NOT NULL, `price` TEXT NOT NULL, `creator` TEXT NOT NULL, `owner` TEXT NOT NULL, `amountMinted` INTEGER NOT NULL, `quantity` INTEGER NOT NULL, `tradePercentage` TEXT NOT NULL, `cookbookID` TEXT NOT NULL, `recipeID` TEXT NOT NULL, `itemID` TEXT NOT NULL, `width` TEXT NOT NULL, `height` TEXT NOT NULL, `appType` TEXT NOT NULL, `tradeID` TEXT NOT NULL, `ownerAddress` TEXT NOT NULL, `step` TEXT NOT NULL, `ibcCoins` TEXT NOT NULL, `isFreeDrop` INTEGER NOT NULL, `type` TEXT NOT NULL, `assetType` TEXT NOT NULL, `duration` TEXT NOT NULL, `hashtags` TEXT NOT NULL, `fileName` TEXT NOT NULL, `cid` TEXT NOT NULL, `isDialogShown` INTEGER NOT NULL, `isEnabled` INTEGER NOT NULL, PRIMARY KEY (`id`))');
 
         await callback?.onCreate?.call(database, version);
       },
@@ -131,7 +131,9 @@ class _$NftDao extends NftDao {
                   'duration': item.duration,
                   'hashtags': item.hashtags,
                   'fileName': item.fileName,
-                  'cid': item.cid
+                  'cid': item.cid,
+                  'isDialogShown': item.isDialogShown ? 1 : 0,
+                  'isEnabled': item.isEnabled ? 1 : 0
                 });
 
   final sqflite.DatabaseExecutor database;
@@ -173,7 +175,9 @@ class _$NftDao extends NftDao {
             duration: row['duration'] as String,
             hashtags: row['hashtags'] as String,
             fileName: row['fileName'] as String,
-            cid: row['cid'] as String));
+            cid: row['cid'] as String,
+            isEnabled: (row['isEnabled'] as int) != 0,
+            isDialogShown: (row['isDialogShown'] as int) != 0));
   }
 
   @override
@@ -207,7 +211,9 @@ class _$NftDao extends NftDao {
             duration: row['duration'] as String,
             hashtags: row['hashtags'] as String,
             fileName: row['fileName'] as String,
-            cid: row['cid'] as String),
+            cid: row['cid'] as String,
+            isEnabled: (row['isEnabled'] as int) != 0,
+            isDialogShown: (row['isDialogShown'] as int) != 0),
         arguments: [id]);
   }
 
@@ -228,6 +234,13 @@ class _$NftDao extends NftDao {
     await _queryAdapter.queryNoReturn(
         'UPDATE nft SET name = ?2, description= ?3, creator = ?4, step = ?5,hashtags = ?6 WHERE id = ?1',
         arguments: [id, nftName, nftDescription, creatorName, step, hashtags]);
+  }
+
+  @override
+  Future<void> updateNFTDialogShown(int id) async {
+    await _queryAdapter.queryNoReturn(
+        'UPDATE nft SET isDialogShown = true WHERE id = ?1',
+        arguments: [id]);
   }
 
   @override

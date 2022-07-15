@@ -5,9 +5,9 @@ import 'package:easel_flutter/models/nft.dart';
 import 'package:easel_flutter/screens/clippers/right_triangle_clipper.dart' as clipper;
 import 'package:easel_flutter/screens/clippers/right_triangle_clipper.dart';
 import 'package:easel_flutter/utils/constants.dart';
+import 'package:easel_flutter/utils/easel_app_theme.dart';
 import 'package:easel_flutter/utils/route_util.dart';
 import 'package:easel_flutter/widgets/clipped_button.dart';
-import 'package:easel_flutter/utils/easel_app_theme.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -19,12 +19,16 @@ TextStyle _rowTitleTextStyle = TextStyle(color: Colors.white, fontWeight: FontWe
 
 class DraftDetailDialog {
   final BuildContext context;
+  final EaselProvider easelProvider;
 
-  DraftDetailDialog({required this.context});
+  DraftDetailDialog({required this.context, required this.easelProvider});
 
   Future<void> show() async {
+    if (dialogAlreadyShown(easelProvider)) return;
     await showDialog<String>(context: context, barrierDismissible: false, builder: (BuildContext context) => const _DraftDetailDialog());
   }
+
+  dialogAlreadyShown(EaselProvider provider) => provider.nft.isDialogShown;
 }
 
 class _DraftDetailDialog extends StatefulWidget {

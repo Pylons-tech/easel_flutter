@@ -80,8 +80,7 @@ abstract class Repository {
 
   /// This method will save the draft of the NFT
   /// Input: [NFT] the draft that will will be saved in database
-  /// Output: [int] returns id of the inserted document
-  /// will return error in the form of failure
+  /// Output: [int] returns id of the inserted document & will return error in the form of [Failure]
   Future<Either<Failure, int>> saveNft(NFT nft);
 
   /// This method will update draft in the local database from description Page
@@ -89,9 +88,14 @@ abstract class Repository {
   /// Output: [bool] returns whether the operation is successful or not
   Future<Either<Failure, bool>> updateNftFromDescription({required SaveNft saveNft});
 
+  /// This method will update the draft of the NFT
+  /// Input: [id] of the draft that will be updated
+  /// Output: [bool] returns that draft that is  updated or not & will return error in the form of [Failure]
+  Future<Either<Failure, bool>> updateNFTDialogShown({required int id});
+
   /// This method will update draft in the local database from Pricing page
   /// Input: [saveNft] contains data to be updated
-  /// Output: [bool] returns whether the operation is successful or not
+  /// Output: [bool] returns whether the operation is successful or not & will return error in the form of [Failure]
   Future<Either<Failure, bool>> updateNftFromPrice({required SaveNft saveNft});
 
   /// This method is used uploading provided file to the server using [httpClient]
@@ -218,11 +222,25 @@ class RepositoryImp implements Repository {
       bool result = await localDataSource.updateNftFromDescription(saveNft);
 
       if (!result) {
-        return Left(CacheFailure("save_error".tr()));
+        return Left(CacheFailure("upload_error".tr()));
       }
       return Right(result);
     } on Exception catch (_) {
-      return Left(CacheFailure("save_error".tr()));
+      return Left(CacheFailure("upload_error".tr()));
+    }
+  }
+
+  @override
+  Future<Either<Failure, bool>> updateNFTDialogShown({required int id}) async {
+    try {
+      bool result = await localDataSource.updateNFTDialogShown(id);
+
+      if (!result) {
+        return Left(CacheFailure("upload_error".tr()));
+      }
+      return Right(result);
+    } on Exception catch (_) {
+      return Left(CacheFailure("upload_error".tr()));
     }
   }
 
@@ -233,7 +251,7 @@ class RepositoryImp implements Repository {
 
       return Right(result);
     } on Exception catch (_) {
-      return Left(CacheFailure("save_error".tr()));
+      return Left(CacheFailure("upload_error".tr()));
     }
   }
 
@@ -276,8 +294,7 @@ class RepositoryImp implements Repository {
       if (data == null) {
         return Left(CacheFailure("something_wrong".tr()));
       }
-        return Right(data);
-
+      return Right(data);
     } on Exception catch (_) {
       return Left(CacheFailure("something_wrong".tr()));
     }
