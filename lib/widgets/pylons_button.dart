@@ -2,8 +2,8 @@ import 'package:easel_flutter/main.dart';
 import 'package:easel_flutter/utils/constants.dart';
 import 'package:easel_flutter/utils/easel_app_theme.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/flutter_svg.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 
 class PylonsButton extends StatelessWidget {
   final VoidCallback onPressed;
@@ -20,7 +20,7 @@ class PylonsButton extends StatelessWidget {
           color: Colors.transparent,
           elevation: 10,
           child: SizedBox(
-            width: isTablet ? 0.3.sw : 0.5.sw,
+            width: isTablet ? 0.3.sw : 0.3.sw,
             height: isTablet ? 0.07.sw : 0.12.sw,
             child: Stack(
               children: [

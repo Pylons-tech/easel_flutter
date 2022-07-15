@@ -5,9 +5,9 @@ import 'package:easel_flutter/models/nft.dart';
 import 'package:easel_flutter/screens/clippers/right_triangle_clipper.dart' as clipper;
 import 'package:easel_flutter/screens/clippers/right_triangle_clipper.dart';
 import 'package:easel_flutter/utils/constants.dart';
+import 'package:easel_flutter/utils/easel_app_theme.dart';
 import 'package:easel_flutter/utils/route_util.dart';
 import 'package:easel_flutter/widgets/clipped_button.dart';
-import 'package:easel_flutter/utils/easel_app_theme.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -19,16 +19,24 @@ TextStyle _rowTitleTextStyle = TextStyle(color: Colors.white, fontWeight: FontWe
 
 class DraftDetailDialog {
   final BuildContext context;
+  final VoidCallback onClose;
 
-  DraftDetailDialog({required this.context});
+  DraftDetailDialog({required this.context, required this.onClose});
 
   Future<void> show() async {
-    await showDialog<String>(context: context, barrierDismissible: false, builder: (BuildContext context) => const _DraftDetailDialog());
+    await showDialog<String>(
+        context: context,
+        barrierDismissible: false,
+        builder: (BuildContext context) => _DraftDetailDialog(
+              onClose: onClose,
+            ));
   }
 }
 
 class _DraftDetailDialog extends StatelessWidget {
-  const _DraftDetailDialog({Key? key}) : super(key: key);
+  final VoidCallback onClose;
+
+  const _DraftDetailDialog({Key? key, required this.onClose}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -82,29 +90,28 @@ class _DraftDetailDialog extends StatelessWidget {
                   SizedBox(
                     height: 100.h,
                     width: 100.h,
-                    child:
-                    easelProvider.nft.assetType == k3dText
+                    child: easelProvider.nft.assetType == k3dText
                         ? ModelViewer(
-                      src: easelProvider.nft.url,
-                      ar: false,
-                      autoRotate: false,
-                      cameraControls: false,
-                    )
+                            src: easelProvider.nft.url,
+                            ar: false,
+                            autoRotate: false,
+                            cameraControls: false,
+                          )
                         : CachedNetworkImage(
-                      fit: BoxFit.contain,
-                      imageUrl: getImageUrl(easelProvider),
-                      errorWidget: (a, b, c) => const Center(
-                          child: Icon(
-                            Icons.error_outline,
-                            color: Colors.white,
-                          )),
-                      placeholder: (context, url) => Shimmer(
-                          color: EaselAppTheme.cardBackground,
-                          child: SizedBox(
-                            height: 100.h,
-                            width: 100.h,
-                          )),
-                    ),
+                            fit: BoxFit.contain,
+                            imageUrl: getImageUrl(easelProvider),
+                            errorWidget: (a, b, c) => const Center(
+                                child: Icon(
+                              Icons.error_outline,
+                              color: Colors.white,
+                            )),
+                            placeholder: (context, url) => Shimmer(
+                                color: EaselAppTheme.cardBackground,
+                                child: SizedBox(
+                                  height: 100.h,
+                                  width: 100.h,
+                                )),
+                          ),
                   ),
                   SizedBox(
                     height: 30.h,
@@ -140,9 +147,11 @@ class _DraftDetailDialog extends StatelessWidget {
                       bgColor: Colors.white.withOpacity(0.2),
                       textColor: EaselAppTheme.kWhite,
                       onPressed: () async {
-                        Navigator.pop(context);
+                        Navigator.popUntil(context, ModalRoute.withName(RouteUtil.kRouteHome));
+                        onClose();
                       },
-                      cuttingHeight: 15.h, clipperType: ClipperType.bottomLeftTopRight,
+                      cuttingHeight: 15.h,
+                      clipperType: ClipperType.bottomLeftTopRight,
                       fontWeight: FontWeight.w700,
                     ),
                   )

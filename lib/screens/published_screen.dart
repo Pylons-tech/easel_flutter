@@ -1,16 +1,15 @@
 import 'dart:ui';
+
 import 'package:detectable_text_field/detector/sample_regular_expressions.dart';
 import 'package:detectable_text_field/widgets/detectable_text.dart';
-import 'package:easel_flutter/main.dart';
-import 'package:easel_flutter/screens/clippers/right_triangle_clipper.dart' as clipper;
-
 import 'package:easel_flutter/easel_provider.dart';
+import 'package:easel_flutter/main.dart';
 import 'package:easel_flutter/models/nft.dart';
 import 'package:easel_flutter/repository/repository.dart';
+import 'package:easel_flutter/screens/clippers/right_triangle_clipper.dart' as clipper;
 import 'package:easel_flutter/screens/clippers/right_triangle_clipper.dart';
 import 'package:easel_flutter/screens/custom_widgets/step_labels.dart';
 import 'package:easel_flutter/screens/custom_widgets/steps_indicator.dart';
-import 'package:easel_flutter/screens/preview_nft/nft_image_screen.dart';
 import 'package:easel_flutter/utils/constants.dart';
 import 'package:easel_flutter/utils/easel_app_theme.dart';
 import 'package:easel_flutter/utils/enums.dart';
@@ -18,7 +17,11 @@ import 'package:easel_flutter/utils/read_more.dart';
 import 'package:easel_flutter/utils/route_util.dart';
 import 'package:easel_flutter/utils/space_utils.dart';
 import 'package:easel_flutter/viewmodels/home_viewmodel.dart';
+import 'package:easel_flutter/widgets/audio_widget.dart';
 import 'package:easel_flutter/widgets/clipped_button.dart';
+import 'package:easel_flutter/widgets/image_widget.dart';
+import 'package:easel_flutter/widgets/model_viewer.dart';
+import 'package:easel_flutter/widgets/video_widget.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -57,7 +60,9 @@ class _PublishedScreenState extends State<PublishedScreen> {
 }
 
 class PublishedNewScreen extends StatefulWidget {
-  const PublishedNewScreen({Key? key,}) : super(key: key);
+  const PublishedNewScreen({
+    Key? key,
+  }) : super(key: key);
 
   @override
   State<PublishedNewScreen> createState() => _PublishedNewScreenState();
@@ -82,7 +87,6 @@ class _PublishedNewScreenState extends State<PublishedNewScreen> {
         return true;
       },
       child: Consumer<EaselProvider>(builder: (_, easelProvider, __) {
-
         return Scaffold(
           backgroundColor: EaselAppTheme.kBlack,
           body: GestureDetector(
@@ -91,7 +95,7 @@ class _PublishedNewScreenState extends State<PublishedNewScreen> {
               padding: EdgeInsets.only(top: MediaQuery.of(context).viewPadding.top + 10),
               child: Stack(
                 children: [
-                  NftImageWidget(imageUrl: easelProvider.nft.url),
+                  buildPreviewWidget(easelProvider),
                   Image.asset(kPreviewGradient, width: 1.sw, fit: BoxFit.fill),
                   SizedBox(
                     height: 120.h,
@@ -113,7 +117,6 @@ class _PublishedNewScreenState extends State<PublishedNewScreen> {
                         onPressed: () {
                           homeViewModel.pageController.previousPage(duration: const Duration(milliseconds: 300), curve: Curves.easeIn);
                           Navigator.of(context).pop();
-
                         },
                         icon: const Icon(
                           Icons.arrow_back_ios,
@@ -129,10 +132,38 @@ class _PublishedNewScreenState extends State<PublishedNewScreen> {
       }),
     );
   }
+
+  Widget buildPreviewWidget(EaselProvider provider) {
+    switch (provider.nft.assetType) {
+      case kImageText:
+        return ImageWidget(filePath: provider.nft.url);
+      case kVideoText:
+        return VideoWidget(
+          filePath: provider.nft.url,
+          previewFlag: true,
+          isForFile: false,
+        );
+      case k3dText:
+        return SizedBox(
+            height: MediaQuery.of(context).size.height * 0.78,
+            width: 1.sw,
+            child: Model3dViewer(
+              path: provider.nft.url,
+              isFile: false,
+            ));
+      case kAudioText:
+        return AudioWidget(
+          filePath: provider.nft.url,
+          previewFlag: true,
+        );
+    }
+    return const SizedBox.shrink();
+  }
 }
 
 class OwnerBottomDrawer extends StatefulWidget {
   final NFT nft;
+
   const OwnerBottomDrawer({Key? key, required this.nft}) : super(key: key);
 
   @override
@@ -148,221 +179,215 @@ class _OwnerBottomDrawerState extends State<OwnerBottomDrawer> {
     super.initState();
   }
 
-
   @override
   Widget build(BuildContext context) {
     final viewModel = context.watch<EaselProvider>();
 
     return Consumer<EaselProvider>(builder: (_, easelProvider, __) {
-
       return AnimatedContainer(
-          duration: const Duration(milliseconds: 100),
-          decoration: const BoxDecoration(color: Colors.transparent),
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              if (viewModel.collapsed) ...[
-                Padding(
-                  padding: const EdgeInsets.all(16.0),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Align(
-                        alignment: Alignment.topRight,
-                        child: IconButton(
-                          icon: Icon(
-                            Icons.keyboard_arrow_up,
-                            size: 32.h,
-                            color: Colors.white,
-                          ),
-                          onPressed: () {
-                            viewModel.toChangeCollapse();
-                          },
-                        ),
-                      ),
-                      _title(
-                        nft: widget.nft,
-                        owner: widget.nft.type == NftType.TYPE_RECIPE ? "you".tr() : widget.nft.creator,
-                      ),
-                      const SizedBox(
-                        height: 20,
-                      ),
-
-                    ],
-                  ),
-                )
-              ] else ...[
-                Stack(
+        duration: const Duration(milliseconds: 100),
+        decoration: const BoxDecoration(color: Colors.transparent),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            if (viewModel.collapsed) ...[
+              Padding(
+                padding: const EdgeInsets.all(16.0),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Align(
                       alignment: Alignment.topRight,
-                      child: ClipPath(
-                        clipper: RightTriangleClipper(orientation: clipper.Orientation.orientationSW),
-                        child: Container(
-                          color: EaselAppTheme.kLightRed,
-                          height: 50,
-                          width: 50,
-                          child: Center(
-                              child: IconButton(
-                            alignment: Alignment.topRight,
-                            padding: const EdgeInsets.only(
-                              bottom: 8,
-                              left: 8,
+                      child: IconButton(
+                        icon: Icon(
+                          Icons.keyboard_arrow_up,
+                          size: 32.h,
+                          color: Colors.white,
+                        ),
+                        onPressed: () {
+                          viewModel.toChangeCollapse();
+                        },
+                      ),
+                    ),
+                    _title(
+                      nft: widget.nft,
+                      owner: widget.nft.type == NftType.TYPE_RECIPE ? "you".tr() : widget.nft.creator,
+                    ),
+                    const SizedBox(
+                      height: 20,
+                    ),
+                  ],
+                ),
+              )
+            ] else ...[
+              Stack(
+                children: [
+                  Align(
+                    alignment: Alignment.topRight,
+                    child: ClipPath(
+                      clipper: RightTriangleClipper(orientation: clipper.Orientation.orientationSW),
+                      child: Container(
+                        color: EaselAppTheme.kLightRed,
+                        height: 50,
+                        width: 50,
+                        child: Center(
+                            child: IconButton(
+                          alignment: Alignment.topRight,
+                          padding: const EdgeInsets.only(
+                            bottom: 8,
+                            left: 8,
+                          ),
+                          icon: const Icon(Icons.keyboard_arrow_down_outlined),
+                          onPressed: () {
+                            viewModel.toChangeCollapse();
+                          },
+                          iconSize: 32,
+                          color: Colors.white,
+                        )),
+                      ),
+                    ),
+                  ),
+                  ClipPath(
+                    clipper: ExpandedViewClipper(),
+                    child: BackdropFilter(
+                      filter: ImageFilter.blur(sigmaX: 10.0, sigmaY: 10.0),
+                      child: Container(
+                        width: MediaQuery.of(context).size.width,
+                        color: Colors.black54,
+                        padding: const EdgeInsets.all(32.0),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            _title(nft: widget.nft, owner: widget.nft.type == NftType.TYPE_RECIPE ? "you".tr() : widget.nft.creator),
+                            SizedBox(
+                              height: 20.h,
                             ),
-                            icon: const Icon(Icons.keyboard_arrow_down_outlined),
-                            onPressed: () {
-                              viewModel.toChangeCollapse();
-                            },
-                            iconSize: 32,
-                            color: Colors.white,
-                          )),
+                            if (widget.nft.hashtags.isNotEmpty)
+                              Wrap(
+                                  spacing: 10.w,
+                                  children: List.generate(
+                                      viewModel.hashtagsList.length,
+                                      (index) => SizedBox(
+                                            child: DetectableText(
+                                              text: "#${viewModel.hashtagsList[index]}",
+                                              detectionRegExp: detectionRegExp()!,
+                                              detectedStyle: TextStyle(
+                                                fontSize: 12.sp,
+                                                color: EaselAppTheme.kHashtagColor,
+                                              ),
+                                              basicStyle: TextStyle(
+                                                fontSize: 20.sp,
+                                              ),
+                                              onTap: (tappedText) {},
+                                            ),
+                                          ))),
+                            SizedBox(
+                              height: 10.h,
+                            ),
+                            ReadMoreText(
+                              widget.nft.description,
+                              trimExpandedText: "collapse".tr(),
+                              trimCollapsedText: "read_more".tr(),
+                              moreStyle: TextStyle(fontSize: 12.sp, fontWeight: FontWeight.w300, color: EaselAppTheme.kLightPurple),
+                              lessStyle: TextStyle(fontSize: 12.sp, fontWeight: FontWeight.w300, color: EaselAppTheme.kLightPurple),
+                            ),
+                            SizedBox(
+                              height: 30.h,
+                            ),
+                            SizedBox(
+                              width: double.infinity,
+                              child: Stack(
+                                children: [
+                                  Column(
+                                    children: [
+                                      buildRow(
+                                        title: "currency".tr(),
+                                        subtitle: widget.nft.ibcCoins,
+                                      ),
+                                      SizedBox(height: 2.h),
+                                      buildRow(
+                                        title: "price".tr(),
+                                        subtitle: widget.nft.price,
+                                      ),
+                                      SizedBox(height: 10.h),
+                                      buildRow(
+                                        title: "editions".tr(),
+                                        subtitle: widget.nft.quantity.toString(),
+                                      ),
+                                      SizedBox(height: 2.h),
+                                      buildRow(
+                                        title: "royalty".tr(),
+                                        subtitle: "${widget.nft.tradePercentage}%",
+                                      ),
+                                      SizedBox(height: 10.h),
+                                      buildRow(
+                                        title: "content_identifier".tr(),
+                                        subtitle: widget.nft.cid,
+                                      ),
+                                      SizedBox(height: 2.h),
+                                      buildRow(
+                                        title: "asset_uri".tr(),
+                                        subtitle: "view".tr(),
+                                      ),
+                                      SizedBox(height: 50.h),
+                                      Row(
+                                        children: [
+                                          Expanded(
+                                            child: ClippedButton(
+                                              title: "save".tr(),
+                                              bgColor: Colors.white.withOpacity(0.2),
+                                              textColor: EaselAppTheme.kWhite,
+                                              onPressed: () async {
+                                                Navigator.of(context).popUntil(ModalRoute.withName(RouteUtil.kRouteCreatorHub));
+                                              },
+                                              cuttingHeight: 15.h,
+                                              clipperType: ClipperType.topLeftBottomRight,
+                                              isShadow: false,
+                                              fontWeight: FontWeight.w300,
+                                            ),
+                                          ),
+                                          SizedBox(
+                                            width: 30.w,
+                                          ),
+                                          Expanded(
+                                            child: ClippedButton(
+                                              title: "publish".tr(),
+                                              bgColor: EaselAppTheme.kLightRed,
+                                              textColor: EaselAppTheme.kWhite,
+                                              onPressed: () async {
+                                                bool isRecipeCreated = await easelProvider.verifyPylonsAndMint(nft: easelProvider.nft);
+                                                if (!isRecipeCreated) {
+                                                  return;
+                                                }
+                                                easelProvider.disposeAudioController();
+                                                Navigator.of(context).pushNamedAndRemoveUntil(RouteUtil.kRouteCreatorHub, (route) => false);
+                                              },
+                                              cuttingHeight: 15.h,
+                                              clipperType: ClipperType.topLeftBottomRight,
+                                              isShadow: false,
+                                              fontWeight: FontWeight.w700,
+                                            ),
+                                          )
+                                        ],
+                                      ),
+                                    ],
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ],
                         ),
                       ),
                     ),
-                    ClipPath(
-                      clipper: ExpandedViewClipper(),
-                      child: BackdropFilter(
-                        filter: ImageFilter.blur(sigmaX: 10.0, sigmaY: 10.0),
-                        child: Container(
-                          width: MediaQuery.of(context).size.width,
-                          color: Colors.black54,
-                          padding: const EdgeInsets.all(32.0),
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              _title(nft: widget.nft, owner: widget.nft.type == NftType.TYPE_RECIPE ? "you".tr() : widget.nft.creator),
-                              SizedBox(
-                                height: 20.h,
-                              ),
-
-                              if (widget.nft.hashtags.isNotEmpty)
-                                Wrap(
-                                    spacing: 10.w,
-                                    children: List.generate(
-                                        viewModel.hashtagsList.length,
-                                        (index) => SizedBox(
-                                              child: DetectableText(
-                                                text: "#${viewModel.hashtagsList[index]}",
-                                                detectionRegExp: detectionRegExp()!,
-                                                detectedStyle: TextStyle(
-                                                  fontSize: 12.sp,
-                                                  color: EaselAppTheme.kHashtagColor,
-                                                ),
-                                                basicStyle: TextStyle(
-                                                  fontSize: 20.sp,
-                                                ),
-                                                onTap: (tappedText) {},
-                                              ),
-                                            ))),
-                              SizedBox(
-                                height: 10.h,
-                              ),
-                              ReadMoreText(
-                                widget.nft.description,
-                                trimExpandedText: "collapse".tr(),
-                                trimCollapsedText: "read_more".tr(),
-                                moreStyle: TextStyle(fontSize: 12.sp, fontWeight: FontWeight.w300, color: EaselAppTheme.kLightPurple),
-                                lessStyle: TextStyle(fontSize: 12.sp, fontWeight: FontWeight.w300, color: EaselAppTheme.kLightPurple),
-                              ),
-                              SizedBox(
-                                height: 30.h,
-                              ),
-                              SizedBox(
-                                width: double.infinity,
-                                child: Stack(
-                                  children: [
-                                    Column(
-                                      children: [
-                                        buildRow(
-                                          title: "currency".tr(),
-                                          subtitle: widget.nft.ibcCoins,
-                                        ),
-                                        SizedBox(height: 2.h),
-
-                                        buildRow(
-                                          title: "price".tr(),
-                                          subtitle: widget.nft.price,
-                                        ),
-                                        SizedBox(height: 10.h),
-                                        buildRow(
-                                          title: "editions".tr(),
-                                          subtitle: widget.nft.quantity.toString(),
-                                        ),
-                                        SizedBox(height: 2.h),
-
-                                        buildRow(
-                                          title: "royalty".tr(),
-                                          subtitle: "${widget.nft.tradePercentage}%",
-                                        ),
-                                        SizedBox(height: 10.h),
-                                        buildRow(
-                                          title: "content_identifier".tr(),
-                                          subtitle: widget.nft.cid,
-                                        ),
-                                        SizedBox(height: 2.h),
-
-                                        buildRow(
-                                          title: "asset_uri".tr(),
-                                          subtitle: "view".tr(),
-                                        ),
-                                        SizedBox(height: 50.h),
-                                        Row(
-                                          children: [
-                                            Expanded(
-                                              child: ClippedButton(
-                                                title: "save".tr(),
-                                                bgColor: Colors.white.withOpacity(0.2),
-                                                textColor: EaselAppTheme.kWhite,
-                                                onPressed: () async {
-                                                  Navigator.of(context).popUntil(ModalRoute.withName(RouteUtil.kRouteCreatorHub));
-                                                },
-                                                cuttingHeight: 15.h,
-                                                clipperType: ClipperType.topLeftBottomRight,
-                                                isShadow: false,
-                                                fontWeight: FontWeight.w300,
-                                              ),
-                                            ),
-                                            SizedBox(width: 30.w,),
-                                            Expanded(
-                                              child: ClippedButton(
-                                                title: "publish".tr(),
-                                                bgColor: EaselAppTheme.kLightRed,
-                                                textColor: EaselAppTheme.kWhite,
-                                                onPressed: () async {
-                                                  bool isRecipeCreated = await easelProvider.verifyPylonsAndMint(nft: easelProvider.nft);
-                                                  if (!isRecipeCreated) {
-                                                    return;
-                                                  }
-                                                  easelProvider.disposeAudioController();
-                                                  Navigator.of(context).pushNamedAndRemoveUntil(RouteUtil.kRouteCreatorHub, (route) => false);
-},
-                                                cuttingHeight: 15.h,
-                                                clipperType: ClipperType.topLeftBottomRight,
-                                                isShadow: false,
-                                                fontWeight: FontWeight.w700,
-                                              ),
-                                            )
-                                          ],
-                                        ),
-                                      ],
-                                    ),
-                                  ],
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
-                      ),
-                    )
-                  ],
-                )
-              ]
-            ],
-          ),
-        );
-      }
-    );
+                  )
+                ],
+              )
+            ]
+          ],
+        ),
+      );
+    });
   }
 
   Widget _title({required NFT nft, required String owner}) {
@@ -380,7 +405,6 @@ class _OwnerBottomDrawerState extends State<OwnerBottomDrawer> {
                 overflow: TextOverflow.ellipsis,
               ),
             ),
-
           ],
         ),
         SizedBox(
@@ -391,7 +415,7 @@ class _OwnerBottomDrawerState extends State<OwnerBottomDrawer> {
             children: [
               TextSpan(
                 text: "created_by".tr(),
-                style: TextStyle(color: Colors.white, fontSize: 18.sp,fontWeight: FontWeight.w500),
+                style: TextStyle(color: Colors.white, fontSize: 18.sp, fontWeight: FontWeight.w500),
               ),
               TextSpan(text: owner, style: TextStyle(color: EaselAppTheme.kLightPurple, fontSize: 18.sp, fontWeight: FontWeight.w500)),
               WidgetSpan(
@@ -440,9 +464,10 @@ class _OwnerBottomDrawerState extends State<OwnerBottomDrawer> {
                         subtitle.substring(subtitle.length - 5, subtitle.length),
                         style: _rowTitleTextStyle,
                       ),
-                      SizedBox(width: 1.w,),
+                      SizedBox(
+                        width: 1.w,
+                      ),
                       clipboardWidget(subtitle)
-
                     ],
                   )
                 : Row(
@@ -458,18 +483,18 @@ class _OwnerBottomDrawerState extends State<OwnerBottomDrawer> {
                           style: title == "asset_uri".tr() ? _rowTitleTextStyle.copyWith(color: EaselAppTheme.kLightPurple) : _rowTitleTextStyle,
                         ),
                       ),
-                      SizedBox(width: 1.w,),
-
-                      if (title == "content_identifier".tr())
-                        clipboardWidget(subtitle)
+                      SizedBox(
+                        width: 1.w,
+                      ),
+                      if (title == "content_identifier".tr()) clipboardWidget(subtitle)
                     ],
                   ))
       ],
     );
   }
 
-  Widget   clipboardWidget(subtitle){
-    return    InkWell(
+  Widget clipboardWidget(subtitle) {
+    return InkWell(
       onTap: () async {
         await Clipboard.setData(ClipboardData(text: subtitle));
         if (!mounted) return;
