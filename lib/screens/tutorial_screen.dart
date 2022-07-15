@@ -87,7 +87,7 @@ class _TutorialScreenState extends State<TutorialScreen> {
                           decoration: const BoxDecoration(
                             image: DecorationImage(image: AssetImage(kTooltipBalloon), fit: BoxFit.contain),
                           ),
-                          child:  AutoSizeText(
+                          child: AutoSizeText(
                             kWhyAppNeeded,
                             maxFontSize: isTablet ? 18 : 14,
                             style: TextStyle(fontSize: isTablet ? 18 : 14, fontWeight: FontWeight.w400, color: EaselAppTheme.kWhite),
@@ -101,7 +101,7 @@ class _TutorialScreenState extends State<TutorialScreen> {
                   ),
                   RichText(
                     text: TextSpan(
-                      style: TextStyle(fontSize: isTablet ? 16.sp: 18.sp, fontWeight: FontWeight.w800, color: EaselAppTheme.kDartGrey),
+                      style: TextStyle(fontSize: isTablet ? 16.sp : 18.sp, fontWeight: FontWeight.w800, color: EaselAppTheme.kDartGrey),
                       children: <TextSpan>[
                         TextSpan(text: item['header']),
                         TextSpan(text: item['header1'], style: const TextStyle(color: EaselAppTheme.kPurple02)),
@@ -110,16 +110,12 @@ class _TutorialScreenState extends State<TutorialScreen> {
                   )
                 ] else ...[
                   SizedBox(height: 0.15.sh),
-                  Text(item['header'],
-                      style: TextStyle(fontSize: isTablet ? 16.sp: 18.sp, fontWeight: FontWeight.w800, color: EaselAppTheme.kDartGrey),
-                      textAlign: TextAlign.center),
+                  Text(item['header'], style: TextStyle(fontSize: isTablet ? 16.sp : 18.sp, fontWeight: FontWeight.w800, color: EaselAppTheme.kDartGrey), textAlign: TextAlign.center),
                 ],
                 const SizedBox(height: 15),
                 Container(
                     padding: EdgeInsets.symmetric(horizontal: 20.w),
-                    child: Text(item['description'],
-                        style: TextStyle(color: Colors.black, fontSize: 16.sp, fontWeight: FontWeight.w400),
-                        textAlign: TextAlign.center)),
+                    child: Text(item['description'], style: TextStyle(color: Colors.black, fontSize: 16.sp, fontWeight: FontWeight.w400), textAlign: TextAlign.center)),
               ],
             ))
         .toList();
@@ -152,8 +148,7 @@ class _TutorialScreenState extends State<TutorialScreen> {
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: indicator(),
                 ),
-              )
-              ),
+              )),
           if (isLastPage()) ...[
             Align(
                 alignment: Alignment.bottomRight,
@@ -161,11 +156,9 @@ class _TutorialScreenState extends State<TutorialScreen> {
                   margin: EdgeInsets.only(right: 25.w, bottom: 40.h),
                   child: PylonsButton(
                     onPressed: () async {
-
                       GetIt.I.get<LocalDataSource>().saveOnBoardingComplete();
 
-
-                      checkPylonsAppExistsOrNot();
+                      populateCoinsAndMoveForward();
                     },
                     btnText: kContinue,
                     isBlue: false,
@@ -208,12 +201,9 @@ class _TutorialScreenState extends State<TutorialScreen> {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Text(kWhyAppNeededDesc1,
-                          style: TextStyle(fontSize: 14.sp, fontWeight: FontWeight.w800, color: Colors.black)),
+                      Text(kWhyAppNeededDesc1, style: TextStyle(fontSize: 14.sp, fontWeight: FontWeight.w800, color: Colors.black)),
                       SizedBox(height: 8.h),
-                      Text(kWhyAppNeededDescSummary1,
-                          style:
-                              TextStyle(fontSize: 13.sp, fontWeight: FontWeight.w400, color: EaselAppTheme.kLightGrey))
+                      Text(kWhyAppNeededDescSummary1, style: TextStyle(fontSize: 13.sp, fontWeight: FontWeight.w400, color: EaselAppTheme.kLightGrey))
                     ],
                   ),
                 )
@@ -236,12 +226,9 @@ class _TutorialScreenState extends State<TutorialScreen> {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Text(kWhyAppNeededDesc2,
-                          style: TextStyle(fontSize: 14.sp, fontWeight: FontWeight.w800, color: Colors.black)),
+                      Text(kWhyAppNeededDesc2, style: TextStyle(fontSize: 14.sp, fontWeight: FontWeight.w800, color: Colors.black)),
                       SizedBox(height: 8.h),
-                      Text(kWhyAppNeededDescSummary2,
-                          style:
-                              TextStyle(fontSize: 13.sp, fontWeight: FontWeight.w400, color: EaselAppTheme.kLightGrey))
+                      Text(kWhyAppNeededDescSummary2, style: TextStyle(fontSize: 13.sp, fontWeight: FontWeight.w400, color: EaselAppTheme.kLightGrey))
                     ],
                   ),
                 )
@@ -264,12 +251,9 @@ class _TutorialScreenState extends State<TutorialScreen> {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Text(kWhyAppNeededDesc3,
-                          style: TextStyle(fontSize: 14.sp, fontWeight: FontWeight.w800, color: Colors.black)),
+                      Text(kWhyAppNeededDesc3, style: TextStyle(fontSize: 14.sp, fontWeight: FontWeight.w800, color: Colors.black)),
                       SizedBox(height: 8.h),
-                      Text(kWhyAppNeededDescSummary3,
-                          style:
-                              TextStyle(fontSize: 13.sp, fontWeight: FontWeight.w400, color: EaselAppTheme.kLightGrey))
+                      Text(kWhyAppNeededDescSummary3, style: TextStyle(fontSize: 13.sp, fontWeight: FontWeight.w400, color: EaselAppTheme.kLightGrey))
                     ],
                   ),
                 )
@@ -317,53 +301,9 @@ class _TutorialScreenState extends State<TutorialScreen> {
     }
   }
 
-
-
-  void checkPylonsAppExistsOrNot() async {
-    final isExist = await PylonsWallet.instance.exists();
-
-    if (isExist) {
-      getProfile();
-      return;
-    }
-
+  void populateCoinsAndMoveForward() async {
     context.read<EaselProvider>().populateCoinsIfPylonsNotExists();
 
     navigatorKey.currentState!.pushReplacementNamed(RouteUtil.kRouteCreatorHub);
-  }
-
-  Future<void> getProfile() async {
-    final response = await context.read<EaselProvider>().getProfile();
-
-    if (response.success) {
-      await Future.delayed(const Duration(
-        milliseconds: 500,
-      ));
-
-      navigatorKey.currentState!.pushReplacementNamed(RouteUtil.kRouteCreatorHub);
-      return;
-    }
-
-    if (response.errorCode == kErrProfileNotExist) {
-      ShowWalletInstallDialog showWalletInstallDialog = ShowWalletInstallDialog(
-          context: context,
-          errorMessage: 'create_username_description'.tr(),
-          buttonMessage: 'open_pylons_app'.tr(),
-          onDownloadPressed: () {
-            PylonsWallet.instance.goToPylons();
-          },
-          onClose: () {
-            Navigator.of(context).pop();
-          });
-      showWalletInstallDialog.show();
-    } else {
-      ShowSomethingWentWrongDialog somethingWentWrongDialog = ShowSomethingWentWrongDialog(
-          context: context,
-          errorMessage: kPleaseTryAgain,
-          onClose: () {
-            Navigator.of(context).pop();
-          });
-      somethingWentWrongDialog.show();
-    }
   }
 }

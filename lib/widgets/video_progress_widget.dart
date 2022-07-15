@@ -106,7 +106,7 @@ class VideoProgressWidget extends StatelessWidget {
                               }
                             }),
                         Text(
-                          isForFile ? formatDuration(easelProvider.fileDuration ~/ kSecInMillis) : formatDuration(int.parse(easelProvider.nft.duration) ~/ kSecInMillis),
+                          isForFile ? formatDuration(easelProvider.fileDuration ~/ kSecInMillis) :  formatDuration(easelProvider.videoPlayerController.value.duration.inSeconds) ,
                           style: TextStyle(color: darkMode ? EaselAppTheme.kWhite : EaselAppTheme.kBlack),
                         ),
                       ],

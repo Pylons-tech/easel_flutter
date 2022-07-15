@@ -33,7 +33,8 @@ class VideoWidget extends StatefulWidget {
 class _VideoWidgetState extends State<VideoWidget> {
   EaselProvider get easelProvider => GetIt.I.get();
 
-  final repository = GetIt.I.get<Repository>();
+
+
 
   @override
   void initState() {
