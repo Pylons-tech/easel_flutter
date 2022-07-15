@@ -3,6 +3,7 @@ import 'dart:math';
 
 import 'package:easel_flutter/models/nft_format.dart';
 import 'package:easel_flutter/models/picked_file_model.dart';
+import 'package:easel_flutter/utils/easel_app_theme.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
@@ -48,7 +49,13 @@ abstract class FileUtilsHelper {
   /// This function is used to generate the NFT link to be shared with others after publishing
   /// Input: [recipeId] and [cookbookId] used in the link generation as query parameters
   /// Output: [String] returns the generated NFTs link to be shared with others
-  String generateEaselLink({required String recipeId, required String cookbookId});
+  String generateEaselLinkForShare({required String recipeId, required String cookbookId});
+
+  /// This function is used to generate the NFT link to be open in the pylons wallet
+  /// Input: [recipeId] and [cookbookId] used in the link generation as query parameters
+  /// Output: [String] returns the generated NFTs link to be shared with others
+  String generateEaselLinkForOpeningInPylonsApp({required String recipeId, required String cookbookId});
+
 
   /// This function is used to launch the link generated and open the link in external source platform
   /// Input: [url] is the link to be launched by the launcher
@@ -151,7 +158,7 @@ class FileUtilsHelperImpl implements FileUtilsHelper {
   }
 
   @override
-  String generateEaselLink({required String recipeId, required String cookbookId}) {
+  String generateEaselLinkForShare({required String recipeId, required String cookbookId}) {
     return "$kWalletWebLink/?action=purchase_nft&recipe_id=$recipeId&cookbook_id=$cookbookId";
   }
 
@@ -170,13 +177,25 @@ class FileUtilsHelperImpl implements FileUtilsHelper {
       sourcePath: filePath,
       aspectRatioPresets: [CropAspectRatioPreset.square, CropAspectRatioPreset.ratio3x2, CropAspectRatioPreset.original, CropAspectRatioPreset.ratio4x3, CropAspectRatioPreset.ratio16x9],
       uiSettings: [
-        AndroidUiSettings(toolbarTitle: 'Cropper', toolbarColor: Colors.deepOrange, toolbarWidgetColor: Colors.white, initAspectRatio: CropAspectRatioPreset.original, lockAspectRatio: false),
+        AndroidUiSettings(toolbarTitle: 'Pylons', toolbarColor: EaselAppTheme.kBlue, toolbarWidgetColor: Colors.white, initAspectRatio: CropAspectRatioPreset.original, lockAspectRatio: false),
         IOSUiSettings(
-          title: 'Cropper',
+          title: 'Pylons',
         ),
       ],
     );
 
     return croppedFile?.path ?? "";
+  }
+
+  @override
+  String generateEaselLinkForOpeningInPylonsApp({required String recipeId, required String cookbookId}) {
+    return Uri.https('pylons.page.link', "/", {
+      "amv": "1",
+      "apn": "tech.pylons.wallet",
+      "ibi": "xyz.pylons.wallet",
+      "imv": "1",
+      "link": "https://wallet.pylons.tech/?action=purchase_nft&recipe_id=$recipeId&cookbook_id=$cookbookId&nft_amount=1"
+    }).toString();
+
   }
 }

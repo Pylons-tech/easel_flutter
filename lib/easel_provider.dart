@@ -641,7 +641,7 @@ class EaselProvider extends ChangeNotifier {
   bool isDifferentUserName(String savedUserName) => (currentUsername.isNotEmpty && savedUserName != currentUsername);
 
   Future<void> shareNFT(Size size) async {
-    String url = fileUtilsHelper.generateEaselLink(
+    String url = fileUtilsHelper.generateEaselLinkForShare(
       cookbookId: _cookbookId ?? '',
       recipeId: _recipeId,
     );

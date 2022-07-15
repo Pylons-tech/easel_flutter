@@ -34,7 +34,7 @@ class BuildPublishedNFTsBottomSheet {
   }
 
   void onViewOnPylonsPressed({required NFT nft}) async {
-    String url = easelProvider.fileUtilsHelper.generateEaselLink(
+    String url = easelProvider.fileUtilsHelper.generateEaselLinkForOpeningInPylonsApp(
       cookbookId: nft.cookbookID,
       recipeId: nft.recipeID,
     );
