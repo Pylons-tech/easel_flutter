@@ -2,6 +2,7 @@ import 'dart:io';
 import 'dart:ui';
 
 import 'package:audio_video_progress_bar/audio_video_progress_bar.dart';
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:easel_flutter/easel_provider.dart';
 import 'package:easel_flutter/utils/constants.dart';
 import 'package:easy_localization/easy_localization.dart';
@@ -63,7 +64,8 @@ class _AudioWidgetState extends State<AudioWidget> with WidgetsBindingObserver {
       },
       child: Consumer<EaselProvider>(builder: (context, viewModel, _) {
         return Container(
-          decoration: BoxDecoration(image: viewModel.audioThumbnail != null ? DecorationImage(image: FileImage(viewModel.audioThumbnail!), fit: BoxFit.fill) : null),
+          width: double.infinity,
+          decoration: BoxDecoration(image: viewModel.nft.thumbnailUrl.isNotEmpty ? DecorationImage(image: CachedNetworkImageProvider(viewModel.nft.thumbnailUrl), fit: BoxFit.fill) : null),
           child: BackdropFilter(
             filter: ImageFilter.blur(sigmaX: 2, sigmaY: 2),
             child: SafeArea(

@@ -35,6 +35,17 @@
   "something_wrong": "что-то пошло не так",
   "err_add_audio_thumbnail" : "Пожалуйста, выберите миниатюру аудио",
   "err_add_video_thumbnail" : "Пожалуйста, выберите миниатюру видео",
-  "loading": "загрузка ..."
+  "loading": "загрузка ...",
+  "created_by": "Сделано ",
+  "currency": "валюта",
+  "price": "цена ",
+  "editions": "число тираж",
+  "royalty": "royalty",
+  "content_identifier": "доля личность",
+  "asset_uri": "актив URI ",
+  "copied_to_clipboard" : "Скопировано в буфер обмена",
+  "save": "сберечь",
+  "read_more": "read more",
+  "collapse": " Collapse"
 
 }

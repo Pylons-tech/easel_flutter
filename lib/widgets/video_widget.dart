@@ -18,9 +18,6 @@ import 'package:get_it/get_it.dart';
 import 'package:provider/provider.dart';
 import 'package:video_player/video_player.dart';
 
-
-
-
 class VideoWidget extends StatefulWidget {
   final File? file;
   final String? filePath;
@@ -186,7 +183,7 @@ class _VideoWidgetState extends State<VideoWidget> {
                 ),
                 Padding(
                   padding: EdgeInsets.only(bottom: 70.h),
-                  child: VideoProgressWidget(darkMode: false, isForFile: widget.isForFile),
+                  child: VideoProgressWidget(darkMode: true, isForFile: widget.isForFile),
                 ),
                 if (shouldShowThumbnailButtonOrStepsOrNot()) ...[
                   _buildThumbnailButton(),

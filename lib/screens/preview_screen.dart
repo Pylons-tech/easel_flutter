@@ -1,5 +1,7 @@
 import 'package:easel_flutter/easel_provider.dart';
 import 'package:easel_flutter/models/nft_format.dart';
+import 'package:easel_flutter/repository/repository.dart';
+import 'package:easel_flutter/screens/custom_widgets/initial_draft_detail_dialog.dart';
 import 'package:easel_flutter/utils/constants.dart';
 import 'package:easel_flutter/utils/enums.dart';
 import 'package:easel_flutter/utils/extension_util.dart';
@@ -11,12 +13,14 @@ import 'package:easel_flutter/widgets/video_widget.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:get_it/get_it.dart';
 import 'package:provider/provider.dart';
 
 import '../utils/easel_app_theme.dart';
 
 class PreviewScreen extends StatefulWidget {
   final VoidCallback onMoveToNextScreen;
+
   const PreviewScreen({Key? key, required this.onMoveToNextScreen}) : super(key: key);
 
   @override
@@ -24,6 +28,8 @@ class PreviewScreen extends StatefulWidget {
 }
 
 class _PreviewScreenState extends State<PreviewScreen> {
+  var repository = GetIt.I.get<Repository>();
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -59,8 +65,15 @@ class _PreviewScreenState extends State<PreviewScreen> {
               child: Align(
                 alignment: Alignment.bottomRight,
                 child: PylonsButton(
-                    onPressed: () {
-                      onUploadPressed();
+                    onPressed: () async {
+                      await onUploadPressed();
+                      provider.nft = repository.getCacheDynamicType(key: nftKey);
+
+                      DraftDetailDialog(
+                          context: context,
+                          onClose: () {
+                            widget.onMoveToNextScreen();
+                          }).show();
                     },
                     btnText: "upload".tr(),
                     isBlue: false,
@@ -92,20 +105,19 @@ class _PreviewScreenState extends State<PreviewScreen> {
     }
   }
 
-  void onUploadPressed() async {
+  Future onUploadPressed() async {
     final provider = context.read<EaselProvider>();
 
     switch (provider.nftFormat.format) {
       case NFTTypes.image:
-        saveToUpload();
+        await saveToUpload();
         break;
       case NFTTypes.video:
         if (provider.videoThumbnail == null) {
           context.show(message: uploadYourThumbnail);
           return;
         }
-
-        saveToUpload();
+        await saveToUpload();
 
         break;
       case NFTTypes.audio:
@@ -113,21 +125,19 @@ class _PreviewScreenState extends State<PreviewScreen> {
           context.show(message: uploadYourThumbnail);
           return;
         }
-        saveToUpload();
+        await saveToUpload();
         break;
       case NFTTypes.threeD:
-        saveToUpload();
+        await saveToUpload();
 
         break;
     }
   }
 
-  void saveToUpload() async {
+  Future saveToUpload() async {
     final provider = context.read<EaselProvider>();
     if (!await provider.saveNftLocally(UploadStep.assetUploaded)) {
       return;
     }
-
-    widget.onMoveToNextScreen();
   }
 }

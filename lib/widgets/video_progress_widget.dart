@@ -1,11 +1,9 @@
-
 import 'package:easel_flutter/easel_provider.dart';
 import 'package:easel_flutter/utils/constants.dart';
 import 'package:easel_flutter/utils/easel_app_theme.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:provider/provider.dart';
-
 import 'package:video_player/video_player.dart';
 
 class VideoProgressWidget extends StatelessWidget {

@@ -30,6 +30,7 @@ class EaselAppTheme {
   static const Color kLightBlackText = Color(0xFFA0A6AB);
   static const Color kpurpleButtonColor = Color(0xFF8F8FCE);
   static const Color kLightGreyColor = Color(0xFFE5E5E5);
+  static const Color kHashtagColor = Color(0xFFB6B6E8);
 
   static const String universalSansFamily = "UniversalSans";
 

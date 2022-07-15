@@ -3,8 +3,6 @@ import 'dart:io';
 
 import 'package:easel_flutter/main.dart';
 import 'package:easel_flutter/models/api_response.dart';
-import '../utils/enums.dart';
-
 import 'package:easel_flutter/models/denom.dart';
 import 'package:easel_flutter/models/nft.dart';
 import 'package:easel_flutter/models/nft_format.dart';
@@ -30,6 +28,8 @@ import 'package:pylons_sdk/pylons_sdk.dart';
 import 'package:pylons_sdk/src/features/models/sdk_ipc_response.dart';
 import 'package:share_plus/share_plus.dart';
 import 'package:video_player/video_player.dart';
+
+import '../utils/enums.dart';
 
 class EaselProvider extends ChangeNotifier {
   final VideoPlayerHelper videoPlayerHelper;
@@ -65,6 +65,8 @@ class EaselProvider extends ChangeNotifier {
   NFT get publishedNFTClicked => _publishedNFTClicked;
 
   bool willLoadFirstTime = true;
+
+  late bool collapsed = false;
 
   void setPublishedNFTClicked(NFT nft) {
     _publishedNFTClicked = nft;
@@ -180,6 +182,11 @@ class EaselProvider extends ChangeNotifier {
     hashtagsList.clear();
     willLoadFirstTime = true;
     isFreeDrop = false;
+    notifyListeners();
+  }
+
+  void toChangeCollapse() {
+    collapsed = !collapsed;
     notifyListeners();
   }
 
@@ -842,7 +849,7 @@ class EaselProvider extends ChangeNotifier {
       cookbookID: cookbookId ?? "",
       width: fileWidth.toString(),
       denom: "",
-      tradePercentage: "",
+      tradePercentage: royaltyController.text,
       height: fileHeight.toString(),
       duration: fileDuration.toString(),
       description: descriptionController.text,
@@ -874,7 +881,7 @@ class EaselProvider extends ChangeNotifier {
       cookbookID: cookbookId ?? "",
       width: fileWidth.toString(),
       denom: "",
-      tradePercentage: "",
+      tradePercentage: royaltyController.text,
       height: fileHeight.toString(),
       duration: fileDuration.toString(),
       description: descriptionController.text,
@@ -896,7 +903,6 @@ class EaselProvider extends ChangeNotifier {
     setAudioThumbnail(null);
 
     setVideoThumbnail(null);
-    Navigator.of(navigatorKey.currentState!.overlay!.context).pop();
 
     return true;
   }
@@ -945,6 +951,10 @@ class EaselProvider extends ChangeNotifier {
 
   Future<void> deleteNft(int? id) async {
     await repository.deleteNft(id!);
+  }
+
+  void toHashtagList(String hashtag) {
+    hashtagsList = hashtag.split("#");
   }
 }
 
