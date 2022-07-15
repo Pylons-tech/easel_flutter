@@ -4,6 +4,7 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:easel_flutter/main.dart';
 import 'package:easel_flutter/models/nft.dart';
 import 'package:easel_flutter/screens/creator_hub/creator_hub_view_model.dart';
+import 'package:easel_flutter/screens/creator_hub/widgets/delete_confirmation_dialog.dart';
 import 'package:easel_flutter/screens/creator_hub/widgets/drafts_more_bottomsheet.dart';
 import 'package:easel_flutter/screens/creator_hub/widgets/nfts_list_tile.dart';
 import 'package:easel_flutter/utils/constants.dart';
@@ -11,7 +12,6 @@ import 'package:easel_flutter/utils/easel_app_theme.dart';
 import 'package:easel_flutter/utils/enums.dart';
 import 'package:easel_flutter/utils/extension_util.dart';
 import 'package:easel_flutter/utils/route_util.dart';
-import 'package:easel_flutter/widgets/model_viewer.dart';
 import 'package:easel_flutter/widgets/painters/painter.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
@@ -360,7 +360,8 @@ class _DraftsListTileState extends State<DraftsListTile> {
           Expanded(
             child: InkWell(
               onTap: () {
-                viewModel.deleteNft(widget.nft.id);
+                final DeleteDialog deleteDialog = DeleteDialog(contextt: context, nft: widget.nft);
+                deleteDialog.show();
               },
               child: SvgPicture.asset(kSvgDelete),
             ),
