@@ -1,3 +1,5 @@
+import 'package:easel_flutter/easel_provider.dart';
+import 'package:easel_flutter/main.dart';
 import 'package:easel_flutter/models/nft.dart';
 import 'package:easel_flutter/repository/repository.dart';
 import 'package:easel_flutter/utils/constants.dart';
@@ -5,6 +7,7 @@ import 'package:easel_flutter/utils/extension_util.dart';
 import 'package:easel_flutter/widgets/loading.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:provider/provider.dart';
 import 'package:pylons_sdk/pylons_sdk.dart';
 
 class CreatorHubViewModel extends ChangeNotifier {
@@ -73,6 +76,17 @@ class CreatorHubViewModel extends ChangeNotifier {
     if (!isPylonsExist) {
       return;
     }
+
+
+    final easelProvider  = Provider.of<EaselProvider>(navigatorKey.currentState!.overlay!.context, listen: false);
+
+
+    final profileResponse = await easelProvider.getProfile();
+
+    if (!profileResponse.success) {
+      return;
+    }
+
     final cookBookId = getCookbookIdFromLocalDatasource();
     if (cookBookId == null) {
       return;
