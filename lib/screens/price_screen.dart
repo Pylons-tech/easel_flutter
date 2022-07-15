@@ -262,7 +262,7 @@ class _PriceScreenState extends State<PriceScreen> {
                         if (_formKey.currentState!.validate()) {
                           if (checkTextFields()) {
                             context.read<EaselProvider>().updateNftFromPrice(nft!.id!);
-                            context.read<HomeViewModel>().pageController.nextPage(duration: const Duration(milliseconds: kPageAnimationTimeInMillis), curve: Curves.easeIn);
+                            context.read<HomeViewModel>().nextPage();
                           }
                         }
                       },

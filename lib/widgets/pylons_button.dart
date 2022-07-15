@@ -29,7 +29,7 @@ class PylonsButton extends StatelessWidget {
                 ? EaselAppTheme.kBlue
                 : isRed
                     ? EaselAppTheme.kRed
-                    : EaselAppTheme.kDartGrey02,
+                    : EaselAppTheme.kGrey.withOpacity(0.8),
           ),
           child: Stack(
             children: [
