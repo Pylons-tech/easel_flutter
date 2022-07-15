@@ -2,13 +2,13 @@ import 'dart:io';
 
 import 'package:easel_flutter/easel_provider.dart';
 import 'package:easel_flutter/models/nft_format.dart';
+import 'package:easel_flutter/models/picked_file_model.dart';
 import 'package:easel_flutter/screens/preview_screen.dart';
 import 'package:easel_flutter/utils/constants.dart';
 import 'package:easel_flutter/utils/easel_app_theme.dart';
 import 'package:easel_flutter/utils/screen_responsive.dart';
 import 'package:easel_flutter/viewmodels/home_viewmodel.dart';
 import 'package:easy_localization/easy_localization.dart';
-import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/svg.dart';
@@ -25,14 +25,15 @@ class ChooseFormatScreen extends StatefulWidget {
 class _ChooseFormatScreenState extends State<ChooseFormatScreen> {
   ValueNotifier<String> errorText = ValueNotifier(kErrFileNotPicked);
 
-  void proceedToNext({required PlatformFile? result, required EaselProvider easelProvider}) async {
+  void proceedToNext({required PickedFileModel result, required EaselProvider easelProvider}) async {
     EaselProvider provider = context.read();
 
-    if (result == null) {
+    if (result.path.isEmpty) {
       errorText.value = kErrFileNotPicked;
       showErrorDialog();
       return;
     }
+
 
     if (!provider.nftFormat.extensions.contains(result.extension)) {
       errorText.value = kErrUnsupportedFormat;
@@ -40,15 +41,18 @@ class _ChooseFormatScreenState extends State<ChooseFormatScreen> {
       return;
     }
 
-    provider.resolveNftFormat(context, result.extension!);
+    provider.resolveNftFormat(context, result.extension);
 
-    if (easelProvider.fileUtilsHelper.getFileSizeInGB(File(result.path!).lengthSync()) > kFileSizeLimitInGB) {
-      errorText.value = 'could_not_uploaded'.tr(args: [result.name]);
+    if (easelProvider.fileUtilsHelper.getFileSizeInGB(File(result.path).lengthSync()) > kFileSizeLimitInGB) {
+      errorText.value = 'could_not_uploaded'.tr(args: [result.fileName]);
       showErrorDialog();
       return;
     }
 
-    await provider.setFile(context, result);
+
+
+
+    await provider.setFile(fileName: result.fileName, filePath: result.path);
 
     Navigator.of(context).push(MaterialPageRoute(
         builder: (_) => PreviewScreen(
@@ -137,7 +141,7 @@ class _CardWidget extends StatelessWidget {
     this.bottomPadding = 0.0,
   }) : super(key: key);
 
-  final Function(PlatformFile?) onFilePicked;
+  final Function(PickedFileModel) onFilePicked;
   final int typeIdx;
   final bool selected;
   final Color textIconColor;
