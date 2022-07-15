@@ -33,8 +33,6 @@ class AudioWidget extends StatefulWidget {
 
 class _AudioWidgetState extends State<AudioWidget> with WidgetsBindingObserver {
   EaselProvider get easelProvider => GetIt.I.get();
-  final ValueNotifier<int> _currentStep = ValueNotifier(0);
-  final ValueNotifier<int> _currentPage = ValueNotifier(0);
 
   @override
   initState() {
@@ -54,6 +52,13 @@ class _AudioWidgetState extends State<AudioWidget> with WidgetsBindingObserver {
     super.initState();
   }
 
+  BoxDecoration getAudioBackgroundDecoration({required EaselProvider viewModel}) {
+    if (widget.previewFlag && viewModel.audioThumbnail != null) {
+      return BoxDecoration(image: DecorationImage(image: FileImage(viewModel.audioThumbnail!), fit: BoxFit.fill));
+    }
+    return BoxDecoration(image: viewModel.nft.thumbnailUrl.isNotEmpty ? DecorationImage(image: CachedNetworkImageProvider(viewModel.nft.thumbnailUrl), fit: BoxFit.fill) : null);
+  }
+
   @override
   Widget build(BuildContext context) {
     return WillPopScope(
@@ -65,54 +70,14 @@ class _AudioWidgetState extends State<AudioWidget> with WidgetsBindingObserver {
       child: Consumer<EaselProvider>(builder: (context, viewModel, _) {
         return Container(
           width: double.infinity,
-          decoration: BoxDecoration(image: viewModel.nft.thumbnailUrl.isNotEmpty ? DecorationImage(image: CachedNetworkImageProvider(viewModel.nft.thumbnailUrl), fit: BoxFit.fill) : null),
+          decoration: getAudioBackgroundDecoration(viewModel: viewModel),
           child: BackdropFilter(
             filter: ImageFilter.blur(sigmaX: 2, sigmaY: 2),
             child: SafeArea(
               child: Column(
                 children: [
                   SizedBox(
-                    height: 15.0.h,
-                  ),
-                  if (shouldShowThumbnailButtonOrStepsOrNot()) ...[
-                    MyStepsIndicator(currentPage: _currentPage, currentStep: _currentStep),
-                    VerticalSpace(5.h),
-                    StepLabels(currentPage: _currentPage, currentStep: _currentStep),
-                    VerticalSpace(10.h),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                      children: [
-                        IconButton(
-                          onPressed: () {
-                            easelProvider.setAudioThumbnail(null);
-
-                            Navigator.pop(context);
-                          },
-                          icon: const Icon(
-                            Icons.arrow_back_ios,
-                            color: EaselAppTheme.kBlack,
-                          ),
-                        ),
-                        Text(
-                          kPreviewYourNFTText,
-                          key: const Key(kPreviewYourNFTText),
-                          style: Theme.of(context).textTheme.bodyText1!.copyWith(
-                                fontSize: 18.sp,
-                                fontWeight: FontWeight.w600,
-                                color: EaselAppTheme.kDarkText,
-                              ),
-                        ),
-                        SizedBox(
-                          width: 20.w,
-                        ),
-                      ],
-                    ),
-                  ],
-                  SizedBox(
-                    height: 50.0.h,
-                  ),
-                  SizedBox(
-                    height: 150.0.h,
+                    height: 220.0.h,
                   ),
                   SizedBox(
                       width: 330.0.w,
@@ -177,7 +142,7 @@ class _AudioWidgetState extends State<AudioWidget> with WidgetsBindingObserver {
                         ],
                       )),
                   SizedBox(
-                    height: 90.0.h,
+                    height: 120.0.h,
                   ),
                   if (shouldShowThumbnailButtonOrStepsOrNot()) ...[
                     _buildThumbnailButton(),
@@ -192,7 +157,7 @@ class _AudioWidgetState extends State<AudioWidget> with WidgetsBindingObserver {
   }
 
   bool shouldShowThumbnailButtonOrStepsOrNot() {
-    return !widget.previewFlag;
+    return widget.previewFlag;
   }
 
   @override

@@ -245,7 +245,7 @@ class EaselProvider extends ChangeNotifier {
   }
 
   Future<void> delayLoading() async {
-    Future.delayed(const Duration(seconds: 3));
+    await Future.delayed(const Duration(seconds: 2));
     isVideoLoading = false;
   }
 
@@ -259,8 +259,9 @@ class EaselProvider extends ChangeNotifier {
     videoPlayerController.addListener(() {
       if (videoPlayerController.value.hasError) {
         videoLoadingError = videoPlayerController.value.errorDescription!;
-        notifyListeners();
       }
+      notifyListeners();
+
     });
   }
 
@@ -280,10 +281,14 @@ class EaselProvider extends ChangeNotifier {
 
   void playVideo() {
     videoPlayerHelper.playVideo();
+    notifyListeners();
+
   }
 
   void pauseVideo() {
     videoPlayerHelper.pauseVideo();
+    notifyListeners();
+
   }
 
   void seekVideo(Duration position) {

@@ -1,8 +1,8 @@
 import 'dart:async';
+import 'dart:developer';
 import 'dart:io';
 
 import 'package:easel_flutter/easel_provider.dart';
-import 'package:easel_flutter/repository/repository.dart';
 import 'package:easel_flutter/screens/clippers/custom_triangle_clipper.dart';
 import 'package:easel_flutter/screens/clippers/small_bottom_corner_clipper.dart';
 import 'package:easel_flutter/utils/constants.dart';
@@ -32,9 +32,6 @@ class VideoWidget extends StatefulWidget {
 
 class _VideoWidgetState extends State<VideoWidget> {
   EaselProvider get easelProvider => GetIt.I.get();
-
-
-
 
   @override
   void initState() {
@@ -183,7 +180,7 @@ class _VideoWidgetState extends State<VideoWidget> {
                 ),
                 Padding(
                   padding: EdgeInsets.only(bottom: 70.h),
-                  child: VideoProgressWidget(darkMode: true, isForFile: widget.isForFile),
+                  child: VideoProgressWidget(darkMode: false, isForFile: widget.isForFile),
                 ),
                 if (shouldShowThumbnailButtonOrStepsOrNot()) ...[
                   _buildThumbnailButton(),

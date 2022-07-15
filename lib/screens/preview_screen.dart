@@ -33,6 +33,7 @@ class _PreviewScreenState extends State<PreviewScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: EaselAppTheme.kWhite,
       body: Consumer<EaselProvider>(
         builder: (_, provider, __) => Stack(
           children: [
@@ -93,15 +94,9 @@ class _PreviewScreenState extends State<PreviewScreen> {
       case NFTTypes.video:
         return VideoWidget(file: provider.file!, previewFlag: false, isForFile: true);
       case NFTTypes.audio:
-        return AudioWidget(
-          file: provider.file!,
-          previewFlag: false,
-        );
+        return AudioWidget(file: provider.file!, previewFlag: true);
       case NFTTypes.threeD:
-        return Model3dViewer(
-          path: provider.file!.path,
-          isFile: true,
-        );
+        return Model3dViewer(path: provider.file!.path, isFile: true);
     }
   }
 
