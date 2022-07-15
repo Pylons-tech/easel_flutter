@@ -194,7 +194,7 @@ class _DescribeScreenState extends State<DescribeScreen> {
 
                               context.read<EaselProvider>().saveArtistName(provider.artistNameController.text.trim());
 
-                              context.read<HomeViewModel>().pageController.nextPage(duration: const Duration(milliseconds: kPageAnimationTimeInMillis), curve: Curves.easeIn);
+                              context.read<HomeViewModel>().nextPage();
                             }
                           }
                         },

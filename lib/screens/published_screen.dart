@@ -30,6 +30,8 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get_it/get_it.dart';
 import 'package:provider/provider.dart';
 
+import '../widgets/video_progress_widget.dart';
+
 TextStyle _rowTitleTextStyle = TextStyle(color: Colors.white, fontWeight: FontWeight.w700, fontSize: isTablet ? 11.sp : 13.sp);
 
 class PublishedScreen extends StatefulWidget {
@@ -93,7 +95,7 @@ class _PublishedNewScreenState extends State<PublishedNewScreen> {
             padding: EdgeInsets.only(top: MediaQuery.of(context).viewPadding.top + 10),
             child: Stack(
               children: [
-                buildPreviewWidget(easelProvider),
+                SizedBox(width: double.infinity, child: buildPreviewWidget(easelProvider)),
                 Image.asset(kPreviewGradient, width: 1.sw, fit: BoxFit.fill),
                 SizedBox(
                   height: 120.h,
@@ -121,7 +123,10 @@ class _PublishedNewScreenState extends State<PublishedNewScreen> {
                         color: EaselAppTheme.kWhite,
                       ),
                     )),
-                Align(alignment: Alignment.bottomCenter, child: OwnerBottomDrawer(nft: easelProvider.nft))
+                Align(
+                  alignment: Alignment.bottomCenter,
+                  child: OwnerBottomDrawer(nft: easelProvider.nft),
+                ),
               ],
             ),
           ),
@@ -211,6 +216,7 @@ class _OwnerBottomDrawerState extends State<OwnerBottomDrawer> {
                     const SizedBox(
                       height: 20,
                     ),
+                    easelProvider.nft.assetType == kVideoText ? const VideoProgressWidget(darkMode: true, isForFile: false) : const SizedBox(),
                   ],
                 ),
               )
@@ -285,6 +291,14 @@ class _OwnerBottomDrawerState extends State<OwnerBottomDrawer> {
                               trimCollapsedText: "read_more".tr(),
                               moreStyle: TextStyle(fontSize: 12.sp, fontWeight: FontWeight.w300, color: EaselAppTheme.kLightPurple),
                               lessStyle: TextStyle(fontSize: 12.sp, fontWeight: FontWeight.w300, color: EaselAppTheme.kLightPurple),
+                            ),
+                            SizedBox(
+                              height: 30.h,
+                            ),
+                            Container(
+                              width: 250.w,
+                              color: EaselAppTheme.kWhite.withOpacity(0.2),
+                              child: VideoProgressWidget(darkMode: false, isForFile: false),
                             ),
                             SizedBox(
                               height: 30.h,
