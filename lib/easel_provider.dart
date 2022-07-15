@@ -255,8 +255,6 @@ class EaselProvider extends ChangeNotifier {
         videoLoadingError = videoPlayerController.value.errorDescription!;
         notifyListeners();
       }
-
-
     });
   }
 
@@ -485,9 +483,7 @@ class EaselProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-  Future<bool> verifyPylonsAndMint({
-    required NFT nft,
-  }) async {
+  Future<bool> verifyPylonsAndMint({required NFT nft}) async {
     final isPylonsExist = await PylonsWallet.instance.exists();
 
     if (!isPylonsExist) {

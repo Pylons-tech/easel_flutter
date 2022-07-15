@@ -92,52 +92,10 @@ class _SplashScreenState extends State<SplashScreen> {
     );
   }
 
-  void checkPylonsAppExistsOrNot() async {
-    final isExist = await PylonsWallet.instance.exists();
-
-    if (isExist) {
-      getProfile();
-      return;
-    }
-
+  void populateCoinsAndMoveForward() async {
     context.read<EaselProvider>().populateCoinsIfPylonsNotExists();
 
     navigatorKey.currentState!.pushReplacementNamed(RouteUtil.kRouteCreatorHub);
-  }
-
-  Future<void> getProfile() async {
-    final response = await context.read<EaselProvider>().getProfile();
-
-    if (response.success) {
-      await Future.delayed(const Duration(
-        milliseconds: 500,
-      ));
-
-      navigatorKey.currentState!.pushReplacementNamed(RouteUtil.kRouteCreatorHub);
-      return;
-    }
-
-    if (response.errorCode == kErrProfileNotExist) {
-      ShowWalletInstallDialog showWalletInstallDialog = ShowWalletInstallDialog(
-          context: context,
-          errorMessage: 'create_username_description'.tr(),
-          buttonMessage: 'open_pylons_app'.tr(),
-          onDownloadPressed: () {
-            PylonsWallet.instance.goToPylons();
-          },
-          onClose: () {
-            Navigator.of(context).pop();
-          });
-      showWalletInstallDialog.show();
-    } else {
-      ShowSomethingWentWrongDialog somethingWentWrongDialog = ShowSomethingWentWrongDialog(
-          context: context,
-          errorMessage: kPleaseTryAgain,
-          onClose: () {
-            Navigator.of(context).pop();
-          });
-      somethingWentWrongDialog.show();
-    }
   }
 
   void onGetStartedPressed() {
@@ -147,7 +105,6 @@ class _SplashScreenState extends State<SplashScreen> {
       return;
     }
 
-    checkPylonsAppExistsOrNot();
-
+    populateCoinsAndMoveForward();
   }
 }
