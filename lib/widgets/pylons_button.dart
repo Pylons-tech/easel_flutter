@@ -16,6 +16,9 @@ class PylonsButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
+      onTap: () {
+        onPressed();
+      },
       child: ClipPath(
         clipper: PylonsButtonClipper(),
         child: Container(
@@ -50,9 +53,6 @@ class PylonsButton extends StatelessWidget {
           ),
         ),
       ),
-      onTap: () {
-        onPressed();
-      },
     );
   }
 }
