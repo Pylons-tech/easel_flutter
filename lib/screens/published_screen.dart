@@ -154,10 +154,7 @@ class _PublishedNewScreenState extends State<PublishedNewScreen> {
               isFile: false,
             ));
       case kAudioText:
-        return AudioWidget(
-          filePath: provider.nft.url,
-          previewFlag: true,
-        );
+        return AudioWidget(filePath: provider.nft.url, previewFlag: false);
     }
     return const SizedBox.shrink();
   }
@@ -314,12 +311,16 @@ class _OwnerBottomDrawerState extends State<OwnerBottomDrawer> {
                                     children: [
                                       buildRow(
                                         title: "currency".tr(),
-                                        subtitle: widget.nft.ibcCoins,
+                                        subtitle: widget.nft.isFreeDrop ? kPylonText : (viewModel.supportedDenomList.firstWhere((denom) => denom.symbol == widget.nft.denom).name),
                                       ),
                                       SizedBox(height: 2.h),
                                       buildRow(
                                         title: "price".tr(),
-                                        subtitle: widget.nft.price,
+                                        subtitle: widget.nft.isFreeDrop
+                                            ? "0"
+                                            : widget.nft.denom == kUsdSymbol
+                                                ? "\$${widget.nft.price}"
+                                                : widget.nft.price,
                                       ),
                                       SizedBox(height: 10.h),
                                       buildRow(
@@ -445,13 +446,12 @@ class _OwnerBottomDrawerState extends State<OwnerBottomDrawer> {
     );
   }
 
-  void navigateToPreviewScreen({required BuildContext context, required NFT nft}) {
-    context.read<EaselProvider>().setPublishedNFTClicked(nft);
-    context.read<EaselProvider>().setPublishedNFTDuration(nft.duration);
-    Navigator.of(context).pushNamed(RouteUtil.kRoutePreviewNFTFullScreen);
+  void onViewOnIPFSPressed({required EaselProvider provider}) async {
+    await provider.fileUtilsHelper.launchMyUrl(url: provider.nft.url);
   }
 
   Widget buildRow({required String title, required String subtitle}) {
+    final viewModel = context.watch<EaselProvider>();
     return Row(
       children: [
         Expanded(
@@ -486,7 +486,9 @@ class _OwnerBottomDrawerState extends State<OwnerBottomDrawer> {
                       InkWell(
                         onTap: () {
                           if (title == "asset_uri".tr()) {
-                            navigateToPreviewScreen(context: context, nft: widget.nft);
+                            onViewOnIPFSPressed(
+                              provider: viewModel,
+                            );
                           }
                         },
                         child: Text(

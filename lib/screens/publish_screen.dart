@@ -1,4 +1,3 @@
-
 import 'package:easel_flutter/easel_provider.dart';
 import 'package:easel_flutter/models/nft_format.dart';
 import 'package:easel_flutter/utils/constants.dart';
@@ -179,10 +178,7 @@ class _PublishScreenState extends State<PublishScreen> {
               isFile: false,
             ));
       case kAudioText:
-        return AudioWidget(
-          file: provider.file!,
-          previewFlag: true,
-        );
+        return AudioWidget(file: provider.file!, previewFlag: false);
     }
     return const SizedBox.shrink();
   }

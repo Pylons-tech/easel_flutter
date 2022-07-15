@@ -14,6 +14,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:get_it/get_it.dart';
+import 'package:model_viewer_plus/model_viewer_plus.dart';
 import 'package:shimmer_animation/shimmer_animation.dart';
 
 class NFTsListTile extends StatelessWidget {
@@ -45,8 +46,8 @@ class NFTsListTile extends StatelessWidget {
           child: Row(
             children: [
               SizedBox(
-                  height: 45.w,
-                  width: 45.w,
+                  height: 45.h,
+                  width: 45.h,
                   child: LeadingBuilder(
                     onImage: (context) => CachedNetworkImage(
                       errorWidget: (context, url, error) => Align(
@@ -64,7 +65,12 @@ class NFTsListTile extends StatelessWidget {
                       kSvgNftFormatAudio,
                       color: EaselAppTheme.kBlack,
                     ),
-                    on3D: (context) => Model3dViewer(isFile: false, path: publishedNFT.url),
+                    on3D: (context) => ModelViewer(
+                      src: publishedNFT.url,
+                      ar: false,
+                      autoRotate: false,
+                      cameraControls: false,
+                    ),
                     assetType: publishedNFT.assetType.toAssetTypeEnum(),
                   )),
               SizedBox(

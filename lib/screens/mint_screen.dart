@@ -189,10 +189,7 @@ class _MintScreenState extends State<MintScreen> {
               isFile: false,
             ));
       case kAudioText:
-        return AudioWidget(
-          filePath: provider.nft.url,
-          previewFlag: true,
-        );
+        return AudioWidget(filePath: provider.nft.url, previewFlag: false);
     }
     return const SizedBox.shrink();
   }
