@@ -66,9 +66,11 @@ class _PreviewScreenState extends State<PreviewScreen> {
                 alignment: Alignment.bottomRight,
                 child: PylonsButton(
                     onPressed: () async {
-                      await onUploadPressed();
-                      provider.nft = repository.getCacheDynamicType(key: nftKey);
-
+                      final result = await onUploadPressed();
+                      if (!result) {
+                        context.show(message: "save_error".tr());
+                        return;
+                      }
                       DraftDetailDialog(
                           context: context,
                           onClose: () {
@@ -105,39 +107,41 @@ class _PreviewScreenState extends State<PreviewScreen> {
     }
   }
 
-  Future onUploadPressed() async {
+  Future<bool> onUploadPressed() async {
     final provider = context.read<EaselProvider>();
+    bool result = false;
 
     switch (provider.nftFormat.format) {
       case NFTTypes.image:
-        await saveToUpload();
+        result = await saveToUpload();
         break;
       case NFTTypes.video:
         if (provider.videoThumbnail == null) {
           context.show(message: uploadYourThumbnail);
-          return;
+          return false;
         }
-        await saveToUpload();
+        result = await saveToUpload();
 
         break;
       case NFTTypes.audio:
         if (provider.audioThumbnail == null) {
           context.show(message: uploadYourThumbnail);
-          return;
+          return false;
         }
-        await saveToUpload();
+        result = await saveToUpload();
         break;
       case NFTTypes.threeD:
-        await saveToUpload();
-
+        result = await saveToUpload();
         break;
     }
+    return result;
   }
 
-  Future saveToUpload() async {
+  Future<bool> saveToUpload() async {
     final provider = context.read<EaselProvider>();
     if (!await provider.saveNftLocally(UploadStep.assetUploaded)) {
-      return;
+      return false;
     }
+    return true;
   }
 }
