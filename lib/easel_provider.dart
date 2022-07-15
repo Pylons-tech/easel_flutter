@@ -17,7 +17,6 @@ import 'package:easel_flutter/utils/extension_util.dart';
 import 'package:easel_flutter/utils/file_utils_helper.dart';
 import 'package:easel_flutter/widgets/loading.dart';
 import 'package:easy_localization/easy_localization.dart';
-import 'package:file_picker/file_picker.dart';
 import 'package:fixnum/fixnum.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -262,8 +261,6 @@ class EaselProvider extends ChangeNotifier {
         videoLoadingError = videoPlayerController.value.errorDescription!;
         notifyListeners();
       }
-
-
     });
   }
 
@@ -417,9 +414,9 @@ class EaselProvider extends ChangeNotifier {
     }
   }
 
-  Future<void> setFile(BuildContext context, PlatformFile selectedFile) async {
-    _file = File(selectedFile.path!);
-    _fileName = selectedFile.name;
+  Future<void> setFile({required String filePath, required String fileName}) async {
+    _file = File(filePath);
+    _fileName = fileName;
     _fileSize = fileUtilsHelper.getFileSizeString(fileLength: _file!.lengthSync());
     _fileExtension = fileUtilsHelper.getExtension(_fileName);
     await _getMetadata(_file!);
@@ -492,9 +489,7 @@ class EaselProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-  Future<bool> verifyPylonsAndMint({
-    required NFT nft,
-  }) async {
+  Future<bool> verifyPylonsAndMint({required NFT nft}) async {
     final isPylonsExist = await PylonsWallet.instance.exists();
 
     if (!isPylonsExist) {
@@ -656,9 +651,9 @@ class EaselProvider extends ChangeNotifier {
   void onVideoThumbnailPicked() async {
     final result = await fileUtilsHelper.pickFile(NftFormat.supportedFormats[0]);
 
-    if (result == null) return;
+    if (result.path.isEmpty) return;
     final loading = Loading()..showLoading(message: kCompressingMessage);
-    final file = await fileUtilsHelper.compressAndGetFile(File(result.path!));
+    final file = await fileUtilsHelper.compressAndGetFile(File(result.path));
     setVideoThumbnail(file);
     loading.dismiss();
   }

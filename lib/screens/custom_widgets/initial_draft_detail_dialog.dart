@@ -33,10 +33,51 @@ class DraftDetailDialog {
   }
 }
 
-class _DraftDetailDialog extends StatelessWidget {
+class _DraftDetailDialog extends StatefulWidget {
   final VoidCallback onClose;
 
   const _DraftDetailDialog({Key? key, required this.onClose}) : super(key: key);
+
+  @override
+  State<_DraftDetailDialog> createState() => _DraftDetailDialogState();
+}
+
+class _DraftDetailDialogState extends State<_DraftDetailDialog> {
+  Widget previewWidget = const SizedBox();
+
+  @override
+  void initState() {
+    super.initState();
+    selectPreviewWidgetBasedOnType();
+  }
+
+  void selectPreviewWidgetBasedOnType() {
+    EaselProvider easelProvider = context.read<EaselProvider>();
+    if (easelProvider.nft.assetType == k3dText) {
+      previewWidget = ModelViewer(
+        src: easelProvider.nft.url,
+        ar: false,
+        autoRotate: false,
+        cameraControls: false,
+      );
+      return;
+    }
+    previewWidget = CachedNetworkImage(
+      fit: BoxFit.contain,
+      imageUrl: getImageUrl(easelProvider),
+      errorWidget: (a, b, c) => const Center(
+          child: Icon(
+        Icons.error_outline,
+        color: Colors.white,
+      )),
+      placeholder: (context, url) => Shimmer(
+          color: EaselAppTheme.cardBackground,
+          child: SizedBox(
+            height: 100.h,
+            width: 100.h,
+          )),
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -90,28 +131,7 @@ class _DraftDetailDialog extends StatelessWidget {
                   SizedBox(
                     height: 100.h,
                     width: 100.h,
-                    child: easelProvider.nft.assetType == k3dText
-                        ? ModelViewer(
-                            src: easelProvider.nft.url,
-                            ar: false,
-                            autoRotate: false,
-                            cameraControls: false,
-                          )
-                        : CachedNetworkImage(
-                            fit: BoxFit.contain,
-                            imageUrl: getImageUrl(easelProvider),
-                            errorWidget: (a, b, c) => const Center(
-                                child: Icon(
-                              Icons.error_outline,
-                              color: Colors.white,
-                            )),
-                            placeholder: (context, url) => Shimmer(
-                                color: EaselAppTheme.cardBackground,
-                                child: SizedBox(
-                                  height: 100.h,
-                                  width: 100.h,
-                                )),
-                          ),
+                    child: previewWidget,
                   ),
                   SizedBox(
                     height: 30.h,
@@ -134,7 +154,7 @@ class _DraftDetailDialog extends StatelessWidget {
                       title: "tx_receipt".tr(),
                       subtitle: "view".tr(),
                       onPressed: () {
-                        navigateToPreviewScreen(context: context, nft: easelProvider.nft);
+                        onViewOnIPFSPressed(provider: easelProvider);
                       }),
                   SizedBox(
                     height: 50.h,
@@ -148,7 +168,7 @@ class _DraftDetailDialog extends StatelessWidget {
                       textColor: EaselAppTheme.kWhite,
                       onPressed: () async {
                         Navigator.popUntil(context, ModalRoute.withName(RouteUtil.kRouteHome));
-                        onClose();
+                        widget.onClose();
                       },
                       cuttingHeight: 15.h,
                       clipperType: ClipperType.bottomLeftTopRight,
@@ -164,10 +184,9 @@ class _DraftDetailDialog extends StatelessWidget {
     );
   }
 
-  void navigateToPreviewScreen({required BuildContext context, required NFT nft}) {
-    context.read<EaselProvider>().setPublishedNFTClicked(nft);
-    context.read<EaselProvider>().setPublishedNFTDuration(nft.duration);
-    Navigator.of(context).pushReplacementNamed(RouteUtil.kRoutePreviewNFTFullScreen);
+  void onViewOnIPFSPressed({ required EaselProvider provider}) async {
+    await provider.fileUtilsHelper.launchMyUrl(url: provider.nft.url);
+
   }
 
   String getImageUrl(EaselProvider easelProvider) {

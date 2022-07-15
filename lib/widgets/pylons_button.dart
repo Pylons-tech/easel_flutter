@@ -16,11 +16,14 @@ class PylonsButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
+      onTap: () {
+        onPressed();
+      },
       child: Material(
           color: Colors.transparent,
           elevation: 10,
           child: SizedBox(
-            width: isTablet ? 0.3.sw : 0.3.sw,
+            width: isTablet ? 0.3.sw : 0.5.sw,
             height: isTablet ? 0.07.sw : 0.12.sw,
             child: Stack(
               children: [
@@ -50,9 +53,6 @@ class PylonsButton extends StatelessWidget {
               ],
             ),
           )),
-      onTap: () {
-        onPressed();
-      },
     );
   }
 }

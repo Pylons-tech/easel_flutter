@@ -23,16 +23,14 @@ class BuildPublishedNFTsBottomSheet {
       child: InkWell(
         onTap: () => onPressed(),
         child: Row(
-          children: [SvgPicture.asset(svg), SizedBox(width: 30.w), Text(title.tr(), style: EaselAppTheme.titleStyle.copyWith(fontSize: isTablet? 13.sp :16.sp))],
+          children: [SvgPicture.asset(svg), SizedBox(width: 30.w), Text(title.tr(), style: EaselAppTheme.titleStyle.copyWith(fontSize: isTablet ? 13.sp : 16.sp))],
         ),
       ),
     );
   }
 
-  void navigateToPreviewScreen({required BuildContext context, required NFT nft}) {
-    easelProvider.setPublishedNFTClicked(nft);
-    easelProvider.setPublishedNFTDuration(nft.duration);
-    Navigator.of(context).pushReplacementNamed(RouteUtil.kRoutePreviewNFTFullScreen);
+  void onViewOnIPFSPressed({required NFT nft}) async {
+    await easelProvider.fileUtilsHelper.launchMyUrl(url: nft.url);
   }
 
   void onViewOnPylonsPressed({required NFT nft}) async {
@@ -58,7 +56,7 @@ class BuildPublishedNFTsBottomSheet {
                 children: [
                   moreOptionTile(
                       onPressed: () {
-                        navigateToPreviewScreen(context: context, nft: nft);
+                        onViewOnIPFSPressed(nft: nft);
                       },
                       title: "view".tr(),
                       svg: kSvgViewIcon),
