@@ -300,12 +300,16 @@ class _OwnerBottomDrawerState extends State<OwnerBottomDrawer> {
                                     children: [
                                       buildRow(
                                         title: "currency".tr(),
-                                        subtitle: widget.nft.ibcCoins,
+                                        subtitle: widget.nft.isFreeDrop ? kPylonText : (viewModel.supportedDenomList.firstWhere((denom) => denom.symbol == widget.nft.denom).name),
                                       ),
                                       SizedBox(height: 2.h),
                                       buildRow(
                                         title: "price".tr(),
-                                        subtitle: widget.nft.price,
+                                        subtitle: widget.nft.isFreeDrop
+                                            ? "0"
+                                            : widget.nft.denom == kUsdSymbol
+                                                ? "\$${widget.nft.price}"
+                                                : widget.nft.price,
                                       ),
                                       SizedBox(height: 10.h),
                                       buildRow(
