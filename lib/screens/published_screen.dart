@@ -295,11 +295,13 @@ class _OwnerBottomDrawerState extends State<OwnerBottomDrawer> {
                             SizedBox(
                               height: 30.h,
                             ),
-                            Container(
-                              width: 250.w,
-                              color: EaselAppTheme.kWhite.withOpacity(0.2),
-                              child: VideoProgressWidget(darkMode: false, isForFile: false),
-                            ),
+                            easelProvider.nft.assetType == kVideoText
+                                ? Container(
+                                    width: 250.w,
+                                    color: EaselAppTheme.kWhite.withOpacity(0.2),
+                                    child: const VideoProgressWidget(darkMode: false, isForFile: false),
+                                  )
+                                : const SizedBox(),
                             SizedBox(
                               height: 30.h,
                             ),
