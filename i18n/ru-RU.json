@@ -36,6 +36,7 @@
   "err_add_audio_thumbnail" : "Пожалуйста, выберите миниатюру аудио",
   "err_add_video_thumbnail" : "Пожалуйста, выберите миниатюру видео",
   "loading": "загрузка ...",
+  "are_you_sure_you_want_to_delete": "Вы уверены, что хотите удалить этот черновик?"
   "created_by": "Сделано ",
   "currency": "валюта",
   "price": "цена ",

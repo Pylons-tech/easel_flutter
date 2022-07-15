@@ -9,6 +9,7 @@ import 'package:easel_flutter/utils/constants.dart';
 import 'package:easel_flutter/utils/easel_app_theme.dart';
 import 'package:easel_flutter/utils/enums.dart';
 import 'package:easel_flutter/utils/extension_util.dart';
+import 'package:easel_flutter/widgets/model_viewer.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get_it/get_it.dart';
@@ -56,7 +57,7 @@ class _PreviewNFTFullScreenState extends State<PreviewNFTFullScreen> {
                 onImage: (context) => NftImageWidget(imageUrl: easelProvider.publishedNFTClicked.url),
                 onVideo: (context) => const NFTVideoPlayerScreen(),
                 onAudio: (context) => const NFTAudioPlayerScreen(),
-                on3D: (context) => Container(),
+                on3D: (context) => Model3dViewer(isFile: false, path: easelProvider.publishedNFTClicked.url,),
                 assetType: easelProvider.publishedNFTClicked.assetType.toAssetTypeEnum()),
             Column(
               mainAxisAlignment: MainAxisAlignment.start,
@@ -129,6 +130,9 @@ class PreviewNFTBuilder extends StatelessWidget {
 
       case AssetType.Video:
         return onVideo(context);
+
+      case AssetType.ThreeD:
+        return on3D(context);
     }
   }
 }

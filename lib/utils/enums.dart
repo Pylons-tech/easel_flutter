@@ -10,6 +10,7 @@ enum AssetType {
   Audio,
   Image,
   Video,
+  ThreeD
 }
 
 enum UploadStep {

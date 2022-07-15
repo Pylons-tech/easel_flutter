@@ -178,7 +178,7 @@ class _MintScreenState extends State<MintScreen> {
         return VideoWidget(
           filePath: provider.nft.url,
           previewFlag: true,
-          isForFile: true,
+          isForFile: false,
         );
       case k3dText:
         return SizedBox(

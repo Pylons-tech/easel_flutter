@@ -93,11 +93,14 @@ class HomeScreenContent extends StatelessWidget {
     final homeViewModel = context.watch<HomeViewModel>();
     return Column(
       children: [
+        if (homeViewModel.currentPage.value != 0) ...[
+          const VerticalSpace(20),
+          MyStepsIndicator(currentPage: homeViewModel.currentPage, currentStep: homeViewModel.currentStep),
+          const VerticalSpace(5),
+          StepLabels(currentPage: homeViewModel.currentPage, currentStep: homeViewModel.currentStep),
+          const VerticalSpace(10),
+        ],
         const VerticalSpace(20),
-        MyStepsIndicator(currentPage: homeViewModel.currentPage, currentStep: homeViewModel.currentStep),
-        const VerticalSpace(5),
-        StepLabels(currentPage: homeViewModel.currentPage, currentStep: homeViewModel.currentStep),
-        const VerticalSpace(10),
         Stack(
           alignment: Alignment.center,
           children: [
@@ -110,7 +113,7 @@ class HomeScreenContent extends StatelessWidget {
                       child: IconButton(
                         onPressed: () {
                           ScaffoldMessenger.of(context).hideCurrentSnackBar();
-                          homeViewModel.pageController.previousPage(duration: const Duration(milliseconds: kPageAnimationTimeInMillis), curve: Curves.easeIn);
+                          homeViewModel.previousPage();
                           if (homeViewModel.currentPage.value == 0) {
                             GetIt.I.get<CreatorHubViewModel>().getDraftsList();
                             Navigator.of(context).pop();
@@ -181,6 +184,6 @@ class HomeScreenContent extends StatelessWidget {
   }
 
   Widget mintScreen() {
-    return const PublishedScreen();
+    return const MintScreen();
   }
 }
