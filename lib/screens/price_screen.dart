@@ -73,7 +73,9 @@ class _PriceScreenState extends State<PriceScreen> {
                         provider.updateIsFreeDropStatus(true);
                       },
                       cuttingHeight: 12.h,
-                      isShadow: false, clipperType: ClipperType.bottomLeftTopRight, fontWeight: FontWeight.w500,
+                      isShadow: false,
+                      clipperType: ClipperType.bottomLeftTopRight,
+                      fontWeight: FontWeight.w500,
                     ),
                   ),
                   SizedBox(
@@ -88,7 +90,9 @@ class _PriceScreenState extends State<PriceScreen> {
                         provider.updateIsFreeDropStatus(false);
                       },
                       cuttingHeight: 12.h,
-                      isShadow: false, clipperType: ClipperType.bottomLeftTopRight, fontWeight: FontWeight.w500,
+                      isShadow: false,
+                      clipperType: ClipperType.bottomLeftTopRight,
+                      fontWeight: FontWeight.w500,
                     ),
                   ),
                   SizedBox(
@@ -233,22 +237,41 @@ class _PriceScreenState extends State<PriceScreen> {
                   style: TextStyle(color: EaselAppTheme.kLightPurple, fontSize: 14.sp, fontWeight: FontWeight.w800),
                 ),
                 VerticalSpace(20.h),
-                Align(
-                  alignment: Alignment.centerRight,
-                  child: PylonsButton(
-                    onPressed: () async {
-                      FocusScope.of(context).unfocus();
-                      if (_formKey.currentState!.validate()) {
-                        if (checkTextFields()) {
-                          context.read<EaselProvider>().updateNftFromPrice(nft!.id!);
-                          context.read<HomeViewModel>().pageController.nextPage(duration: const Duration(milliseconds: kPageAnimationTimeInMillis), curve: Curves.easeIn);
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    PylonsButton(
+                      onPressed: () async {
+                        FocusScope.of(context).unfocus();
+                        if (_formKey.currentState!.validate()) {
+                          if (checkTextFields()) {
+                            context.read<EaselProvider>().updateNftFromPrice(nft!.id!);
+                            Navigator.pop(context);
+                          }
                         }
-                      }
-                    },
-                    btnText: kContinue,
-                    showArrow: true,
-                    isBlue: false,
-                  ),
+                      },
+                      btnText: "save".tr(),
+                      showArrow: false,
+                      isBlue: false,
+                      isRed: false,
+                      mobileScreenButtonWidth: 0.4,
+                    ),
+                    PylonsButton(
+                      onPressed: () async {
+                        FocusScope.of(context).unfocus();
+                        if (_formKey.currentState!.validate()) {
+                          if (checkTextFields()) {
+                            context.read<EaselProvider>().updateNftFromPrice(nft!.id!);
+                            context.read<HomeViewModel>().pageController.nextPage(duration: const Duration(milliseconds: kPageAnimationTimeInMillis), curve: Curves.easeIn);
+                          }
+                        }
+                      },
+                      btnText: kContinue,
+                      showArrow: false,
+                      isBlue: false,
+                      mobileScreenButtonWidth: 0.4,
+                    ),
+                  ],
                 ),
                 VerticalSpace(20.h),
               ],
@@ -258,6 +281,6 @@ class _PriceScreenState extends State<PriceScreen> {
       ),
     );
   }
-  bool checkTextFields() => _royaltiesFieldError.isEmpty && _noOfEditionsFieldError.isEmpty && _priceFieldError.isEmpty;
 
+  bool checkTextFields() => _royaltiesFieldError.isEmpty && _noOfEditionsFieldError.isEmpty && _priceFieldError.isEmpty;
 }

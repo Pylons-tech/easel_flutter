@@ -91,7 +91,6 @@ class CreatorHubViewModel extends ChangeNotifier {
     }
     for (final recipe in recipesList) {
       final nft = NFT.fromRecipe(recipe);
-
       _publishedNFTsList.add(nft);
     }
 

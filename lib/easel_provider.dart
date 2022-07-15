@@ -863,6 +863,7 @@ class EaselProvider extends ChangeNotifier {
       name: artistNameController.text,
       url: "$ipfsDomain/${fileUploadResponse.data?.value?.cid}",
       price: priceController.text,
+      dateTime: DateTime.now().millisecondsSinceEpoch,
     );
 
     final saveNftResponse = await repository.saveNft(nft);
@@ -915,7 +916,14 @@ class EaselProvider extends ChangeNotifier {
       _hashtags = hashtagsList.join(',');
     }
     SaveNft saveNftForDescription = SaveNft(
-        id: id, nftDescription: descriptionController.text, nftName: artNameController.text, creatorName: artistNameController.text, step: UploadStep.descriptionAdded.name, hashtags: _hashtags);
+      id: id,
+      nftDescription: descriptionController.text,
+      nftName: artNameController.text,
+      creatorName: artistNameController.text,
+      step: UploadStep.descriptionAdded.name,
+      hashtags: _hashtags,
+      dateTime: DateTime.now().millisecondsSinceEpoch,
+    );
     final saveNftResponse = await repository.updateNftFromDescription(saveNft: saveNftForDescription);
 
     final _nft = await repository.getNft(id);
@@ -939,6 +947,7 @@ class EaselProvider extends ChangeNotifier {
       step: UploadStep.priceAdded.name,
       denomSymbol: isFreeDrop == false ? selectedDenom.symbol : "",
       isFreeDrop: isFreeDrop,
+      dateTime: DateTime.now().millisecondsSinceEpoch,
     );
     final saveNftResponse = await repository.updateNftFromPrice(saveNft: saveNftForPrice);
     final _nft = await repository.getNft(id);

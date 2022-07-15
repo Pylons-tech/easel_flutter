@@ -6,6 +6,7 @@ import 'package:easel_flutter/utils/space_utils.dart';
 import 'package:easel_flutter/viewmodels/home_viewmodel.dart';
 import 'package:easel_flutter/widgets/easel_hashtag_input_field.dart';
 import 'package:easel_flutter/widgets/easel_text_field.dart';
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -162,25 +163,47 @@ class _DescribeScreenState extends State<DescribeScreen> {
                   VerticalSpace(20.h),
                   const EaselHashtagInputField(),
                   VerticalSpace(40.h),
-                  Align(
-                    alignment: Alignment.centerRight,
-                    child: PylonsButton(
-                      onPressed: () async {
-                        FocusScope.of(context).unfocus();
-                        if (_formKey.currentState!.validate()) {
-                          if (_artNameFieldError.isEmpty && _artistNameFieldError.isEmpty && _descriptionFieldError.isEmpty) {
-                            context.read<EaselProvider>().updateNftFromDescription(provider.nft.id!);
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      PylonsButton(
+                        onPressed: () async {
+                          FocusScope.of(context).unfocus();
+                          if (_formKey.currentState!.validate()) {
+                            if (_artNameFieldError.isEmpty && _artistNameFieldError.isEmpty && _descriptionFieldError.isEmpty) {
+                              context.read<EaselProvider>().updateNftFromDescription(provider.nft.id!);
 
-                            context.read<EaselProvider>().saveArtistName(provider.artistNameController.text.trim());
+                              context.read<EaselProvider>().saveArtistName(provider.artistNameController.text.trim());
 
-                            context.read<HomeViewModel>().pageController.nextPage(duration: const Duration(milliseconds: kPageAnimationTimeInMillis), curve: Curves.easeIn);
+                              Navigator.pop(context);
+                            }
                           }
-                        }
-                      },
-                      btnText: kContinue,
-                      showArrow: true,
-                      isBlue: false,
-                    ),
+                        },
+                        btnText: "save".tr(),
+                        showArrow: false,
+                        isBlue: false,
+                        isRed: false,
+                        mobileScreenButtonWidth: 0.4,
+                      ),
+                      PylonsButton(
+                        onPressed: () async {
+                          FocusScope.of(context).unfocus();
+                          if (_formKey.currentState!.validate()) {
+                            if (_artNameFieldError.isEmpty && _artistNameFieldError.isEmpty && _descriptionFieldError.isEmpty) {
+                              context.read<EaselProvider>().updateNftFromDescription(provider.nft.id!);
+
+                              context.read<EaselProvider>().saveArtistName(provider.artistNameController.text.trim());
+
+                              context.read<HomeViewModel>().pageController.nextPage(duration: const Duration(milliseconds: kPageAnimationTimeInMillis), curve: Curves.easeIn);
+                            }
+                          }
+                        },
+                        btnText: "continue".tr(),
+                        showArrow: false,
+                        isBlue: false,
+                        mobileScreenButtonWidth: 0.4,
+                      ),
+                    ],
                   ),
                   VerticalSpace(20.h),
                 ],
