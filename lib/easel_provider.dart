@@ -261,7 +261,6 @@ class EaselProvider extends ChangeNotifier {
         videoLoadingError = videoPlayerController.value.errorDescription!;
       }
       notifyListeners();
-
     });
   }
 
@@ -282,13 +281,11 @@ class EaselProvider extends ChangeNotifier {
   void playVideo() {
     videoPlayerHelper.playVideo();
     notifyListeners();
-
   }
 
   void pauseVideo() {
     videoPlayerHelper.pauseVideo();
     notifyListeners();
-
   }
 
   void seekVideo(Duration position) {
@@ -822,6 +819,7 @@ class EaselProvider extends ChangeNotifier {
       final uploadResponse = await repository.uploadFile(nftFormat.format == NFTTypes.audio ? audioThumbnail! : videoThumbnail!);
       if (uploadResponse.isLeft()) {
         loading.dismiss();
+        "something_wrong_while_uploading".tr().show();
         return false;
       }
       uploadThumbnailResponse = uploadResponse.getOrElse(() => uploadThumbnailResponse);
@@ -836,6 +834,7 @@ class EaselProvider extends ChangeNotifier {
     final response = await repository.uploadFile(_file!);
     if (response.isLeft()) {
       loading.dismiss();
+      "something_wrong_while_uploading".tr().show();
       return false;
     }
     final fileUploadResponse = response.getOrElse(() => uploadUrlResponse);
