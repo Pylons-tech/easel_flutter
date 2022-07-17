@@ -77,9 +77,7 @@ class CreatorHubViewModel extends ChangeNotifier {
       return;
     }
 
-
-    final easelProvider  = Provider.of<EaselProvider>(navigatorKey.currentState!.overlay!.context, listen: false);
-
+    final easelProvider = Provider.of<EaselProvider>(navigatorKey.currentState!.overlay!.context, listen: false);
 
     final profileResponse = await easelProvider.getProfile();
 

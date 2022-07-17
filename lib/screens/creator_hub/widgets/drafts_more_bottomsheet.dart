@@ -1,3 +1,4 @@
+import 'package:easel_flutter/easel_provider.dart';
 import 'package:easel_flutter/main.dart';
 import 'package:easel_flutter/models/nft.dart';
 import 'package:easel_flutter/screens/creator_hub/creator_hub_view_model.dart';
@@ -43,6 +44,11 @@ class DraftsMoreBottomSheet extends StatelessWidget {
 
   final NFT nft;
 
+  void onViewOnIPFSPressed({required BuildContext context, required NFT nft}) async {
+    final easelProvider = Provider.of<EaselProvider>(context, listen: false);
+    await easelProvider.fileUtilsHelper.launchMyUrl(url: nft.url);
+  }
+
   @override
   Widget build(BuildContext context) {
     final viewModel = context.watch<CreatorHubViewModel>();
@@ -77,7 +83,7 @@ class DraftsMoreBottomSheet extends StatelessWidget {
             const Divider(
               color: EaselAppTheme.kGrey,
             ),
-            moreOptionTile(title: "view", svg: kSvgView, onPressed: () {}),
+            moreOptionTile(title: "view", svg: kSvgView, onPressed: () => onViewOnIPFSPressed(context: context, nft: nft)),
           ],
         ),
       ),
