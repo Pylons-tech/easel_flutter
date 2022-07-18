@@ -169,15 +169,18 @@ class _DescribeScreenState extends State<DescribeScreen> {
                       PylonsButton(
                         onPressed: () async {
                           FocusScope.of(context).unfocus();
-                          if (_formKey.currentState!.validate()) {
-                            if (_artNameFieldError.isEmpty && _artistNameFieldError.isEmpty && _descriptionFieldError.isEmpty) {
-                              context.read<EaselProvider>().updateNftFromDescription(provider.nft.id!);
-
-                              context.read<EaselProvider>().saveArtistName(provider.artistNameController.text.trim());
-
-                              Navigator.pop(context);
-                            }
+                          if (!_formKey.currentState!.validate()) {
+                            return;
                           }
+                          if ((_artNameFieldError.isNotEmpty || _artistNameFieldError.isNotEmpty || _descriptionFieldError.isNotEmpty)) {
+                            return;
+                          }
+
+                          context.read<EaselProvider>().updateNftFromDescription(provider.nft.id!);
+                          context.read<EaselProvider>().saveArtistName(provider.artistNameController.text.trim());
+                          Navigator.pop(context);
+
+
                         },
                         btnText: "save".tr(),
                         showArrow: false,
@@ -188,15 +191,17 @@ class _DescribeScreenState extends State<DescribeScreen> {
                       PylonsButton(
                         onPressed: () async {
                           FocusScope.of(context).unfocus();
-                          if (_formKey.currentState!.validate()) {
-                            if (_artNameFieldError.isEmpty && _artistNameFieldError.isEmpty && _descriptionFieldError.isEmpty) {
-                              context.read<EaselProvider>().updateNftFromDescription(provider.nft.id!);
-
-                              context.read<EaselProvider>().saveArtistName(provider.artistNameController.text.trim());
-
-                              context.read<HomeViewModel>().nextPage();
-                            }
+                          if (!_formKey.currentState!.validate()) {
+                            return;
                           }
+
+                          if ((_artNameFieldError.isNotEmpty || _artistNameFieldError.isNotEmpty || _descriptionFieldError.isNotEmpty)) {
+                            return;
+                          }
+
+                          context.read<EaselProvider>().updateNftFromDescription(provider.nft.id!);
+                          context.read<EaselProvider>().saveArtistName(provider.artistNameController.text.trim());
+                          context.read<HomeViewModel>().nextPage();
                         },
                         btnText: "continue".tr(),
                         showArrow: false,
@@ -215,3 +220,4 @@ class _DescribeScreenState extends State<DescribeScreen> {
     );
   }
 }
+

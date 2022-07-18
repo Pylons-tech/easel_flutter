@@ -129,11 +129,6 @@ abstract class Repository {
   /// This function checks if a file path extension svg or not
   /// Input: [filePath] the path of selected file
   /// Output: [True] if the filepath has svg extension and [False] otherwise
-  bool isSvgFile(String filePath);
-
-  /// This function checks if a file path extension svg or not
-  /// Input: [filePath] the path of selected file
-  /// Output: [True] if the filepath has svg extension and [False] otherwise
   String getExtension(String fileName);
 
   /// This function is used to get the file size in GBs
@@ -151,10 +146,6 @@ abstract class Repository {
   /// Output: [String] returns the generated NFTs link to be shared with others
   String generateEaselLinkForShare({required String recipeId, required String cookbookId});
 
-  /// This function is used to generate the NFT link to be open in the pylons wallet
-  /// Input: [recipeId] and [cookbookId] used in the link generation as query parameters
-  /// Output: [String] returns the generated NFTs link to be shared with others
-  String generateEaselLinkForOpeningInPylonsApp({required String recipeId, required String cookbookId});
 
   /// This function is used to launch the link generated and open the link in external source platform
   /// Input: [url] is the link to be launched by the launcher
@@ -323,9 +314,9 @@ class RepositoryImp implements Repository {
       NFT? data = await localDataSource.getNft(id);
       if (data == null) {
         return Left(CacheFailure("something_wrong".tr()));
-      } else {
-        return Right(data);
       }
+      return Right(data);
+
     } on Exception catch (_) {
       return Left(CacheFailure("something_wrong".tr()));
     }
@@ -355,11 +346,6 @@ class RepositoryImp implements Repository {
   }
 
   @override
-  bool isSvgFile(String filePath) {
-    return fileUtilsHelper.isSvgFile(filePath);
-  }
-
-  @override
   String getExtension(String fileName) {
     return fileUtilsHelper.getExtension(fileName);
   }
@@ -379,10 +365,6 @@ class RepositoryImp implements Repository {
     return fileUtilsHelper.generateEaselLinkForShare(recipeId: recipeId, cookbookId: cookbookId);
   }
 
-  @override
-  String generateEaselLinkForOpeningInPylonsApp({required String recipeId, required String cookbookId}) {
-    return fileUtilsHelper.generateEaselLinkForOpeningInPylonsApp(recipeId: recipeId, cookbookId: cookbookId);
-  }
 
   @override
   Future<Either<Failure, void>> launchMyUrl({required String url}) async {

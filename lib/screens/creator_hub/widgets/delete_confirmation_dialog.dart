@@ -11,7 +11,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
-TextStyle kDeleteHeaderTextStyle = TextStyle(fontSize: 14.sp, fontFamily: 'UniversalSans', color: EaselAppTheme.kWhite, fontWeight: FontWeight.w600);
 
 class DeleteDialog {
   final BuildContext contextt;
@@ -56,7 +55,7 @@ class DeleteDialog {
                     Text(
                       "are_you_sure_you_want_to_delete",
                       textAlign: TextAlign.center,
-                      style: kDeleteHeaderTextStyle,
+                      style: EaselAppTheme.kDeleteHeaderTextStyle,
                     ).tr(),
                     SizedBox(
                       height: 30.h,

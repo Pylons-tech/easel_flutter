@@ -60,4 +60,7 @@ class EaselAppTheme {
     color: EaselAppTheme.kWhite,
     fontFamily: universalSansFamily,
   );
+
+  static TextStyle kDeleteHeaderTextStyle = TextStyle(fontSize: 14.sp, fontFamily: 'UniversalSans', color: EaselAppTheme.kWhite, fontWeight: FontWeight.w600);
+
 }

@@ -302,5 +302,9 @@ const supportedEmail = "support@pylons.tech";
 const cookbookDesc = "Cookbook for Easel NFT";
 const cookbookName = "Easel Cookbook";
 const kVersionCookboox = "v0.0.1";
+const kHashtagSymbol = "#";
+const String costPerBlock = '0';
+const String transferFeeAmount = '1';
+
 
 const int kPageAnimationTimeInMillis = 300;

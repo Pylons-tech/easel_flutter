@@ -245,11 +245,6 @@ class EaselProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-  Future<void> delayLoading() async {
-    await Future.delayed(const Duration(seconds: 2));
-    isVideoLoading = false;
-  }
-
   /// VIDEO PLAYER FUNCTIONS
   void initializeVideoPlayerWithFile() async {
     videoPlayerHelper.initializeVideoPlayerWithFile(file: _file!);
@@ -263,6 +258,12 @@ class EaselProvider extends ChangeNotifier {
       }
       notifyListeners();
     });
+  }
+
+  delayLoading() {
+    Future.delayed(const Duration(seconds: 2));
+    isVideoLoading = false;
+    notifyListeners();
   }
 
   void initializeVideoPlayerWithUrl({required String publishedNftUrl}) async {
@@ -583,7 +584,7 @@ class EaselProvider extends ChangeNotifier {
           nft.isFreeDrop ? CoinInput() : CoinInput(coins: [Coin(amount: price, denom: _selectedDenom.symbol)])
         ],
         itemInputs: [],
-        costPerBlock: Coin(denom: kUpylon, amount: "0"),
+        costPerBlock: Coin(denom: kUpylon, amount: costPerBlock),
         entries: EntriesList(coinOutputs: [], itemOutputs: [
           ItemOutput(
               id: kEaselNFT,
@@ -609,14 +610,14 @@ class EaselProvider extends ChangeNotifier {
                 StringParam(key: kName, value: nft.name.trim()),
                 StringParam(key: kAppType, value: kEasel),
                 StringParam(key: kDescription, value: nft.description.trim()),
-                StringParam(key: kHashtags, value: hashtagsList.join('#')),
+                StringParam(key: kHashtags, value: hashtagsList.join(kHashtagSymbol)),
                 StringParam(key: kNFTFormat, value: nft.assetType),
                 StringParam(key: kNFTURL, value: nft.url),
                 StringParam(key: kThumbnailUrl, value: nft.thumbnailUrl),
                 StringParam(key: kCreator, value: nft.creator.trim()),
               ],
               mutableStrings: [],
-              transferFee: [Coin(denom: kPylonSymbol, amount: "1")],
+              transferFee: [Coin(denom: kPylonSymbol, amount: transferFeeAmount)],
               tradePercentage: nft.tradePercentage.trim(),
               tradeable: true,
               amountMinted: Int64(0),
@@ -974,7 +975,7 @@ class EaselProvider extends ChangeNotifier {
   }
 
   void toHashtagList(String hashtag) {
-    hashtagsList = hashtag.split("#");
+    hashtagsList = hashtag.split(kHashtagSymbol);
   }
 }
 

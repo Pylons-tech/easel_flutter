@@ -99,9 +99,8 @@ class VideoProgressWidget extends StatelessWidget {
                                 style: TextStyle(color: darkMode ? EaselAppTheme.kWhite : EaselAppTheme.kBlack),
                               ),
                             );
-                          } else {
-                            return SizedBox(width: 15.w, child: CircularProgressIndicator(strokeWidth: 1.w, color: darkMode ? EaselAppTheme.kWhite : EaselAppTheme.kBlack));
                           }
+                          return SizedBox(width: 15.w, child: CircularProgressIndicator(strokeWidth: 1.w, color: darkMode ? EaselAppTheme.kWhite : EaselAppTheme.kBlack));
                         }),
                     Text(
                       isForFile ? formatDuration(easelProvider.fileDuration ~/ kSecInMillis) : formatDuration(easelProvider.videoPlayerController.value.duration.inSeconds),
@@ -112,5 +111,19 @@ class VideoProgressWidget extends StatelessWidget {
               ),
           ],
         ));
+  }
+}
+
+class BuildActions extends StatelessWidget {
+  final WidgetBuilder isPlaying;
+  final WidgetBuilder isPaused;
+  final WidgetBuilder isLoading;
+  final bool videoStatus;
+
+  const BuildActions({Key? key, required this.isPlaying, required this.isLoading, required this.isPaused, required this.videoStatus}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Container();
   }
 }

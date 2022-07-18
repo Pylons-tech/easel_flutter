@@ -243,12 +243,12 @@ class _PriceScreenState extends State<PriceScreen> {
                     PylonsButton(
                       onPressed: () async {
                         FocusScope.of(context).unfocus();
-                        if (_formKey.currentState!.validate()) {
-                          if (checkTextFields()) {
-                            context.read<EaselProvider>().updateNftFromPrice(nft!.id!);
-                            Navigator.pop(context);
-                          }
+
+                        if (!_formKey.currentState!.validate() || !checkTextFields()) {
+                          return;
                         }
+                        context.read<EaselProvider>().updateNftFromPrice(nft!.id!);
+                        Navigator.pop(context);
                       },
                       btnText: "save".tr(),
                       showArrow: false,
@@ -259,12 +259,11 @@ class _PriceScreenState extends State<PriceScreen> {
                     PylonsButton(
                       onPressed: () async {
                         FocusScope.of(context).unfocus();
-                        if (_formKey.currentState!.validate()) {
-                          if (checkTextFields()) {
-                            context.read<EaselProvider>().updateNftFromPrice(nft!.id!);
-                            context.read<HomeViewModel>().nextPage();
-                          }
+                        if (!_formKey.currentState!.validate() || !checkTextFields()) {
+                          return;
                         }
+                        context.read<EaselProvider>().updateNftFromPrice(nft!.id!);
+                        context.read<HomeViewModel>().nextPage();
                       },
                       btnText: kContinue,
                       showArrow: false,
