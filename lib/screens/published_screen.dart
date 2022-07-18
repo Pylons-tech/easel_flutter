@@ -46,18 +46,18 @@ class _PublishedScreenState extends State<PublishedScreen> {
   void initState() {
     super.initState();
 
-    WidgetsBinding.instance.addPostFrameCallback((_) async {
-      Navigator.of(context).push(
-        MaterialPageRoute(
-          builder: (BuildContext context) => const PublishedNewScreen(),
-        ),
-      );
-    });
+    // WidgetsBinding.instance.addPostFrameCallback((_) async {
+    //   Navigator.of(context).push(
+    //     MaterialPageRoute(
+    //       builder: (BuildContext context) => const PublishedNewScreen(),
+    //     ),
+    //   );
+    // });
   }
 
   @override
   Widget build(BuildContext context) {
-    return Container();
+    return const PublishedNewScreen();
   }
 }
 
@@ -83,6 +83,8 @@ class _PublishedNewScreenState extends State<PublishedNewScreen> {
 
   @override
   Widget build(BuildContext context) {
+
+
     return WillPopScope(
       onWillPop: () async {
         homeViewModel.pageController.previousPage(duration: const Duration(milliseconds: 300), curve: Curves.easeIn);
@@ -97,26 +99,15 @@ class _PublishedNewScreenState extends State<PublishedNewScreen> {
               children: [
                 SizedBox(width: double.infinity, child: buildPreviewWidget(easelProvider)),
                 Image.asset(kPreviewGradient, width: 1.sw, fit: BoxFit.fill),
-                SizedBox(
-                  height: 120.h,
-                  width: double.infinity,
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      MyStepsIndicator(currentStep: homeViewModel.currentStep),
-                      VerticalSpace(5.h),
-                      StepLabels(currentPage: homeViewModel.currentPage, currentStep: homeViewModel.currentStep),
-                      VerticalSpace(10.h),
-                    ],
-                  ),
-                ),
+
                 Positioned(
                     left: 10.w,
                     top: 60.h,
                     child: IconButton(
                       onPressed: () {
-                        homeViewModel.pageController.previousPage(duration: const Duration(milliseconds: 300), curve: Curves.easeIn);
-                        Navigator.of(context).pop();
+                        homeViewModel.currentPage = ValueNotifier(1);
+                        homeViewModel.currentStep = ValueNotifier(1);
+                        homeViewModel.previousPage();
                       },
                       icon: const Icon(
                         Icons.arrow_back_ios,
@@ -292,7 +283,7 @@ class _OwnerBottomDrawerState extends State<OwnerBottomDrawer> {
                             lessStyle: TextStyle(fontSize: 12.sp, fontWeight: FontWeight.w300, color: EaselAppTheme.kLightPurple),
                           ),
                           SizedBox(
-                            height: 30.h,
+                            height: 20.h,
                           ),
                           viewModel.nft.assetType == kVideoText
                               ? Container(

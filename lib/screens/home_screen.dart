@@ -91,55 +91,62 @@ class HomeScreenContent extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final homeViewModel = context.watch<HomeViewModel>();
+
+    print("ALpha ${ homeViewModel.currentPage.value}");
     return Column(
       children: [
-        if (homeViewModel.currentPage.value != 0) ...[
+        if (homeViewModel.currentPage.value != 0 && homeViewModel.currentPage.value != 3) ...[
           const VerticalSpace(20),
           MyStepsIndicator(currentStep: homeViewModel.currentStep),
           const VerticalSpace(5),
           StepLabels(currentPage: homeViewModel.currentPage, currentStep: homeViewModel.currentStep),
           const VerticalSpace(10),
         ],
-        const VerticalSpace(20),
-        Stack(
-          alignment: Alignment.center,
-          children: [
-            Align(
-                alignment: Alignment.centerLeft,
-                child: ValueListenableBuilder(
-                  valueListenable: homeViewModel.currentPage,
-                  builder: (_, int currentPage, __) => Padding(
-                      padding: EdgeInsets.only(left: 10.sp),
-                      child: IconButton(
-                        onPressed: () {
-                          ScaffoldMessenger.of(context).hideCurrentSnackBar();
-                          homeViewModel.previousPage();
-                          if (homeViewModel.currentPage.value == 0) {
-                            GetIt.I.get<CreatorHubViewModel>().getDraftsList();
-                            Navigator.of(context).pop();
-                          }
-                        },
-                        icon: const Icon(
-                          Icons.arrow_back_ios,
-                          color: EaselAppTheme.kGrey,
-                        ),
-                      )),
-                )),
-            ValueListenableBuilder(
-              valueListenable: homeViewModel.currentPage,
-              builder: (_, int currentPage, __) {
-                return Text(
-                  homeViewModel.pageTitles[homeViewModel.currentPage.value],
-                  style: Theme.of(context).textTheme.bodyText1!.copyWith(fontSize: 18.sp, fontWeight: FontWeight.w400, color: EaselAppTheme.kDarkText),
-                );
-              },
-            ),
-          ],
-        ),
-        ScreenResponsive(
-          mobileScreen: (context) => const VerticalSpace(6),
-          tabletScreen: (context) => const VerticalSpace(30),
-        ),
+        if (homeViewModel.currentPage.value != 3) ...[
+          const VerticalSpace(20),
+          Stack(
+            alignment: Alignment.center,
+            children: [
+              Align(
+                  alignment: Alignment.centerLeft,
+                  child: ValueListenableBuilder(
+                    valueListenable: homeViewModel.currentPage,
+                    builder: (_, int currentPage, __) => Padding(
+                        padding: EdgeInsets.only(left: 10.sp),
+                        child: IconButton(
+                          onPressed: () {
+                            ScaffoldMessenger.of(context).hideCurrentSnackBar();
+                            homeViewModel.previousPage();
+                            if (homeViewModel.currentPage.value == 0) {
+                              GetIt.I.get<CreatorHubViewModel>().getDraftsList();
+                              Navigator.of(context).pop();
+                            }
+                          },
+                          icon: const Icon(
+                            Icons.arrow_back_ios,
+                            color: EaselAppTheme.kGrey,
+                          ),
+                        )),
+                  )),
+              ValueListenableBuilder(
+                valueListenable: homeViewModel.currentPage,
+                builder: (_, int currentPage, __) {
+                  return Text(
+                    homeViewModel.pageTitles[homeViewModel.currentPage.value],
+                    style: Theme.of(context).textTheme.bodyText1!.copyWith(fontSize: 18.sp, fontWeight: FontWeight.w400, color: EaselAppTheme.kDarkText),
+                  );
+                },
+              ),
+            ],
+          ),
+          ScreenResponsive(
+            mobileScreen: (context) => const VerticalSpace(6),
+            tabletScreen: (context) => const VerticalSpace(30),
+          ),
+        ],
+
+
+
         Expanded(
           child: PageView.builder(
             controller: homeViewModel.pageController,

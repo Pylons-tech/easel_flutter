@@ -294,7 +294,7 @@ class RepositoryImp implements Repository {
 
       return Right(response);
     } on Exception catch (_) {
-      return Left(CacheFailure("something_wrong".tr()));
+      return const Right([]);
     }
   }
 

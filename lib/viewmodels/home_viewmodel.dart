@@ -70,7 +70,9 @@ class HomeViewModel extends ChangeNotifier {
   }
 
   void previousPage() async {
+
     await pageController.previousPage(duration: const Duration(milliseconds: kPageAnimationTimeInMillis), curve: Curves.easeIn);
+
     notifyListeners();
   }
 

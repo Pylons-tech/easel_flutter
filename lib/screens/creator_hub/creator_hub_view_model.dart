@@ -64,7 +64,7 @@ class CreatorHubViewModel extends ChangeNotifier {
   }
 
   Future<void> getPublishAndDraftData() async {
-    await Future.wait([getRecipesList(), getDraftsList()]);
+    await getRecipesList();
 
     getTotalForSale();
     notifyListeners();
@@ -77,13 +77,7 @@ class CreatorHubViewModel extends ChangeNotifier {
       return;
     }
 
-    final easelProvider = Provider.of<EaselProvider>(navigatorKey.currentState!.overlay!.context, listen: false);
 
-    final profileResponse = await easelProvider.getProfile();
-
-    if (!profileResponse.success) {
-      return;
-    }
 
     final cookBookId = getCookbookIdFromLocalDatasource();
     if (cookBookId == null) {

@@ -60,10 +60,17 @@ class NFTsListTile extends StatelessWidget {
                       imageUrl: publishedNFT.url,
                       fit: BoxFit.cover,
                     ),
-                    onVideo: (context) => VideoPlaceHolder(nftUrl: publishedNFT.url, nftName: publishedNFT.name, thumbnailUrl: publishedNFT.thumbnailUrl),
-                    onAudio: (context) => SvgPicture.asset(
-                      kSvgNftFormatAudio,
-                      color: EaselAppTheme.kBlack,
+                    onVideo: (context) => CachedNetworkImage(
+                      fit: BoxFit.fill,
+                      imageUrl: publishedNFT.thumbnailUrl,
+                      errorWidget: (a, b, c) => const Center(child: Icon(Icons.error_outline)),
+                      placeholder: (context, url) => Shimmer(color: EaselAppTheme.cardBackground, child: const SizedBox.expand()),
+                    ),
+                    onAudio: (context) => CachedNetworkImage(
+                      fit: BoxFit.fill,
+                      imageUrl: publishedNFT.thumbnailUrl,
+                      errorWidget: (a, b, c) => const Center(child: Icon(Icons.error_outline)),
+                      placeholder: (context, url) => Shimmer(color: EaselAppTheme.cardBackground, child: const SizedBox.expand()),
                     ),
                     on3D: (context) => ModelViewer(
                       src: publishedNFT.url,

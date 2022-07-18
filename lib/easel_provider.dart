@@ -66,7 +66,7 @@ class EaselProvider extends ChangeNotifier {
 
   bool willLoadFirstTime = true;
 
-  late bool collapsed = false;
+  bool collapsed = true;
 
   void setPublishedNFTClicked(NFT nft) {
     _publishedNFTClicked = nft;
@@ -182,6 +182,7 @@ class EaselProvider extends ChangeNotifier {
     hashtagsList.clear();
     willLoadFirstTime = true;
     isFreeDrop = false;
+    collapsed = true;
     notifyListeners();
   }
 
