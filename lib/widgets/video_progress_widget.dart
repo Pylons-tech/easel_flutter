@@ -1,6 +1,3 @@
-
-import 'dart:developer';
-
 import 'package:easel_flutter/easel_provider.dart';
 import 'package:easel_flutter/utils/constants.dart';
 import 'package:easel_flutter/utils/easel_app_theme.dart';
@@ -34,7 +31,6 @@ class VideoProgressWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-
     final easelProvider = context.watch<EaselProvider>();
 
     return Padding(
@@ -48,41 +44,41 @@ class VideoProgressWidget extends StatelessWidget {
               easelProvider.isVideoLoading
                   ? const SizedBox()
                   : Row(
-                children: [
-                  if (easelProvider.isVideoLoading)
-                    SizedBox(height: 22.h, width: 22.h, child: CircularProgressIndicator(strokeWidth: 2.w, color: EaselAppTheme.kBlack))
-                  else if (easelProvider.videoPlayerController.value.isPlaying)
-                    InkWell(
-                      onTap: easelProvider.pauseVideo,
-                      child: Icon(
-                        Icons.pause,
-                        color: darkMode ? EaselAppTheme.kWhite : EaselAppTheme.kDarkBlue,
-                        size: 25.h,
-                      ),
-                    )
-                  else
-                    InkWell(
-                      onTap: easelProvider.playVideo,
-                      child: Icon(
-                        Icons.play_arrow,
-                        color: darkMode ? EaselAppTheme.kWhite : EaselAppTheme.kDarkBlue,
-                        size: 25.h,
-                      ),
+                      children: [
+                        if (easelProvider.isVideoLoading)
+                          SizedBox(height: 22.h, width: 22.h, child: CircularProgressIndicator(strokeWidth: 2.w, color: EaselAppTheme.kBlack))
+                        else if (easelProvider.videoPlayerController.value.isPlaying)
+                          InkWell(
+                            onTap: easelProvider.pauseVideo,
+                            child: Icon(
+                              Icons.pause,
+                              color: darkMode ? EaselAppTheme.kWhite : EaselAppTheme.kDarkBlue,
+                              size: 25.h,
+                            ),
+                          )
+                        else
+                          InkWell(
+                            onTap: easelProvider.playVideo,
+                            child: Icon(
+                              Icons.play_arrow,
+                              color: darkMode ? EaselAppTheme.kWhite : EaselAppTheme.kDarkBlue,
+                              size: 25.h,
+                            ),
+                          ),
+                        SizedBox(width: 10.w),
+                        Expanded(
+                          child: VideoProgressIndicator(
+                            easelProvider.videoPlayerController,
+                            allowScrubbing: true,
+                            colors: VideoProgressColors(
+                              backgroundColor: darkMode ? EaselAppTheme.kWhite : EaselAppTheme.kBlack,
+                              playedColor: EaselAppTheme.kLightRed,
+                              bufferedColor: darkMode ? EaselAppTheme.kBlack.withOpacity(0.7) : EaselAppTheme.kWhite.withOpacity(0.7),
+                            ),
+                          ),
+                        ),
+                      ],
                     ),
-                  SizedBox(width: 10.w),
-                  Expanded(
-                    child: VideoProgressIndicator(
-                      easelProvider.videoPlayerController,
-                      allowScrubbing: true,
-                      colors: VideoProgressColors(
-                        backgroundColor: darkMode ? EaselAppTheme.kWhite : EaselAppTheme.kBlack,
-                        playedColor: EaselAppTheme.kLightRed,
-                        bufferedColor: EaselAppTheme.kWhite.withOpacity(0.7),
-                      ),
-                    ),
-                  ),
-                ],
-              ),
             if (easelProvider.videoLoadingError.isNotEmpty || easelProvider.isVideoLoading)
               const SizedBox()
             else
@@ -108,7 +104,7 @@ class VideoProgressWidget extends StatelessWidget {
                           }
                         }),
                     Text(
-                      isForFile ? formatDuration(easelProvider.fileDuration ~/ kSecInMillis) :  formatDuration(easelProvider.videoPlayerController.value.duration.inSeconds) ,
+                      isForFile ? formatDuration(easelProvider.fileDuration ~/ kSecInMillis) : formatDuration(easelProvider.videoPlayerController.value.duration.inSeconds),
                       style: TextStyle(color: darkMode ? EaselAppTheme.kWhite : EaselAppTheme.kBlack),
                     ),
                   ],

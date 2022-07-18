@@ -4,6 +4,8 @@ import 'dart:ui';
 import 'package:audio_video_progress_bar/audio_video_progress_bar.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:easel_flutter/easel_provider.dart';
+import 'package:easel_flutter/models/picked_file_model.dart';
+import 'package:easel_flutter/repository/repository.dart';
 import 'package:easel_flutter/utils/constants.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
@@ -13,11 +15,7 @@ import 'package:get_it/get_it.dart';
 import 'package:provider/provider.dart';
 
 import '../models/nft_format.dart';
-import '../screens/custom_widgets/step_labels.dart';
-import '../screens/custom_widgets/steps_indicator.dart';
 import '../utils/easel_app_theme.dart';
-import '../utils/file_utils.dart';
-import '../utils/space_utils.dart';
 import 'loading.dart';
 
 class AudioWidget extends StatefulWidget {
@@ -33,6 +31,7 @@ class AudioWidget extends StatefulWidget {
 
 class _AudioWidgetState extends State<AudioWidget> with WidgetsBindingObserver {
   EaselProvider get easelProvider => GetIt.I.get();
+  Repository get repository => GetIt.I.get<Repository>();
 
   @override
   initState() {
@@ -53,6 +52,9 @@ class _AudioWidgetState extends State<AudioWidget> with WidgetsBindingObserver {
   }
 
   BoxDecoration getAudioBackgroundDecoration({required EaselProvider viewModel}) {
+    if (widget.previewFlag && viewModel.audioThumbnail == null) {
+      return const BoxDecoration();
+    }
     if (widget.previewFlag && viewModel.audioThumbnail != null) {
       return BoxDecoration(image: DecorationImage(image: FileImage(viewModel.audioThumbnail!), fit: BoxFit.fill));
     }
@@ -186,13 +188,16 @@ class _AudioWidgetState extends State<AudioWidget> with WidgetsBindingObserver {
   }
 
   void audioThumbnailPicker() async {
-    final result = await FileUtils.pickFile(NftFormat.supportedFormats[0]);
-    if (result != null) {
-      final loading = Loading()..showLoading(message: "compressing_thumbnail".tr());
-      final file = await FileUtils.compressAndGetFile(File(result.path!));
-      easelProvider.setAudioThumbnail(file);
-      loading.dismiss();
+    final pickedFile = await repository.pickFile(NftFormat.supportedFormats[0]);
+    final result = pickedFile.getOrElse(() => PickedFileModel(path: "", fileName: "", extension: ""));
+    if (result.path == "") {
+      return;
     }
+    final loading = Loading()..showLoading(message: "compressing_thumbnail".tr());
+    final compressedFile = await repository.compressAndGetFile(File(result.path));
+    final file = compressedFile.getOrElse(() => null);
+    easelProvider.setAudioThumbnail(file);
+    loading.dismiss();
   }
 }
 

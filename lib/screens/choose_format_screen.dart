@@ -34,7 +34,6 @@ class _ChooseFormatScreenState extends State<ChooseFormatScreen> {
       return;
     }
 
-
     if (!provider.nftFormat.extensions.contains(result.extension)) {
       errorText.value = kErrUnsupportedFormat;
       showErrorDialog();
@@ -43,14 +42,11 @@ class _ChooseFormatScreenState extends State<ChooseFormatScreen> {
 
     provider.resolveNftFormat(context, result.extension);
 
-    if (easelProvider.fileUtilsHelper.getFileSizeInGB(File(result.path).lengthSync()) > kFileSizeLimitInGB) {
+    if (easelProvider.repository.getFileSizeInGB(File(result.path).lengthSync()) > kFileSizeLimitInGB) {
       errorText.value = 'could_not_uploaded'.tr(args: [result.fileName]);
       showErrorDialog();
       return;
     }
-
-
-
 
     await provider.setFile(fileName: result.fileName, filePath: result.path);
 
@@ -160,7 +156,8 @@ class _CardWidget extends StatelessWidget {
               onTap: () async {
                 EaselProvider provider = context.read();
                 provider.setFormat(context, NftFormat.supportedFormats[typeIdx]);
-                final result = await provider.fileUtilsHelper.pickFile(provider.nftFormat);
+                final pickedFile = await provider.repository.pickFile(provider.nftFormat);
+                final result = pickedFile.getOrElse(() => PickedFileModel(path: "", fileName: "", extension: ""));
                 onFilePicked(result);
               },
               child: Container(

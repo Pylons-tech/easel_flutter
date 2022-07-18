@@ -248,8 +248,8 @@ const kLoadingMessage = "Loading...";
 
 final List stepLabels = ["upload", "draft", "publish"];
 
-final List<String> imageAllowedExtsAndroid = ["png", "jpg", "jpeg", "svg", "heif"];
-final List<String> audioAllowedExtsAndroid = ['mp3', 'ogg', 'wav'];
+final List<String> imageAllowedExts = ["png", "jpg", "jpeg", "svg", "heif"];
+final List<String> audioAllowedExts = ['mp3', 'ogg', 'wav', 'aac'];
 
 /// Nft viewmodel key values
 const String kNameKey = "Name";

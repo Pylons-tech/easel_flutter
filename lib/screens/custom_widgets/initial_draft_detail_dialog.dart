@@ -1,7 +1,6 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:easel_flutter/easel_provider.dart';
 import 'package:easel_flutter/main.dart';
-import 'package:easel_flutter/models/nft.dart';
 import 'package:easel_flutter/screens/clippers/right_triangle_clipper.dart' as clipper;
 import 'package:easel_flutter/screens/clippers/right_triangle_clipper.dart';
 import 'package:easel_flutter/utils/constants.dart';
@@ -184,9 +183,8 @@ class _DraftDetailDialogState extends State<_DraftDetailDialog> {
     );
   }
 
-  void onViewOnIPFSPressed({ required EaselProvider provider}) async {
-    await provider.fileUtilsHelper.launchMyUrl(url: provider.nft.url);
-
+  void onViewOnIPFSPressed({required EaselProvider provider}) async {
+    await provider.repository.launchMyUrl(url: provider.nft.url);
   }
 
   String getImageUrl(EaselProvider easelProvider) {

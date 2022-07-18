@@ -46,7 +46,7 @@ class DraftsMoreBottomSheet extends StatelessWidget {
 
   void onViewOnIPFSPressed({required BuildContext context, required NFT nft}) async {
     final easelProvider = Provider.of<EaselProvider>(context, listen: false);
-    await easelProvider.fileUtilsHelper.launchMyUrl(url: nft.url);
+    await easelProvider.repository.launchMyUrl(url: nft.url);
   }
 
   @override

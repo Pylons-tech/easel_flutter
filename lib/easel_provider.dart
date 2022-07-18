@@ -6,6 +6,7 @@ import 'package:easel_flutter/models/api_response.dart';
 import 'package:easel_flutter/models/denom.dart';
 import 'package:easel_flutter/models/nft.dart';
 import 'package:easel_flutter/models/nft_format.dart';
+import 'package:easel_flutter/models/picked_file_model.dart';
 import 'package:easel_flutter/models/save_nft.dart';
 import 'package:easel_flutter/repository/repository.dart';
 import 'package:easel_flutter/screens/welcome_screen/widgets/show_wallet_install_dialog.dart';
@@ -419,8 +420,8 @@ class EaselProvider extends ChangeNotifier {
   Future<void> setFile({required String filePath, required String fileName}) async {
     _file = File(filePath);
     _fileName = fileName;
-    _fileSize = fileUtilsHelper.getFileSizeString(fileLength: _file!.lengthSync());
-    _fileExtension = fileUtilsHelper.getExtension(_fileName);
+    _fileSize = repository.getFileSizeString(fileLength: _file!.lengthSync());
+    _fileExtension = repository.getExtension(_fileName);
     await _getMetadata(_file!);
     notifyListeners();
   }
@@ -643,7 +644,7 @@ class EaselProvider extends ChangeNotifier {
   bool isDifferentUserName(String savedUserName) => (currentUsername.isNotEmpty && savedUserName != currentUsername);
 
   Future<void> shareNFT(Size size) async {
-    String url = fileUtilsHelper.generateEaselLinkForShare(
+    String url = repository.generateEaselLinkForShare(
       cookbookId: _cookbookId ?? '',
       recipeId: _recipeId,
     );
@@ -651,11 +652,18 @@ class EaselProvider extends ChangeNotifier {
   }
 
   void onVideoThumbnailPicked() async {
-    final result = await fileUtilsHelper.pickFile(NftFormat.supportedFormats[0]);
+    final pickedFile = await repository.pickFile(NftFormat.supportedFormats[0]);
+
+    final result = pickedFile.getOrElse(() => PickedFileModel(
+          path: "",
+          fileName: "",
+          extension: "",
+        ));
 
     if (result.path.isEmpty) return;
     final loading = Loading()..showLoading(message: kCompressingMessage);
-    final file = await fileUtilsHelper.compressAndGetFile(File(result.path));
+    final compressedFile = await repository.compressAndGetFile(File(result.path));
+    final file = compressedFile.getOrElse(() => null);
     setVideoThumbnail(file);
     loading.dismiss();
   }

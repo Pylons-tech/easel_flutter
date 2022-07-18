@@ -27,13 +27,13 @@ abstract class FileUtilsHelper {
   Future<File?> compressAndGetFile(File file);
 
   /// This function checks if a file path extension svg or not
-  /// Input: [filePath] the file path
-  /// Output: [true] if the filepath has svg extension and [false] otherwise
+  /// Input: [filePath] the path of selected file
+  /// Output: [True] if the filepath has svg extension and [False] otherwise
   bool isSvgFile(String filePath);
 
   /// This function checks if a file path extension svg or not
-  /// Input: [filePath] the path of the file
-  /// Output: [true] if the filepath has svg extension and [false] otherwise
+  /// Input: [filePath] the path of selected file
+  /// Output: [True] if the filepath has svg extension and [False] otherwise
   String getExtension(String fileName);
 
   /// This function is used to get the file size in GBs
@@ -42,9 +42,9 @@ abstract class FileUtilsHelper {
   double getFileSizeInGB(int fileLength);
 
   /// This function is used to get the file size in String format
-  /// Input: [fileLength] the file length in bytes and [precision] sets to [2] if not given
+  /// Input: [fileLength] the file length in bytes and [precision]
   /// Output: [String] returns the file size in String format
-  String getFileSizeString({required int fileLength, int precision = 2});
+  String getFileSizeString({required int fileLength, required int precision});
 
   /// This function is used to generate the NFT link to be shared with others after publishing
   /// Input: [recipeId] and [cookbookId] used in the link generation as query parameters
@@ -55,7 +55,6 @@ abstract class FileUtilsHelper {
   /// Input: [recipeId] and [cookbookId] used in the link generation as query parameters
   /// Output: [String] returns the generated NFTs link to be shared with others
   String generateEaselLinkForOpeningInPylonsApp({required String recipeId, required String cookbookId});
-
 
   /// This function is used to launch the link generated and open the link in external source platform
   /// Input: [url] is the link to be launched by the launcher
@@ -76,7 +75,7 @@ class FileUtilsHelperImpl implements FileUtilsHelper {
       case NFTTypes.image:
         if (Platform.isAndroid) {
           _type = FileType.custom;
-          allowedExtensions = imageAllowedExtsAndroid;
+          allowedExtensions = imageAllowedExts;
           break;
         }
         _type = FileType.image;
@@ -87,14 +86,13 @@ class FileUtilsHelperImpl implements FileUtilsHelper {
         break;
 
       case NFTTypes.audio:
-        if (Platform.isAndroid) {
+        if (!Platform.isAndroid) {
+          _type = FileType.custom;
+          allowedExtensions = audioAllowedExts;
+        } else {
           _type = FileType.audio;
-          break;
         }
-        _type = FileType.custom;
-        allowedExtensions = audioAllowedExtsAndroid;
         break;
-
       default:
         _type = FileType.any;
         break;
@@ -152,7 +150,7 @@ class FileUtilsHelperImpl implements FileUtilsHelper {
   }
 
   @override
-  String getFileSizeString({required int fileLength, int precision = 2}) {
+  String getFileSizeString({required int fileLength, required int precision}) {
     var i = (log(fileLength) / log(1024)).floor();
     return ((fileLength / pow(1024, i)).toStringAsFixed(precision)) + suffixes[i];
   }
@@ -173,30 +171,22 @@ class FileUtilsHelperImpl implements FileUtilsHelper {
   }
 
   Future<String> cropImage({required String filePath}) async {
-
-
     try {
       CroppedFile? croppedFile = await imageCropper.cropImage(
         sourcePath: filePath,
         aspectRatioPresets: [CropAspectRatioPreset.square, CropAspectRatioPreset.ratio3x2, CropAspectRatioPreset.original, CropAspectRatioPreset.ratio4x3, CropAspectRatioPreset.ratio16x9],
         uiSettings: [
-          AndroidUiSettings(toolbarTitle: 'Pylons',
-              toolbarColor: EaselAppTheme.kBlue,
-              toolbarWidgetColor: Colors.white,
-              initAspectRatio: CropAspectRatioPreset.original,
-              lockAspectRatio: false),
+          AndroidUiSettings(toolbarTitle: 'Pylons', toolbarColor: EaselAppTheme.kBlue, toolbarWidgetColor: Colors.white, initAspectRatio: CropAspectRatioPreset.original, lockAspectRatio: false),
           IOSUiSettings(
             title: 'Pylons',
           ),
         ],
       );
       return croppedFile?.path ?? "";
-    } catch(e){
+    } catch (e) {
       print(e);
       return "";
     }
-
-
   }
 
   @override
@@ -208,6 +198,5 @@ class FileUtilsHelperImpl implements FileUtilsHelper {
       "imv": "1",
       "link": "https://wallet.pylons.tech/?action=purchase_nft&recipe_id=$recipeId&cookbook_id=$cookbookId&nft_amount=1"
     }).toString();
-
   }
 }

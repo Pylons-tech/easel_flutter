@@ -33,8 +33,8 @@
   "compressing_thumbnail": "Compressing Thumbnail",
   "could_not_uploaded": "{} не удалось загрузить",
   "something_wrong": "что-то пошло не так",
-  "err_add_audio_thumbnail" : "Пожалуйста, выберите миниатюру аудио",
-  "err_add_video_thumbnail" : "Пожалуйста, выберите миниатюру видео",
+  "err_add_audio_thumbnail": "Пожалуйста, выберите миниатюру аудио",
+  "err_add_video_thumbnail": "Пожалуйста, выберите миниатюру видео",
   "loading": "загрузка ...",
   "are_you_sure_you_want_to_delete": "Вы уверены, что хотите удалить этот черновик?"
   "created_by": "Сделано ",
@@ -44,10 +44,11 @@
   "royalty": "royalty",
   "content_identifier": "доля личность",
   "asset_uri": "актив URI ",
-  "copied_to_clipboard" : "Скопировано в буфер обмена",
+  "copied_to_clipboard": "Скопировано в буфер обмена",
   "save": "сберечь",
   "continue": "Продолжать",
-  "read_more": "read more",
-  "collapse": " Collapse"
-
+  "read_more": "читать далее",
+  "collapse": "Крах",
+  "picking_file_error": "Ошибка при выборе файла",
+  "compressing_file_failure": "Ошибка при сжатии файла"
 }

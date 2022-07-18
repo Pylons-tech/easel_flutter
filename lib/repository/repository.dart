@@ -4,12 +4,15 @@ import 'dart:io';
 import 'package:dartz/dartz.dart';
 import 'package:easel_flutter/models/api_response.dart';
 import 'package:easel_flutter/models/nft.dart';
+import 'package:easel_flutter/models/nft_format.dart';
+import 'package:easel_flutter/models/picked_file_model.dart';
 import 'package:easel_flutter/models/save_nft.dart';
 import 'package:easel_flutter/services/datasources/local_datasource.dart';
 import 'package:easel_flutter/services/datasources/remote_datasource.dart';
 import 'package:easel_flutter/services/third_party_services/network_info.dart';
 import 'package:easel_flutter/utils/constants.dart';
 import 'package:easel_flutter/utils/failure/failure.dart';
+import 'package:easel_flutter/utils/file_utils_helper.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:pylons_sdk/pylons_sdk.dart';
 
@@ -112,14 +115,59 @@ abstract class Repository {
   /// Input: [id] the id of the nft which the user wants to delete
   /// Output: [bool] returns whether the operation is successful or not
   Future<Either<Failure, bool>> deleteNft(int id);
+
+  /// This function picks a file with the given format from device storage
+  /// Input: [format] it is the file format which needs to be picked from local storage
+  /// returns [PickedFileModel] the selected file or [Failure] if aborted
+  Future<Either<Failure, PickedFileModel>> pickFile(NftFormat format);
+
+  /// This function takes the file and returns a compressed version of that file
+  /// Input: [file] it takes the file that needs to be compressed
+  /// Output: [File] returns the compressed file
+  Future<Either<Failure, File?>> compressAndGetFile(File file);
+
+  /// This function checks if a file path extension svg or not
+  /// Input: [filePath] the path of selected file
+  /// Output: [True] if the filepath has svg extension and [False] otherwise
+  bool isSvgFile(String filePath);
+
+  /// This function checks if a file path extension svg or not
+  /// Input: [filePath] the path of selected file
+  /// Output: [True] if the filepath has svg extension and [False] otherwise
+  String getExtension(String fileName);
+
+  /// This function is used to get the file size in GBs
+  /// Input: [fileLength] the file length in bytes
+  /// Output: [double] returns the file size in GBs in double format
+  double getFileSizeInGB(int fileLength);
+
+  /// This function is used to get the file size in String format
+  /// Input: [fileLength] the file length in bytes and [precision] sets to [2] if not given
+  /// Output: [String] returns the file size in String format
+  String getFileSizeString({required int fileLength, int precision = 2});
+
+  /// This function is used to generate the NFT link to be shared with others after publishing
+  /// Input: [recipeId] and [cookbookId] used in the link generation as query parameters
+  /// Output: [String] returns the generated NFTs link to be shared with others
+  String generateEaselLinkForShare({required String recipeId, required String cookbookId});
+
+  /// This function is used to generate the NFT link to be open in the pylons wallet
+  /// Input: [recipeId] and [cookbookId] used in the link generation as query parameters
+  /// Output: [String] returns the generated NFTs link to be shared with others
+  String generateEaselLinkForOpeningInPylonsApp({required String recipeId, required String cookbookId});
+
+  /// This function is used to launch the link generated and open the link in external source platform
+  /// Input: [url] is the link to be launched by the launcher
+  Future<Either<Failure, void>> launchMyUrl({required String url});
 }
 
 class RepositoryImp implements Repository {
   final NetworkInfo networkInfo;
   final RemoteDataSource remoteDataSource;
   final LocalDataSource localDataSource;
+  final FileUtilsHelper fileUtilsHelper;
 
-  RepositoryImp({required this.networkInfo, required this.remoteDataSource, required this.localDataSource});
+  RepositoryImp({required this.networkInfo, required this.remoteDataSource, required this.localDataSource, required this.fileUtilsHelper});
 
   @override
   Future<Either<Failure, List<Recipe>>> getRecipesBasedOnCookBookId({required String cookBookId}) async {
@@ -280,6 +328,69 @@ class RepositoryImp implements Repository {
       }
     } on Exception catch (_) {
       return Left(CacheFailure("something_wrong".tr()));
+    }
+  }
+
+  @override
+  Future<Either<Failure, PickedFileModel>> pickFile(NftFormat format) async {
+    try {
+      PickedFileModel pickedFileModel = await fileUtilsHelper.pickFile(format);
+      return Right(pickedFileModel);
+    } on Exception catch (_) {
+      return Left(PickingFileFailure(message: "picking_file_error".tr()));
+    }
+  }
+
+  @override
+  Future<Either<Failure, File?>> compressAndGetFile(File selectedFile) async {
+    try {
+      File? file = await fileUtilsHelper.compressAndGetFile(selectedFile);
+      if (file == null) {
+        return Left(CompressingFileFailure(message: "compressing_file_failure".tr()));
+      }
+      return Right(file);
+    } on Exception catch (_) {
+      return Left(CompressingFileFailure(message: "compressing_file_failure".tr()));
+    }
+  }
+
+  @override
+  bool isSvgFile(String filePath) {
+    return fileUtilsHelper.isSvgFile(filePath);
+  }
+
+  @override
+  String getExtension(String fileName) {
+    return fileUtilsHelper.getExtension(fileName);
+  }
+
+  @override
+  double getFileSizeInGB(int fileLength) {
+    return fileUtilsHelper.getFileSizeInGB(fileLength);
+  }
+
+  @override
+  String getFileSizeString({required int fileLength, int precision = 2}) {
+    return fileUtilsHelper.getFileSizeString(fileLength: fileLength, precision: precision);
+  }
+
+  @override
+  String generateEaselLinkForShare({required String recipeId, required String cookbookId}) {
+    return fileUtilsHelper.generateEaselLinkForShare(recipeId: recipeId, cookbookId: cookbookId);
+  }
+
+  @override
+  String generateEaselLinkForOpeningInPylonsApp({required String recipeId, required String cookbookId}) {
+    return fileUtilsHelper.generateEaselLinkForOpeningInPylonsApp(recipeId: recipeId, cookbookId: cookbookId);
+  }
+
+  @override
+  Future<Either<Failure, void>> launchMyUrl({required String url}) async {
+    try {
+      final file = await fileUtilsHelper.launchMyUrl(url: url);
+      return Right(file);
+    } catch (e) {
+      return Left(UrlLaunchingFileFailure(message: "url_launching_error".tr()));
     }
   }
 }

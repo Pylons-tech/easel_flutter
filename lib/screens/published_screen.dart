@@ -449,7 +449,7 @@ class _OwnerBottomDrawerState extends State<OwnerBottomDrawer> {
   }
 
   void onViewOnIPFSPressed({required EaselProvider provider}) async {
-    await provider.fileUtilsHelper.launchMyUrl(url: provider.nft.url);
+    await provider.repository.launchMyUrl(url: provider.nft.url);
   }
 
   Widget buildRow({required String title, required String subtitle}) {

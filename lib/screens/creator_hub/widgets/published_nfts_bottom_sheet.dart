@@ -3,7 +3,6 @@ import 'package:easel_flutter/main.dart';
 import 'package:easel_flutter/models/nft.dart';
 import 'package:easel_flutter/utils/constants.dart';
 import 'package:easel_flutter/utils/easel_app_theme.dart';
-import 'package:easel_flutter/utils/route_util.dart';
 import 'package:easel_flutter/widgets/clippers/bottom_sheet_clipper.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
@@ -30,7 +29,7 @@ class BuildPublishedNFTsBottomSheet {
   }
 
   void onViewOnIPFSPressed({required NFT nft}) async {
-    await easelProvider.fileUtilsHelper.launchMyUrl(url: nft.url);
+    await easelProvider.repository.launchMyUrl(url: nft.url);
   }
 
   void onViewOnPylonsPressed({required NFT nft}) async {
@@ -39,7 +38,7 @@ class BuildPublishedNFTsBottomSheet {
       recipeId: nft.recipeID,
     );
 
-    await easelProvider.fileUtilsHelper.launchMyUrl(url: url);
+    await easelProvider.repository.launchMyUrl(url: url);
   }
 
   Future show() {
