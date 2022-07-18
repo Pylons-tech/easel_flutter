@@ -176,7 +176,7 @@ class FileUtilsHelperImpl implements FileUtilsHelper {
 
 
     try {
-      CroppedFile? croppedFile = await ImageCropper().cropImage(
+      CroppedFile? croppedFile = await imageCropper.cropImage(
         sourcePath: filePath,
         aspectRatioPresets: [CropAspectRatioPreset.square, CropAspectRatioPreset.ratio3x2, CropAspectRatioPreset.original, CropAspectRatioPreset.ratio4x3, CropAspectRatioPreset.ratio16x9],
         uiSettings: [
