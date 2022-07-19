@@ -8,14 +8,11 @@ import 'package:easel_flutter/models/nft.dart';
 import 'package:easel_flutter/repository/repository.dart';
 import 'package:easel_flutter/screens/clippers/right_triangle_clipper.dart' as clipper;
 import 'package:easel_flutter/screens/clippers/right_triangle_clipper.dart';
-import 'package:easel_flutter/screens/custom_widgets/step_labels.dart';
-import 'package:easel_flutter/screens/custom_widgets/steps_indicator.dart';
 import 'package:easel_flutter/utils/constants.dart';
 import 'package:easel_flutter/utils/easel_app_theme.dart';
 import 'package:easel_flutter/utils/enums.dart';
 import 'package:easel_flutter/utils/read_more.dart';
 import 'package:easel_flutter/utils/route_util.dart';
-import 'package:easel_flutter/utils/space_utils.dart';
 import 'package:easel_flutter/viewmodels/home_viewmodel.dart';
 import 'package:easel_flutter/widgets/audio_widget.dart';
 import 'package:easel_flutter/widgets/clipped_button.dart';
@@ -83,10 +80,10 @@ class _PublishedNewScreenState extends State<PublishedNewScreen> {
 
   @override
   Widget build(BuildContext context) {
-
-
     return WillPopScope(
       onWillPop: () async {
+        easelProvider.videoLoadingError = '';
+        easelProvider.isVideoLoading = true;
         homeViewModel.pageController.previousPage(duration: const Duration(milliseconds: 300), curve: Curves.easeIn);
         return true;
       },
@@ -99,12 +96,13 @@ class _PublishedNewScreenState extends State<PublishedNewScreen> {
               children: [
                 SizedBox(width: double.infinity, child: buildPreviewWidget(easelProvider)),
                 Image.asset(kPreviewGradient, width: 1.sw, fit: BoxFit.fill),
-
                 Positioned(
                     left: 10.w,
                     top: 60.h,
                     child: IconButton(
                       onPressed: () {
+                        easelProvider.videoLoadingError = '';
+                        easelProvider.isVideoLoading = true;
                         homeViewModel.currentPage = ValueNotifier(1);
                         homeViewModel.currentStep = ValueNotifier(1);
                         homeViewModel.previousPage();
@@ -343,6 +341,9 @@ class _OwnerBottomDrawerState extends State<OwnerBottomDrawer> {
                                             bgColor: Colors.white.withOpacity(0.2),
                                             textColor: EaselAppTheme.kWhite,
                                             onPressed: () async {
+                                              viewModel.videoLoadingError = '';
+                                              viewModel.isVideoLoading = true;
+
                                               Navigator.of(context).popUntil(ModalRoute.withName(RouteUtil.kRouteCreatorHub));
                                             },
                                             cuttingHeight: 15.h,

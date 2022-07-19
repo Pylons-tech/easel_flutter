@@ -27,9 +27,9 @@ class _Model3dViewerState extends State<Model3dViewer> {
 
     modelViewer = ModelViewer(
       src: widget.isFile ? 'file://${widget.path!}' : widget.path!,
-      ar: true,
       autoRotate: false,
       cameraControls: true,
+      loading: Loading.eager,
     );
   }
 }
