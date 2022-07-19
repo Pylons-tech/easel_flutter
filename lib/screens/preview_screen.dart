@@ -93,7 +93,7 @@ class _PreviewScreenState extends State<PreviewScreen> {
       case NFTTypes.image:
         return ImageWidget(file: provider.file!);
       case NFTTypes.video:
-        return VideoWidget(file: provider.file!, previewFlag: false, isForFile: true);
+        return VideoWidget(file: provider.file!, previewFlag: false, isForFile: true, isDarkMode: false,);
       case NFTTypes.audio:
         return AudioWidget(file: provider.file!, previewFlag: true);
       case NFTTypes.threeD:
