@@ -126,7 +126,7 @@ class EaselProvider extends ChangeNotifier {
   File? get audioThumbnail => _audioThumbnail;
 
   bool _isInitializedForFile = false;
-  final bool _isInitializedForNetwork = false;
+  bool _isInitializedForNetwork = false;
 
   bool get isInitializedForFile => _isInitializedForFile;
 
@@ -134,6 +134,11 @@ class EaselProvider extends ChangeNotifier {
 
   set setIsInitialized(bool value) {
     _isInitializedForFile = value;
+    notifyListeners();
+  }
+
+  set setIsInitializedUrl(bool value) {
+    _isInitializedForNetwork = value;
     notifyListeners();
   }
 
@@ -309,7 +314,6 @@ class EaselProvider extends ChangeNotifier {
 
   bool isUrlLoaded = false;
 
-
   Future initializeAudioPlayer({required publishedNFTUrl}) async {
     audioProgressNotifier = ValueNotifier<ProgressBarState>(
       ProgressBarState(
@@ -320,10 +324,10 @@ class EaselProvider extends ChangeNotifier {
     );
     buttonNotifier = ValueNotifier<ButtonState>(ButtonState.loading);
 
-    isUrlLoaded = await audioPlayerHelperForUrl.setUrl(url: publishedNFTUrl);
+    setIsInitializedUrl = await audioPlayerHelperForUrl.setUrl(url: publishedNFTUrl);
 
-    if (isUrlLoaded) {
-    audioPlayerHelperForUrl.playerStateStream().listen((playerState) {
+    if (isInitializedForNetwork) {
+      audioPlayerHelperForUrl.playerStateStream().listen((playerState) {
         final isPlaying = playerState.playing;
         final processingState = playerState.processingState;
 
@@ -376,35 +380,30 @@ class EaselProvider extends ChangeNotifier {
   }
 
   void playAudio(bool forFile) {
-    if(forFile){
+    if (forFile) {
       audioPlayerHelperForFile.playAudio();
-
-    }else{
+    } else {
       audioPlayerHelperForUrl.playAudio();
-
     }
   }
 
   void pauseAudio(bool forFile) {
-    if(forFile){
+    if (forFile) {
       audioPlayerHelperForFile.pauseAudio();
-
-    }else{
+    } else {
       audioPlayerHelperForUrl.pauseAudio();
     }
   }
 
-  void seekAudio(Duration position,bool forFile) {
-    if(forFile){
+  void seekAudio(Duration position, bool forFile) {
+    if (forFile) {
       audioPlayerHelperForFile.seekAudio(position: position);
-
-    }else{
+    } else {
       audioPlayerHelperForUrl.seekAudio(position: position);
     }
   }
 
   void disposeAudioController() {
-
     audioPlayerHelperForFile.destroyAudioPlayer();
   }
 
