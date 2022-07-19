@@ -46,7 +46,7 @@ class VideoProgressWidget extends StatelessWidget {
                   : Row(
                       children: [
                         if (easelProvider.isVideoLoading)
-                          SizedBox(height: 22.h, width: 22.h, child: CircularProgressIndicator(strokeWidth: 2.w, color: EaselAppTheme.kBlack))
+                          SizedBox(height: 22.h, width: 22.h, child: CircularProgressIndicator(strokeWidth: 2.w, color: darkMode ? EaselAppTheme.kWhite :EaselAppTheme.kBlack))
                         else if (easelProvider.videoPlayerController.value.isPlaying)
                           InkWell(
                             onTap: easelProvider.pauseVideo,
