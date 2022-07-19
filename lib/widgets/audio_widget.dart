@@ -56,9 +56,9 @@ class _AudioWidgetState extends State<AudioWidget> with WidgetsBindingObserver {
       return const BoxDecoration();
     }
     if (widget.previewFlag && viewModel.audioThumbnail != null) {
-      return BoxDecoration(image: DecorationImage(image: FileImage(viewModel.audioThumbnail!), fit: BoxFit.fill));
+      return BoxDecoration(image: DecorationImage(image: FileImage(viewModel.audioThumbnail!), fit: BoxFit.fitHeight));
     }
-    return BoxDecoration(image: viewModel.nft.thumbnailUrl.isNotEmpty ? DecorationImage(image: CachedNetworkImageProvider(viewModel.nft.thumbnailUrl), fit: BoxFit.fill) : null);
+    return BoxDecoration(image: viewModel.nft.thumbnailUrl.isNotEmpty ? DecorationImage(image: CachedNetworkImageProvider(viewModel.nft.thumbnailUrl), fit: BoxFit.fitHeight) : null);
   }
 
   @override
@@ -72,6 +72,7 @@ class _AudioWidgetState extends State<AudioWidget> with WidgetsBindingObserver {
       child: Consumer<EaselProvider>(builder: (context, viewModel, _) {
         return Container(
           width: double.infinity,
+          height: double.infinity,
           decoration: getAudioBackgroundDecoration(viewModel: viewModel),
           child: BackdropFilter(
             filter: ImageFilter.blur(sigmaX: 2, sigmaY: 2),
