@@ -1,6 +1,7 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:easel_flutter/easel_provider.dart';
 import 'package:easel_flutter/main.dart';
+import 'package:easel_flutter/models/nft.dart';
 import 'package:easel_flutter/screens/clippers/right_triangle_clipper.dart' as clipper;
 import 'package:easel_flutter/screens/clippers/right_triangle_clipper.dart';
 import 'package:easel_flutter/utils/constants.dart';
@@ -19,8 +20,10 @@ TextStyle _rowTitleTextStyle = TextStyle(color: Colors.white, fontWeight: FontWe
 class DraftDetailDialog {
   final BuildContext context;
   final VoidCallback onClose;
+  final EaselProvider easelProvider;
 
   DraftDetailDialog({required this.context, required this.onClose});
+  DraftDetailDialog({required this.context, required this.easelProvider});
 
   Future<void> show() async {
     await showDialog<String>(
@@ -29,7 +32,11 @@ class DraftDetailDialog {
         builder: (BuildContext context) => _DraftDetailDialog(
               onClose: onClose,
             ));
+    if (dialogAlreadyShown(easelProvider)) return;
+    await showDialog<String>(context: context, barrierDismissible: false, builder: (BuildContext context) => const _DraftDetailDialog());
   }
+
+  dialogAlreadyShown(EaselProvider provider) => provider.nft.isDialogShown;
 }
 
 class _DraftDetailDialog extends StatefulWidget {

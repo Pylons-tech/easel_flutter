@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:easel_flutter/easel_provider.dart';
 import 'package:easel_flutter/repository/repository.dart';
+import 'package:easel_flutter/screens/custom_widgets/initial_draft_detail_dialog.dart';
 import 'package:easel_flutter/utils/constants.dart';
 import 'package:easel_flutter/utils/easel_app_theme.dart';
 import 'package:easel_flutter/utils/space_utils.dart';
@@ -16,6 +17,7 @@ import 'package:get_it/get_it.dart';
 import 'package:provider/provider.dart';
 
 import '../widgets/pylons_button.dart';
+import 'custom_widgets/initial_draft_detail_dialog.dart';
 
 class DescribeScreen extends StatefulWidget {
   const DescribeScreen({Key? key}) : super(key: key);

@@ -42,6 +42,8 @@ class NFT extends Equatable {
   String fileName = "";
   String cid = "";
   int dateTime = 0;
+  bool isDialogShown = false;
+
   bool isEnabled = true;
 
   NFT({
@@ -74,6 +76,7 @@ class NFT extends Equatable {
     this.fileName = "",
     this.cid = "",
     this.isEnabled = true,
+    this.isDialogShown = false,
     this.dateTime = 0,
   });
 
