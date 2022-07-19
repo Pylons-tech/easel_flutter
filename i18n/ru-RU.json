@@ -52,9 +52,5 @@
   "collapse": "Крах",
   "picking_file_error": "Ошибка при выборе файла",
   "compressing_file_failure": "Ошибка при сжатии файла",
-  "url_launching_error": "Ошибка при запуске URL"
-
-  "err_add_audio_thumbnail": "Пожалуйста, выберите миниатюру аудио",
-  "err_add_video_thumbnail": "Пожалуйста, выберите миниатюру видео",
-  "loading": "загрузка ..."
+  "url_launching_error": "Ошибка при запуске URL",
 }

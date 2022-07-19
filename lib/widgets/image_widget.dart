@@ -17,12 +17,12 @@ class ImageWidget extends StatelessWidget {
             file!.readAsBytesSync(),
             width: 1.sw,
             height: 1.sh,
-            fit: BoxFit.cover,
+            fit: BoxFit.fitHeight,
           )
         : SizedBox(
             height: double.infinity,
             child: CachedNetworkImage(
-              fit: BoxFit.fill,
+              fit: BoxFit.fitHeight,
               imageUrl: filePath!,
               errorWidget: (a, b, c) => const Center(child: Icon(Icons.error_outline)),
               placeholder: (context, url) => Center(

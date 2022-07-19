@@ -1,7 +1,5 @@
 import 'dart:io';
 import 'dart:ui';
-
-import 'package:audio_video_progress_bar/audio_video_progress_bar.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:easel_flutter/easel_provider.dart';
 import 'package:easel_flutter/models/picked_file_model.dart';
@@ -82,69 +80,7 @@ class _AudioWidgetState extends State<AudioWidget> with WidgetsBindingObserver {
                   SizedBox(
                     height: 220.0.h,
                   ),
-                  SizedBox(
-                      width: 330.0.w,
-                      child: Row(
-                        crossAxisAlignment: CrossAxisAlignment.end,
-                        children: [
-                          Padding(
-                            padding: EdgeInsets.only(right: 10.w, bottom: 10.h, top: 10.h, left: 5.w),
-                            child: ValueListenableBuilder<ButtonState>(
-                              valueListenable: viewModel.buttonNotifier,
-                              builder: (_, value, __) {
-                                switch (value) {
-                                  case ButtonState.loading:
-                                    return SizedBox(height: 35.h, width: 22.h, child: CircularProgressIndicator(strokeWidth: 2.w, color: Colors.black));
-                                  case ButtonState.paused:
-                                    return InkWell(
-                                      onTap: (){viewModel.playAudio(widget.file!=null);},
-                                      child: Icon(
-                                        Icons.play_arrow,
-                                        color: EaselAppTheme.kDarkBlue,
-                                        size: 35.h,
-                                      ),
-                                    );
 
-                                  case ButtonState.playing:
-                                    return InkWell(
-                                      onTap: (){viewModel.pauseAudio(widget.file!=null);},
-                                      child: Icon(
-                                        Icons.pause,
-                                        color: EaselAppTheme.kDarkBlue,
-                                        size: 35.h,
-                                      ),
-                                    );
-                                }
-                              },
-                            ),
-                          ),
-                          Expanded(
-                            child: ValueListenableBuilder<ProgressBarState>(
-                              valueListenable: viewModel.audioProgressNotifier,
-                              builder: (_, value, __) {
-                                return Padding(
-                                  padding: EdgeInsets.only(bottom: 3.h, right: 20.w),
-                                  child: ProgressBar(
-                                    progressBarColor: EaselAppTheme.kDarkBlue,
-                                    thumbColor: EaselAppTheme.kDarkBlue,
-                                    progress: value.current,
-                                    baseBarColor: EaselAppTheme.kBlack,
-                                    bufferedBarColor: EaselAppTheme.kLightGrey,
-                                    buffered: value.buffered,
-                                    total: value.total,
-                                    timeLabelTextStyle: TextStyle(color: EaselAppTheme.kDartGrey, fontWeight: FontWeight.w800, fontSize: 9.sp),
-                                    thumbRadius: 10.h,
-                                    timeLabelPadding: 3.h,
-                                    onSeek:(position) {
-                                      viewModel.seekAudio(position,widget.file!=null);
-                                    },
-                                  ),
-                                );
-                              },
-                            ),
-                          ),
-                        ],
-                      )),
                   SizedBox(
                     height: 120.0.h,
                   ),
