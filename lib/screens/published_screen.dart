@@ -74,8 +74,10 @@ class _PublishedNewScreenState extends State<PublishedNewScreen> {
       onWillPop: () async {
         easelProvider.videoLoadingError = '';
         easelProvider.isVideoLoading = true;
-        homeViewModel.pageController.previousPage(duration: const Duration(milliseconds: 300), curve: Curves.easeIn);
-        return true;
+        homeViewModel.currentPage = ValueNotifier(1);
+        homeViewModel.currentStep = ValueNotifier(1);
+        homeViewModel.previousPage();
+        return false;
       },
       child: Consumer<EaselProvider>(builder: (_, easelProvider, __) {
         return Scaffold(
