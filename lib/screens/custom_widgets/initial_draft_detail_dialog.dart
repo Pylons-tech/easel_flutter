@@ -19,17 +19,16 @@ TextStyle _rowTitleTextStyle = TextStyle(color: Colors.white, fontWeight: FontWe
 class DraftDetailDialog {
   final BuildContext context;
   final VoidCallback onClose;
+  final EaselProvider easelProvider;
 
-  DraftDetailDialog({required this.context, required this.onClose});
+  DraftDetailDialog({required this.context, required this.onClose, required this.easelProvider});
 
   Future<void> show() async {
-    await showDialog<String>(
-        context: context,
-        barrierDismissible: false,
-        builder: (BuildContext context) => _DraftDetailDialog(
-              onClose: onClose,
-            ));
+    if (dialogAlreadyShown(easelProvider)) return;
+    await showDialog<String>(context: context, barrierDismissible: false, builder: (BuildContext context) =>  _DraftDetailDialog(onClose: onClose,));
   }
+
+  dialogAlreadyShown(EaselProvider provider) => provider.nft.isDialogShown;
 }
 
 class _DraftDetailDialog extends StatefulWidget {

@@ -71,7 +71,9 @@ class _PreviewScreenState extends State<PreviewScreen> {
 
                       if (result) {
                         DraftDetailDialog(
+
                             context: context,
+                            easelProvider: provider,
                             onClose: () {
                               widget.onMoveToNextScreen();
                             }).show();

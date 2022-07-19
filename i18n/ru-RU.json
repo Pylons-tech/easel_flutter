@@ -10,6 +10,7 @@
   "view": "Вид на IFPS",
   "delete_error": "Не удалось удалить черновик",
   "save_error": "Не удалось сохранить черновик",
+  "upload_error": "Не удалось загрузить черновик",
   "upload": "загрузить",
   "upload_to_ipfs": "загрузить на IPFS",
   "content_id": "содержание ID",
@@ -51,6 +52,5 @@
   "collapse": "Крах",
   "picking_file_error": "Ошибка при выборе файла",
   "compressing_file_failure": "Ошибка при сжатии файла",
-  "url_launching_error": "Ошибка при запуске URL"
-
+  "url_launching_error": "Ошибка при запуске URL",
 }
