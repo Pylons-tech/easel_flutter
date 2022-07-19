@@ -69,9 +69,12 @@ class _PreviewScreenState extends State<PreviewScreen> {
                     onPressed: () async {
                       final result = await onUploadPressed();
 
+                      if (!result) {
+                        'something_went_wrong'.tr().show();
+                      }
+
                       if (result) {
                         DraftDetailDialog(
-
                             context: context,
                             easelProvider: provider,
                             onClose: () {
@@ -95,7 +98,12 @@ class _PreviewScreenState extends State<PreviewScreen> {
       case NFTTypes.image:
         return ImageWidget(file: provider.file!);
       case NFTTypes.video:
-        return VideoWidget(file: provider.file!, previewFlag: false, isForFile: true, isDarkMode: false,);
+        return VideoWidget(
+          file: provider.file!,
+          previewFlag: false,
+          isForFile: true,
+          isDarkMode: false,
+        );
       case NFTTypes.audio:
         return AudioWidget(file: provider.file!, previewFlag: true);
       case NFTTypes.threeD:

@@ -11,6 +11,7 @@ import 'package:easel_flutter/services/datasources/local_datasource.dart';
 import 'package:easel_flutter/services/datasources/remote_datasource.dart';
 import 'package:easel_flutter/services/third_party_services/network_info.dart';
 import 'package:easel_flutter/utils/constants.dart';
+import 'package:easel_flutter/utils/extension_util.dart';
 import 'package:easel_flutter/utils/failure/failure.dart';
 import 'package:easel_flutter/utils/file_utils_helper.dart';
 import 'package:easy_localization/easy_localization.dart';
@@ -149,7 +150,6 @@ abstract class Repository {
   /// Input: [recipeId] and [cookbookId] used in the link generation as query parameters
   /// Output: [String] returns the generated NFTs link to be shared with others
   String generateEaselLinkForShare({required String recipeId, required String cookbookId});
-
 
   /// This function is used to launch the link generated and open the link in external source platform
   /// Input: [url] is the link to be launched by the launcher
@@ -334,7 +334,6 @@ class RepositoryImp implements Repository {
         return Left(CacheFailure("something_wrong".tr()));
       }
       return Right(data);
-
     } on Exception catch (_) {
       return Left(CacheFailure("something_wrong".tr()));
     }
@@ -365,24 +364,23 @@ class RepositoryImp implements Repository {
 
   @override
   String getExtension(String fileName) {
-    return fileUtilsHelper.getExtension(fileName);
+    return fileName.getFileExtension();
   }
 
   @override
   double getFileSizeInGB(int fileLength) {
-    return fileUtilsHelper.getFileSizeInGB(fileLength);
+    return fileLength.getFileSizeInGB();
   }
 
   @override
   String getFileSizeString({required int fileLength, int precision = 2}) {
-    return fileUtilsHelper.getFileSizeString(fileLength: fileLength, precision: precision);
+    return fileLength.getFileSizeString(precision: precision);
   }
 
   @override
   String generateEaselLinkForShare({required String recipeId, required String cookbookId}) {
-    return fileUtilsHelper.generateEaselLinkForShare(recipeId: recipeId, cookbookId: cookbookId);
+    return recipeId.generateEaselLinkToShare(cookbookId: cookbookId);
   }
-
 
   @override
   Future<Either<Failure, void>> launchMyUrl({required String url}) async {

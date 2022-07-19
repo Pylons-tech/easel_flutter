@@ -26,36 +26,6 @@ abstract class FileUtilsHelper {
   /// Output: [File] returns the compressed file
   Future<File?> compressAndGetFile(File file);
 
-  /// This function checks if a file path extension svg or not
-  /// Input: [filePath] the path of selected file
-  /// Output: [True] if the filepath has svg extension and [False] otherwise
-  bool isSvgFile(String filePath);
-
-  /// This function checks if a file path extension svg or not
-  /// Input: [filePath] the path of selected file
-  /// Output: [True] if the filepath has svg extension and [False] otherwise
-  String getExtension(String fileName);
-
-  /// This function is used to get the file size in GBs
-  /// Input: [fileLength] the file length in bytes
-  /// Output: [double] returns the file size in GBs in double format
-  double getFileSizeInGB(int fileLength);
-
-  /// This function is used to get the file size in String format
-  /// Input: [fileLength] the file length in bytes and [precision]
-  /// Output: [String] returns the file size in String format
-  String getFileSizeString({required int fileLength, required int precision});
-
-  /// This function is used to generate the NFT link to be shared with others after publishing
-  /// Input: [recipeId] and [cookbookId] used in the link generation as query parameters
-  /// Output: [String] returns the generated NFTs link to be shared with others
-  String generateEaselLinkForShare({required String recipeId, required String cookbookId});
-
-  /// This function is used to generate the NFT link to be open in the pylons wallet
-  /// Input: [recipeId] and [cookbookId] used in the link generation as query parameters
-  /// Output: [String] returns the generated NFTs link to be shared with others
-  String generateEaselLinkForOpeningInPylonsApp({required String recipeId, required String cookbookId});
-
   /// This function is used to launch the link generated and open the link in external source platform
   /// Input: [url] is the link to be launched by the launcher
   Future<void> launchMyUrl({required String url});
@@ -133,32 +103,6 @@ class FileUtilsHelperImpl implements FileUtilsHelper {
     return result;
   }
 
-  @override
-  bool isSvgFile(String filePath) {
-    final extension = p.extension(filePath);
-    return extension == ".svg";
-  }
-
-  @override
-  String getExtension(String fileName) {
-    return p.extension(fileName).replaceAll(".", "");
-  }
-
-  @override
-  double getFileSizeInGB(int fileLength) {
-    return fileLength / (1024 * 1024 * 1024).toDouble();
-  }
-
-  @override
-  String getFileSizeString({required int fileLength, required int precision}) {
-    var i = (log(fileLength) / log(1024)).floor();
-    return ((fileLength / pow(1024, i)).toStringAsFixed(precision)) + suffixes[i];
-  }
-
-  @override
-  String generateEaselLinkForShare({required String recipeId, required String cookbookId}) {
-    return "$kWalletWebLink/?action=purchase_nft&recipe_id=$recipeId&cookbook_id=$cookbookId";
-  }
 
   @override
   Future<void> launchMyUrl({required String url}) async {
@@ -176,9 +120,9 @@ class FileUtilsHelperImpl implements FileUtilsHelper {
         sourcePath: filePath,
         aspectRatioPresets: [CropAspectRatioPreset.square, CropAspectRatioPreset.ratio3x2, CropAspectRatioPreset.original, CropAspectRatioPreset.ratio4x3, CropAspectRatioPreset.ratio16x9],
         uiSettings: [
-          AndroidUiSettings(toolbarTitle: 'Pylons', toolbarColor: EaselAppTheme.kBlue, toolbarWidgetColor: Colors.white, initAspectRatio: CropAspectRatioPreset.original, lockAspectRatio: false),
+          AndroidUiSettings(toolbarTitle: kPylons, toolbarColor: EaselAppTheme.kBlue, toolbarWidgetColor: Colors.white, initAspectRatio: CropAspectRatioPreset.original, lockAspectRatio: false),
           IOSUiSettings(
-            title: 'Pylons',
+            title: kPylons,
           ),
         ],
       );
@@ -187,16 +131,5 @@ class FileUtilsHelperImpl implements FileUtilsHelper {
       print(e);
       return "";
     }
-  }
-
-  @override
-  String generateEaselLinkForOpeningInPylonsApp({required String recipeId, required String cookbookId}) {
-    return Uri.https('pylons.page.link', "/", {
-      "amv": "1",
-      "apn": "tech.pylons.wallet",
-      "ibi": "xyz.pylons.wallet",
-      "imv": "1",
-      "link": "https://wallet.pylons.tech/?action=purchase_nft&recipe_id=$recipeId&cookbook_id=$cookbookId&nft_amount=1"
-    }).toString();
   }
 }

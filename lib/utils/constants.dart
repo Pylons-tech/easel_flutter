@@ -64,6 +64,7 @@ const kWalletWebLink = 'https://wallet.pylons.tech';
 const kWalletDynamicLink = 'pylons.page.link';
 
 const kEaselEmail = "easel@pylons.tech";
+const kPylons = "Pylons";
 
 /// ```Number constants
 const kMinNFTName = 9;

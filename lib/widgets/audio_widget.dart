@@ -128,7 +128,7 @@ class _AudioWidgetState extends State<AudioWidget> with WidgetsBindingObserver {
   void audioThumbnailPicker() async {
     final pickedFile = await repository.pickFile(NftFormat.supportedFormats[0]);
     final result = pickedFile.getOrElse(() => PickedFileModel(path: "", fileName: "", extension: ""));
-    if (result.path == "") {
+    if (result.path.isEmpty) {
       return;
     }
     final loading = Loading()..showLoading(message: "compressing_thumbnail".tr());
