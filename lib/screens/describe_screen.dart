@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:easel_flutter/easel_provider.dart';
 import 'package:easel_flutter/repository/repository.dart';
 import 'package:easel_flutter/utils/constants.dart';
@@ -41,8 +43,8 @@ class _DescribeScreenState extends State<DescribeScreen> {
   void initState() {
     super.initState();
 
-    WidgetsBinding.instance.addPostFrameCallback((_) async {
-      provider.nft = repository.getCacheDynamicType(key: nftKey);
+    provider.nft = repository.getCacheDynamicType(key: nftKey);
+    scheduleMicrotask(() {
       provider.toCheckSavedArtistName();
     });
   }
@@ -129,7 +131,33 @@ class _DescribeScreenState extends State<DescribeScreen> {
                     controller: provider.descriptionController,
                     textCapitalization: TextCapitalization.sentences,
                     inputFormatters: [LengthLimitingTextInputFormatter(kMaxDescription)],
+                    validator: (value) {
+                      setState(() {
+                        if (value!.isEmpty) {
+                          _descriptionFieldError = kEnterNFTDescriptionText;
+                          return;
+                        }
+                        if (value.length <= kMinDescription) {
+                          _descriptionFieldError = "$kEnterMoreThanText $kMinDescription $kCharactersText";
+                          return;
+                        }
+                        _descriptionFieldError = '';
+                      });
+                      return null;
+                    },
                   ),
+                  _descriptionFieldError.isNotEmpty
+                      ? Padding(
+                    padding: EdgeInsets.only(left: 10.w, right: 10.w, top: 2.h),
+                    child: Text(
+                      _descriptionFieldError,
+                      style: TextStyle(
+                        fontSize: 12.sp,
+                        color: Colors.red,
+                      ),
+                    ),
+                  )
+                      : const SizedBox.shrink(),
                   Text(
                     "$kMaxDescription $kCharacterLimitText",
                     style: TextStyle(color: EaselAppTheme.kLightPurple, fontSize: 14.sp, fontWeight: FontWeight.w800),

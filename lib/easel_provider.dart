@@ -33,13 +33,15 @@ import '../utils/enums.dart';
 
 class EaselProvider extends ChangeNotifier {
   final VideoPlayerHelper videoPlayerHelper;
-  final AudioPlayerHelper audioPlayerHelper;
+  final AudioPlayerHelper audioPlayerHelperForFile;
+  final AudioPlayerHelper audioPlayerHelperForUrl;
   final FileUtilsHelper fileUtilsHelper;
   final Repository repository;
 
   EaselProvider({
     required this.videoPlayerHelper,
-    required this.audioPlayerHelper,
+    required this.audioPlayerHelperForFile,
+    required this.audioPlayerHelperForUrl,
     required this.fileUtilsHelper,
     required this.repository,
   });
@@ -307,13 +309,6 @@ class EaselProvider extends ChangeNotifier {
 
   bool isUrlLoaded = false;
 
-  late StreamSubscription playerStateSubscription;
-
-  late StreamSubscription positionStreamSubscription;
-
-  late StreamSubscription bufferPositionSubscription;
-
-  late StreamSubscription durationStreamSubscription;
 
   Future initializeAudioPlayer({required publishedNFTUrl}) async {
     audioProgressNotifier = ValueNotifier<ProgressBarState>(
@@ -325,10 +320,10 @@ class EaselProvider extends ChangeNotifier {
     );
     buttonNotifier = ValueNotifier<ButtonState>(ButtonState.loading);
 
-    isUrlLoaded = await audioPlayerHelper.setUrl(url: publishedNFTUrl);
+    isUrlLoaded = await audioPlayerHelperForUrl.setUrl(url: publishedNFTUrl);
 
     if (isUrlLoaded) {
-      playerStateSubscription = audioPlayerHelper.playerStateStream().listen((playerState) {
+    audioPlayerHelperForUrl.playerStateStream().listen((playerState) {
         final isPlaying = playerState.playing;
         final processingState = playerState.processingState;
 
@@ -347,13 +342,12 @@ class EaselProvider extends ChangeNotifier {
             break;
 
           default:
-            audioPlayerHelper.seekAudio(position: Duration.zero);
-            audioPlayerHelper.pauseAudio();
+            audioPlayerHelperForFile.seekAudio(position: Duration.zero);
+            audioPlayerHelperForFile.pauseAudio();
         }
       });
     }
-
-    positionStreamSubscription = audioPlayerHelper.positionStream().listen((position) {
+    audioPlayerHelperForUrl.positionStream().listen((position) {
       final oldState = audioProgressNotifier.value;
       audioProgressNotifier.value = ProgressBarState(
         current: position,
@@ -362,7 +356,7 @@ class EaselProvider extends ChangeNotifier {
       );
     });
 
-    bufferPositionSubscription = audioPlayerHelper.bufferedPositionStream().listen((bufferedPosition) {
+    audioPlayerHelperForUrl.bufferedPositionStream().listen((bufferedPosition) {
       final oldState = audioProgressNotifier.value;
       audioProgressNotifier.value = ProgressBarState(
         current: oldState.current,
@@ -371,7 +365,7 @@ class EaselProvider extends ChangeNotifier {
       );
     });
 
-    durationStreamSubscription = audioPlayerHelper.durationStream().listen((totalDuration) {
+    audioPlayerHelperForUrl.durationStream().listen((totalDuration) {
       final oldState = audioProgressNotifier.value;
       audioProgressNotifier.value = ProgressBarState(
         current: oldState.current,
@@ -381,26 +375,37 @@ class EaselProvider extends ChangeNotifier {
     });
   }
 
-  void playAudio() {
-    audioPlayerHelper.playAudio();
+  void playAudio(bool forFile) {
+    if(forFile){
+      audioPlayerHelperForFile.playAudio();
+
+    }else{
+      audioPlayerHelperForUrl.playAudio();
+
+    }
   }
 
-  void pauseAudio() {
-    audioPlayerHelper.pauseAudio();
+  void pauseAudio(bool forFile) {
+    if(forFile){
+      audioPlayerHelperForFile.pauseAudio();
+
+    }else{
+      audioPlayerHelperForUrl.pauseAudio();
+    }
   }
 
-  void seekAudio(Duration position) {
-    audioPlayerHelper.seekAudio(position: position);
+  void seekAudio(Duration position,bool forFile) {
+    if(forFile){
+      audioPlayerHelperForFile.seekAudio(position: position);
+
+    }else{
+      audioPlayerHelperForUrl.seekAudio(position: position);
+    }
   }
 
   void disposeAudioController() {
-    if (isUrlLoaded) {
-      playerStateSubscription.cancel();
-      bufferPositionSubscription.cancel();
-      durationStreamSubscription.cancel();
-      positionStreamSubscription.cancel();
-    }
-    audioPlayerHelper.destroyAudioPlayer();
+
+    audioPlayerHelperForFile.destroyAudioPlayer();
   }
 
   void initializePlayers({required NFT publishedNFT}) {
@@ -567,7 +572,8 @@ class EaselProvider extends ChangeNotifier {
 
     _recipeId = repository.autoGenerateEaselId();
 
-    audioPlayerHelper.pauseAudio();
+    audioPlayerHelperForFile.pauseAudio();
+    audioPlayerHelperForUrl.pauseAudio();
     setVideoThumbnail(null);
     setAudioThumbnail(null);
 
@@ -754,16 +760,16 @@ class EaselProvider extends ChangeNotifier {
     );
     buttonNotifier = ValueNotifier<ButtonState>(ButtonState.loading);
 
-    setIsInitialized = await audioPlayerHelper.setFile(file: _file!.path);
+    setIsInitialized = await audioPlayerHelperForFile.setFile(file: _file!.path);
 
     if (isInitializedForFile) {
-      audioPlayerHelper.playerStateStream().listen((event) {}).onData((playerState) async {
+      audioPlayerHelperForFile.playerStateStream().listen((event) {}).onData((playerState) async {
         final isPlaying = playerState.playing;
         final processingState = playerState.processingState;
 
         switch (processingState) {
           case ProcessingState.idle:
-            await audioPlayerHelper.setFile(file: _file!.path);
+            await audioPlayerHelperForFile.setFile(file: _file!.path);
             break;
           case ProcessingState.loading:
           case ProcessingState.buffering:
@@ -779,12 +785,12 @@ class EaselProvider extends ChangeNotifier {
             break;
 
           default:
-            audioPlayerHelper.seekAudio(position: Duration.zero);
-            audioPlayerHelper.pauseAudio();
+            audioPlayerHelperForFile.seekAudio(position: Duration.zero);
+            audioPlayerHelperForFile.pauseAudio();
         }
       });
     }
-    audioPlayerHelper.positionStream().listen((event) {}).onData((position) {
+    audioPlayerHelperForFile.positionStream().listen((event) {}).onData((position) {
       final oldState = audioProgressNotifier.value;
       audioProgressNotifier.value = ProgressBarState(
         current: position,
@@ -793,7 +799,7 @@ class EaselProvider extends ChangeNotifier {
       );
     });
 
-    audioPlayerHelper.bufferedPositionStream().listen((event) {}).onData((bufferedPosition) {
+    audioPlayerHelperForFile.bufferedPositionStream().listen((event) {}).onData((bufferedPosition) {
       final oldState = audioProgressNotifier.value;
       audioProgressNotifier.value = ProgressBarState(
         current: oldState.current,
@@ -801,7 +807,7 @@ class EaselProvider extends ChangeNotifier {
         total: oldState.total,
       );
     });
-    audioPlayerHelper.durationStream().listen((event) {}).onData((totalDuration) {
+    audioPlayerHelperForFile.durationStream().listen((event) {}).onData((totalDuration) {
       final oldState = audioProgressNotifier.value;
       audioProgressNotifier.value = ProgressBarState(
         current: oldState.current,
@@ -839,7 +845,7 @@ class EaselProvider extends ChangeNotifier {
         return false;
       }
     }
-    audioPlayerHelper.pauseAudio();
+    audioPlayerHelperForFile.pauseAudio();
 
     final response = await repository.uploadFile(_file!);
     if (response.isLeft()) {

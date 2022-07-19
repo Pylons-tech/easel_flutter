@@ -5,7 +5,6 @@ import 'package:easel_flutter/screens/custom_widgets/step_labels.dart';
 import 'package:easel_flutter/screens/custom_widgets/steps_indicator.dart';
 import 'package:easel_flutter/screens/describe_screen.dart';
 import 'package:easel_flutter/screens/price_screen.dart';
-import 'package:easel_flutter/utils/constants.dart';
 import 'package:easel_flutter/screens/published_screen.dart';
 import 'package:easel_flutter/utils/easel_app_theme.dart';
 import 'package:easel_flutter/utils/screen_responsive.dart';
@@ -74,6 +73,7 @@ class _HomeScreenState extends State<HomeScreen> {
       child: Container(
         color: EaselAppTheme.kWhite,
         child: SafeArea(
+          bottom: false,
           child: Scaffold(
             body: ChangeNotifierProvider.value(value: homeViewModel, child: const HomeScreenContent()),
           ),
@@ -91,8 +91,6 @@ class HomeScreenContent extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final homeViewModel = context.watch<HomeViewModel>();
-
-    print("ALpha ${ homeViewModel.currentPage.value}");
     return Column(
       children: [
         if (homeViewModel.currentPage.value != 0 && homeViewModel.currentPage.value != 3) ...[

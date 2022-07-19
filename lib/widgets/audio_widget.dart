@@ -97,7 +97,7 @@ class _AudioWidgetState extends State<AudioWidget> with WidgetsBindingObserver {
                                     return SizedBox(height: 35.h, width: 22.h, child: CircularProgressIndicator(strokeWidth: 2.w, color: Colors.black));
                                   case ButtonState.paused:
                                     return InkWell(
-                                      onTap: viewModel.playAudio,
+                                      onTap: (){viewModel.playAudio(widget.file!=null);},
                                       child: Icon(
                                         Icons.play_arrow,
                                         color: EaselAppTheme.kDarkBlue,
@@ -107,7 +107,7 @@ class _AudioWidgetState extends State<AudioWidget> with WidgetsBindingObserver {
 
                                   case ButtonState.playing:
                                     return InkWell(
-                                      onTap: viewModel.pauseAudio,
+                                      onTap: (){viewModel.pauseAudio(widget.file!=null);},
                                       child: Icon(
                                         Icons.pause,
                                         color: EaselAppTheme.kDarkBlue,
@@ -132,11 +132,12 @@ class _AudioWidgetState extends State<AudioWidget> with WidgetsBindingObserver {
                                     bufferedBarColor: EaselAppTheme.kLightGrey,
                                     buffered: value.buffered,
                                     total: value.total,
-                                    // timeLabelLocation: viewModel.collapsed ? TimeLabelLocation.none : TimeLabelLocation.below,
                                     timeLabelTextStyle: TextStyle(color: EaselAppTheme.kDartGrey, fontWeight: FontWeight.w800, fontSize: 9.sp),
                                     thumbRadius: 10.h,
                                     timeLabelPadding: 3.h,
-                                    onSeek: viewModel.seekAudio,
+                                    onSeek:(position) {
+                                      viewModel.seekAudio(position,widget.file!=null);
+                                    },
                                   ),
                                 );
                               },

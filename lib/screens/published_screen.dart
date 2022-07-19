@@ -42,18 +42,7 @@ class PublishedScreen extends StatefulWidget {
 }
 
 class _PublishedScreenState extends State<PublishedScreen> {
-  @override
-  void initState() {
-    super.initState();
 
-    // WidgetsBinding.instance.addPostFrameCallback((_) async {
-    //   Navigator.of(context).push(
-    //     MaterialPageRoute(
-    //       builder: (BuildContext context) => const PublishedNewScreen(),
-    //     ),
-    //   );
-    // });
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -182,33 +171,45 @@ class _OwnerBottomDrawerState extends State<OwnerBottomDrawer> {
         children: [
           BuildPublishBottomSheet(
             collapseStatus: viewModel.collapsed,
-            onCollapsed: (context) => Padding(
-              padding: const EdgeInsets.all(16.0),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Align(
-                    alignment: Alignment.topRight,
-                    child: IconButton(
-                      icon: Icon(
-                        Icons.keyboard_arrow_up,
-                        size: 32.h,
-                        color: Colors.white,
+            onCollapsed: (context) => Container(
+              decoration: const BoxDecoration(
+                gradient: LinearGradient(
+                  begin: Alignment.topCenter,
+                  end: Alignment.bottomCenter,
+                  colors: [
+                    EaselAppTheme.kTransparent,
+                    EaselAppTheme.kBlack
+                  ]
+                )
+              ),
+              child: Padding(
+                padding: const EdgeInsets.all(16.0),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Align(
+                      alignment: Alignment.topRight,
+                      child: IconButton(
+                        icon: Icon(
+                          Icons.keyboard_arrow_up,
+                          size: 32.h,
+                          color: Colors.white,
+                        ),
+                        onPressed: () {
+                          viewModel.toChangeCollapse();
+                        },
                       ),
-                      onPressed: () {
-                        viewModel.toChangeCollapse();
-                      },
                     ),
-                  ),
-                  _title(
-                    nft: widget.nft,
-                    owner: widget.nft.type == NftType.TYPE_RECIPE.name ? "you".tr() : widget.nft.creator,
-                  ),
-                  const SizedBox(
-                    height: 20,
-                  ),
-                  viewModel.nft.assetType == kVideoText ? const VideoProgressWidget(darkMode: true, isForFile: false) : const SizedBox(),
-                ],
+                    _title(
+                      nft: widget.nft,
+                      owner: widget.nft.type == NftType.TYPE_RECIPE.name ? "you".tr() : widget.nft.creator,
+                    ),
+                    const SizedBox(
+                      height: 20,
+                    ),
+                    viewModel.nft.assetType == kVideoText ? const VideoProgressWidget(darkMode: true, isForFile: false) : const SizedBox(),
+                  ],
+                ),
               ),
             ),
             onOpened: (context) => Stack(
@@ -550,8 +551,6 @@ class BuildPublishBottomSheet extends StatelessWidget {
       case false:
         return onOpened(context);
     }
-    ;
-
     return const SizedBox();
   }
 }

@@ -68,9 +68,10 @@ void _registerLocalDataSources() {
 void _registerProviders() {
   sl.registerLazySingleton<EaselProvider>(() => EaselProvider(
         videoPlayerHelper: sl(),
-        audioPlayerHelper: sl(),
+        audioPlayerHelperForFile: sl(),
         fileUtilsHelper: sl(),
         repository: sl(),
+        audioPlayerHelperForUrl: sl()
       ));
 
   sl.registerLazySingleton<CreatorHubViewModel>(() => CreatorHubViewModel(sl()));

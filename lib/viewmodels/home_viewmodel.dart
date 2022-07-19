@@ -1,5 +1,3 @@
-import 'dart:developer';
-
 import 'package:easel_flutter/models/nft.dart';
 import 'package:easel_flutter/repository/repository.dart';
 import 'package:easel_flutter/utils/constants.dart';
@@ -47,7 +45,7 @@ class HomeViewModel extends ChangeNotifier {
           pageController = PageController(keepPage: true, initialPage: 2);
           break;
         case UploadStep.priceAdded:
-          currentPage = ValueNotifier(2);
+          currentPage = ValueNotifier(3);
           currentStep = ValueNotifier(2);
           pageController = PageController(keepPage: true, initialPage: 3);
           break;

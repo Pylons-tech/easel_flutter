@@ -11,6 +11,7 @@ class EaselAppTheme {
   static const Color kDartGrey = Color(0xFF333333);
   static const Color kDartGrey02 = Color(0xFFA1A1A1);
   static const Color kBlack = Colors.black;
+  static const Color kTransparent = Colors.transparent;
   static const Color kBlue = Color(0xFF1212C4);
   static const Color kDarkText = Color(0xFF080830);
   static const Color kLightText = Color(0xFF464545);
