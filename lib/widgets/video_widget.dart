@@ -99,7 +99,7 @@ class _VideoWidgetState extends State<VideoWidget> {
                           easelProvider.videoThumbnail!,
                           height: 60.h,
                           width: 60.w,
-                          fit: BoxFit.fill,
+                          fit: BoxFit.cover,
                         )),
                   )
                 : SvgPicture.asset(kUploadThumbnail),
