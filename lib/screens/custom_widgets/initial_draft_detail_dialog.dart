@@ -85,7 +85,7 @@ class _DraftDetailDialogState extends State<_DraftDetailDialog> {
       backgroundColor: Colors.transparent,
       insetPadding: EdgeInsets.symmetric(horizontal: isTablet ? 65.w : 21.w),
       child: Container(
-        color: Colors.black.withOpacity(0.7),
+        color: Colors.black.withOpacity(0.5),
         height: isTablet ? 400.h : 340.h,
         child: Stack(
           children: [

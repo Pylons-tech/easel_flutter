@@ -168,6 +168,7 @@ class _PublishScreenState extends State<PublishScreen> {
           file: provider.file!,
           previewFlag: true,
           isForFile: true,
+          isDarkMode: true,
         );
       case k3dText:
         return SizedBox(

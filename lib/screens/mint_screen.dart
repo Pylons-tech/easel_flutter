@@ -179,6 +179,7 @@ class _MintScreenState extends State<MintScreen> {
           filePath: provider.nft.url,
           previewFlag: true,
           isForFile: false,
+          isDarkMode: false,
         );
       case k3dText:
         return SizedBox(

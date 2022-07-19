@@ -1,3 +1,4 @@
+import 'dart:developer';
 import 'dart:ui';
 
 import 'package:audio_video_progress_bar/audio_video_progress_bar.dart';
@@ -40,8 +41,6 @@ class PublishedScreen extends StatefulWidget {
 }
 
 class _PublishedScreenState extends State<PublishedScreen> {
-
-
   @override
   Widget build(BuildContext context) {
     return const PublishedNewScreen();
@@ -70,6 +69,7 @@ class _PublishedNewScreenState extends State<PublishedNewScreen> {
 
   @override
   Widget build(BuildContext context) {
+
     return WillPopScope(
       onWillPop: () async {
         easelProvider.videoLoadingError = '';
@@ -124,6 +124,7 @@ class _PublishedNewScreenState extends State<PublishedNewScreen> {
           filePath: provider.nft.url,
           previewFlag: true,
           isForFile: false,
+          isDarkMode: true,
         );
       case k3dText:
         return SizedBox(
@@ -172,16 +173,7 @@ class _OwnerBottomDrawerState extends State<OwnerBottomDrawer> {
           BuildPublishBottomSheet(
             collapseStatus: viewModel.collapsed,
             onCollapsed: (context) => Container(
-              decoration: const BoxDecoration(
-                gradient: LinearGradient(
-                  begin: Alignment.topCenter,
-                  end: Alignment.bottomCenter,
-                  colors: [
-                    EaselAppTheme.kTransparent,
-                    EaselAppTheme.kBlack
-                  ]
-                )
-              ),
+              decoration: const BoxDecoration(gradient: LinearGradient(begin: Alignment.topCenter, end: Alignment.bottomCenter, colors: [EaselAppTheme.kTransparent, EaselAppTheme.kBlack])),
               child: Padding(
                 padding: const EdgeInsets.all(16.0),
                 child: Column(
@@ -353,7 +345,7 @@ class _OwnerBottomDrawerState extends State<OwnerBottomDrawer> {
                               ? Container(
                                   width: 250.w,
                                   color: EaselAppTheme.kWhite.withOpacity(0.2),
-                                  child: const VideoProgressWidget(darkMode: false, isForFile: false),
+                                  child: const VideoProgressWidget(darkMode: true, isForFile: false),
                                 )
                               : const SizedBox(),
                           viewModel.nft.assetType == kAudioText
