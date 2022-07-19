@@ -125,11 +125,6 @@ abstract class Repository {
   /// returns [PickedFileModel] the selected file or [Failure] if aborted
   Future<Either<Failure, PickedFileModel>> pickFile(NftFormat format);
 
-  /// This function takes the file and returns a compressed version of that file
-  /// Input: [file] it takes the file that needs to be compressed
-  /// Output: [File] returns the compressed file
-  Future<Either<Failure, File?>> compressAndGetFile(File file);
-
   /// This function checks if a file path extension svg or not
   /// Input: [filePath] the path of selected file
   /// Output: [True] if the filepath has svg extension and [False] otherwise
@@ -149,7 +144,6 @@ abstract class Repository {
   /// Input: [recipeId] and [cookbookId] used in the link generation as query parameters
   /// Output: [String] returns the generated NFTs link to be shared with others
   String generateEaselLinkForShare({required String recipeId, required String cookbookId});
-
 
   /// This function is used to launch the link generated and open the link in external source platform
   /// Input: [url] is the link to be launched by the launcher
@@ -334,7 +328,6 @@ class RepositoryImp implements Repository {
         return Left(CacheFailure("something_wrong".tr()));
       }
       return Right(data);
-
     } on Exception catch (_) {
       return Left(CacheFailure("something_wrong".tr()));
     }
@@ -347,19 +340,6 @@ class RepositoryImp implements Repository {
       return Right(pickedFileModel);
     } on Exception catch (_) {
       return Left(PickingFileFailure(message: "picking_file_error".tr()));
-    }
-  }
-
-  @override
-  Future<Either<Failure, File?>> compressAndGetFile(File selectedFile) async {
-    try {
-      File? file = await fileUtilsHelper.compressAndGetFile(selectedFile);
-      if (file == null) {
-        return Left(CompressingFileFailure(message: "compressing_file_failure".tr()));
-      }
-      return Right(file);
-    } on Exception catch (_) {
-      return Left(CompressingFileFailure(message: "compressing_file_failure".tr()));
     }
   }
 
@@ -382,7 +362,6 @@ class RepositoryImp implements Repository {
   String generateEaselLinkForShare({required String recipeId, required String cookbookId}) {
     return fileUtilsHelper.generateEaselLinkForShare(recipeId: recipeId, cookbookId: cookbookId);
   }
-
 
   @override
   Future<Either<Failure, void>> launchMyUrl({required String url}) async {

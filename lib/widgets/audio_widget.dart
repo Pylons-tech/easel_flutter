@@ -8,7 +8,6 @@ import 'package:easel_flutter/models/picked_file_model.dart';
 import 'package:easel_flutter/repository/repository.dart';
 import 'package:easel_flutter/utils/constants.dart';
 import 'package:easel_flutter/utils/easel_app_theme.dart';
-import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/svg.dart';
@@ -16,7 +15,6 @@ import 'package:get_it/get_it.dart';
 import 'package:provider/provider.dart';
 
 import '../models/nft_format.dart';
-import 'loading.dart';
 
 class AudioWidget extends StatefulWidget {
   final File? file;
@@ -195,14 +193,10 @@ class _AudioWidgetState extends State<AudioWidget> with WidgetsBindingObserver {
   void audioThumbnailPicker() async {
     final pickedFile = await repository.pickFile(NftFormat.supportedFormats[0]);
     final result = pickedFile.getOrElse(() => PickedFileModel(path: "", fileName: "", extension: ""));
-    if (result.path == "") {
+    if (result.path.isEmpty) {
       return;
     }
-    final loading = Loading()..showLoading(message: "compressing_thumbnail".tr());
-    final compressedFile = await repository.compressAndGetFile(File(result.path));
-    final file = compressedFile.getOrElse(() => null);
-    easelProvider.setAudioThumbnail(file);
-    loading.dismiss();
+    easelProvider.setAudioThumbnail(File(result.path));
   }
 }
 

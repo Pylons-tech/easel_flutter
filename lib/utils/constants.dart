@@ -75,6 +75,7 @@ const kMaxEdition = 10000;
 const kMinRoyalty = 0;
 const kMaxRoyalty = 99.99;
 const kFileSizeLimitInGB = 32;
+const kFileSizeLimitForAudiVideoInGB = 0.2;
 const kMaxPriceLength = 14;
 const kSecInMillis = 1000;
 const double TABLET_MIN_WIDTH = 600;
@@ -305,6 +306,5 @@ const kVersionCookboox = "v0.0.1";
 const kHashtagSymbol = "#";
 const String costPerBlock = '0';
 const String transferFeeAmount = '1';
-
 
 const int kPageAnimationTimeInMillis = 300;

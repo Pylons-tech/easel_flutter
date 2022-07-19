@@ -40,7 +40,16 @@ class _ChooseFormatScreenState extends State<ChooseFormatScreen> {
       return;
     }
 
-    provider.resolveNftFormat(context, result.extension);
+    NftFormat? nftFormat = await provider.resolveNftFormat(context, result.extension);
+    if (nftFormat != null) {
+      if (nftFormat.format == NFTTypes.audio || nftFormat.format == NFTTypes.video) {
+        if (easelProvider.repository.getFileSizeInGB(File(result.path).lengthSync()) > kFileSizeLimitForAudiVideoInGB) {
+          errorText.value = 'could_not_uploaded'.tr(args: [result.fileName]);
+          showErrorDialog();
+          return;
+        }
+      }
+    }
 
     if (easelProvider.repository.getFileSizeInGB(File(result.path).lengthSync()) > kFileSizeLimitInGB) {
       errorText.value = 'could_not_uploaded'.tr(args: [result.fileName]);

@@ -243,14 +243,15 @@ class EaselProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-  Future<void> resolveNftFormat(BuildContext context, String ext) async {
+  Future<NftFormat?> resolveNftFormat(BuildContext context, String ext) async {
     for (var format in NftFormat.supportedFormats) {
       if (format.extensions.contains(ext)) {
         _nftFormat = format;
-        break;
+        return _nftFormat;
       }
     }
     notifyListeners();
+    return null;
   }
 
   /// VIDEO PLAYER FUNCTIONS
@@ -572,6 +573,7 @@ class EaselProvider extends ChangeNotifier {
     _recipeId = repository.autoGenerateEaselId();
 
     audioPlayerHelperForFile.pauseAudio();
+    videoPlayerController.dispose();
     audioPlayerHelperForUrl.pauseAudio();
     setVideoThumbnail(null);
     setAudioThumbnail(null);
@@ -668,11 +670,7 @@ class EaselProvider extends ChangeNotifier {
         ));
 
     if (result.path.isEmpty) return;
-    final loading = Loading()..showLoading(message: kCompressingMessage);
-    final compressedFile = await repository.compressAndGetFile(File(result.path));
-    final file = compressedFile.getOrElse(() => null);
-    setVideoThumbnail(file);
-    loading.dismiss();
+    setVideoThumbnail(File(result.path));
   }
 
   void populateCoinsIfPylonsNotExists() {

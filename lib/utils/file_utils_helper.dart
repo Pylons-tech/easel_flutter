@@ -7,10 +7,8 @@ import 'package:easel_flutter/utils/easel_app_theme.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_image_compress/flutter_image_compress.dart';
 import 'package:image_cropper/image_cropper.dart';
 import 'package:path/path.dart' as p;
-import 'package:path_provider/path_provider.dart';
 import 'package:url_launcher/url_launcher_string.dart';
 
 import 'constants.dart';
@@ -20,11 +18,6 @@ abstract class FileUtilsHelper {
   /// Input: [format] it is the file format which needs to be picked from local storage
   /// returns [PlatformFile] the selected file or null if aborted
   Future<PickedFileModel> pickFile(NftFormat format);
-
-  /// This function takes the file and returns a compressed version of that file
-  /// Input: [file] it takes the file that needs to be compressed
-  /// Output: [File] returns the compressed file
-  Future<File?> compressAndGetFile(File file);
 
   /// This function checks if a file path extension svg or not
   /// Input: [filePath] the path of selected file
@@ -122,15 +115,6 @@ class FileUtilsHelperImpl implements FileUtilsHelper {
       fileName: result.files.single.name,
       extension: result.files.single.extension ?? "",
     );
-  }
-
-  @override
-  Future<File?> compressAndGetFile(File file) async {
-    var tempDirectory = await getTemporaryDirectory();
-    var timeStamp = DateTime.now();
-    var result = await FlutterImageCompress.compressAndGetFile(file.path, '${tempDirectory.path}/$timeStamp.jpg', quality: kFileCompressQuality);
-
-    return result;
   }
 
   @override
