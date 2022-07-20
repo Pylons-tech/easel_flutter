@@ -984,12 +984,12 @@ class EaselProvider extends ChangeNotifier {
   void disposePlayers({required String assetType}) {
     if (assetType == AssetType.Audio.name) {
       audioPlayerHelperForFile.pauseAudio();
-      videoPlayerController.dispose();
+      audioPlayerHelperForUrl.pauseAudio();
       return;
     }
 
     if (assetType == AssetType.Video.name) {
-      audioPlayerHelperForUrl.pauseAudio();
+      videoPlayerController.dispose();
       return;
     }
   }
