@@ -959,7 +959,7 @@ class EaselProvider extends ChangeNotifier {
       price: priceController.text,
       quantity: noOfEditionController.text,
       step: UploadStep.priceAdded.name,
-      denomSymbol: isFreeDrop == false ? selectedDenom.symbol : "",
+      denomSymbol: isFreeDrop ? "" : selectedDenom.symbol,
       isFreeDrop: isFreeDrop,
       dateTime: DateTime.now().millisecondsSinceEpoch,
     );

@@ -124,4 +124,9 @@ class NFT extends Equatable {
         itemID,
         owner,
       ];
+
+  @override
+  String toString() {
+    return 'NFT{id: $id, url: $url, thumbnailUrl: $thumbnailUrl, name: $name, description: $description, denom: $denom, price: $price, creator: $creator, owner: $owner, amountMinted: $amountMinted, quantity: $quantity, tradePercentage: $tradePercentage, cookbookID: $cookbookID, recipeID: $recipeID, itemID: $itemID, width: $width, height: $height, appType: $appType, tradeID: $tradeID, ownerAddress: $ownerAddress, step: $step, ibcCoins: $ibcCoins, isFreeDrop: $isFreeDrop, type: $type, assetType: $assetType, duration: $duration, hashtags: $hashtags, fileName: $fileName, cid: $cid, dateTime: $dateTime, isDialogShown: $isDialogShown, isEnabled: $isEnabled}';
+  }
 }
