@@ -1,5 +1,3 @@
-import 'package:easel_flutter/easel_provider.dart';
-import 'package:easel_flutter/main.dart';
 import 'package:easel_flutter/models/nft.dart';
 import 'package:easel_flutter/repository/repository.dart';
 import 'package:easel_flutter/utils/constants.dart';
@@ -7,7 +5,6 @@ import 'package:easel_flutter/utils/extension_util.dart';
 import 'package:easel_flutter/widgets/loading.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/cupertino.dart';
-import 'package:provider/provider.dart';
 import 'package:pylons_sdk/pylons_sdk.dart';
 
 class CreatorHubViewModel extends ChangeNotifier {
@@ -57,7 +54,7 @@ class CreatorHubViewModel extends ChangeNotifier {
   void getTotalForSale() {
     forSaleCount = 0;
     for (int i = 0; i < _publishedNFTsList.length; i++) {
-      if (publishedNFTsList[i].isEnabled && publishedNFTsList[i].amountMinted < publishedNFTsList[i].quantity) {
+      if (publishedNFTsList[i].isEnabled && publishedNFTsList[i].amountMinted < int.parse(publishedNFTsList[i].quantity)) {
         forSaleCount++;
       }
     }
@@ -76,8 +73,6 @@ class CreatorHubViewModel extends ChangeNotifier {
     if (!isPylonsExist) {
       return;
     }
-
-
 
     final cookBookId = getCookbookIdFromLocalDatasource();
     if (cookBookId == null) {

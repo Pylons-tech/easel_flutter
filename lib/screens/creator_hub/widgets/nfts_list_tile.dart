@@ -3,12 +3,10 @@ import 'package:easel_flutter/easel_provider.dart';
 import 'package:easel_flutter/main.dart';
 import 'package:easel_flutter/models/nft.dart';
 import 'package:easel_flutter/screens/creator_hub/widgets/published_nfts_bottom_sheet.dart';
-import 'package:easel_flutter/screens/creator_hub/widgets/video_placeholder.dart';
 import 'package:easel_flutter/utils/constants.dart';
 import 'package:easel_flutter/utils/easel_app_theme.dart';
 import 'package:easel_flutter/utils/enums.dart';
 import 'package:easel_flutter/utils/extension_util.dart';
-import 'package:easel_flutter/widgets/model_viewer.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -110,7 +108,7 @@ class NFTsListTile extends StatelessWidget {
                           ),
                         ),
                         SizedBox(width: 9.w),
-                        if (publishedNFT.isEnabled && publishedNFT.amountMinted < publishedNFT.quantity)
+                        if (publishedNFT.isEnabled && publishedNFT.amountMinted < int.parse(publishedNFT.quantity))
                           Container(
                             padding: EdgeInsets.symmetric(horizontal: 6.w, vertical: 3.h),
                             child: Text(
