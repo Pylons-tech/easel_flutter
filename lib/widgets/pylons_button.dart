@@ -29,7 +29,7 @@ class PylonsButton extends StatelessWidget {
                 ? EaselAppTheme.kBlue
                 : isRed
                     ? EaselAppTheme.kRed
-                    : EaselAppTheme.kGrey.withOpacity(0.8),
+                    : EaselAppTheme.kLightGreyColor,
           ),
           child: Stack(
             children: [
@@ -46,7 +46,8 @@ class PylonsButton extends StatelessWidget {
               Center(
                 child: Text(
                   btnText,
-                  style: Theme.of(context).textTheme.bodyText1!.copyWith(fontSize: 15.sp, color: EaselAppTheme.kWhite, fontWeight: FontWeight.w600),
+                  style:
+                      Theme.of(context).textTheme.bodyText1!.copyWith(fontSize: 15.sp, color: (!isBlue && !isRed) ? EaselAppTheme.kLightBlackText : EaselAppTheme.kWhite, fontWeight: FontWeight.w600),
                 ),
               )
             ],
