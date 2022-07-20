@@ -572,9 +572,8 @@ class EaselProvider extends ChangeNotifier {
 
     _recipeId = repository.autoGenerateEaselId();
 
-    audioPlayerHelperForFile.pauseAudio();
-    videoPlayerController.dispose();
-    audioPlayerHelperForUrl.pauseAudio();
+    disposePlayers(assetType: nft.assetType);
+
     setVideoThumbnail(null);
     setAudioThumbnail(null);
 
@@ -980,6 +979,19 @@ class EaselProvider extends ChangeNotifier {
 
   void toHashtagList(String hashtag) {
     hashtagsList = hashtag.split(kHashtagSymbol);
+  }
+
+  void disposePlayers({required String assetType}) {
+    if (assetType == AssetType.Audio.name) {
+      audioPlayerHelperForFile.pauseAudio();
+      videoPlayerController.dispose();
+      return;
+    }
+
+    if (assetType == AssetType.Video.name) {
+      audioPlayerHelperForUrl.pauseAudio();
+      return;
+    }
   }
 }
 
