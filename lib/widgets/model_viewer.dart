@@ -1,3 +1,4 @@
+import 'package:easel_flutter/utils/easel_app_theme.dart';
 import 'package:flutter/material.dart';
 import 'package:model_viewer_plus/model_viewer_plus.dart';
 
@@ -30,6 +31,7 @@ class _Model3dViewerState extends State<Model3dViewer> {
       autoRotate: false,
       cameraControls: true,
       loading: Loading.eager,
+      backgroundColor: EaselAppTheme.kBlack,
     );
   }
 }
