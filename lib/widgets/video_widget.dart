@@ -24,7 +24,7 @@ class VideoWidget extends StatefulWidget {
   final bool isForFile;
   final bool isDarkMode;
 
-  const VideoWidget({Key? key, this.file, this.filePath, required this.isDarkMode,required this.previewFlag, required this.isForFile}) : super(key: key);
+  const VideoWidget({Key? key, this.file, this.filePath, required this.isDarkMode, required this.previewFlag, required this.isForFile}) : super(key: key);
 
   @override
   _VideoWidgetState createState() => _VideoWidgetState();
@@ -140,29 +140,26 @@ class _VideoWidgetState extends State<VideoWidget> {
                   height: 20.w,
                 ),
                 if (!shouldShowThumbnailButtonOrStepsOrNot()) ...[
-                  SizedBox(
-                    height: 420.h,
-                    child: VideoBuilder(
-                        onVideoLoading: (BuildContext context) => const Center(
-                              child: CircularProgressIndicator(
-                                strokeWidth: 2,
-                                valueColor: AlwaysStoppedAnimation<Color>(EaselAppTheme.kWhite),
-                              ),
+                  VideoBuilder(
+                      onVideoLoading: (BuildContext context) => const Center(
+                            child: CircularProgressIndicator(
+                              strokeWidth: 2,
+                              valueColor: AlwaysStoppedAnimation<Color>(EaselAppTheme.kWhite),
                             ),
-                        onVideoHasError: (BuildContext context) => Center(
-                                child: Padding(
-                              padding: const EdgeInsets.all(10),
-                              child: Text(
-                                videoPlayerError,
-                                style: TextStyle(fontSize: 18.sp, color: EaselAppTheme.kWhite),
-                              ),
-                            )),
-                        onVideoInitialized: (BuildContext context) => AspectRatio(
-                          aspectRatio: easelProvider.videoPlayerController.value.aspectRatio,
-                          child: VideoPlayer(easelProvider.videoPlayerController),
-                        ),
-                        easelProvider: easelProvider),
-                  )
+                          ),
+                      onVideoHasError: (BuildContext context) => Center(
+                              child: Padding(
+                            padding: const EdgeInsets.all(10),
+                            child: Text(
+                              videoPlayerError,
+                              style: TextStyle(fontSize: 18.sp, color: EaselAppTheme.kWhite),
+                            ),
+                          )),
+                      onVideoInitialized: (BuildContext context) => AspectRatio(
+                            aspectRatio: easelProvider.videoPlayerController.value.aspectRatio,
+                            child: VideoPlayer(easelProvider.videoPlayerController),
+                          ),
+                      easelProvider: easelProvider)
                 ],
                 if (shouldShowThumbnailButtonOrStepsOrNot()) ...[
                   SizedBox(

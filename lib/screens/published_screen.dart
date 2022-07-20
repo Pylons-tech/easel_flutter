@@ -1,4 +1,3 @@
-import 'dart:developer';
 import 'dart:ui';
 
 import 'package:audio_video_progress_bar/audio_video_progress_bar.dart';
@@ -71,21 +70,19 @@ class _PublishedNewScreenState extends State<PublishedNewScreen> {
   Widget build(BuildContext context) {
     return WillPopScope(
       onWillPop: () async {
+        print("Wroking");
         easelProvider.videoLoadingError = '';
         easelProvider.isVideoLoading = true;
         homeViewModel.currentPage = ValueNotifier(1);
         homeViewModel.currentStep = ValueNotifier(1);
         homeViewModel.previousPage();
-        return false;
+        return true;
       },
       child: Consumer<EaselProvider>(builder: (_, easelProvider, __) {
         return Scaffold(
           backgroundColor: EaselAppTheme.kBlack,
           body: Padding(
-            padding: EdgeInsets.only(top: MediaQuery
-                .of(context)
-                .viewPadding
-                .top + 10),
+            padding: EdgeInsets.only(top: MediaQuery.of(context).viewPadding.top + 10),
             child: Stack(
               children: [
                 SizedBox(width: double.infinity, child: buildPreviewWidget(easelProvider)),
@@ -110,7 +107,6 @@ class _PublishedNewScreenState extends State<PublishedNewScreen> {
                   alignment: Alignment.bottomCenter,
                   child: OwnerBottomDrawer(nft: easelProvider.nft),
                 ),
-
               ],
             ),
           ),
@@ -166,14 +162,11 @@ class _OwnerBottomDrawerState extends State<OwnerBottomDrawer> {
   String getCurrency() {
     final viewModel = context.read<EaselProvider>();
 
-
     if (viewModel.supportedDenomList.isEmpty) {
       return viewModel.selectedDenom.name;
     }
 
-    return viewModel.supportedDenomList
-        .firstWhere((denom) => denom.symbol == widget.nft.denom)
-        .name;
+    return viewModel.supportedDenomList.firstWhere((denom) => denom.symbol == widget.nft.denom).name;
   }
 
   @override
@@ -189,36 +182,36 @@ class _OwnerBottomDrawerState extends State<OwnerBottomDrawer> {
         children: [
           BuildPublishBottomSheet(
             collapseStatus: viewModel.collapsed,
-            onCollapsed: (context) =>
-                Container(
-                  decoration: const BoxDecoration(gradient: LinearGradient(begin: Alignment.topCenter, end: Alignment.bottomCenter, colors: [EaselAppTheme.kTransparent, EaselAppTheme.kBlack])),
-                  child: Padding(
-                    padding: const EdgeInsets.all(16.0),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Align(
-                          alignment: Alignment.topRight,
-                          child: IconButton(
-                            icon: Icon(
-                              Icons.keyboard_arrow_up,
-                              size: 32.h,
-                              color: Colors.white,
-                            ),
-                            onPressed: () {
-                              viewModel.toChangeCollapse();
-                            },
-                          ),
+            onCollapsed: (context) => Container(
+              decoration: const BoxDecoration(gradient: LinearGradient(begin: Alignment.topCenter, end: Alignment.bottomCenter, colors: [EaselAppTheme.kTransparent, EaselAppTheme.kBlack])),
+              child: Padding(
+                padding: const EdgeInsets.all(16.0),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Align(
+                      alignment: Alignment.topRight,
+                      child: IconButton(
+                        icon: Icon(
+                          Icons.keyboard_arrow_up,
+                          size: 32.h,
+                          color: Colors.white,
                         ),
-                        _title(
-                          nft: widget.nft,
-                          owner: widget.nft.type == NftType.TYPE_RECIPE.name ? "you".tr() : widget.nft.creator,
-                        ),
-                        const SizedBox(
-                          height: 20,
-                        ),
-                        viewModel.nft.assetType == kVideoText ? const VideoProgressWidget(darkMode: true, isForFile: false) : const SizedBox(),
-                        viewModel.nft.assetType == kAudioText ? SizedBox(
+                        onPressed: () {
+                          viewModel.toChangeCollapse();
+                        },
+                      ),
+                    ),
+                    _title(
+                      nft: widget.nft,
+                      owner: widget.nft.type == NftType.TYPE_RECIPE.name ? "you".tr() : widget.nft.creator,
+                    ),
+                    const SizedBox(
+                      height: 20,
+                    ),
+                    viewModel.nft.assetType == kVideoText ? const VideoProgressWidget(darkMode: true, isForFile: false) : const SizedBox(),
+                    viewModel.nft.assetType == kAudioText
+                        ? SizedBox(
                             width: 330.0.w,
                             child: Row(
                               crossAxisAlignment: CrossAxisAlignment.end,
@@ -284,99 +277,93 @@ class _OwnerBottomDrawerState extends State<OwnerBottomDrawer> {
                                   ),
                                 ),
                               ],
-                            )) : const SizedBox(),
-                      ],
+                            ))
+                        : const SizedBox(),
+                  ],
+                ),
+              ),
+            ),
+            onOpened: (context) => Stack(
+              children: [
+                Align(
+                  alignment: Alignment.topRight,
+                  child: ClipPath(
+                    clipper: RightTriangleClipper(orientation: clipper.Orientation.orientationSW),
+                    child: Container(
+                      color: EaselAppTheme.kLightRed,
+                      height: 50,
+                      width: 50,
+                      child: Center(
+                          child: IconButton(
+                        alignment: Alignment.topRight,
+                        padding: const EdgeInsets.only(
+                          bottom: 8,
+                          left: 8,
+                        ),
+                        icon: const Icon(Icons.keyboard_arrow_down_outlined),
+                        onPressed: () {
+                          viewModel.toChangeCollapse();
+                        },
+                        iconSize: 32,
+                        color: Colors.white,
+                      )),
                     ),
                   ),
                 ),
-            onOpened: (context) =>
-                Stack(
-                  children: [
-                    Align(
-                      alignment: Alignment.topRight,
-                      child: ClipPath(
-                        clipper: RightTriangleClipper(orientation: clipper.Orientation.orientationSW),
-                        child: Container(
-                          color: EaselAppTheme.kLightRed,
-                          height: 50,
-                          width: 50,
-                          child: Center(
-                              child: IconButton(
-                                alignment: Alignment.topRight,
-                                padding: const EdgeInsets.only(
-                                  bottom: 8,
-                                  left: 8,
-                                ),
-                                icon: const Icon(Icons.keyboard_arrow_down_outlined),
-                                onPressed: () {
-                                  viewModel.toChangeCollapse();
-                                },
-                                iconSize: 32,
-                                color: Colors.white,
-                              )),
+                ClipPath(
+                  clipper: ExpandedViewClipper(),
+                  child: Container(
+                    width: MediaQuery.of(context).size.width,
+                    color: Colors.black54,
+                    padding: const EdgeInsets.all(32.0),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        _title(nft: widget.nft, owner: widget.nft.type == NftType.TYPE_RECIPE.name ? "you".tr() : widget.nft.creator),
+                        SizedBox(
+                          height: 20.h,
                         ),
-                      ),
-                    ),
-                    ClipPath(
-                      clipper: ExpandedViewClipper(),
-                      child: BackdropFilter(
-                        filter: ImageFilter.blur(sigmaX: 10.0, sigmaY: 10.0),
-                        child: Container(
-                          width: MediaQuery
-                              .of(context)
-                              .size
-                              .width,
-                          color: Colors.black54,
-                          padding: const EdgeInsets.all(32.0),
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              _title(nft: widget.nft, owner: widget.nft.type == NftType.TYPE_RECIPE.name ? "you".tr() : widget.nft.creator),
-                              SizedBox(
-                                height: 20.h,
-                              ),
-                              if (widget.nft.hashtags.isNotEmpty)
-                                Wrap(
-                                    spacing: 10.w,
-                                    children: List.generate(
-                                        viewModel.hashtagsList.length,
-                                            (index) =>
-                                            SizedBox(
-                                              child: DetectableText(
-                                                text: "#${viewModel.hashtagsList[index]}",
-                                                detectionRegExp: detectionRegExp()!,
-                                                detectedStyle: TextStyle(
-                                                  fontSize: 12.sp,
-                                                  color: EaselAppTheme.kHashtagColor,
-                                                ),
-                                                basicStyle: TextStyle(
-                                                  fontSize: 20.sp,
-                                                ),
-                                                onTap: (tappedText) {},
-                                              ),
-                                            ))),
-                              SizedBox(
-                                height: 10.h,
-                              ),
-                              ReadMoreText(
-                                widget.nft.description,
-                                trimExpandedText: "collapse".tr(),
-                                trimCollapsedText: "read_more".tr(),
-                                moreStyle: TextStyle(fontSize: 12.sp, fontWeight: FontWeight.w300, color: EaselAppTheme.kLightPurple),
-                                lessStyle: TextStyle(fontSize: 12.sp, fontWeight: FontWeight.w300, color: EaselAppTheme.kLightPurple),
-                              ),
-                              SizedBox(
-                                height: 20.h,
-                              ),
-                              viewModel.nft.assetType == kVideoText
-                                  ? Container(
+                        if (widget.nft.hashtags.isNotEmpty)
+                          Wrap(
+                              spacing: 10.w,
+                              children: List.generate(
+                                  viewModel.hashtagsList.length,
+                                  (index) => SizedBox(
+                                        child: DetectableText(
+                                          text: "#${viewModel.hashtagsList[index]}",
+                                          detectionRegExp: detectionRegExp()!,
+                                          detectedStyle: TextStyle(
+                                            fontSize: 12.sp,
+                                            color: EaselAppTheme.kHashtagColor,
+                                          ),
+                                          basicStyle: TextStyle(
+                                            fontSize: 20.sp,
+                                          ),
+                                          onTap: (tappedText) {},
+                                        ),
+                                      ))),
+                        SizedBox(
+                          height: 10.h,
+                        ),
+                        ReadMoreText(
+                          widget.nft.description,
+                          trimExpandedText: "collapse".tr(),
+                          trimCollapsedText: "read_more".tr(),
+                          moreStyle: TextStyle(fontSize: 12.sp, fontWeight: FontWeight.w300, color: EaselAppTheme.kLightPurple),
+                          lessStyle: TextStyle(fontSize: 12.sp, fontWeight: FontWeight.w300, color: EaselAppTheme.kLightPurple),
+                        ),
+                        SizedBox(
+                          height: 20.h,
+                        ),
+                        viewModel.nft.assetType == kVideoText
+                            ? Container(
                                 width: 250.w,
                                 color: EaselAppTheme.kWhite.withOpacity(0.2),
                                 child: const VideoProgressWidget(darkMode: true, isForFile: false),
                               )
-                                  : const SizedBox(),
-                              viewModel.nft.assetType == kAudioText
-                                  ? Container(
+                            : const SizedBox(),
+                        viewModel.nft.assetType == kAudioText
+                            ? Container(
                                 width: 250.w,
                                 color: EaselAppTheme.kWhite.withOpacity(0.2),
                                 child: Row(
@@ -445,105 +432,104 @@ class _OwnerBottomDrawerState extends State<OwnerBottomDrawer> {
                                   ],
                                 ),
                               )
-                                  : const SizedBox(),
-                              SizedBox(
-                                height: 30.h,
-                              ),
-                              SizedBox(
-                                width: double.infinity,
-                                child: Stack(
-                                  children: [
-                                    Column(
-                                      children: [
-                                        buildRow(
-                                          title: "currency".tr(),
-                                          subtitle: widget.nft.isFreeDrop ? kPylonText : getCurrency(),
-                                        ),
-                                        SizedBox(height: 2.h),
-                                        buildRow(
-                                          title: "price".tr(),
-                                          subtitle: widget.nft.isFreeDrop
-                                              ? "0"
-                                              : widget.nft.denom == kUsdSymbol
-                                              ? "\$${widget.nft.price}"
-                                              : widget.nft.price,
-                                        ),
-                                        SizedBox(height: 10.h),
-                                        buildRow(
-                                          title: "editions".tr(),
-                                          subtitle: widget.nft.quantity.toString(),
-                                        ),
-                                        SizedBox(height: 2.h),
-                                        buildRow(
-                                          title: "royalty".tr(),
-                                          subtitle: "${widget.nft.tradePercentage}%",
-                                        ),
-                                        SizedBox(height: 10.h),
-                                        buildRow(
-                                          title: "content_identifier".tr(),
-                                          subtitle: widget.nft.cid,
-                                        ),
-                                        SizedBox(height: 2.h),
-                                        buildRow(
-                                          title: "asset_uri".tr(),
-                                          subtitle: "view".tr(),
-                                        ),
-                                        SizedBox(height: 50.h),
-                                        Row(
-                                          children: [
-                                            Expanded(
-                                              child: ClippedButton(
-                                                title: "save".tr(),
-                                                bgColor: Colors.white.withOpacity(0.2),
-                                                textColor: EaselAppTheme.kWhite,
-                                                onPressed: () async {
-                                                  viewModel.videoLoadingError = '';
-                                                  viewModel.isVideoLoading = true;
+                            : const SizedBox(),
+                        SizedBox(
+                          height: 30.h,
+                        ),
+                        SizedBox(
+                          width: double.infinity,
+                          child: Stack(
+                            children: [
+                              Column(
+                                children: [
+                                  buildRow(
+                                    title: "currency".tr(),
+                                    subtitle: widget.nft.isFreeDrop ? kPylonText : getCurrency(),
+                                  ),
+                                  SizedBox(height: 2.h),
+                                  buildRow(
+                                    title: "price".tr(),
+                                    subtitle: widget.nft.isFreeDrop
+                                        ? "0"
+                                        : widget.nft.denom == kUsdSymbol
+                                            ? "\$${widget.nft.price}"
+                                            : widget.nft.price,
+                                  ),
+                                  SizedBox(height: 10.h),
+                                  buildRow(
+                                    title: "editions".tr(),
+                                    subtitle: widget.nft.quantity.toString(),
+                                  ),
+                                  SizedBox(height: 2.h),
+                                  buildRow(
+                                    title: "royalty".tr(),
+                                    subtitle: "${widget.nft.tradePercentage}%",
+                                  ),
+                                  SizedBox(height: 10.h),
+                                  buildRow(
+                                    title: "content_identifier".tr(),
+                                    subtitle: widget.nft.cid,
+                                  ),
+                                  SizedBox(height: 2.h),
+                                  buildRow(
+                                    title: "asset_uri".tr(),
+                                    subtitle: "view".tr(),
+                                  ),
+                                  SizedBox(height: 50.h),
+                                  Row(
+                                    children: [
+                                      Expanded(
+                                        child: ClippedButton(
+                                          title: "save".tr(),
+                                          bgColor: Colors.white.withOpacity(0.2),
+                                          textColor: EaselAppTheme.kWhite,
+                                          onPressed: () async {
+                                            viewModel.videoLoadingError = '';
+                                            viewModel.isVideoLoading = true;
 
-                                                  Navigator.of(context).popUntil(ModalRoute.withName(RouteUtil.kRouteCreatorHub));
-                                                },
-                                                cuttingHeight: 15.h,
-                                                clipperType: ClipperType.topLeftBottomRight,
-                                                isShadow: false,
-                                                fontWeight: FontWeight.w300,
-                                              ),
-                                            ),
-                                            SizedBox(
-                                              width: 30.w,
-                                            ),
-                                            Expanded(
-                                              child: ClippedButton(
-                                                title: "publish".tr(),
-                                                bgColor: EaselAppTheme.kLightRed,
-                                                textColor: EaselAppTheme.kWhite,
-                                                onPressed: () async {
-                                                  bool isRecipeCreated = await viewModel.verifyPylonsAndMint(nft: viewModel.nft);
-                                                  if (!isRecipeCreated) {
-                                                    return;
-                                                  }
-                                                  viewModel.disposeAudioController();
-                                                  Navigator.of(context).pushNamedAndRemoveUntil(RouteUtil.kRouteCreatorHub, (route) => false);
-                                                },
-                                                cuttingHeight: 15.h,
-                                                clipperType: ClipperType.topLeftBottomRight,
-                                                isShadow: false,
-                                                fontWeight: FontWeight.w700,
-                                              ),
-                                            )
-                                          ],
+                                            Navigator.of(context).popUntil(ModalRoute.withName(RouteUtil.kRouteCreatorHub));
+                                          },
+                                          cuttingHeight: 15.h,
+                                          clipperType: ClipperType.topLeftBottomRight,
+                                          isShadow: false,
+                                          fontWeight: FontWeight.w300,
                                         ),
-                                      ],
-                                    ),
-                                  ],
-                                ),
+                                      ),
+                                      SizedBox(
+                                        width: 30.w,
+                                      ),
+                                      Expanded(
+                                        child: ClippedButton(
+                                          title: "publish".tr(),
+                                          bgColor: EaselAppTheme.kLightRed,
+                                          textColor: EaselAppTheme.kWhite,
+                                          onPressed: () async {
+                                            bool isRecipeCreated = await viewModel.verifyPylonsAndMint(nft: viewModel.nft);
+                                            if (!isRecipeCreated) {
+                                              return;
+                                            }
+                                            viewModel.disposeAudioController();
+                                            Navigator.of(context).pushNamedAndRemoveUntil(RouteUtil.kRouteCreatorHub, (route) => false);
+                                          },
+                                          cuttingHeight: 15.h,
+                                          clipperType: ClipperType.topLeftBottomRight,
+                                          isShadow: false,
+                                          fontWeight: FontWeight.w700,
+                                        ),
+                                      )
+                                    ],
+                                  ),
+                                ],
                               ),
                             ],
                           ),
                         ),
-                      ),
-                    )
-                  ],
-                ),
+                      ],
+                    ),
+                  ),
+                )
+              ],
+            ),
           )
         ],
       ),
@@ -604,52 +590,52 @@ class _OwnerBottomDrawerState extends State<OwnerBottomDrawer> {
       children: [
         Expanded(
             child: Text(
-              title,
-              style: _rowTitleTextStyle,
-            )),
+          title,
+          style: _rowTitleTextStyle,
+        )),
         Expanded(
             child: subtitle.length > 14
                 ? Row(
-              children: [
-                Text(
-                  subtitle.substring(0, 8),
-                  style: _rowTitleTextStyle,
-                ),
-                const Text("...",
-                    style: TextStyle(
-                      color: Colors.white,
-                    )),
-                Text(
-                  subtitle.substring(subtitle.length - 5, subtitle.length),
-                  style: _rowTitleTextStyle,
-                ),
-                SizedBox(
-                  width: 1.w,
-                ),
-                clipboardWidget(subtitle)
-              ],
-            )
+                    children: [
+                      Text(
+                        subtitle.substring(0, 8),
+                        style: _rowTitleTextStyle,
+                      ),
+                      const Text("...",
+                          style: TextStyle(
+                            color: Colors.white,
+                          )),
+                      Text(
+                        subtitle.substring(subtitle.length - 5, subtitle.length),
+                        style: _rowTitleTextStyle,
+                      ),
+                      SizedBox(
+                        width: 1.w,
+                      ),
+                      clipboardWidget(subtitle)
+                    ],
+                  )
                 : Row(
-              children: [
-                InkWell(
-                  onTap: () {
-                    if (title == "asset_uri".tr()) {
-                      onViewOnIPFSPressed(
-                        provider: viewModel,
-                      );
-                    }
-                  },
-                  child: Text(
-                    subtitle,
-                    style: title == "asset_uri".tr() ? _rowTitleTextStyle.copyWith(color: EaselAppTheme.kLightPurple) : _rowTitleTextStyle,
-                  ),
-                ),
-                SizedBox(
-                  width: 1.w,
-                ),
-                if (title == "content_identifier".tr()) clipboardWidget(subtitle)
-              ],
-            ))
+                    children: [
+                      InkWell(
+                        onTap: () {
+                          if (title == "asset_uri".tr()) {
+                            onViewOnIPFSPressed(
+                              provider: viewModel,
+                            );
+                          }
+                        },
+                        child: Text(
+                          subtitle,
+                          style: title == "asset_uri".tr() ? _rowTitleTextStyle.copyWith(color: EaselAppTheme.kLightPurple) : _rowTitleTextStyle,
+                        ),
+                      ),
+                      SizedBox(
+                        width: 1.w,
+                      ),
+                      if (title == "content_identifier".tr()) clipboardWidget(subtitle)
+                    ],
+                  ))
       ],
     );
   }
