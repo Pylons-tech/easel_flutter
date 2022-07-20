@@ -256,6 +256,8 @@ class EaselProvider extends ChangeNotifier {
 
   /// VIDEO PLAYER FUNCTIONS
   void initializeVideoPlayerWithFile() async {
+    videoLoadingError = "";
+    isVideoLoading = true;
     videoPlayerHelper.initializeVideoPlayerWithFile(file: _file!);
     videoPlayerController = videoPlayerHelper.getVideoPlayerController();
     delayLoading();
@@ -276,6 +278,8 @@ class EaselProvider extends ChangeNotifier {
   }
 
   void initializeVideoPlayerWithUrl({required String publishedNftUrl}) async {
+    videoLoadingError = "";
+    isVideoLoading = true;
     videoPlayerHelper.initializeVideoPlayerWithUrl(videoUrl: publishedNftUrl);
     videoPlayerController = videoPlayerHelper.getVideoPlayerController();
     delayLoading();
