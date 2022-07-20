@@ -68,46 +68,35 @@ class _PublishedNewScreenState extends State<PublishedNewScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return WillPopScope(
-      onWillPop: () async {
-        easelProvider.videoLoadingError = '';
-        easelProvider.isVideoLoading = true;
-        homeViewModel.currentPage = ValueNotifier(1);
-        homeViewModel.currentStep = ValueNotifier(1);
-        homeViewModel.previousPage();
-        return true;
-      },
-      child: Consumer<EaselProvider>(builder: (_, easelProvider, __) {
-        return Scaffold(
-          backgroundColor: EaselAppTheme.kBlack,
-          body: Padding(
-            padding: EdgeInsets.only(top: MediaQuery.of(context).viewPadding.top + 10),
-            child: Stack(
-              children: [
-                SizedBox(width: double.infinity, child: buildPreviewWidget(easelProvider)),
-                Image.asset(kPreviewGradient, width: 1.sw, fit: BoxFit.fill),
-                Positioned(
-                    left: 10.w,
-                    top: 60.h,
-                    child: IconButton(
-                      onPressed: () {
-                        easelProvider.videoLoadingError = '';
-                        easelProvider.isVideoLoading = true;
-                        homeViewModel.currentPage = ValueNotifier(1);
-                        homeViewModel.currentStep = ValueNotifier(1);
-                        homeViewModel.previousPage();
-                      },
-                      icon: const Icon(
-                        Icons.arrow_back_ios,
-                        color: EaselAppTheme.kWhite,
-                      ),
-                    )),
-                Align(
-                  alignment: Alignment.bottomCenter,
-                  child: OwnerBottomDrawer(nft: easelProvider.nft),
-                ),
-              ],
-            ),
+    return Scaffold(
+      body: Consumer<EaselProvider>(builder: (_, easelProvider, __) {
+        return Padding(
+          padding: EdgeInsets.only(top: MediaQuery.of(context).viewPadding.top + 10),
+          child: Stack(
+            children: [
+              SizedBox(width: double.infinity, child: buildPreviewWidget(easelProvider)),
+              Image.asset(kPreviewGradient, width: 1.sw, fit: BoxFit.fill),
+              Positioned(
+                  left: 10.w,
+                  top: 60.h,
+                  child: IconButton(
+                    onPressed: () {
+                      easelProvider.videoLoadingError = '';
+                      easelProvider.isVideoLoading = true;
+                      homeViewModel.currentPage = ValueNotifier(1);
+                      homeViewModel.currentStep = ValueNotifier(1);
+                      homeViewModel.previousPage();
+                    },
+                    icon: const Icon(
+                      Icons.arrow_back_ios,
+                      color: EaselAppTheme.kWhite,
+                    ),
+                  )),
+              Align(
+                alignment: Alignment.bottomCenter,
+                child: OwnerBottomDrawer(nft: easelProvider.nft),
+              ),
+            ],
           ),
         );
       }),

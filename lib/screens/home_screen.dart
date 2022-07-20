@@ -67,7 +67,10 @@ class _HomeScreenState extends State<HomeScreen> {
     return WillPopScope(
       onWillPop: () async {
         GetIt.I.get<CreatorHubViewModel>().getDraftsList();
+        easelProvider.videoLoadingError = '';
+        easelProvider.isVideoLoading = true;
         Navigator.of(context).pop();
+
         return false;
       },
       child: Container(
@@ -142,9 +145,6 @@ class HomeScreenContent extends StatelessWidget {
             tabletScreen: (context) => const VerticalSpace(30),
           ),
         ],
-
-
-
         Expanded(
           child: PageView.builder(
             controller: homeViewModel.pageController,
