@@ -77,7 +77,7 @@ class _PublishedNewScreenState extends State<PublishedNewScreen> {
             Image.asset(kPreviewGradient, width: 1.sw, fit: BoxFit.fill),
             Positioned(
                 left: 10.w,
-                top: 60.h,
+                top: 50.h,
                 child: IconButton(
                   onPressed: () {
                     easelProvider.videoLoadingError = '';
@@ -341,7 +341,7 @@ class _OwnerBottomDrawerState extends State<OwnerBottomDrawer> {
                         SizedBox(
                           height: 20.h,
                         ),
-                        viewModel.nft.assetType == kVideoText
+                        viewModel.nft.assetType == kVideoText && viewModel.videoLoadingError.isEmpty
                             ? Container(
                                 width: 250.w,
                                 color: EaselAppTheme.kWhite.withOpacity(0.2),

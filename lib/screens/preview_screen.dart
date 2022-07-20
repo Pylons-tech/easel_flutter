@@ -69,10 +69,6 @@ class _PreviewScreenState extends State<PreviewScreen> {
                     onPressed: () async {
                       final result = await onUploadPressed();
 
-                      if (!result) {
-                        'something_went_wrong'.tr().show();
-                      }
-
                       if (result) {
                         DraftDetailDialog(
                             context: context,
@@ -144,6 +140,7 @@ class _PreviewScreenState extends State<PreviewScreen> {
   Future<bool> saveToUpload() async {
     final provider = context.read<EaselProvider>();
     if (!await provider.saveNftLocally(UploadStep.assetUploaded)) {
+      'something_wrong'.tr().show();
       return false;
     }
     return true;

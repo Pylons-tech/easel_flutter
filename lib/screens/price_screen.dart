@@ -258,9 +258,8 @@ class _PriceScreenState extends State<PriceScreen> {
                     ),
                     PylonsButton(
                       onPressed: () async {
-                        print("textField: ${!checkTextFields()} and ${!_formKey.currentState!.validate()} ");
                         FocusScope.of(context).unfocus();
-                        if (!_formKey.currentState!.validate() || checkTextFields()) {
+                        if (!_formKey.currentState!.validate() || !checkTextFields()) {
                           return;
                         }
                         final response = await context.read<EaselProvider>().updateNftFromPrice(nft!.id!);
