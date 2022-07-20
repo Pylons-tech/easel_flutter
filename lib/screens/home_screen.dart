@@ -166,7 +166,7 @@ class HomeScreenContent extends StatelessWidget {
               }
             },
             itemBuilder: (BuildContext context, int index) {
-              final map = {0: chooseFormatScreen, 1: describeScreen, 2: priceScreen, 3: mintScreen};
+              final map = {0: chooseFormatScreen, 1: describeScreen, 2: priceScreen, 3: publishScreen};
 
               return map[index]?.call() ?? const SizedBox();
             },
@@ -188,7 +188,7 @@ class HomeScreenContent extends StatelessWidget {
     return const PriceScreen();
   }
 
-  Widget mintScreen() {
-    return const PublishedScreen();
+  Widget publishScreen() {
+    return const PublishedNewScreen();
   }
 }
