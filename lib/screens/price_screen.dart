@@ -242,12 +242,7 @@ class _PriceScreenState extends State<PriceScreen> {
                     PylonsButton(
                       onPressed: () async {
                         FocusScope.of(context).unfocus();
-
-                        if (!(_formKey.currentState!.validate()) || !checkTextFields()) {
-                          return;
-                        }
-                        context.read<EaselProvider>().updateNftFromPrice(nft!.id!);
-                        Navigator.pop(context);
+                        validateAndUpdatePrice();
                       },
                       btnText: "save".tr(),
                       showArrow: false,
@@ -258,14 +253,7 @@ class _PriceScreenState extends State<PriceScreen> {
                     PylonsButton(
                       onPressed: () async {
                         FocusScope.of(context).unfocus();
-                        if (!(_formKey.currentState!.validate()) || !checkTextFields()) {
-                          return;
-                        }
-                        final response = await context.read<EaselProvider>().updateNftFromPrice(nft!.id!);
-
-                        if (response) {
-                          context.read<HomeViewModel>().nextPage();
-                        }
+                        validateAndUpdatePrice();
                       },
                       btnText: kContinue,
                       showArrow: false,
@@ -283,5 +271,18 @@ class _PriceScreenState extends State<PriceScreen> {
     );
   }
 
-  bool checkTextFields() => _royaltiesFieldError.isEmpty && _noOfEditionsFieldError.isEmpty && context.read<EaselProvider>().isFreeDrop ? true : _priceFieldError.isEmpty;
+  validateAndUpdatePrice() async {
+    if (!_formKey.currentState!.validate()) {
+      return;
+    }
+    if (context.read<EaselProvider>().isFreeDrop) {
+      if (_royaltiesFieldError.isNotEmpty || _noOfEditionsFieldError.isNotEmpty) return;
+      await context.read<EaselProvider>().updateNftFromPrice(nft!.id!);
+      context.read<HomeViewModel>().nextPage();
+    } else {
+      if (_royaltiesFieldError.isNotEmpty || _noOfEditionsFieldError.isNotEmpty || _priceFieldError.isNotEmpty) return;
+      await context.read<EaselProvider>().updateNftFromPrice(nft!.id!);
+      context.read<HomeViewModel>().nextPage();
+    }
+  }
 }
