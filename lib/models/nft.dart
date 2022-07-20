@@ -22,7 +22,7 @@ class NFT extends Equatable {
   String creator = "";
   String owner = "";
   int amountMinted = 0;
-  int quantity = 0;
+  String quantity = "0";
   String tradePercentage = "0";
   String cookbookID = "";
   String recipeID = "";
@@ -65,7 +65,7 @@ class NFT extends Equatable {
     this.height = "",
     this.tradePercentage = "0",
     this.amountMinted = 0,
-    this.quantity = 0,
+    this.quantity = "0",
     this.appType = "",
     required this.ibcCoins,
     this.tradeID = "",
@@ -96,7 +96,7 @@ class NFT extends Equatable {
       width: recipe.entries.itemOutputs.firstOrNull?.longs.firstWhere((longKeyValue) => longKeyValue.key == kWidth, orElse: () => LongParam()).weightRanges.firstOrNull?.upper.toString() ?? "0",
       height: recipe.entries.itemOutputs.firstOrNull?.longs.firstWhere((longKeyValue) => longKeyValue.key == kHeight, orElse: () => LongParam()).weightRanges.firstOrNull?.upper.toString() ?? "0",
       amountMinted: int.parse(recipe.entries.itemOutputs.firstOrNull?.amountMinted.toString() ?? "0"),
-      quantity: recipe.entries.itemOutputs.firstOrNull?.quantity.toInt() ?? 0,
+      quantity: recipe.entries.itemOutputs.firstOrNull?.quantity.toString() ?? "0",
       tradePercentage: royalties == null ? kNone : "$royalties%",
       price: recipe.coinInputs.firstOrNull?.coins.firstOrNull?.amount ?? "0",
       denom: recipe.coinInputs.firstOrNull?.coins.firstOrNull?.denom ?? "",

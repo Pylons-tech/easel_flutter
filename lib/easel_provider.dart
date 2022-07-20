@@ -963,6 +963,7 @@ class EaselProvider extends ChangeNotifier {
       dateTime: DateTime.now().millisecondsSinceEpoch,
     );
     final saveNftResponse = await repository.updateNftFromPrice(saveNft: saveNftForPrice);
+
     final _nft = await repository.getNft(id);
     final dataFromLocal = _nft.getOrElse(() => nft);
     repository.setCacheDynamicType(key: nftKey, value: dataFromLocal);

@@ -99,50 +99,49 @@ class _PriceScreenState extends State<PriceScreen> {
                     width: 60.w,
                   ),
                 ]),
-                Visibility(
-                  visible: !provider.isFreeDrop,
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      VerticalSpace(20.h),
-                      EaselPriceInputField(
-                        key: ValueKey("${provider.selectedDenom.name}-amount"),
-                        inputFormatters: [FilteringTextInputFormatter.digitsOnly, LengthLimitingTextInputFormatter(kMaxPriceLength), provider.selectedDenom.getFormatter()],
-                        controller: provider.priceController,
-                        validator: (value) {
-                          setState(() {
-                            if (value!.isEmpty) {
-                              _priceFieldError = kEnterPriceText;
-                              return;
-                            }
-                            if (double.parse(value.replaceAll(",", "")) < kMinValue) {
-                              _priceFieldError = "$kMinIsText $kMinValue";
-                              return;
-                            }
-                            _priceFieldError = '';
-                          });
-                          return null;
-                        },
-                      ),
-                      _priceFieldError.isNotEmpty
-                          ? Padding(
-                              padding: EdgeInsets.only(left: 8.w, right: 10.w, top: 2.h),
-                              child: Text(
-                                _priceFieldError,
-                                style: TextStyle(
-                                  fontSize: 12.sp,
-                                  color: Colors.red,
-                                ),
-                              ),
-                            )
-                          : const SizedBox.shrink(),
-                      Text(
-                        kNetworkFeeWarnText,
-                        style: TextStyle(color: EaselAppTheme.kLightPurple, fontSize: 14.sp, fontWeight: FontWeight.w800),
-                      ),
-                    ],
-                  ),
-                ),
+                !provider.isFreeDrop
+                    ? Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          VerticalSpace(20.h),
+                          EaselPriceInputField(
+                            key: ValueKey("${provider.selectedDenom.name}-amount"),
+                            inputFormatters: [FilteringTextInputFormatter.digitsOnly, LengthLimitingTextInputFormatter(kMaxPriceLength), provider.selectedDenom.getFormatter()],
+                            controller: provider.priceController,
+                            validator: (value) {
+                              setState(() {
+                                if (value!.isEmpty) {
+                                  _priceFieldError = kEnterPriceText;
+                                  return;
+                                }
+                                if (double.parse(value.replaceAll(",", "")) < kMinValue) {
+                                  _priceFieldError = "$kMinIsText $kMinValue";
+                                  return;
+                                }
+                                _priceFieldError = '';
+                              });
+                              return null;
+                            },
+                          ),
+                          _priceFieldError.isNotEmpty
+                              ? Padding(
+                                  padding: EdgeInsets.only(left: 8.w, right: 10.w, top: 2.h),
+                                  child: Text(
+                                    _priceFieldError,
+                                    style: TextStyle(
+                                      fontSize: 12.sp,
+                                      color: Colors.red,
+                                    ),
+                                  ),
+                                )
+                              : const SizedBox.shrink(),
+                          Text(
+                            kNetworkFeeWarnText,
+                            style: TextStyle(color: EaselAppTheme.kLightPurple, fontSize: 14.sp, fontWeight: FontWeight.w800),
+                          ),
+                        ],
+                      )
+                    : const SizedBox(),
                 VerticalSpace(20.h),
                 EaselTextField(
                   label: kRoyaltiesText,
@@ -244,7 +243,7 @@ class _PriceScreenState extends State<PriceScreen> {
                       onPressed: () async {
                         FocusScope.of(context).unfocus();
 
-                        if (!_formKey.currentState!.validate() || !checkTextFields()) {
+                        if (!(_formKey.currentState!.validate()) || !checkTextFields()) {
                           return;
                         }
                         context.read<EaselProvider>().updateNftFromPrice(nft!.id!);
@@ -258,9 +257,8 @@ class _PriceScreenState extends State<PriceScreen> {
                     ),
                     PylonsButton(
                       onPressed: () async {
-                        print("textField: ${!checkTextFields()} and ${!_formKey.currentState!.validate()} ");
                         FocusScope.of(context).unfocus();
-                        if (!_formKey.currentState!.validate() || checkTextFields()) {
+                        if (!(_formKey.currentState!.validate()) || !checkTextFields()) {
                           return;
                         }
                         final response = await context.read<EaselProvider>().updateNftFromPrice(nft!.id!);
