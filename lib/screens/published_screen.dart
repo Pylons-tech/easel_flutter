@@ -70,7 +70,6 @@ class _PublishedNewScreenState extends State<PublishedNewScreen> {
   Widget build(BuildContext context) {
     return WillPopScope(
       onWillPop: () async {
-        print("Wroking");
         easelProvider.videoLoadingError = '';
         easelProvider.isVideoLoading = true;
         homeViewModel.currentPage = ValueNotifier(1);
