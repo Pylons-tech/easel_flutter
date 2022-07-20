@@ -258,11 +258,12 @@ class _PriceScreenState extends State<PriceScreen> {
                     ),
                     PylonsButton(
                       onPressed: () async {
+                        print("textField: ${!checkTextFields()} and ${!_formKey.currentState!.validate()} ");
                         FocusScope.of(context).unfocus();
-                        if (!_formKey.currentState!.validate() || !checkTextFields()) {
+                        if (!_formKey.currentState!.validate() || checkTextFields()) {
                           return;
                         }
-                        final response =await context.read<EaselProvider>().updateNftFromPrice(nft!.id!);
+                        final response = await context.read<EaselProvider>().updateNftFromPrice(nft!.id!);
 
                         if (response) {
                           context.read<HomeViewModel>().nextPage();
@@ -284,4 +285,5 @@ class _PriceScreenState extends State<PriceScreen> {
     );
   }
 
-  bool checkTextFields() => _royaltiesFieldError.isEmpty && _noOfEditionsFieldError.isEmpty && context.read<EaselProvider>().isFreeDrop ? true : _priceFieldError.isEmpty;}
+  bool checkTextFields() => _royaltiesFieldError.isEmpty && _noOfEditionsFieldError.isEmpty && context.read<EaselProvider>().isFreeDrop ? true : _priceFieldError.isEmpty;
+}

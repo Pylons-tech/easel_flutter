@@ -180,7 +180,7 @@ class _DescribeScreenState extends State<DescribeScreen> {
                             return;
                           }
 
-                          await context.read<EaselProvider>().updateNftFromDescription(provider.nft.id!);
+                          context.read<EaselProvider>().updateNftFromDescription(provider.nft.id!);
                           context.read<EaselProvider>().saveArtistName(provider.artistNameController.text.trim());
                           Navigator.pop(context);
 
@@ -203,7 +203,7 @@ class _DescribeScreenState extends State<DescribeScreen> {
                             return;
                           }
 
-                          await context.read<EaselProvider>().updateNftFromDescription(provider.nft.id!);
+                          context.read<EaselProvider>().updateNftFromDescription(provider.nft.id!);
                           context.read<EaselProvider>().saveArtistName(provider.artistNameController.text.trim());
                           context.read<HomeViewModel>().nextPage();
                         },
