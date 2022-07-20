@@ -29,8 +29,6 @@ class _ChooseFormatScreenState extends State<ChooseFormatScreen> {
     EaselProvider provider = context.read();
 
     if (result.path.isEmpty) {
-      errorText.value = kErrFileNotPicked;
-      showErrorDialog();
       return;
     }
 
@@ -41,20 +39,23 @@ class _ChooseFormatScreenState extends State<ChooseFormatScreen> {
     }
 
     NftFormat? nftFormat = await provider.resolveNftFormat(context, result.extension);
-    if (nftFormat != null) {
-      if (nftFormat.format == NFTTypes.audio || nftFormat.format == NFTTypes.video) {
-        if (easelProvider.repository.getFileSizeInGB(File(result.path).lengthSync()) > kFileSizeLimitForAudiVideoInGB) {
-          errorText.value = 'could_not_uploaded'.tr(args: [result.fileName]);
-          showErrorDialog();
-          return;
-        }
-      }
+
+    if (nftFormat == null) {
+      return;
     }
 
-    if (easelProvider.repository.getFileSizeInGB(File(result.path).lengthSync()) > kFileSizeLimitInGB) {
-      errorText.value = 'could_not_uploaded'.tr(args: [result.fileName]);
-      showErrorDialog();
-      return;
+    if (nftFormat.format == NFTTypes.audio || nftFormat.format == NFTTypes.video) {
+      if (easelProvider.repository.getFileSizeInGB(File(result.path).lengthSync()) > kFileSizeLimitForAudiVideoInGB) {
+        errorText.value = 'size_error'.tr();
+        showErrorDialog(type: nftFormat.format);
+        return;
+      }
+    } else {
+      if (easelProvider.repository.getFileSizeInGB(File(result.path).lengthSync()) > kFileSizeLimitInGB) {
+        errorText.value = 'size_error'.tr();
+        showErrorDialog(type: nftFormat.format);
+        return;
+      }
     }
 
     await provider.setFile(fileName: result.fileName, filePath: result.path);
@@ -67,11 +68,12 @@ class _ChooseFormatScreenState extends State<ChooseFormatScreen> {
             )));
   }
 
-  void showErrorDialog() {
+  void showErrorDialog({NFTTypes? type}) {
     showDialog(
         context: context,
         builder: (context) => _ErrorMessageWidget(
               errorMessage: errorText.value,
+              nftTypes: type,
               onClose: () {
                 Navigator.of(context).pop();
               },
@@ -233,10 +235,11 @@ class _CardWidget extends StatelessWidget {
 }
 
 class _ErrorMessageWidget extends StatelessWidget {
-  const _ErrorMessageWidget({Key? key, required this.errorMessage, required this.onClose}) : super(key: key);
+  const _ErrorMessageWidget({Key? key, required this.errorMessage, required this.onClose, this.nftTypes}) : super(key: key);
 
   final String errorMessage;
   final VoidCallback onClose;
+  final NFTTypes? nftTypes;
 
   @override
   Widget build(BuildContext context) {
@@ -268,7 +271,8 @@ class _ErrorMessageWidget extends StatelessWidget {
             Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text("• ${kFileSizeLimitInGB}GB Limit", style: Theme.of(context).textTheme.bodyText2!.copyWith(color: Colors.white, fontSize: 16.sp, fontWeight: FontWeight.w800)),
+                Text((nftTypes == NFTTypes.video || nftTypes == NFTTypes.audio) ? "• ${(kFileSizeLimitForAudiVideoInGB * 1000).toStringAsFixed(0)}MB Limit" : "• ${kFileSizeLimitInGB}GB Limit",
+                    style: Theme.of(context).textTheme.bodyText2!.copyWith(color: Colors.white, fontSize: 16.sp, fontWeight: FontWeight.w800)),
                 Text(kUploadHint2, style: Theme.of(context).textTheme.bodyText2!.copyWith(color: Colors.white, fontSize: 16.sp, fontWeight: FontWeight.w800)),
                 Text(kUploadHint3, style: Theme.of(context).textTheme.bodyText2!.copyWith(color: Colors.white, fontSize: 16.sp, fontWeight: FontWeight.w800)),
               ],
@@ -323,7 +327,8 @@ class _ErrorMessageWidget extends StatelessWidget {
             Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text("• ${kFileSizeLimitInGB}GB Limit", style: Theme.of(context).textTheme.bodyText2!.copyWith(color: Colors.white, fontSize: 16.sp, fontWeight: FontWeight.w800)),
+                Text((nftTypes == NFTTypes.video || nftTypes == NFTTypes.audio) ? "• ${(kFileSizeLimitForAudiVideoInGB * 1000).toStringAsFixed(0)}MB Limit" : "• ${kFileSizeLimitInGB}GB Limit",
+                    style: Theme.of(context).textTheme.bodyText2!.copyWith(color: Colors.white, fontSize: 16.sp, fontWeight: FontWeight.w800)),
                 Text(kUploadHint2, style: Theme.of(context).textTheme.bodyText2!.copyWith(color: Colors.white, fontSize: 16.sp, fontWeight: FontWeight.w800)),
                 Text(kUploadHint3, style: Theme.of(context).textTheme.bodyText2!.copyWith(color: Colors.white, fontSize: 16.sp, fontWeight: FontWeight.w800)),
               ],

@@ -52,5 +52,6 @@
   "collapse": "Крах",
   "picking_file_error": "Ошибка при выборе файла",
   "compressing_file_failure": "Ошибка при сжатии файла",
-  "url_launching_error": "Ошибка при запуске URL"
+  "url_launching_error": "Ошибка при запуске URL",
+  "size_error": "Size Error"
 }
