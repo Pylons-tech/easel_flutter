@@ -63,5 +63,6 @@
   "something_wrong_while_uploading": "Something went wrong while uploading. Please try later.",
   "picking_file_error": "Error while picking file",
   "compressing_file_failure": "Error while compressing file",
-  "url_launching_error": "Error while launching a Url"
+  "url_launching_error": "Error while launching a Url",
+  "size_error": "Size Error"
 }

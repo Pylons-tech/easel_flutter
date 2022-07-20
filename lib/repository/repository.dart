@@ -338,6 +338,7 @@ class RepositoryImp implements Repository {
   Future<Either<Failure, PickedFileModel>> pickFile(NftFormat format) async {
     try {
       PickedFileModel pickedFileModel = await fileUtilsHelper.pickFile(format);
+
       return Right(pickedFileModel);
     } on Exception catch (_) {
       return Left(PickingFileFailure(message: "picking_file_error".tr()));
