@@ -867,6 +867,7 @@ class EaselProvider extends ChangeNotifier {
       assetType: nftFormat.format.getTitle(),
       cookbookID: cookbookId ?? "",
       width: fileWidth.toString(),
+      creator: repository.getArtistName(),
       denom: "",
       tradePercentage: royaltyController.text,
       height: fileHeight.toString(),

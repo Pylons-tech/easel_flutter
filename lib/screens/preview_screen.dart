@@ -68,7 +68,6 @@ class _PreviewScreenState extends State<PreviewScreen> {
                 child: PylonsButton(
                     onPressed: () async {
                       final result = await onUploadPressed();
-
                       if (result) {
                         DraftDetailDialog(
                             context: context,

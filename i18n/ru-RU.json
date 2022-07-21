@@ -53,5 +53,12 @@
   "picking_file_error": "Ошибка при выборе файла",
   "compressing_file_failure": "Ошибка при сжатии файла",
   "url_launching_error": "Ошибка при запуске URL",
-  "size_error": "Size Error"
+  "size_error": "Size Error",
+  "ipfs_upload": "IPFS Upload",
+  "untitled_nft": "Untitled NFT",
+  "nft_created_by": "Created by {}",
+  "path_address": "Path/Address",
+  "status": "Status",
+  "status_value": "{}",
+  "copy_cid": "Copy CID"
 }

@@ -7,6 +7,7 @@ import 'package:easel_flutter/utils/extension_util.dart';
 import 'package:easel_flutter/widgets/clippers/bottom_sheet_clipper.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/svg.dart';
 
@@ -17,13 +18,22 @@ class BuildPublishedNFTsBottomSheet {
 
   BuildPublishedNFTsBottomSheet({required this.context, required this.nft, required this.easelProvider});
 
-  Widget moreOptionTile({required String title, required String svg, required VoidCallback onPressed}) {
+  Widget moreOptionTile({required String title, required String image, required VoidCallback onPressed, final bool isSvg = true}) {
     return Padding(
       padding: EdgeInsets.symmetric(vertical: 8.h),
       child: InkWell(
         onTap: () => onPressed(),
         child: Row(
-          children: [SvgPicture.asset(svg), SizedBox(width: 30.w), Text(title.tr(), style: EaselAppTheme.titleStyle.copyWith(fontSize: isTablet ? 13.sp : 16.sp))],
+          children: [
+            isSvg ? SvgPicture.asset(image) : Image.asset(image),
+            SizedBox(width: 30.w),
+            Text(
+              title.tr(),
+              style: EaselAppTheme.titleStyle.copyWith(
+                fontSize: isTablet ? 13.sp : 16.sp,
+              ),
+            ),
+          ],
         ),
       ),
     );
@@ -53,17 +63,22 @@ class BuildPublishedNFTsBottomSheet {
                 children: [
                   moreOptionTile(
                       onPressed: () {
-                        onViewOnIPFSPressed(nft: nft);
-                      },
-                      title: "view".tr(),
-                      svg: kSvgViewIcon),
-                  Divider(thickness: 1.h),
-                  moreOptionTile(
-                      onPressed: () {
                         onViewOnPylonsPressed(nft: nft);
                       },
                       title: "view_on_pylons".tr(),
-                      svg: kSvgPylonsLogo),
+                      image: kSvgPylonsLogo),
+                  Divider(thickness: 1.h),
+                  moreOptionTile(
+                      onPressed: () async {
+                        Navigator.of(context).pop();
+                        await Clipboard.setData(ClipboardData(text: nft.cid));
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          SnackBar(content: Text("copied_to_clipboard".tr())),
+                        );
+                      },
+                      title: "copy_cid".tr(),
+                      image: kSvgIpfsLogo,
+                      isSvg: false),
                 ],
               ),
             ),
