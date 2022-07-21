@@ -8,7 +8,6 @@ import 'package:easy_localization/easy_localization.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:image_cropper/image_cropper.dart';
-import 'package:path/path.dart' as p;
 import 'package:url_launcher/url_launcher_string.dart';
 
 import 'constants.dart';
@@ -18,21 +17,6 @@ abstract class FileUtilsHelper {
   /// Input: [format] it is the file format which needs to be picked from local storage
   /// returns [PlatformFile] the selected file or null if aborted
   Future<PickedFileModel> pickFile(NftFormat format);
-
-  /// This function checks if a file path extension svg or not
-  /// Input: [filePath] the path of selected file
-  /// Output: [True] if the filepath has svg extension and [False] otherwise
-  bool isSvgFile(String filePath);
-
-  /// This function checks if a file path extension svg or not
-  /// Input: [filePath] the path of selected file
-  /// Output: [True] if the filepath has svg extension and [False] otherwise
-  String getExtension(String fileName);
-
-  /// This function is used to get the file size in GBs
-  /// Input: [fileLength] the file length in bytes
-  /// Output: [double] returns the file size in GBs in double format
-  double getFileSizeInGB(int fileLength);
 
   /// This function is used to get the file size in String format
   /// Input: [fileLength] the file length in bytes and [precision]
@@ -118,22 +102,6 @@ class FileUtilsHelperImpl implements FileUtilsHelper {
   }
 
   @override
-  bool isSvgFile(String filePath) {
-    final extension = p.extension(filePath);
-    return extension == ".svg";
-  }
-
-  @override
-  String getExtension(String fileName) {
-    return p.extension(fileName).replaceAll(".", "");
-  }
-
-  @override
-  double getFileSizeInGB(int fileLength) {
-    return fileLength / (1024 * 1024 * 1024).toDouble();
-  }
-
-  @override
   String getFileSizeString({required int fileLength, required int precision}) {
     var i = (log(fileLength) / log(1024)).floor();
     return ((fileLength / pow(1024, i)).toStringAsFixed(precision)) + suffixes[i];
@@ -168,7 +136,6 @@ class FileUtilsHelperImpl implements FileUtilsHelper {
       );
       return croppedFile?.path ?? "";
     } catch (e) {
-      print(e);
       return "";
     }
   }
@@ -176,11 +143,11 @@ class FileUtilsHelperImpl implements FileUtilsHelper {
   @override
   String generateEaselLinkForOpeningInPylonsApp({required String recipeId, required String cookbookId}) {
     return Uri.https('pylons.page.link', "/", {
-      "amv": "1",
-      "apn": "tech.pylons.wallet",
-      "ibi": "xyz.pylons.wallet",
-      "imv": "1",
-      "link": "https://wallet.pylons.tech/?action=purchase_nft&recipe_id=$recipeId&cookbook_id=$cookbookId&nft_amount=1"
+      kAmvKey: "1",
+      kApnKey: "tech.pylons.wallet",
+      kIbiKey: "xyz.pylons.wallet",
+      kImvKey: "1",
+      kLinkKey: "https://wallet.pylons.tech/?action=purchase_nft&recipe_id=$recipeId&cookbook_id=$cookbookId&nft_amount=1"
     }).toString();
   }
 }

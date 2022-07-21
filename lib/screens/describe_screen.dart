@@ -2,7 +2,6 @@ import 'dart:async';
 
 import 'package:easel_flutter/easel_provider.dart';
 import 'package:easel_flutter/repository/repository.dart';
-import 'package:easel_flutter/screens/custom_widgets/initial_draft_detail_dialog.dart';
 import 'package:easel_flutter/utils/constants.dart';
 import 'package:easel_flutter/utils/easel_app_theme.dart';
 import 'package:easel_flutter/utils/space_utils.dart';
@@ -17,7 +16,6 @@ import 'package:get_it/get_it.dart';
 import 'package:provider/provider.dart';
 
 import '../widgets/pylons_button.dart';
-import 'custom_widgets/initial_draft_detail_dialog.dart';
 
 class DescribeScreen extends StatefulWidget {
   const DescribeScreen({Key? key}) : super(key: key);
@@ -150,15 +148,15 @@ class _DescribeScreenState extends State<DescribeScreen> {
                   ),
                   _descriptionFieldError.isNotEmpty
                       ? Padding(
-                    padding: EdgeInsets.only(left: 10.w, right: 10.w, top: 2.h),
-                    child: Text(
-                      _descriptionFieldError,
-                      style: TextStyle(
-                        fontSize: 12.sp,
-                        color: Colors.red,
-                      ),
-                    ),
-                  )
+                          padding: EdgeInsets.only(left: 10.w, right: 10.w, top: 2.h),
+                          child: Text(
+                            _descriptionFieldError,
+                            style: TextStyle(
+                              fontSize: 12.sp,
+                              color: Colors.red,
+                            ),
+                          ),
+                        )
                       : const SizedBox.shrink(),
                   Text(
                     "$kMaxDescription $kCharacterLimitText",
@@ -183,14 +181,12 @@ class _DescribeScreenState extends State<DescribeScreen> {
                           context.read<EaselProvider>().updateNftFromDescription(provider.nft.id!);
                           context.read<EaselProvider>().saveArtistName(provider.artistNameController.text.trim());
                           Navigator.pop(context);
-
-
                         },
                         btnText: "save".tr(),
                         showArrow: false,
-                        isBlue: false,
-                        isRed: false,
                         mobileScreenButtonWidth: 0.4,
+                        color: EaselAppTheme.kLightGreyColor,
+                        textColor: EaselAppTheme.kLightBlackText,
                       ),
                       PylonsButton(
                         onPressed: () async {
@@ -209,8 +205,8 @@ class _DescribeScreenState extends State<DescribeScreen> {
                         },
                         btnText: "continue".tr(),
                         showArrow: false,
-                        isBlue: false,
                         mobileScreenButtonWidth: 0.4,
+                        color: EaselAppTheme.kRed,
                       ),
                     ],
                   ),
@@ -224,4 +220,3 @@ class _DescribeScreenState extends State<DescribeScreen> {
     );
   }
 }
-

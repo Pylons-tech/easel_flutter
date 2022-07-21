@@ -12,6 +12,7 @@ import 'package:easel_flutter/screens/clippers/right_triangle_clipper.dart';
 import 'package:easel_flutter/utils/constants.dart';
 import 'package:easel_flutter/utils/easel_app_theme.dart';
 import 'package:easel_flutter/utils/enums.dart';
+import 'package:easel_flutter/utils/progress_bar_builder.dart';
 import 'package:easel_flutter/utils/read_more.dart';
 import 'package:easel_flutter/utils/route_util.dart';
 import 'package:easel_flutter/viewmodels/home_viewmodel.dart';
@@ -183,76 +184,80 @@ class _OwnerBottomDrawerState extends State<OwnerBottomDrawer> {
                     const SizedBox(
                       height: 20,
                     ),
-                    viewModel.nft.assetType == kVideoText ? const VideoProgressWidget(darkMode: true, isForFile: false) : const SizedBox(),
-                    viewModel.nft.assetType == kAudioText
-                        ? SizedBox(
-                            width: 330.0.w,
-                            child: Row(
-                              crossAxisAlignment: CrossAxisAlignment.end,
-                              children: [
-                                Padding(
-                                  padding: EdgeInsets.only(right: 10.w, bottom: 10.h, top: 10.h, left: 5.w),
-                                  child: ValueListenableBuilder<ButtonState>(
-                                    valueListenable: viewModel.buttonNotifier,
-                                    builder: (_, value, __) {
-                                      switch (value) {
-                                        case ButtonState.loading:
-                                          return SizedBox(height: 35.h, width: 22.h, child: CircularProgressIndicator(strokeWidth: 2.w, color: Colors.black));
-                                        case ButtonState.paused:
-                                          return InkWell(
-                                            onTap: () {
-                                              viewModel.playAudio(false);
-                                            },
-                                            child: Icon(
-                                              Icons.play_arrow_outlined,
-                                              color: EaselAppTheme.kWhite,
-                                              size: 30.h,
-                                            ),
-                                          );
+                    ProgressBarBuilder(
+                        audioProgressBar: (context) {
+                          return SizedBox(
+                              width: 330.0.w,
+                              child: Row(
+                                crossAxisAlignment: CrossAxisAlignment.end,
+                                children: [
+                                  Padding(
+                                    padding: EdgeInsets.only(right: 10.w, bottom: 10.h, top: 10.h, left: 5.w),
+                                    child: ValueListenableBuilder<ButtonState>(
+                                      valueListenable: viewModel.buttonNotifier,
+                                      builder: (_, value, __) {
+                                        switch (value) {
+                                          case ButtonState.loading:
+                                            return SizedBox(height: 35.h, width: 22.h, child: CircularProgressIndicator(strokeWidth: 2.w, color: Colors.black));
+                                          case ButtonState.paused:
+                                            return InkWell(
+                                              onTap: () {
+                                                viewModel.playAudio(false);
+                                              },
+                                              child: Icon(
+                                                Icons.play_arrow_outlined,
+                                                color: EaselAppTheme.kWhite,
+                                                size: 30.h,
+                                              ),
+                                            );
 
-                                        case ButtonState.playing:
-                                          return InkWell(
-                                            onTap: () {
-                                              viewModel.pauseAudio(false);
+                                          case ButtonState.playing:
+                                            return InkWell(
+                                              onTap: () {
+                                                viewModel.pauseAudio(false);
+                                              },
+                                              child: Icon(
+                                                Icons.pause,
+                                                color: EaselAppTheme.kWhite,
+                                                size: 30.h,
+                                              ),
+                                            );
+                                        }
+                                      },
+                                    ),
+                                  ),
+                                  Expanded(
+                                    child: ValueListenableBuilder<ProgressBarState>(
+                                      valueListenable: viewModel.audioProgressNotifier,
+                                      builder: (_, value, __) {
+                                        return Padding(
+                                          padding: EdgeInsets.only(bottom: 3.h, right: 20.w),
+                                          child: ProgressBar(
+                                            progressBarColor: EaselAppTheme.kWhite,
+                                            thumbColor: EaselAppTheme.kWhite,
+                                            progress: value.current,
+                                            baseBarColor: EaselAppTheme.kBlack,
+                                            bufferedBarColor: EaselAppTheme.kLightGrey,
+                                            buffered: value.buffered,
+                                            total: value.total,
+                                            timeLabelTextStyle: TextStyle(color: EaselAppTheme.kDartGrey, fontWeight: FontWeight.w800, fontSize: 9.sp),
+                                            thumbRadius: 10.h,
+                                            timeLabelPadding: 3.h,
+                                            onSeek: (position) {
+                                              viewModel.seekAudio(position, false);
                                             },
-                                            child: Icon(
-                                              Icons.pause,
-                                              color: EaselAppTheme.kWhite,
-                                              size: 30.h,
-                                            ),
-                                          );
-                                      }
-                                    },
+                                          ),
+                                        );
+                                      },
+                                    ),
                                   ),
-                                ),
-                                Expanded(
-                                  child: ValueListenableBuilder<ProgressBarState>(
-                                    valueListenable: viewModel.audioProgressNotifier,
-                                    builder: (_, value, __) {
-                                      return Padding(
-                                        padding: EdgeInsets.only(bottom: 3.h, right: 20.w),
-                                        child: ProgressBar(
-                                          progressBarColor: EaselAppTheme.kWhite,
-                                          thumbColor: EaselAppTheme.kWhite,
-                                          progress: value.current,
-                                          baseBarColor: EaselAppTheme.kBlack,
-                                          bufferedBarColor: EaselAppTheme.kLightGrey,
-                                          buffered: value.buffered,
-                                          total: value.total,
-                                          timeLabelTextStyle: TextStyle(color: EaselAppTheme.kDartGrey, fontWeight: FontWeight.w800, fontSize: 9.sp),
-                                          thumbRadius: 10.h,
-                                          timeLabelPadding: 3.h,
-                                          onSeek: (position) {
-                                            viewModel.seekAudio(position, false);
-                                          },
-                                        ),
-                                      );
-                                    },
-                                  ),
-                                ),
-                              ],
-                            ))
-                        : const SizedBox(),
+                                ],
+                              ));
+                        },
+                        videoProgressBar: (context) {
+                          return const VideoProgressWidget(darkMode: true, isForFile: false);
+                        },
+                        assetType: viewModel.nft.assetType)
                   ],
                 ),
               ),
@@ -329,15 +334,9 @@ class _OwnerBottomDrawerState extends State<OwnerBottomDrawer> {
                         SizedBox(
                           height: 20.h,
                         ),
-                        viewModel.nft.assetType == kVideoText && viewModel.videoLoadingError.isEmpty
-                            ? Container(
-                                width: 250.w,
-                                color: EaselAppTheme.kWhite.withOpacity(0.2),
-                                child: const VideoProgressWidget(darkMode: true, isForFile: false),
-                              )
-                            : const SizedBox(),
-                        viewModel.nft.assetType == kAudioText
-                            ? Container(
+                        ProgressBarBuilder(
+                            audioProgressBar: (context) {
+                              return Container(
                                 width: 250.w,
                                 color: EaselAppTheme.kWhite.withOpacity(0.2),
                                 child: Row(
@@ -405,8 +404,16 @@ class _OwnerBottomDrawerState extends State<OwnerBottomDrawer> {
                                     ),
                                   ],
                                 ),
-                              )
-                            : const SizedBox(),
+                              );
+                            },
+                            videoProgressBar: (context) {
+                              return Container(
+                                width: 250.w,
+                                color: EaselAppTheme.kWhite.withOpacity(0.2),
+                                child: const VideoProgressWidget(darkMode: true, isForFile: false),
+                              );
+                            },
+                            assetType: viewModel.nft.assetType),
                         SizedBox(
                           height: 30.h,
                         ),

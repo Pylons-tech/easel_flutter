@@ -66,20 +66,21 @@ class _PreviewScreenState extends State<PreviewScreen> {
               child: Align(
                 alignment: Alignment.bottomRight,
                 child: PylonsButton(
-                    onPressed: () async {
-                      final result = await onUploadPressed();
-                      if (result) {
-                        DraftDetailDialog(
-                            context: context,
-                            easelProvider: provider,
-                            onClose: () {
-                              widget.onMoveToNextScreen();
-                            }).show();
-                      }
-                    },
-                    btnText: "upload".tr(),
-                    isBlue: false,
-                    showArrow: true),
+                  onPressed: () async {
+                    final result = await onUploadPressed();
+                    if (result) {
+                      DraftDetailDialog(
+                          context: context,
+                          easelProvider: provider,
+                          onClose: () {
+                            widget.onMoveToNextScreen();
+                          }).show();
+                    }
+                  },
+                  btnText: "upload".tr(),
+                  showArrow: true,
+                  color: EaselAppTheme.kRed,
+                ),
               ),
             )
           ],

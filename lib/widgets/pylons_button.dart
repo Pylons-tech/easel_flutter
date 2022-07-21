@@ -7,11 +7,13 @@ class PylonsButton extends StatelessWidget {
   final VoidCallback onPressed;
   final String btnText;
   final bool showArrow;
-  final bool isBlue;
-  final bool isRed;
-  final double mobileScreenButtonWidth;
 
-  const PylonsButton({Key? key, this.isBlue = true, this.isRed = true, this.showArrow = false, required this.btnText, required this.onPressed, this.mobileScreenButtonWidth = 0.5}) : super(key: key);
+  final double mobileScreenButtonWidth;
+  final Color color;
+  final Color textColor;
+
+  const PylonsButton({Key? key, this.showArrow = false, this.textColor = Colors.white, required this.btnText, required this.onPressed, this.mobileScreenButtonWidth = 0.5, required this.color})
+      : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -24,13 +26,7 @@ class PylonsButton extends StatelessWidget {
         child: Container(
           width: isTablet ? 0.3.sw : mobileScreenButtonWidth.sw,
           height: isTablet ? 0.07.sw : 0.12.sw,
-          decoration: BoxDecoration(
-            color: isBlue
-                ? EaselAppTheme.kBlue
-                : isRed
-                    ? EaselAppTheme.kRed
-                    : EaselAppTheme.kLightGreyColor,
-          ),
+          decoration: BoxDecoration(color: color),
           child: Stack(
             children: [
               if (showArrow)
@@ -46,8 +42,7 @@ class PylonsButton extends StatelessWidget {
               Center(
                 child: Text(
                   btnText,
-                  style:
-                      Theme.of(context).textTheme.bodyText1!.copyWith(fontSize: 15.sp, color: (!isBlue && !isRed) ? EaselAppTheme.kLightBlackText : EaselAppTheme.kWhite, fontWeight: FontWeight.w600),
+                  style: Theme.of(context).textTheme.bodyText1!.copyWith(fontSize: 15.sp, color: textColor, fontWeight: FontWeight.w600),
                 ),
               )
             ],

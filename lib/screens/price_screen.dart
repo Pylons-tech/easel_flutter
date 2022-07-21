@@ -246,9 +246,9 @@ class _PriceScreenState extends State<PriceScreen> {
                       },
                       btnText: "save".tr(),
                       showArrow: false,
-                      isBlue: false,
-                      isRed: false,
                       mobileScreenButtonWidth: 0.4,
+                      color: EaselAppTheme.kLightGreyColor,
+                      textColor: EaselAppTheme.kLightBlackText,
                     ),
                     PylonsButton(
                       onPressed: () async {
@@ -257,8 +257,8 @@ class _PriceScreenState extends State<PriceScreen> {
                       },
                       btnText: kContinue,
                       showArrow: false,
-                      isBlue: false,
                       mobileScreenButtonWidth: 0.4,
+                      color: EaselAppTheme.kRed,
                     ),
                   ],
                 ),

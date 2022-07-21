@@ -310,3 +310,9 @@ const String costPerBlock = '0';
 const String transferFeeAmount = '1';
 
 const int kPageAnimationTimeInMillis = 300;
+
+const kAmvKey = "amv";
+const kApnKey = "apn";
+const kIbiKey = "ibi";
+const kImvKey = "imv";
+const kLinkKey = "link";

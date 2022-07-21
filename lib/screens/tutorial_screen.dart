@@ -1,10 +1,8 @@
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:bottom_drawer/bottom_drawer.dart';
 import 'package:easel_flutter/easel_provider.dart';
-import 'package:easel_flutter/screens/welcome_screen/widgets/show_something_wrong_dialog.dart';
-import 'package:easel_flutter/screens/welcome_screen/widgets/show_wallet_install_dialog.dart';
-import 'package:easel_flutter/services/datasources/local_datasource.dart';
 import 'package:easel_flutter/main.dart';
+import 'package:easel_flutter/services/datasources/local_datasource.dart';
 import 'package:easel_flutter/utils/easel_app_theme.dart';
 import 'package:easel_flutter/utils/extension_util.dart';
 import 'package:easel_flutter/utils/route_util.dart';
@@ -161,7 +159,7 @@ class _TutorialScreenState extends State<TutorialScreen> {
                       populateCoinsAndMoveForward();
                     },
                     btnText: kContinue,
-                    isBlue: false,
+                    color: EaselAppTheme.kRed,
                   ),
                 )
                 //  ),
@@ -268,6 +266,7 @@ class _TutorialScreenState extends State<TutorialScreen> {
                     await onDownloadNowPressed(context);
                   },
                   btnText: 'download_pylons_app'.tr(),
+                  color: EaselAppTheme.kBlue,
                 ),
               ),
               tabletScreen: (BuildContext context) => Center(
@@ -278,6 +277,7 @@ class _TutorialScreenState extends State<TutorialScreen> {
                       await onDownloadNowPressed(context);
                     },
                     btnText: 'download_pylons_app'.tr(),
+                    color: EaselAppTheme.kBlue,
                   ),
                 ),
               ),

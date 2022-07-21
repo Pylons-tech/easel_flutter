@@ -127,9 +127,7 @@ class _VideoWidgetState extends State<VideoWidget> {
           child: SingleChildScrollView(
             child: Column(
               children: [
-                if (shouldShowThumbnailButton()) ...[
-                  VerticalSpace(80.h),
-                ],
+                shouldShowThumbnailButton() ? VerticalSpace(80.h) : const SizedBox(),
                 if (!shouldShowThumbnailButton()) ...[
                   VideoBuilder(
                       onVideoLoading: (BuildContext context) => const Center(
@@ -194,9 +192,7 @@ class _VideoWidgetState extends State<VideoWidget> {
                 SizedBox(
                   height: 10.w,
                 ),
-                if (shouldShowThumbnailButton()) ...[
-                  _buildThumbnailButton(),
-                ],
+                shouldShowThumbnailButton() ? _buildThumbnailButton() : const SizedBox(),
               ],
             ),
           ),

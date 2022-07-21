@@ -147,9 +147,7 @@ class _AudioWidgetState extends State<AudioWidget> with WidgetsBindingObserver {
                 SizedBox(
                   height: 120.0.h,
                 ),
-                if (shouldShowThumbnailButtonOrStepsOrNot()) ...[
-                  _buildThumbnailButton(),
-                ],
+                shouldShowThumbnailButtonOrStepsOrNot() ? _buildThumbnailButton() : const SizedBox(),
               ],
             ),
           ),

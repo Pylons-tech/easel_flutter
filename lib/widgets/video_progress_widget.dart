@@ -46,7 +46,7 @@ class VideoProgressWidget extends StatelessWidget {
                   : Row(
                       children: [
                         if (easelProvider.isVideoLoading)
-                          SizedBox(height: 22.h, width: 22.h, child: CircularProgressIndicator(strokeWidth: 2.w, color: darkMode ? EaselAppTheme.kWhite :EaselAppTheme.kBlack))
+                          SizedBox(height: 22.h, width: 22.h, child: CircularProgressIndicator(strokeWidth: 2.w, color: darkMode ? EaselAppTheme.kWhite : EaselAppTheme.kBlack))
                         else if (easelProvider.videoPlayerController.value.isPlaying)
                           InkWell(
                             onTap: easelProvider.pauseVideo,
@@ -111,19 +111,5 @@ class VideoProgressWidget extends StatelessWidget {
               ),
           ],
         ));
-  }
-}
-
-class BuildActions extends StatelessWidget {
-  final WidgetBuilder isPlaying;
-  final WidgetBuilder isPaused;
-  final WidgetBuilder isLoading;
-  final bool videoStatus;
-
-  const BuildActions({Key? key, required this.isPlaying, required this.isLoading, required this.isPaused, required this.videoStatus}) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    return Container();
   }
 }

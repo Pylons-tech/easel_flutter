@@ -62,7 +62,8 @@ class ShowWalletInstallDialog {
                   onPressed: () {
                     onDownloadPressed();
                     Navigator.of(context).pop();
-                  }),
+                  },
+                  color: EaselAppTheme.kBlue),
             ),
             SizedBox(height: 10.h),
             GestureDetector(
@@ -130,7 +131,8 @@ class ShowWalletInstallDialog {
                     onPressed: () {
                       onDownloadPressed();
                       Navigator.of(context).pop();
-                    }),
+                    },
+                    color: EaselAppTheme.kBlue),
               ),
               SizedBox(height: 10.h),
               GestureDetector(
