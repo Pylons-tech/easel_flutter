@@ -146,48 +146,10 @@ class _DraftDetailDialogState extends State<_DraftDetailDialog> {
                     SizedBox(
                       height: 30.h,
                     ),
-                    Padding(
-                      padding: EdgeInsets.only(left: isTablet ? 10.w : 30.w, right: 5.w),
-                      child: Row(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          SizedBox(
-                            height: 70.h,
-                            width: 80.h,
-                            child: previewWidget,
-                          ),
-                          SizedBox(
-                            width: 5.0.w,
-                          ),
-                          Expanded(
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Text(
-                                  easelProvider.nft.name.isNotEmpty ? easelProvider.nft.name : "untitled_nft".tr(),
-                                  style: TextStyle(
-                                    color: EaselAppTheme.kWhite,
-                                    fontSize: 18.sp,
-                                    fontWeight: FontWeight.bold,
-                                  ),
-                                ),
-                                SizedBox(
-                                  height: 3.0.h,
-                                ),
-                                Text(
-                                  "nft_created_by".tr(args: [easelProvider.nft.creator]),
-                                  style: TextStyle(
-                                    color: EaselAppTheme.kWhite,
-                                    fontSize: 10.sp,
-                                    fontWeight: FontWeight.bold,
-                                  ),
-                                  overflow: TextOverflow.ellipsis,
-                                ),
-                              ],
-                            ),
-                          )
-                        ],
-                      ),
+                    SizedBox(
+                      height: 70.h,
+                      width: 80.h,
+                      child: previewWidget,
                     ),
                     SizedBox(
                       height: 30.h,
@@ -213,9 +175,6 @@ class _DraftDetailDialogState extends State<_DraftDetailDialog> {
                       canCopy: true,
                     ),
                     SizedBox(
-                      height: 5.h,
-                    ),
-                    SizedBox(
                       height: 30.h,
                     ),
                     SizedBox(
@@ -223,7 +182,7 @@ class _DraftDetailDialogState extends State<_DraftDetailDialog> {
                       width: isTablet ? 120.w : 250.w,
                       child: ClippedButton(
                         title: "close".tr(),
-                        bgColor: EaselAppTheme.kLightGrey.withOpacity(0.75),
+                        bgColor: EaselAppTheme.kGrey.withOpacity(0.8),
                         textColor: EaselAppTheme.kWhite,
                         onPressed: () async {
                           Navigator.popUntil(context, ModalRoute.withName(RouteUtil.kRouteHome));

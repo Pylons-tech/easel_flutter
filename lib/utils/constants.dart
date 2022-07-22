@@ -235,6 +235,7 @@ const kHashtags = "Hashtags";
 const kNFTFormat = "NFT_Format";
 const kNFTURL = "NFT_URL";
 const kCreator = "Creator";
+const kCID = "cid";
 const kThumbnailUrl = "Thumbnail_URL";
 const kEasel = "Easel";
 const kEaselNFT = "Easel_NFT";
