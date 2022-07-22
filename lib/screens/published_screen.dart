@@ -61,7 +61,6 @@ class _PublishedNewScreenState extends State<PublishedNewScreen> {
         return Stack(
           children: [
             Positioned(left: 0, right: 0, top: 0, bottom: 0, child: SizedBox(width: double.infinity, child: buildPreviewWidget(easelProvider))),
-            Image.asset(kPreviewGradient, width: 1.sw, fit: BoxFit.fill),
             Positioned(
                 left: 10.w,
                 top: 50.h,
