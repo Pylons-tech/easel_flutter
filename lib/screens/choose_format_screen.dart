@@ -44,18 +44,10 @@ class _ChooseFormatScreenState extends State<ChooseFormatScreen> {
       return;
     }
 
-    if (nftFormat.format == NFTTypes.audio || nftFormat.format == NFTTypes.video) {
-      if (easelProvider.repository.getFileSizeInGB(File(result.path).lengthSync()) > kFileSizeLimitForAudiVideoInGB) {
-        errorText.value = 'size_error'.tr();
-        showErrorDialog(type: nftFormat.format);
-        return;
-      }
-    } else {
-      if (easelProvider.repository.getFileSizeInGB(File(result.path).lengthSync()) > kFileSizeLimitInGB) {
-        errorText.value = 'size_error'.tr();
-        showErrorDialog(type: nftFormat.format);
-        return;
-      }
+    if (easelProvider.repository.getFileSizeInGB(File(result.path).lengthSync()) > kFileSizeLimitForAudiVideoInGB) {
+      errorText.value = 'size_error'.tr();
+      showErrorDialog(type: nftFormat.format);
+      return;
     }
 
     await provider.setFile(fileName: result.fileName, filePath: result.path);
