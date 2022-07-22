@@ -408,7 +408,12 @@ class EaselProvider extends ChangeNotifier {
     }
   }
 
-  void disposeAudioController() {
+  void disposeAudioController() async {
+    audioProgressNotifier.removeListener(() {});
+    buttonNotifier.removeListener(() {});
+
+    audioProgressNotifier.value = ProgressBarState(buffered: Duration(seconds: 0), current: Duration(seconds: 0), total: Duration(seconds: 0));
+    buttonNotifier.value = ButtonState.loading;
     audioPlayerHelperForFile.destroyAudioPlayer();
   }
 
