@@ -34,12 +34,11 @@ class _AudioWidgetState extends State<AudioWidget> with WidgetsBindingObserver {
 
   @override
   initState() {
-    if (widget.file != null) {
-      easelProvider.initializeAudioPlayerForFile();
-      return;
-    }
-    if (widget.filePath != null) {
+    if (!widget.previewFlag) {
       easelProvider.initializeAudioPlayer(publishedNFTUrl: widget.filePath);
+      return;
+    } else {
+      easelProvider.initializeAudioPlayerForFile(file: widget.file!);
       return;
     }
 

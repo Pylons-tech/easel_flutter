@@ -409,11 +409,14 @@ class EaselProvider extends ChangeNotifier {
   }
 
   void disposeAudioController() async {
-    audioProgressNotifier.removeListener(() {});
-    buttonNotifier.removeListener(() {});
-
-    audioProgressNotifier.value = ProgressBarState(buffered: Duration(seconds: 0), current: Duration(seconds: 0), total: Duration(seconds: 0));
-    buttonNotifier.value = ButtonState.loading;
+    audioProgressNotifier = ValueNotifier<ProgressBarState>(
+      ProgressBarState(
+        current: Duration.zero,
+        buffered: Duration.zero,
+        total: Duration.zero,
+      ),
+    );
+    buttonNotifier = ValueNotifier<ButtonState>(ButtonState.loading);
     audioPlayerHelperForFile.destroyAudioPlayer();
   }
 
@@ -756,7 +759,7 @@ class EaselProvider extends ChangeNotifier {
     return stripeTryAgainCompleter.future;
   }
 
-  Future initializeAudioPlayerForFile() async {
+  Future initializeAudioPlayerForFile({required File file}) async {
     audioProgressNotifier = ValueNotifier<ProgressBarState>(
       ProgressBarState(
         current: Duration.zero,
@@ -767,6 +770,9 @@ class EaselProvider extends ChangeNotifier {
     buttonNotifier = ValueNotifier<ButtonState>(ButtonState.loading);
 
     setIsInitialized = await audioPlayerHelperForFile.setFile(file: _file!.path);
+
+    print("THIS IS MY FILE $_file!");
+    print("SETTING IT $isInitializedForFile");
 
     if (isInitializedForFile) {
       audioPlayerHelperForFile.playerStateStream().listen((event) {}).onData((playerState) async {

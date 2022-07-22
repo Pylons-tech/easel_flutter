@@ -488,7 +488,9 @@ class _OwnerBottomDrawerState extends State<OwnerBottomDrawer> {
                                             if (!isRecipeCreated) {
                                               return;
                                             }
-                                            viewModel.disposeAudioController();
+                                            if (viewModel.nft.assetType == kAudioText) {
+                                              viewModel.disposeAudioController();
+                                            }
                                             Navigator.of(context).pushNamedAndRemoveUntil(RouteUtil.kRouteCreatorHub, (route) => false);
                                           },
                                           cuttingHeight: 15.h,
