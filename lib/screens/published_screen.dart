@@ -257,7 +257,7 @@ class _OwnerBottomDrawerState extends State<OwnerBottomDrawer> {
                         videoProgressBar: (context) {
                           return const VideoProgressWidget(darkMode: true, isForFile: false);
                         },
-                        assetType: viewModel.nft.assetType)
+                        assetType: viewModel.nft.assetType, others: (BuildContext context)  => const SizedBox(),)
                   ],
                 ),
               ),
@@ -413,7 +413,7 @@ class _OwnerBottomDrawerState extends State<OwnerBottomDrawer> {
                                 child: const VideoProgressWidget(darkMode: true, isForFile: false),
                               );
                             },
-                            assetType: viewModel.nft.assetType),
+                            assetType: viewModel.nft.assetType, others: (BuildContext context) => const SizedBox(),),
                         SizedBox(
                           height: 30.h,
                         ),
