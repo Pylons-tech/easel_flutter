@@ -832,8 +832,15 @@ class EaselProvider extends ChangeNotifier {
   late NFT nft;
 
   Future<bool> saveNftLocally(UploadStep step) async {
-    audioPlayerHelperForFile.pauseAudio();
-    videoPlayerController.pause();
+    if (nftFormat.format == NFTTypes.audio ) {
+      audioPlayerHelperForFile.pauseAudio();
+    }
+
+    if(nftFormat.format == NFTTypes.video){
+      videoPlayerController.pause();
+    }
+
+
     ApiResponse uploadThumbnailResponse = ApiResponse.error(errorMessage: "");
     ApiResponse uploadUrlResponse = ApiResponse.error(errorMessage: "");
 
