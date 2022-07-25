@@ -1,6 +1,7 @@
 import 'package:easel_flutter/easel_provider.dart';
-import 'package:easel_flutter/utils/easel_app_theme.dart';
+import 'package:easel_flutter/utils/constants.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 class VideoBuilder extends StatelessWidget {
   final WidgetBuilder onVideoLoading;
@@ -25,10 +26,12 @@ class VideoBuilder extends StatelessWidget {
     } else if (easelProvider.videoPlayerController.value.isInitialized) {
       return onVideoInitialized(context);
     }
-    return const Center(
-      child: CircularProgressIndicator(
-        strokeWidth: 2,
-        valueColor: AlwaysStoppedAnimation<Color>(EaselAppTheme.kBlack),
+    return Center(
+      child: SizedBox(
+        height: 50.0.h,
+        child: Image.asset(
+          kLoadingGif,
+        ),
       ),
     );
   }

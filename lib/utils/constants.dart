@@ -56,6 +56,8 @@ const kSvgIpfsLogo = 'assets/images/ipfs_logo.png';
 const kSvgViewIcon = 'assets/images/svg/view_icon.svg';
 const kOwnerVerifiedIcon = 'assets/images/svg/verified.svg';
 
+const String kLoadingGif = 'assets/images/gifs/loading.gif';
+
 /// ```URL constants
 const ipfsDomain = 'https://ipfs.io/ipfs';
 const kPlayStoreUrl = 'https://play.google.com/store/apps/details?id=tech.pylons.wallet';

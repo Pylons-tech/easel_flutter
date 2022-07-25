@@ -586,9 +586,6 @@ class EaselProvider extends ChangeNotifier {
 
     disposePlayers(assetType: nft.assetType);
 
-    setVideoThumbnail(null);
-    setAudioThumbnail(null);
-
     String residual = nft.tradePercentage.trim();
 
     String price = isFreeDrop ? "0" : _selectedDenom.formatAmount(price: priceController.text);
@@ -767,12 +764,13 @@ class EaselProvider extends ChangeNotifier {
         total: Duration.zero,
       ),
     );
+
     buttonNotifier = ValueNotifier<ButtonState>(ButtonState.loading);
-
+    if (_file == null) {
+      "error_playing_audio".tr().show();
+      return;
+    }
     setIsInitialized = await audioPlayerHelperForFile.setFile(file: _file!.path);
-
-    print("THIS IS MY FILE $_file!");
-    print("SETTING IT $isInitializedForFile");
 
     if (isInitializedForFile) {
       audioPlayerHelperForFile.playerStateStream().listen((event) {}).onData((playerState) async {
@@ -832,14 +830,13 @@ class EaselProvider extends ChangeNotifier {
   late NFT nft;
 
   Future<bool> saveNftLocally(UploadStep step) async {
-    if (nftFormat.format == NFTTypes.audio ) {
+    if (nftFormat.format == NFTTypes.audio) {
       audioPlayerHelperForFile.pauseAudio();
     }
 
-    if(nftFormat.format == NFTTypes.video){
+    if (nftFormat.format == NFTTypes.video) {
       videoPlayerController.pause();
     }
-
 
     ApiResponse uploadThumbnailResponse = ApiResponse.error(errorMessage: "");
     ApiResponse uploadUrlResponse = ApiResponse.error(errorMessage: "");
@@ -1009,12 +1006,14 @@ class EaselProvider extends ChangeNotifier {
 
   void disposePlayers({required String assetType}) {
     if (assetType == AssetType.Audio.name) {
+      setAudioThumbnail(null);
       audioPlayerHelperForFile.pauseAudio();
       audioPlayerHelperForUrl.pauseAudio();
       return;
     }
 
     if (assetType == AssetType.Video.name) {
+      setVideoThumbnail(null);
       videoPlayerController.dispose();
       return;
     }

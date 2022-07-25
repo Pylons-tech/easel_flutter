@@ -71,5 +71,6 @@
   "path_address": "Path/Address",
   "status": "Status",
   "status_value": "{}",
-  "copy_cid": "Copy CID"
+  "copy_cid": "Copy CID",
+  "error_playing_audio": "Error while playing audio, please try again"
 }
