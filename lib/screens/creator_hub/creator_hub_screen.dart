@@ -4,6 +4,7 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:easel_flutter/main.dart';
 import 'package:easel_flutter/models/nft.dart';
 import 'package:easel_flutter/screens/creator_hub/creator_hub_view_model.dart';
+import 'package:easel_flutter/screens/creator_hub/widgets/delete_confirmation_dialog.dart';
 import 'package:easel_flutter/screens/creator_hub/widgets/drafts_more_bottomsheet.dart';
 import 'package:easel_flutter/screens/creator_hub/widgets/nfts_list_tile.dart';
 import 'package:easel_flutter/utils/constants.dart';
@@ -11,7 +12,6 @@ import 'package:easel_flutter/utils/easel_app_theme.dart';
 import 'package:easel_flutter/utils/enums.dart';
 import 'package:easel_flutter/utils/extension_util.dart';
 import 'package:easel_flutter/utils/route_util.dart';
-import 'package:easel_flutter/widgets/model_viewer.dart';
 import 'package:easel_flutter/widgets/painters/painter.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
@@ -182,7 +182,16 @@ class _CreatorHubContentState extends State<CreatorHubContent> {
                         viewModel.publishCollapse ? Icons.add : Icons.remove,
                         size: isTablet ? 15.w : 20.w,
                       )),
-                )
+                ),
+                IconButton(
+                    onPressed: () => scheduleMicrotask(() {
+                          viewModel.getPublishAndDraftData();
+                        }),
+                    icon: Icon(
+                      Icons.refresh,
+                      color: EaselAppTheme.kBlack,
+                      size: 18.h,
+                    ))
               ],
             ),
             Wrap(
@@ -261,7 +270,9 @@ class _CreatorHubContentState extends State<CreatorHubContent> {
                 ? ListView.builder(
                     shrinkWrap: true,
                     physics: const NeverScrollableScrollPhysics(),
-                    itemBuilder: (_, index) =>  DraftsListTile(nft: viewModel.nftList[index],),
+                    itemBuilder: (_, index) => DraftsListTile(
+                      nft: viewModel.nftList[index],
+                    ),
                     itemCount: viewModel.nftList.length,
                   )
                 : const SizedBox()
@@ -279,8 +290,6 @@ class _CreatorHubContentState extends State<CreatorHubContent> {
           return NFTsListTile(publishedNFT: nft);
         });
   }
-
-
 
   Widget buildCard({required String title, required String count, required Color cardColor, required CreatorHubViewModel viewModel}) {
     return Container(
@@ -306,10 +315,9 @@ class _CreatorHubContentState extends State<CreatorHubContent> {
   }
 }
 
-
 class DraftsListTile extends StatefulWidget {
-
   final NFT nft;
+
   const DraftsListTile({Key? key, required this.nft}) : super(key: key);
 
   @override
@@ -317,8 +325,6 @@ class DraftsListTile extends StatefulWidget {
 }
 
 class _DraftsListTileState extends State<DraftsListTile> {
-
-
   TextStyle titleStyle = TextStyle(
     fontSize: isTablet ? 14.sp : 18.sp,
     fontWeight: FontWeight.w800,
@@ -326,16 +332,13 @@ class _DraftsListTileState extends State<DraftsListTile> {
     fontFamily: kUniversalFontFamily,
   );
 
-
-
   Widget threeDWidget = const SizedBox();
 
   @override
-  void initState(){
+  void initState() {
     super.initState();
 
-
-    if(widget.nft.assetType.toAssetTypeEnum() == AssetType.ThreeD ){
+    if (widget.nft.assetType.toAssetTypeEnum() == AssetType.ThreeD) {
       threeDWidget = ModelViewer(
         src: widget.nft.url,
         ar: false,
@@ -343,9 +346,7 @@ class _DraftsListTileState extends State<DraftsListTile> {
         cameraControls: false,
       );
     }
-
   }
-
 
   @override
   Widget build(BuildContext context) {
@@ -360,7 +361,8 @@ class _DraftsListTileState extends State<DraftsListTile> {
           Expanded(
             child: InkWell(
               onTap: () {
-                viewModel.deleteNft(widget.nft.id);
+                final DeleteDialog deleteDialog = DeleteDialog(contextt: context, nft: widget.nft);
+                deleteDialog.show();
               },
               child: SvgPicture.asset(kSvgDelete),
             ),
@@ -394,23 +396,23 @@ class _DraftsListTileState extends State<DraftsListTile> {
                     width: 45.h,
                     child: LeadingBuilder(
                         onImage: (_) => CachedNetworkImage(
-                          fit: BoxFit.fill,
-                          imageUrl: widget.nft.url,
-                          errorWidget: (a, b, c) => const Center(child: Icon(Icons.error_outline)),
-                          placeholder: (context, url) => Shimmer(color: EaselAppTheme.cardBackground, child: const SizedBox.expand()),
-                        ),
+                              fit: BoxFit.fill,
+                              imageUrl: widget.nft.url,
+                              errorWidget: (a, b, c) => const Center(child: Icon(Icons.error_outline)),
+                              placeholder: (context, url) => Shimmer(color: EaselAppTheme.cardBackground, child: const SizedBox.expand()),
+                            ),
                         onVideo: (_) => CachedNetworkImage(
-                          fit: BoxFit.fill,
-                          imageUrl: widget.nft.thumbnailUrl,
-                          errorWidget: (a, b, c) => const Center(child: Icon(Icons.error_outline)),
-                          placeholder: (context, url) => Shimmer(color: EaselAppTheme.cardBackground, child: const SizedBox.expand()),
-                        ),
+                              fit: BoxFit.fill,
+                              imageUrl: widget.nft.thumbnailUrl,
+                              errorWidget: (a, b, c) => const Center(child: Icon(Icons.error_outline)),
+                              placeholder: (context, url) => Shimmer(color: EaselAppTheme.cardBackground, child: const SizedBox.expand()),
+                            ),
                         onAudio: (_) => CachedNetworkImage(
-                          fit: BoxFit.fill,
-                          imageUrl: widget.nft.thumbnailUrl,
-                          errorWidget: (a, b, c) => const Center(child: Icon(Icons.error_outline)),
-                          placeholder: (context, url) => Shimmer(color: EaselAppTheme.cardBackground, child: const SizedBox.expand()),
-                        ),
+                              fit: BoxFit.fill,
+                              imageUrl: widget.nft.thumbnailUrl,
+                              errorWidget: (a, b, c) => const Center(child: Icon(Icons.error_outline)),
+                              placeholder: (context, url) => Shimmer(color: EaselAppTheme.cardBackground, child: const SizedBox.expand()),
+                            ),
                         on3D: (_) => threeDWidget,
                         assetType: widget.nft.assetType.toAssetTypeEnum())),
                 SizedBox(
@@ -457,4 +459,3 @@ class _DraftsListTileState extends State<DraftsListTile> {
     );
   }
 }
-

@@ -54,14 +54,14 @@ class CreatorHubViewModel extends ChangeNotifier {
   void getTotalForSale() {
     forSaleCount = 0;
     for (int i = 0; i < _publishedNFTsList.length; i++) {
-      if (publishedNFTsList[i].isEnabled && publishedNFTsList[i].amountMinted < publishedNFTsList[i].quantity) {
+      if (publishedNFTsList[i].isEnabled && publishedNFTsList[i].amountMinted < int.parse(publishedNFTsList[i].quantity)) {
         forSaleCount++;
       }
     }
   }
 
   Future<void> getPublishAndDraftData() async {
-    await Future.wait([getRecipesList(), getDraftsList()]);
+    await getRecipesList();
 
     getTotalForSale();
     notifyListeners();
@@ -73,6 +73,7 @@ class CreatorHubViewModel extends ChangeNotifier {
     if (!isPylonsExist) {
       return;
     }
+
     final cookBookId = getCookbookIdFromLocalDatasource();
     if (cookBookId == null) {
       return;
@@ -91,7 +92,6 @@ class CreatorHubViewModel extends ChangeNotifier {
     }
     for (final recipe in recipesList) {
       final nft = NFT.fromRecipe(recipe);
-
       _publishedNFTsList.add(nft);
     }
 

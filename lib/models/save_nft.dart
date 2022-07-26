@@ -10,6 +10,7 @@ class SaveNft {
   final bool? isFreeDrop;
   final String? step;
   final String? hashtags;
+  final int? dateTime;
 
   SaveNft({
     this.id,
@@ -23,5 +24,6 @@ class SaveNft {
     this.nftDescription,
     this.nftName,
     this.hashtags,
+    this.dateTime,
   });
 }

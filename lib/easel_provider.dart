@@ -3,11 +3,10 @@ import 'dart:io';
 
 import 'package:easel_flutter/main.dart';
 import 'package:easel_flutter/models/api_response.dart';
-import '../utils/enums.dart';
-
 import 'package:easel_flutter/models/denom.dart';
 import 'package:easel_flutter/models/nft.dart';
 import 'package:easel_flutter/models/nft_format.dart';
+import 'package:easel_flutter/models/picked_file_model.dart';
 import 'package:easel_flutter/models/save_nft.dart';
 import 'package:easel_flutter/repository/repository.dart';
 import 'package:easel_flutter/screens/welcome_screen/widgets/show_wallet_install_dialog.dart';
@@ -19,7 +18,6 @@ import 'package:easel_flutter/utils/extension_util.dart';
 import 'package:easel_flutter/utils/file_utils_helper.dart';
 import 'package:easel_flutter/widgets/loading.dart';
 import 'package:easy_localization/easy_localization.dart';
-import 'package:file_picker/file_picker.dart';
 import 'package:fixnum/fixnum.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -31,15 +29,19 @@ import 'package:pylons_sdk/src/features/models/sdk_ipc_response.dart';
 import 'package:share_plus/share_plus.dart';
 import 'package:video_player/video_player.dart';
 
+import '../utils/enums.dart';
+
 class EaselProvider extends ChangeNotifier {
   final VideoPlayerHelper videoPlayerHelper;
-  final AudioPlayerHelper audioPlayerHelper;
+  final AudioPlayerHelper audioPlayerHelperForFile;
+  final AudioPlayerHelper audioPlayerHelperForUrl;
   final FileUtilsHelper fileUtilsHelper;
   final Repository repository;
 
   EaselProvider({
     required this.videoPlayerHelper,
-    required this.audioPlayerHelper,
+    required this.audioPlayerHelperForFile,
+    required this.audioPlayerHelperForUrl,
     required this.fileUtilsHelper,
     required this.repository,
   });
@@ -65,6 +67,8 @@ class EaselProvider extends ChangeNotifier {
   NFT get publishedNFTClicked => _publishedNFTClicked;
 
   bool willLoadFirstTime = true;
+
+  bool collapsed = true;
 
   void setPublishedNFTClicked(NFT nft) {
     _publishedNFTClicked = nft;
@@ -122,7 +126,7 @@ class EaselProvider extends ChangeNotifier {
   File? get audioThumbnail => _audioThumbnail;
 
   bool _isInitializedForFile = false;
-  final bool _isInitializedForNetwork = false;
+  bool _isInitializedForNetwork = false;
 
   bool get isInitializedForFile => _isInitializedForFile;
 
@@ -130,6 +134,11 @@ class EaselProvider extends ChangeNotifier {
 
   set setIsInitialized(bool value) {
     _isInitializedForFile = value;
+    notifyListeners();
+  }
+
+  set setIsInitializedUrl(bool value) {
+    _isInitializedForNetwork = value;
     notifyListeners();
   }
 
@@ -180,6 +189,12 @@ class EaselProvider extends ChangeNotifier {
     hashtagsList.clear();
     willLoadFirstTime = true;
     isFreeDrop = false;
+    collapsed = true;
+    notifyListeners();
+  }
+
+  void toChangeCollapse() {
+    collapsed = !collapsed;
     notifyListeners();
   }
 
@@ -228,23 +243,21 @@ class EaselProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-  Future<void> resolveNftFormat(BuildContext context, String ext) async {
+  Future<NftFormat?> resolveNftFormat(BuildContext context, String ext) async {
     for (var format in NftFormat.supportedFormats) {
       if (format.extensions.contains(ext)) {
         _nftFormat = format;
-        break;
+        return _nftFormat;
       }
     }
     notifyListeners();
-  }
-
-  Future<void> delayLoading() async {
-    Future.delayed(const Duration(seconds: 3));
-    isVideoLoading = false;
+    return null;
   }
 
   /// VIDEO PLAYER FUNCTIONS
   void initializeVideoPlayerWithFile() async {
+    videoLoadingError = "";
+    isVideoLoading = true;
     videoPlayerHelper.initializeVideoPlayerWithFile(file: _file!);
     videoPlayerController = videoPlayerHelper.getVideoPlayerController();
     delayLoading();
@@ -253,14 +266,20 @@ class EaselProvider extends ChangeNotifier {
     videoPlayerController.addListener(() {
       if (videoPlayerController.value.hasError) {
         videoLoadingError = videoPlayerController.value.errorDescription!;
-        notifyListeners();
       }
-
-
+      notifyListeners();
     });
   }
 
+  delayLoading() {
+    Future.delayed(const Duration(seconds: 2));
+    isVideoLoading = false;
+    notifyListeners();
+  }
+
   void initializeVideoPlayerWithUrl({required String publishedNftUrl}) async {
+    videoLoadingError = "";
+    isVideoLoading = true;
     videoPlayerHelper.initializeVideoPlayerWithUrl(videoUrl: publishedNftUrl);
     videoPlayerController = videoPlayerHelper.getVideoPlayerController();
     delayLoading();
@@ -276,10 +295,12 @@ class EaselProvider extends ChangeNotifier {
 
   void playVideo() {
     videoPlayerHelper.playVideo();
+    notifyListeners();
   }
 
   void pauseVideo() {
     videoPlayerHelper.pauseVideo();
+    notifyListeners();
   }
 
   void seekVideo(Duration position) {
@@ -298,14 +319,6 @@ class EaselProvider extends ChangeNotifier {
 
   bool isUrlLoaded = false;
 
-  late StreamSubscription playerStateSubscription;
-
-  late StreamSubscription positionStreamSubscription;
-
-  late StreamSubscription bufferPositionSubscription;
-
-  late StreamSubscription durationStreamSubscription;
-
   Future initializeAudioPlayer({required publishedNFTUrl}) async {
     audioProgressNotifier = ValueNotifier<ProgressBarState>(
       ProgressBarState(
@@ -316,10 +329,10 @@ class EaselProvider extends ChangeNotifier {
     );
     buttonNotifier = ValueNotifier<ButtonState>(ButtonState.loading);
 
-    isUrlLoaded = await audioPlayerHelper.setUrl(url: publishedNFTUrl);
+    setIsInitializedUrl = await audioPlayerHelperForUrl.setUrl(url: publishedNFTUrl);
 
-    if (isUrlLoaded) {
-      playerStateSubscription = audioPlayerHelper.playerStateStream().listen((playerState) {
+    if (isInitializedForNetwork) {
+      audioPlayerHelperForUrl.playerStateStream().listen((playerState) {
         final isPlaying = playerState.playing;
         final processingState = playerState.processingState;
 
@@ -338,13 +351,12 @@ class EaselProvider extends ChangeNotifier {
             break;
 
           default:
-            audioPlayerHelper.seekAudio(position: Duration.zero);
-            audioPlayerHelper.pauseAudio();
+            audioPlayerHelperForFile.seekAudio(position: Duration.zero);
+            audioPlayerHelperForFile.pauseAudio();
         }
       });
     }
-
-    positionStreamSubscription = audioPlayerHelper.positionStream().listen((position) {
+    audioPlayerHelperForUrl.positionStream().listen((position) {
       final oldState = audioProgressNotifier.value;
       audioProgressNotifier.value = ProgressBarState(
         current: position,
@@ -353,7 +365,7 @@ class EaselProvider extends ChangeNotifier {
       );
     });
 
-    bufferPositionSubscription = audioPlayerHelper.bufferedPositionStream().listen((bufferedPosition) {
+    audioPlayerHelperForUrl.bufferedPositionStream().listen((bufferedPosition) {
       final oldState = audioProgressNotifier.value;
       audioProgressNotifier.value = ProgressBarState(
         current: oldState.current,
@@ -362,7 +374,7 @@ class EaselProvider extends ChangeNotifier {
       );
     });
 
-    durationStreamSubscription = audioPlayerHelper.durationStream().listen((totalDuration) {
+    audioPlayerHelperForUrl.durationStream().listen((totalDuration) {
       final oldState = audioProgressNotifier.value;
       audioProgressNotifier.value = ProgressBarState(
         current: oldState.current,
@@ -372,26 +384,40 @@ class EaselProvider extends ChangeNotifier {
     });
   }
 
-  void playAudio() {
-    audioPlayerHelper.playAudio();
-  }
-
-  void pauseAudio() {
-    audioPlayerHelper.pauseAudio();
-  }
-
-  void seekAudio(Duration position) {
-    audioPlayerHelper.seekAudio(position: position);
-  }
-
-  void disposeAudioController() {
-    if (isUrlLoaded) {
-      playerStateSubscription.cancel();
-      bufferPositionSubscription.cancel();
-      durationStreamSubscription.cancel();
-      positionStreamSubscription.cancel();
+  void playAudio(bool forFile) {
+    if (forFile) {
+      audioPlayerHelperForFile.playAudio();
+    } else {
+      audioPlayerHelperForUrl.playAudio();
     }
-    audioPlayerHelper.destroyAudioPlayer();
+  }
+
+  void pauseAudio(bool forFile) {
+    if (forFile) {
+      audioPlayerHelperForFile.pauseAudio();
+    } else {
+      audioPlayerHelperForUrl.pauseAudio();
+    }
+  }
+
+  void seekAudio(Duration position, bool forFile) {
+    if (forFile) {
+      audioPlayerHelperForFile.seekAudio(position: position);
+    } else {
+      audioPlayerHelperForUrl.seekAudio(position: position);
+    }
+  }
+
+  void disposeAudioController() async {
+    audioProgressNotifier = ValueNotifier<ProgressBarState>(
+      ProgressBarState(
+        current: Duration.zero,
+        buffered: Duration.zero,
+        total: Duration.zero,
+      ),
+    );
+    buttonNotifier = ValueNotifier<ButtonState>(ButtonState.loading);
+    audioPlayerHelperForFile.destroyAudioPlayer();
   }
 
   void initializePlayers({required NFT publishedNFT}) {
@@ -410,11 +436,11 @@ class EaselProvider extends ChangeNotifier {
     }
   }
 
-  Future<void> setFile(BuildContext context, PlatformFile selectedFile) async {
-    _file = File(selectedFile.path!);
-    _fileName = selectedFile.name;
-    _fileSize = fileUtilsHelper.getFileSizeString(fileLength: _file!.lengthSync());
-    _fileExtension = fileUtilsHelper.getExtension(_fileName);
+  Future<void> setFile({required String filePath, required String fileName}) async {
+    _file = File(filePath);
+    _fileName = fileName;
+    _fileSize = repository.getFileSizeString(fileLength: _file!.lengthSync());
+    _fileExtension = repository.getExtension(_fileName);
     await _getMetadata(_file!);
     notifyListeners();
   }
@@ -485,9 +511,7 @@ class EaselProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-  Future<bool> verifyPylonsAndMint({
-    required NFT nft,
-  }) async {
+  Future<bool> verifyPylonsAndMint({required NFT nft}) async {
     final isPylonsExist = await PylonsWallet.instance.exists();
 
     if (!isPylonsExist) {
@@ -560,9 +584,7 @@ class EaselProvider extends ChangeNotifier {
 
     _recipeId = repository.autoGenerateEaselId();
 
-    audioPlayerHelper.pauseAudio();
-    setVideoThumbnail(null);
-    setAudioThumbnail(null);
+    disposePlayers(assetType: nft.assetType);
 
     String residual = nft.tradePercentage.trim();
 
@@ -578,7 +600,7 @@ class EaselProvider extends ChangeNotifier {
           nft.isFreeDrop ? CoinInput() : CoinInput(coins: [Coin(amount: price, denom: _selectedDenom.symbol)])
         ],
         itemInputs: [],
-        costPerBlock: Coin(denom: kUpylon, amount: "0"),
+        costPerBlock: Coin(denom: kUpylon, amount: costPerBlock),
         entries: EntriesList(coinOutputs: [], itemOutputs: [
           ItemOutput(
               id: kEaselNFT,
@@ -604,14 +626,15 @@ class EaselProvider extends ChangeNotifier {
                 StringParam(key: kName, value: nft.name.trim()),
                 StringParam(key: kAppType, value: kEasel),
                 StringParam(key: kDescription, value: nft.description.trim()),
-                StringParam(key: kHashtags, value: hashtagsList.join('#')),
+                StringParam(key: kHashtags, value: hashtagsList.join(kHashtagSymbol)),
                 StringParam(key: kNFTFormat, value: nft.assetType),
                 StringParam(key: kNFTURL, value: nft.url),
                 StringParam(key: kThumbnailUrl, value: nft.thumbnailUrl),
                 StringParam(key: kCreator, value: nft.creator.trim()),
+                StringParam(key: kCID, value: nft.cid),
               ],
               mutableStrings: [],
-              transferFee: [Coin(denom: kPylonSymbol, amount: "1")],
+              transferFee: [Coin(denom: kPylonSymbol, amount: transferFeeAmount)],
               tradePercentage: nft.tradePercentage.trim(),
               tradeable: true,
               amountMinted: Int64(0),
@@ -639,7 +662,7 @@ class EaselProvider extends ChangeNotifier {
   bool isDifferentUserName(String savedUserName) => (currentUsername.isNotEmpty && savedUserName != currentUsername);
 
   Future<void> shareNFT(Size size) async {
-    String url = fileUtilsHelper.generateEaselLink(
+    String url = repository.generateEaselLinkForShare(
       cookbookId: _cookbookId ?? '',
       recipeId: _recipeId,
     );
@@ -647,13 +670,16 @@ class EaselProvider extends ChangeNotifier {
   }
 
   void onVideoThumbnailPicked() async {
-    final result = await fileUtilsHelper.pickFile(NftFormat.supportedFormats[0]);
+    final pickedFile = await repository.pickFile(NftFormat.supportedFormats[0]);
 
-    if (result == null) return;
-    final loading = Loading()..showLoading(message: kCompressingMessage);
-    final file = await fileUtilsHelper.compressAndGetFile(File(result.path!));
-    setVideoThumbnail(file);
-    loading.dismiss();
+    final result = pickedFile.getOrElse(() => PickedFileModel(
+          path: "",
+          fileName: "",
+          extension: "",
+        ));
+
+    if (result.path.isEmpty) return;
+    setVideoThumbnail(File(result.path));
   }
 
   void populateCoinsIfPylonsNotExists() {
@@ -730,7 +756,7 @@ class EaselProvider extends ChangeNotifier {
     return stripeTryAgainCompleter.future;
   }
 
-  Future initializeAudioPlayerForFile() async {
+  Future initializeAudioPlayerForFile({required File file}) async {
     audioProgressNotifier = ValueNotifier<ProgressBarState>(
       ProgressBarState(
         current: Duration.zero,
@@ -738,18 +764,22 @@ class EaselProvider extends ChangeNotifier {
         total: Duration.zero,
       ),
     );
-    buttonNotifier = ValueNotifier<ButtonState>(ButtonState.loading);
 
-    setIsInitialized = await audioPlayerHelper.setFile(file: _file!.path);
+    buttonNotifier = ValueNotifier<ButtonState>(ButtonState.loading);
+    if (_file == null) {
+      "error_playing_audio".tr().show();
+      return;
+    }
+    setIsInitialized = await audioPlayerHelperForFile.setFile(file: _file!.path);
 
     if (isInitializedForFile) {
-      audioPlayerHelper.playerStateStream().listen((event) {}).onData((playerState) async {
+      audioPlayerHelperForFile.playerStateStream().listen((event) {}).onData((playerState) async {
         final isPlaying = playerState.playing;
         final processingState = playerState.processingState;
 
         switch (processingState) {
           case ProcessingState.idle:
-            await audioPlayerHelper.setFile(file: _file!.path);
+            await audioPlayerHelperForFile.setFile(file: _file!.path);
             break;
           case ProcessingState.loading:
           case ProcessingState.buffering:
@@ -765,12 +795,12 @@ class EaselProvider extends ChangeNotifier {
             break;
 
           default:
-            audioPlayerHelper.seekAudio(position: Duration.zero);
-            audioPlayerHelper.pauseAudio();
+            audioPlayerHelperForFile.seekAudio(position: Duration.zero);
+            audioPlayerHelperForFile.pauseAudio();
         }
       });
     }
-    audioPlayerHelper.positionStream().listen((event) {}).onData((position) {
+    audioPlayerHelperForFile.positionStream().listen((event) {}).onData((position) {
       final oldState = audioProgressNotifier.value;
       audioProgressNotifier.value = ProgressBarState(
         current: position,
@@ -779,7 +809,7 @@ class EaselProvider extends ChangeNotifier {
       );
     });
 
-    audioPlayerHelper.bufferedPositionStream().listen((event) {}).onData((bufferedPosition) {
+    audioPlayerHelperForFile.bufferedPositionStream().listen((event) {}).onData((bufferedPosition) {
       final oldState = audioProgressNotifier.value;
       audioProgressNotifier.value = ProgressBarState(
         current: oldState.current,
@@ -787,7 +817,7 @@ class EaselProvider extends ChangeNotifier {
         total: oldState.total,
       );
     });
-    audioPlayerHelper.durationStream().listen((event) {}).onData((totalDuration) {
+    audioPlayerHelperForFile.durationStream().listen((event) {}).onData((totalDuration) {
       final oldState = audioProgressNotifier.value;
       audioProgressNotifier.value = ProgressBarState(
         current: oldState.current,
@@ -800,6 +830,14 @@ class EaselProvider extends ChangeNotifier {
   late NFT nft;
 
   Future<bool> saveNftLocally(UploadStep step) async {
+    if (nftFormat.format == NFTTypes.audio) {
+      audioPlayerHelperForFile.pauseAudio();
+    }
+
+    if (nftFormat.format == NFTTypes.video) {
+      videoPlayerController.pause();
+    }
+
     ApiResponse uploadThumbnailResponse = ApiResponse.error(errorMessage: "");
     ApiResponse uploadUrlResponse = ApiResponse.error(errorMessage: "");
 
@@ -815,6 +853,7 @@ class EaselProvider extends ChangeNotifier {
       final uploadResponse = await repository.uploadFile(nftFormat.format == NFTTypes.audio ? audioThumbnail! : videoThumbnail!);
       if (uploadResponse.isLeft()) {
         loading.dismiss();
+        "something_wrong_while_uploading".tr().show();
         return false;
       }
       uploadThumbnailResponse = uploadResponse.getOrElse(() => uploadThumbnailResponse);
@@ -824,11 +863,11 @@ class EaselProvider extends ChangeNotifier {
         return false;
       }
     }
-    audioPlayerHelper.pauseAudio();
 
     final response = await repository.uploadFile(_file!);
     if (response.isLeft()) {
       loading.dismiss();
+      "something_wrong_while_uploading".tr().show();
       return false;
     }
     final fileUploadResponse = response.getOrElse(() => uploadUrlResponse);
@@ -845,8 +884,9 @@ class EaselProvider extends ChangeNotifier {
       assetType: nftFormat.format.getTitle(),
       cookbookID: cookbookId ?? "",
       width: fileWidth.toString(),
+      creator: repository.getArtistName(),
       denom: "",
-      tradePercentage: "",
+      tradePercentage: royaltyController.text,
       height: fileHeight.toString(),
       duration: fileDuration.toString(),
       description: descriptionController.text,
@@ -858,6 +898,7 @@ class EaselProvider extends ChangeNotifier {
       name: artistNameController.text,
       url: "$ipfsDomain/${fileUploadResponse.data?.value?.cid}",
       price: priceController.text,
+      dateTime: DateTime.now().millisecondsSinceEpoch,
     );
 
     final saveNftResponse = await repository.saveNft(nft);
@@ -878,7 +919,7 @@ class EaselProvider extends ChangeNotifier {
       cookbookID: cookbookId ?? "",
       width: fileWidth.toString(),
       denom: "",
-      tradePercentage: "",
+      tradePercentage: royaltyController.text,
       height: fileHeight.toString(),
       duration: fileDuration.toString(),
       description: descriptionController.text,
@@ -900,7 +941,6 @@ class EaselProvider extends ChangeNotifier {
     setAudioThumbnail(null);
 
     setVideoThumbnail(null);
-    Navigator.of(navigatorKey.currentState!.overlay!.context).pop();
 
     return true;
   }
@@ -911,7 +951,14 @@ class EaselProvider extends ChangeNotifier {
       _hashtags = hashtagsList.join(',');
     }
     SaveNft saveNftForDescription = SaveNft(
-        id: id, nftDescription: descriptionController.text, nftName: artNameController.text, creatorName: artistNameController.text, step: UploadStep.descriptionAdded.name, hashtags: _hashtags);
+      id: id,
+      nftDescription: descriptionController.text,
+      nftName: artNameController.text,
+      creatorName: artistNameController.text,
+      step: UploadStep.descriptionAdded.name,
+      hashtags: _hashtags,
+      dateTime: DateTime.now().millisecondsSinceEpoch,
+    );
     final saveNftResponse = await repository.updateNftFromDescription(saveNft: saveNftForDescription);
 
     final _nft = await repository.getNft(id);
@@ -933,10 +980,12 @@ class EaselProvider extends ChangeNotifier {
       price: priceController.text,
       quantity: noOfEditionController.text,
       step: UploadStep.priceAdded.name,
-      denomSymbol: isFreeDrop == false ? selectedDenom.symbol : "",
+      denomSymbol: isFreeDrop ? "" : selectedDenom.symbol,
       isFreeDrop: isFreeDrop,
+      dateTime: DateTime.now().millisecondsSinceEpoch,
     );
     final saveNftResponse = await repository.updateNftFromPrice(saveNft: saveNftForPrice);
+
     final _nft = await repository.getNft(id);
     final dataFromLocal = _nft.getOrElse(() => nft);
     repository.setCacheDynamicType(key: nftKey, value: dataFromLocal);
@@ -949,6 +998,25 @@ class EaselProvider extends ChangeNotifier {
 
   Future<void> deleteNft(int? id) async {
     await repository.deleteNft(id!);
+  }
+
+  void toHashtagList(String hashtag) {
+    hashtagsList = hashtag.split(kHashtagSymbol);
+  }
+
+  void disposePlayers({required String assetType}) {
+    if (assetType == AssetType.Audio.name) {
+      setAudioThumbnail(null);
+      audioPlayerHelperForFile.pauseAudio();
+      audioPlayerHelperForUrl.pauseAudio();
+      return;
+    }
+
+    if (assetType == AssetType.Video.name) {
+      setVideoThumbnail(null);
+      videoPlayerController.dispose();
+      return;
+    }
   }
 }
 

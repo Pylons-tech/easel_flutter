@@ -74,6 +74,8 @@ class _PriceScreenState extends State<PriceScreen> {
                       },
                       cuttingHeight: 12.h,
                       isShadow: false,
+                      clipperType: ClipperType.bottomLeftTopRight,
+                      fontWeight: FontWeight.w500,
                     ),
                   ),
                   SizedBox(
@@ -89,56 +91,57 @@ class _PriceScreenState extends State<PriceScreen> {
                       },
                       cuttingHeight: 12.h,
                       isShadow: false,
+                      clipperType: ClipperType.bottomLeftTopRight,
+                      fontWeight: FontWeight.w500,
                     ),
                   ),
                   SizedBox(
                     width: 60.w,
                   ),
                 ]),
-                Visibility(
-                  visible: !provider.isFreeDrop,
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      VerticalSpace(20.h),
-                      EaselPriceInputField(
-                        key: ValueKey("${provider.selectedDenom.name}-amount"),
-                        inputFormatters: [FilteringTextInputFormatter.digitsOnly, LengthLimitingTextInputFormatter(kMaxPriceLength), provider.selectedDenom.getFormatter()],
-                        controller: provider.priceController,
-                        validator: (value) {
-                          setState(() {
-                            if (value!.isEmpty) {
-                              _priceFieldError = kEnterPriceText;
-                              return;
-                            }
-                            if (double.parse(value.replaceAll(",", "")) < kMinValue) {
-                              _priceFieldError = "$kMinIsText $kMinValue";
-                              return;
-                            }
-                            _priceFieldError = '';
-                          });
-                          return null;
-                        },
-                      ),
-                      _priceFieldError.isNotEmpty
-                          ? Padding(
-                              padding: EdgeInsets.only(left: 8.w, right: 10.w, top: 2.h),
-                              child: Text(
-                                _priceFieldError,
-                                style: TextStyle(
-                                  fontSize: 12.sp,
-                                  color: Colors.red,
-                                ),
-                              ),
-                            )
-                          : const SizedBox.shrink(),
-                      Text(
-                        kNetworkFeeWarnText,
-                        style: TextStyle(color: EaselAppTheme.kLightPurple, fontSize: 14.sp, fontWeight: FontWeight.w800),
-                      ),
-                    ],
-                  ),
-                ),
+                !provider.isFreeDrop
+                    ? Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          VerticalSpace(20.h),
+                          EaselPriceInputField(
+                            key: ValueKey("${provider.selectedDenom.name}-amount"),
+                            inputFormatters: [FilteringTextInputFormatter.digitsOnly, LengthLimitingTextInputFormatter(kMaxPriceLength), provider.selectedDenom.getFormatter()],
+                            controller: provider.priceController,
+                            validator: (value) {
+                              setState(() {
+                                if (value!.isEmpty) {
+                                  _priceFieldError = kEnterPriceText;
+                                  return;
+                                }
+                                if (double.parse(value.replaceAll(",", "")) < kMinValue) {
+                                  _priceFieldError = "$kMinIsText $kMinValue";
+                                  return;
+                                }
+                                _priceFieldError = '';
+                              });
+                              return null;
+                            },
+                          ),
+                          _priceFieldError.isNotEmpty
+                              ? Padding(
+                                  padding: EdgeInsets.only(left: 8.w, right: 10.w, top: 2.h),
+                                  child: Text(
+                                    _priceFieldError,
+                                    style: TextStyle(
+                                      fontSize: 12.sp,
+                                      color: Colors.red,
+                                    ),
+                                  ),
+                                )
+                              : const SizedBox.shrink(),
+                          Text(
+                            kNetworkFeeWarnText,
+                            style: TextStyle(color: EaselAppTheme.kLightPurple, fontSize: 14.sp, fontWeight: FontWeight.w800),
+                          ),
+                        ],
+                      )
+                    : const SizedBox(),
                 VerticalSpace(20.h),
                 EaselTextField(
                   label: kRoyaltiesText,
@@ -233,22 +236,31 @@ class _PriceScreenState extends State<PriceScreen> {
                   style: TextStyle(color: EaselAppTheme.kLightPurple, fontSize: 14.sp, fontWeight: FontWeight.w800),
                 ),
                 VerticalSpace(20.h),
-                Align(
-                  alignment: Alignment.centerRight,
-                  child: PylonsButton(
-                    onPressed: () async {
-                      FocusScope.of(context).unfocus();
-                      if (_formKey.currentState!.validate()) {
-                        if (checkTextFields()) {
-                          context.read<EaselProvider>().updateNftFromPrice(nft!.id!);
-                          context.read<HomeViewModel>().pageController.nextPage(duration: const Duration(milliseconds: kPageAnimationTimeInMillis), curve: Curves.easeIn);
-                        }
-                      }
-                    },
-                    btnText: kContinue,
-                    showArrow: true,
-                    isBlue: false,
-                  ),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    PylonsButton(
+                      onPressed: () async {
+                        FocusScope.of(context).unfocus();
+                        validateAndUpdatePrice();
+                      },
+                      btnText: "save".tr(),
+                      showArrow: false,
+                      mobileScreenButtonWidth: 0.4,
+                      color: EaselAppTheme.kLightGreyColor,
+                      textColor: EaselAppTheme.kLightBlackText,
+                    ),
+                    PylonsButton(
+                      onPressed: () async {
+                        FocusScope.of(context).unfocus();
+                        validateAndUpdatePrice();
+                      },
+                      btnText: kContinue,
+                      showArrow: false,
+                      mobileScreenButtonWidth: 0.4,
+                      color: EaselAppTheme.kRed,
+                    ),
+                  ],
                 ),
                 VerticalSpace(20.h),
               ],
@@ -258,6 +270,19 @@ class _PriceScreenState extends State<PriceScreen> {
       ),
     );
   }
-  bool checkTextFields() => _royaltiesFieldError.isEmpty && _noOfEditionsFieldError.isEmpty && _priceFieldError.isEmpty;
 
+  validateAndUpdatePrice() async {
+    if (!_formKey.currentState!.validate()) {
+      return;
+    }
+    if (context.read<EaselProvider>().isFreeDrop) {
+      if (_royaltiesFieldError.isNotEmpty || _noOfEditionsFieldError.isNotEmpty) return;
+      await context.read<EaselProvider>().updateNftFromPrice(nft!.id!);
+      context.read<HomeViewModel>().nextPage();
+    } else {
+      if (_royaltiesFieldError.isNotEmpty || _noOfEditionsFieldError.isNotEmpty || _priceFieldError.isNotEmpty) return;
+      await context.read<EaselProvider>().updateNftFromPrice(nft!.id!);
+      context.read<HomeViewModel>().nextPage();
+    }
+  }
 }

@@ -1,18 +1,15 @@
 import 'package:easel_flutter/easel_provider.dart';
 import 'package:easel_flutter/main.dart';
-import 'package:easel_flutter/screens/welcome_screen/widgets/show_something_wrong_dialog.dart';
-import 'package:easel_flutter/screens/welcome_screen/widgets/show_wallet_install_dialog.dart';
-import 'package:easel_flutter/services/datasources/local_datasource.dart';
+import 'package:easel_flutter/repository/repository.dart';
+import 'package:easel_flutter/utils/easel_app_theme.dart';
 import 'package:easel_flutter/utils/route_util.dart';
 import 'package:easel_flutter/utils/screen_responsive.dart';
-import 'package:easy_localization/easy_localization.dart';
-import 'package:flutter/material.dart';
 import 'package:easel_flutter/widgets/pylons_button.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get_it/get_it.dart';
 import 'package:provider/provider.dart';
-import 'package:pylons_sdk/pylons_sdk.dart';
 
 import '../utils/constants.dart';
 
@@ -47,6 +44,7 @@ class _SplashScreenState extends State<SplashScreen> {
             child: PylonsButton(
               onPressed: onGetStartedPressed,
               btnText: kGetStarted,
+              color: EaselAppTheme.kBlue,
             ),
           ),
         ),
@@ -85,6 +83,7 @@ class _SplashScreenState extends State<SplashScreen> {
             child: PylonsButton(
               onPressed: onGetStartedPressed,
               btnText: kGetStarted,
+              color: EaselAppTheme.kBlue,
             ),
           ),
         ),
@@ -92,62 +91,19 @@ class _SplashScreenState extends State<SplashScreen> {
     );
   }
 
-  void checkPylonsAppExistsOrNot() async {
-    final isExist = await PylonsWallet.instance.exists();
-
-    if (isExist) {
-      getProfile();
-      return;
-    }
-
+  void populateCoinsAndMoveForward() async {
     context.read<EaselProvider>().populateCoinsIfPylonsNotExists();
 
     navigatorKey.currentState!.pushReplacementNamed(RouteUtil.kRouteCreatorHub);
   }
 
-  Future<void> getProfile() async {
-    final response = await context.read<EaselProvider>().getProfile();
-
-    if (response.success) {
-      await Future.delayed(const Duration(
-        milliseconds: 500,
-      ));
-
-      navigatorKey.currentState!.pushReplacementNamed(RouteUtil.kRouteCreatorHub);
-      return;
-    }
-
-    if (response.errorCode == kErrProfileNotExist) {
-      ShowWalletInstallDialog showWalletInstallDialog = ShowWalletInstallDialog(
-          context: context,
-          errorMessage: 'create_username_description'.tr(),
-          buttonMessage: 'open_pylons_app'.tr(),
-          onDownloadPressed: () {
-            PylonsWallet.instance.goToPylons();
-          },
-          onClose: () {
-            Navigator.of(context).pop();
-          });
-      showWalletInstallDialog.show();
-    } else {
-      ShowSomethingWentWrongDialog somethingWentWrongDialog = ShowSomethingWentWrongDialog(
-          context: context,
-          errorMessage: kPleaseTryAgain,
-          onClose: () {
-            Navigator.of(context).pop();
-          });
-      somethingWentWrongDialog.show();
-    }
-  }
-
   void onGetStartedPressed() {
-    var onBoardingComplete = GetIt.I.get<LocalDataSource>().getOnBoardingComplete();
+    var onBoardingComplete = GetIt.I.get<Repository>().getOnBoardingComplete();
     if (!onBoardingComplete) {
       Navigator.of(context).pushNamed(RouteUtil.kRouteTutorial);
       return;
     }
 
-    checkPylonsAppExistsOrNot();
-
+    populateCoinsAndMoveForward();
   }
 }

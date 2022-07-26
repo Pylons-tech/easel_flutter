@@ -2,13 +2,13 @@ import 'dart:async';
 
 import 'package:easel_flutter/easel_provider.dart';
 import 'package:easel_flutter/repository/repository.dart';
-import 'package:easel_flutter/screens/custom_widgets/initial_draft_detail_dialog.dart';
 import 'package:easel_flutter/utils/constants.dart';
 import 'package:easel_flutter/utils/easel_app_theme.dart';
 import 'package:easel_flutter/utils/space_utils.dart';
 import 'package:easel_flutter/viewmodels/home_viewmodel.dart';
 import 'package:easel_flutter/widgets/easel_hashtag_input_field.dart';
 import 'package:easel_flutter/widgets/easel_text_field.dart';
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -16,7 +16,6 @@ import 'package:get_it/get_it.dart';
 import 'package:provider/provider.dart';
 
 import '../widgets/pylons_button.dart';
-import 'custom_widgets/initial_draft_detail_dialog.dart';
 
 class DescribeScreen extends StatefulWidget {
   const DescribeScreen({Key? key}) : super(key: key);
@@ -45,13 +44,8 @@ class _DescribeScreenState extends State<DescribeScreen> {
     super.initState();
 
     provider.nft = repository.getCacheDynamicType(key: nftKey);
-
     scheduleMicrotask(() {
-      if (provider.nft.id != null) {
-        repository.updateNFTDialogShown(id: provider.nft.id!);
-      }
       provider.toCheckSavedArtistName();
-      DraftDetailDialog(context: context, easelProvider: provider).show();
     });
   }
 
@@ -171,25 +165,50 @@ class _DescribeScreenState extends State<DescribeScreen> {
                   VerticalSpace(20.h),
                   const EaselHashtagInputField(),
                   VerticalSpace(40.h),
-                  Align(
-                    alignment: Alignment.centerRight,
-                    child: PylonsButton(
-                      onPressed: () async {
-                        FocusScope.of(context).unfocus();
-                        if (_formKey.currentState!.validate()) {
-                          if (_artNameFieldError.isEmpty && _artistNameFieldError.isEmpty && _descriptionFieldError.isEmpty) {
-                            context.read<EaselProvider>().updateNftFromDescription(provider.nft.id!);
-
-                            context.read<EaselProvider>().saveArtistName(provider.artistNameController.text.trim());
-
-                            context.read<HomeViewModel>().pageController.nextPage(duration: const Duration(milliseconds: kPageAnimationTimeInMillis), curve: Curves.easeIn);
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      PylonsButton(
+                        onPressed: () async {
+                          FocusScope.of(context).unfocus();
+                          if (!_formKey.currentState!.validate()) {
+                            return;
                           }
-                        }
-                      },
-                      btnText: kContinue,
-                      showArrow: true,
-                      isBlue: false,
-                    ),
+                          if ((_artNameFieldError.isNotEmpty || _artistNameFieldError.isNotEmpty || _descriptionFieldError.isNotEmpty)) {
+                            return;
+                          }
+
+                          context.read<EaselProvider>().updateNftFromDescription(provider.nft.id!);
+                          context.read<EaselProvider>().saveArtistName(provider.artistNameController.text.trim());
+                          Navigator.pop(context);
+                        },
+                        btnText: "save".tr(),
+                        showArrow: false,
+                        mobileScreenButtonWidth: 0.4,
+                        color: EaselAppTheme.kLightGreyColor,
+                        textColor: EaselAppTheme.kLightBlackText,
+                      ),
+                      PylonsButton(
+                        onPressed: () async {
+                          FocusScope.of(context).unfocus();
+                          if (!_formKey.currentState!.validate()) {
+                            return;
+                          }
+
+                          if ((_artNameFieldError.isNotEmpty || _artistNameFieldError.isNotEmpty || _descriptionFieldError.isNotEmpty)) {
+                            return;
+                          }
+
+                          context.read<EaselProvider>().updateNftFromDescription(provider.nft.id!);
+                          context.read<EaselProvider>().saveArtistName(provider.artistNameController.text.trim());
+                          context.read<HomeViewModel>().nextPage();
+                        },
+                        btnText: "continue".tr(),
+                        showArrow: false,
+                        mobileScreenButtonWidth: 0.4,
+                        color: EaselAppTheme.kRed,
+                      ),
+                    ],
                   ),
                   VerticalSpace(20.h),
                 ],

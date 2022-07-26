@@ -54,3 +54,24 @@ class UploadFailedFailure extends Failure {
   @override
   List<Object?> get props => [message];
 }
+
+class PickingFileFailure extends Failure {
+  const PickingFileFailure({required String message}) : super(message);
+
+  @override
+  List<Object?> get props => [message];
+}
+
+class CompressingFileFailure extends Failure {
+  const CompressingFileFailure({required String message}) : super(message);
+
+  @override
+  List<Object?> get props => [message];
+}
+
+class UrlLaunchingFileFailure extends Failure {
+  const UrlLaunchingFileFailure({required String message}) : super(message);
+
+  @override
+  List<Object?> get props => [message];
+}

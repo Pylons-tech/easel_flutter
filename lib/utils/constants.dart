@@ -1,9 +1,9 @@
 import 'package:easy_localization/easy_localization.dart';
 
 List kTutorialItems = [
-  {'header': 'upload_your_nft_file'.tr(), 'description': 'pick_the_file'.tr(), 'image': 'assets/images/tutorial1.png'},
+  {'header': 'upload_your_ipfs'.tr(), 'description': 'pick_the_file'.tr(), 'image': 'assets/images/tutorial1.png'},
   {'header': 'edit_your_nft'.tr(), 'description': 'enter_information_describing_your_nft'.tr(), 'image': 'assets/images/tutorial2.png'},
-  {'header': 'manage_your_nft'.tr(), 'header1': 'pylons_app'.tr(), 'description': 'you_can_collect_manage_your_nft'.tr(), 'image': 'assets/images/tutorial3.png'},
+  {'header': 'publish_your_nft'.tr(), 'header1': 'pylons_app'.tr(), 'description': 'once_you_enter_all'.tr(), 'image': 'assets/images/tutorial3.png'},
 ];
 
 /// ```PNG assets
@@ -52,7 +52,11 @@ const kDummyImg = 'assets/images/svg/dummy_img.png';
 const kVideoIcon = 'assets/images/video_icon.png';
 
 const kSvgPylonsLogo = 'assets/images/svg/pylons_logo.svg';
+const kSvgIpfsLogo = 'assets/images/ipfs_logo.png';
 const kSvgViewIcon = 'assets/images/svg/view_icon.svg';
+const kOwnerVerifiedIcon = 'assets/images/svg/verified.svg';
+
+const String kLoadingGif = 'assets/images/gifs/loading.gif';
 
 /// ```URL constants
 const ipfsDomain = 'https://ipfs.io/ipfs';
@@ -63,6 +67,7 @@ const kWalletWebLink = 'https://wallet.pylons.tech';
 const kWalletDynamicLink = 'pylons.page.link';
 
 const kEaselEmail = "easel@pylons.tech";
+const kPylons = "Pylons";
 
 /// ```Number constants
 const kMinNFTName = 9;
@@ -74,6 +79,7 @@ const kMaxEdition = 10000;
 const kMinRoyalty = 0;
 const kMaxRoyalty = 99.99;
 const kFileSizeLimitInGB = 32;
+const kFileSizeLimitForAudiVideoInGB = 0.2;
 const kMaxPriceLength = 14;
 const kSecInMillis = 1000;
 const double TABLET_MIN_WIDTH = 600;
@@ -231,6 +237,7 @@ const kHashtags = "Hashtags";
 const kNFTFormat = "NFT_Format";
 const kNFTURL = "NFT_URL";
 const kCreator = "Creator";
+const kCID = "cid";
 const kThumbnailUrl = "Thumbnail_URL";
 const kEasel = "Easel";
 const kEaselNFT = "Easel_NFT";
@@ -247,8 +254,8 @@ const kLoadingMessage = "Loading...";
 
 final List stepLabels = ["upload", "draft", "publish"];
 
-final List<String> imageAllowedExtsAndroid = ["png", "jpg", "jpeg", "svg", "heif"];
-final List<String> audioAllowedExtsAndroid = ['mp3', 'ogg', 'wav'];
+final List<String> imageAllowedExts = ["png", "jpg", "jpeg", "svg", "heif"];
+final List<String> audioAllowedExts = ['mp3', 'ogg', 'wav', 'aac'];
 
 /// Nft viewmodel key values
 const String kNameKey = "Name";
@@ -301,5 +308,14 @@ const supportedEmail = "support@pylons.tech";
 const cookbookDesc = "Cookbook for Easel NFT";
 const cookbookName = "Easel Cookbook";
 const kVersionCookboox = "v0.0.1";
+const kHashtagSymbol = "#";
+const String costPerBlock = '0';
+const String transferFeeAmount = '1';
 
 const int kPageAnimationTimeInMillis = 300;
+
+const kAmvKey = "amv";
+const kApnKey = "apn";
+const kIbiKey = "ibi";
+const kImvKey = "imv";
+const kLinkKey = "link";

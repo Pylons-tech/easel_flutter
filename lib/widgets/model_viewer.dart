@@ -1,7 +1,6 @@
-
-import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:model_viewer_plus/model_viewer_plus.dart';
+import 'package:easel_flutter/utils/easel_app_theme.dart';
 import 'package:flutter/material.dart';
+import 'package:model_viewer_plus/model_viewer_plus.dart';
 
 class Model3dViewer extends StatefulWidget {
   final bool isFile;
@@ -16,8 +15,7 @@ class Model3dViewer extends StatefulWidget {
 class _Model3dViewerState extends State<Model3dViewer> {
   @override
   Widget build(BuildContext context) {
-    return Padding(
-      padding: EdgeInsets.only(bottom: 60.h),
+    return Container(
       child: modelViewer,
     );
   }
@@ -30,9 +28,10 @@ class _Model3dViewerState extends State<Model3dViewer> {
 
     modelViewer = ModelViewer(
       src: widget.isFile ? 'file://${widget.path!}' : widget.path!,
-      ar: true,
       autoRotate: false,
       cameraControls: true,
+      loading: Loading.eager,
+      backgroundColor: EaselAppTheme.kBlack,
     );
   }
 }

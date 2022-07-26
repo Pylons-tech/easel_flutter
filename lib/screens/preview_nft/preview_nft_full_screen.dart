@@ -1,8 +1,6 @@
 import 'dart:async';
-import 'dart:ui';
 
 import 'package:easel_flutter/easel_provider.dart';
-import 'package:easel_flutter/screens/preview_nft/nft_audio_player_screen.dart';
 import 'package:easel_flutter/screens/preview_nft/nft_image_screen.dart';
 import 'package:easel_flutter/screens/preview_nft/nft_video_player_screen.dart';
 import 'package:easel_flutter/utils/constants.dart';
@@ -56,40 +54,36 @@ class _PreviewNFTFullScreenState extends State<PreviewNFTFullScreen> {
             PreviewNFTBuilder(
                 onImage: (context) => NftImageWidget(imageUrl: easelProvider.publishedNFTClicked.url),
                 onVideo: (context) => const NFTVideoPlayerScreen(),
-                onAudio: (context) => const NFTAudioPlayerScreen(),
-                on3D: (context) => Model3dViewer(isFile: false, path: easelProvider.publishedNFTClicked.url,),
+                on3D: (context) => Model3dViewer(
+                      isFile: false,
+                      path: easelProvider.publishedNFTClicked.url,
+                    ),
                 assetType: easelProvider.publishedNFTClicked.assetType.toAssetTypeEnum()),
             Column(
               mainAxisAlignment: MainAxisAlignment.start,
               children: [
                 ClipRect(
-                  child: BackdropFilter(
-                    filter: ImageFilter.blur(
-                      sigmaX: 5.0,
-                      sigmaY: 5.0,
-                    ),
-                    child: Container(
-                      color: Colors.black.withOpacity(0.3),
-                      child: Padding(
-                        padding: EdgeInsets.fromLTRB(20.w, 30.h, 0, 10.h),
-                        child: Row(
-                          children: [
-                            IconButton(
-                              onPressed: () {
-                                onBackPressed(context: context);
-                              },
-                              icon: Icon(
-                                Icons.arrow_back_ios,
-                                size: 22.h,
-                                color: EaselAppTheme.kWhite,
-                              ),
+                  child: Container(
+                    color: Colors.black.withOpacity(0.3),
+                    child: Padding(
+                      padding: EdgeInsets.fromLTRB(20.w, 30.h, 0, 10.h),
+                      child: Row(
+                        children: [
+                          IconButton(
+                            onPressed: () {
+                              onBackPressed(context: context);
+                            },
+                            icon: Icon(
+                              Icons.arrow_back_ios,
+                              size: 22.h,
+                              color: EaselAppTheme.kWhite,
                             ),
-                            Text(
-                              kBack,
-                              style: EaselAppTheme.titleStyle.copyWith(fontSize: 18.sp, color: EaselAppTheme.kWhite),
-                            ),
-                          ],
-                        ),
+                          ),
+                          Text(
+                            kBack,
+                            style: EaselAppTheme.titleStyle.copyWith(fontSize: 18.sp, color: EaselAppTheme.kWhite),
+                          ),
+                        ],
                       ),
                     ),
                   ),
@@ -106,7 +100,6 @@ class _PreviewNFTFullScreenState extends State<PreviewNFTFullScreen> {
 class PreviewNFTBuilder extends StatelessWidget {
   final WidgetBuilder onImage;
   final WidgetBuilder onVideo;
-  final WidgetBuilder onAudio;
   final WidgetBuilder on3D;
   final AssetType assetType;
 
@@ -114,7 +107,6 @@ class PreviewNFTBuilder extends StatelessWidget {
     Key? key,
     required this.onImage,
     required this.onVideo,
-    required this.onAudio,
     required this.on3D,
     required this.assetType,
   }) : super(key: key);
@@ -122,9 +114,6 @@ class PreviewNFTBuilder extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     switch (assetType) {
-      case AssetType.Audio:
-        return onAudio(context);
-
       case AssetType.Image:
         return onImage(context);
 
@@ -133,6 +122,8 @@ class PreviewNFTBuilder extends StatelessWidget {
 
       case AssetType.ThreeD:
         return on3D(context);
+      default:
+        return const SizedBox();
     }
   }
 }
