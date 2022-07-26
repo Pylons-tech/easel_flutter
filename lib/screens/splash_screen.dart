@@ -1,6 +1,6 @@
 import 'package:easel_flutter/easel_provider.dart';
 import 'package:easel_flutter/main.dart';
-import 'package:easel_flutter/services/datasources/local_datasource.dart';
+import 'package:easel_flutter/repository/repository.dart';
 import 'package:easel_flutter/utils/easel_app_theme.dart';
 import 'package:easel_flutter/utils/route_util.dart';
 import 'package:easel_flutter/utils/screen_responsive.dart';
@@ -98,7 +98,7 @@ class _SplashScreenState extends State<SplashScreen> {
   }
 
   void onGetStartedPressed() {
-    var onBoardingComplete = GetIt.I.get<LocalDataSource>().getOnBoardingComplete();
+    var onBoardingComplete = GetIt.I.get<Repository>().getOnBoardingComplete();
     if (!onBoardingComplete) {
       Navigator.of(context).pushNamed(RouteUtil.kRouteTutorial);
       return;

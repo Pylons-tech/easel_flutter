@@ -1,9 +1,9 @@
 import 'package:easy_localization/easy_localization.dart';
 
 List kTutorialItems = [
-  {'header': 'upload_your_nft_file'.tr(), 'description': 'pick_the_file'.tr(), 'image': 'assets/images/tutorial1.png'},
+  {'header': 'upload_your_ipfs'.tr(), 'description': 'pick_the_file'.tr(), 'image': 'assets/images/tutorial1.png'},
   {'header': 'edit_your_nft'.tr(), 'description': 'enter_information_describing_your_nft'.tr(), 'image': 'assets/images/tutorial2.png'},
-  {'header': 'manage_your_nft'.tr(), 'header1': 'pylons_app'.tr(), 'description': 'you_can_collect_manage_your_nft'.tr(), 'image': 'assets/images/tutorial3.png'},
+  {'header': 'publish_your_nft'.tr(), 'header1': 'pylons_app'.tr(), 'description': 'once_you_enter_all'.tr(), 'image': 'assets/images/tutorial3.png'},
 ];
 
 /// ```PNG assets

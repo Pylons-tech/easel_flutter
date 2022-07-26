@@ -149,6 +149,14 @@ abstract class Repository {
   /// This function is used to launch the link generated and open the link in external source platform
   /// Input: [url] is the link to be launched by the launcher
   Future<Either<Failure, void>> launchMyUrl({required String url});
+
+  /// This method will save the on boarding complete
+  /// Output: [bool] returns whether the operation is successful or not
+  Future<bool> saveOnBoardingComplete();
+
+  /// This method will get the on boarding status
+  /// Output: [bool] returns whether the operation is successful or not
+  bool getOnBoardingComplete();
 }
 
 class RepositoryImp implements Repository {
@@ -373,5 +381,15 @@ class RepositoryImp implements Repository {
     } catch (e) {
       return Left(UrlLaunchingFileFailure(message: "url_launching_error".tr()));
     }
+  }
+
+  @override
+  Future<bool> saveOnBoardingComplete() {
+    return localDataSource.saveOnBoardingComplete();
+  }
+
+  @override
+  bool getOnBoardingComplete() {
+    return localDataSource.getOnBoardingComplete();
   }
 }

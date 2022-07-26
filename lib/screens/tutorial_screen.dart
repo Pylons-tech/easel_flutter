@@ -1,8 +1,7 @@
-import 'package:auto_size_text/auto_size_text.dart';
 import 'package:bottom_drawer/bottom_drawer.dart';
 import 'package:easel_flutter/easel_provider.dart';
 import 'package:easel_flutter/main.dart';
-import 'package:easel_flutter/services/datasources/local_datasource.dart';
+import 'package:easel_flutter/repository/repository.dart';
 import 'package:easel_flutter/utils/easel_app_theme.dart';
 import 'package:easel_flutter/utils/extension_util.dart';
 import 'package:easel_flutter/utils/route_util.dart';
@@ -70,50 +69,10 @@ class _TutorialScreenState extends State<TutorialScreen> {
                       item['image'],
                       fit: BoxFit.contain,
                     )),
-                if (kTutorialItems.indexOf(item) == kTutorialItems.length - 1) ...[
-                  SizedBox(
-                    height: 0.15.sh,
-                    child: Align(
-                      alignment: Alignment.bottomRight,
-                      child: GestureDetector(
-                        child: Container(
-                          alignment: Alignment.center,
-                          margin: EdgeInsets.only(right: isTablet ? 50.w : 10.w, bottom: 2.h),
-                          padding: EdgeInsets.only(bottom: 8.h),
-                          width: 0.17.sh,
-                          height: 0.08.sh,
-                          decoration: const BoxDecoration(
-                            image: DecorationImage(image: AssetImage(kTooltipBalloon), fit: BoxFit.contain),
-                          ),
-                          child: AutoSizeText(
-                            kWhyAppNeeded,
-                            maxFontSize: isTablet ? 18 : 14,
-                            style: TextStyle(fontSize: isTablet ? 18 : 14, fontWeight: FontWeight.w400, color: EaselAppTheme.kWhite),
-                          ),
-                        ),
-                        onTap: () {
-                          myBottomDrawerController.open();
-                        },
-                      ),
-                    ),
-                  ),
-                  RichText(
-                    text: TextSpan(
-                      style: TextStyle(fontSize: isTablet ? 16.sp : 18.sp, fontWeight: FontWeight.w800, color: EaselAppTheme.kDartGrey),
-                      children: <TextSpan>[
-                        TextSpan(text: item['header']),
-                        TextSpan(text: item['header1'], style: const TextStyle(color: EaselAppTheme.kPurple02)),
-                      ],
-                    ),
-                  )
-                ] else ...[
-                  SizedBox(height: 0.15.sh),
-                  Text(item['header'], style: TextStyle(fontSize: isTablet ? 16.sp : 18.sp, fontWeight: FontWeight.w800, color: EaselAppTheme.kDartGrey), textAlign: TextAlign.center),
-                ],
+                SizedBox(height: 0.15.sh),
+                Text(item['header'], style: TextStyle(fontSize: isTablet ? 16.sp : 18.sp, fontWeight: FontWeight.w800, color: EaselAppTheme.kDartGrey), textAlign: TextAlign.center),
                 const SizedBox(height: 15),
-                Container(
-                    padding: EdgeInsets.symmetric(horizontal: 20.w),
-                    child: Text(item['description'], style: TextStyle(color: Colors.black, fontSize: 16.sp, fontWeight: FontWeight.w400), textAlign: TextAlign.center)),
+                SizedBox(width: 0.63.sw, child: Text(item['description'], style: TextStyle(color: Colors.black, fontSize: 13.sp, fontWeight: FontWeight.w400), textAlign: TextAlign.center)),
               ],
             ))
         .toList();
@@ -154,7 +113,7 @@ class _TutorialScreenState extends State<TutorialScreen> {
                   margin: EdgeInsets.only(right: 25.w, bottom: 40.h),
                   child: PylonsButton(
                     onPressed: () async {
-                      GetIt.I.get<LocalDataSource>().saveOnBoardingComplete();
+                      GetIt.I.get<Repository>().saveOnBoardingComplete();
 
                       populateCoinsAndMoveForward();
                     },
