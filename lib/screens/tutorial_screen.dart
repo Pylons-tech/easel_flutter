@@ -67,7 +67,9 @@ class _TutorialScreenState extends State<TutorialScreen> {
                     padding: EdgeInsets.symmetric(horizontal: 0.22.sw),
                     child: Image.asset(
                       item['image'],
-                      fit: BoxFit.contain,
+                      height: 40,
+                      width: 40,
+                      fit: BoxFit.fill,
                     )),
                 SizedBox(height: 0.15.sh),
                 Text(item['header'], style: TextStyle(fontSize: isTablet ? 16.sp : 18.sp, fontWeight: FontWeight.w800, color: EaselAppTheme.kDartGrey), textAlign: TextAlign.center),
@@ -85,6 +87,25 @@ class _TutorialScreenState extends State<TutorialScreen> {
 
   @override
   Widget build(BuildContext context) {
+    slides = kTutorialItems
+        .map((item) => Column(
+      children: <Widget>[
+        SizedBox(height: 0.2.sh),
+        Padding(
+            padding: EdgeInsets.symmetric(horizontal: 0.22.sw),
+            child: Image.asset(
+              item['image'],
+              height: isTablet ? 140.w : 200.w,
+              width: isTablet ? 140.w : 200.w,
+              fit: BoxFit.fill,
+            )),
+        SizedBox(height: 0.15.sh),
+        Text(item['header'], style: TextStyle(fontSize: isTablet ? 16.sp : 18.sp, fontWeight: FontWeight.w800, color: EaselAppTheme.kDartGrey), textAlign: TextAlign.center),
+        const SizedBox(height: 15),
+        SizedBox(width: 0.63.sw, child: Text(item['description'], style: TextStyle(color: Colors.black, fontSize: 13.sp, fontWeight: FontWeight.w400), textAlign: TextAlign.center)),
+      ],
+    ))
+        .toList();
     return Scaffold(
       backgroundColor: EaselAppTheme.kWhite03,
       body: Stack(
