@@ -46,7 +46,7 @@ class VideoProgressWidget extends StatelessWidget {
                   : Row(
                       children: [
                         if (easelProvider.isVideoLoading)
-                          SizedBox(height: 22.h, width: 22.h, child: CircularProgressIndicator(strokeWidth: 2.w, color: darkMode ? EaselAppTheme.kWhite : EaselAppTheme.kBlack))
+                          SizedBox(height: 22.h, width: 22.h, child: Image.asset(kLoadingGif))
                         else if (easelProvider.videoPlayerController.value.isPlaying)
                           InkWell(
                             onTap: easelProvider.pauseVideo,
@@ -100,7 +100,7 @@ class VideoProgressWidget extends StatelessWidget {
                               ),
                             );
                           }
-                          return SizedBox(width: 15.w, child: CircularProgressIndicator(strokeWidth: 1.w, color: darkMode ? EaselAppTheme.kWhite : EaselAppTheme.kBlack));
+                          return SizedBox(width: 30.w, child: Image.asset(kLoadingGif));
                         }),
                     Text(
                       isForFile ? formatDuration(easelProvider.fileDuration ~/ kSecInMillis) : formatDuration(easelProvider.videoPlayerController.value.duration.inSeconds),
