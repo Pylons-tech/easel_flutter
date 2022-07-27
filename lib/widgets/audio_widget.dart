@@ -187,6 +187,11 @@ class _AudioWidgetState extends State<AudioWidget> with WidgetsBindingObserver {
   }
 
   void audioThumbnailPicker() async {
+    if (!widget.previewFlag) {
+      easelProvider.audioPlayerHelperForUrl.pauseAudio();
+    } else {
+      easelProvider.audioPlayerHelperForFile.pauseAudio();
+    }
     final pickedFile = await repository.pickFile(NftFormat.supportedFormats[0]);
     final result = pickedFile.getOrElse(() => PickedFileModel(path: "", fileName: "", extension: ""));
     if (result.path.isEmpty) {

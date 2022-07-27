@@ -244,6 +244,7 @@ const kEaselNFT = "Easel_NFT";
 const kUpylon = "upylon";
 const kExtraInfo = "extraInfo";
 const kDuration = "Duration";
+const kFileSize = "fileSize";
 
 const kThumbnailFileName = "temp.jpg";
 

@@ -191,13 +191,15 @@ class _OwnerBottomDrawerState extends State<OwnerBottomDrawer> {
                               crossAxisAlignment: CrossAxisAlignment.end,
                               children: [
                                 Padding(
-                                  padding: EdgeInsets.only(right: 10.w, bottom: 10.h, top: 10.h, left: 5.w),
+                                  padding: EdgeInsets.only(
+                                    right: 8.w,
+                                  ),
                                   child: ValueListenableBuilder<ButtonState>(
                                     valueListenable: viewModel.buttonNotifier,
                                     builder: (_, value, __) {
                                       switch (value) {
                                         case ButtonState.loading:
-                                          return SizedBox(height: 35.h, width: 22.h, child: CircularProgressIndicator(strokeWidth: 2.w, color: Colors.black));
+                                          return SizedBox(height: 20.h, width: 15.h, child: CircularProgressIndicator(strokeWidth: 2.w, color: EaselAppTheme.kWhite));
                                         case ButtonState.paused:
                                           return InkWell(
                                             onTap: () {
@@ -206,7 +208,7 @@ class _OwnerBottomDrawerState extends State<OwnerBottomDrawer> {
                                             child: Icon(
                                               Icons.play_arrow_outlined,
                                               color: EaselAppTheme.kWhite,
-                                              size: 30.h,
+                                              size: 22.h,
                                             ),
                                           );
 
@@ -218,7 +220,7 @@ class _OwnerBottomDrawerState extends State<OwnerBottomDrawer> {
                                             child: Icon(
                                               Icons.pause,
                                               color: EaselAppTheme.kWhite,
-                                              size: 30.h,
+                                              size: 22.h,
                                             ),
                                           );
                                       }
@@ -239,9 +241,10 @@ class _OwnerBottomDrawerState extends State<OwnerBottomDrawer> {
                                           bufferedBarColor: EaselAppTheme.kLightGrey,
                                           buffered: value.buffered,
                                           total: value.total,
-                                          timeLabelTextStyle: TextStyle(color: EaselAppTheme.kDartGrey, fontWeight: FontWeight.w800, fontSize: 9.sp),
-                                          thumbRadius: 10.h,
-                                          timeLabelPadding: 3.h,
+                                          timeLabelTextStyle: TextStyle(color: EaselAppTheme.kWhite, fontWeight: FontWeight.w800, fontSize: 9.sp),
+                                          thumbRadius: 6.h,
+                                          timeLabelPadding: 2.h,
+                                          timeLabelLocation: TimeLabelLocation.none,
                                           onSeek: (position) {
                                             viewModel.seekAudio(position, false);
                                           },
@@ -344,38 +347,41 @@ class _OwnerBottomDrawerState extends State<OwnerBottomDrawer> {
                                 crossAxisAlignment: CrossAxisAlignment.end,
                                 children: [
                                   Padding(
-                                    padding: EdgeInsets.only(right: 10.w, bottom: 10.h, top: 10.h, left: 5.w),
-                                    child: ValueListenableBuilder<ButtonState>(
-                                      valueListenable: viewModel.buttonNotifier,
-                                      builder: (_, value, __) {
-                                        switch (value) {
-                                          case ButtonState.loading:
-                                            return SizedBox(height: 35.h, width: 22.h, child: CircularProgressIndicator(strokeWidth: 2.w, color: EaselAppTheme.kWhite));
-                                          case ButtonState.paused:
-                                            return InkWell(
-                                              onTap: () {
-                                                viewModel.playAudio(false);
-                                              },
-                                              child: Icon(
-                                                Icons.play_arrow_outlined,
-                                                color: EaselAppTheme.kWhite,
-                                                size: 30.h,
-                                              ),
-                                            );
+                                    padding: EdgeInsets.only(right: 10.w, bottom: 10.h, top: 5.h, left: 5.w),
+                                    child: SizedBox(
+                                      height: 28.0.h,
+                                      child: ValueListenableBuilder<ButtonState>(
+                                        valueListenable: viewModel.buttonNotifier,
+                                        builder: (_, value, __) {
+                                          switch (value) {
+                                            case ButtonState.loading:
+                                              return SizedBox(height: 20.h, width: 15.h, child: CircularProgressIndicator(strokeWidth: 2.w, color: EaselAppTheme.kWhite));
+                                            case ButtonState.paused:
+                                              return InkWell(
+                                                onTap: () {
+                                                  viewModel.playAudio(false);
+                                                },
+                                                child: Icon(
+                                                  Icons.play_arrow_outlined,
+                                                  color: EaselAppTheme.kWhite,
+                                                  size: 25.h,
+                                                ),
+                                              );
 
-                                          case ButtonState.playing:
-                                            return InkWell(
-                                              onTap: () {
-                                                viewModel.pauseAudio(false);
-                                              },
-                                              child: Icon(
-                                                Icons.pause,
-                                                color: EaselAppTheme.kWhite,
-                                                size: 30.h,
-                                              ),
-                                            );
-                                        }
-                                      },
+                                            case ButtonState.playing:
+                                              return InkWell(
+                                                onTap: () {
+                                                  viewModel.pauseAudio(false);
+                                                },
+                                                child: Icon(
+                                                  Icons.pause,
+                                                  color: EaselAppTheme.kWhite,
+                                                  size: 25.h,
+                                                ),
+                                              );
+                                          }
+                                        },
+                                      ),
                                     ),
                                   ),
                                   Expanded(
@@ -383,7 +389,7 @@ class _OwnerBottomDrawerState extends State<OwnerBottomDrawer> {
                                       valueListenable: viewModel.audioProgressNotifier,
                                       builder: (_, value, __) {
                                         return Padding(
-                                          padding: EdgeInsets.only(bottom: 3.h, right: 20.w),
+                                          padding: EdgeInsets.only(bottom: 5.h, right: 20.w),
                                           child: ProgressBar(
                                             progressBarColor: EaselAppTheme.kWhite,
                                             thumbColor: EaselAppTheme.kWhite,
@@ -392,9 +398,9 @@ class _OwnerBottomDrawerState extends State<OwnerBottomDrawer> {
                                             bufferedBarColor: EaselAppTheme.kLightGrey,
                                             buffered: value.buffered,
                                             total: value.total,
-                                            timeLabelTextStyle: TextStyle(color: EaselAppTheme.kDartGrey, fontWeight: FontWeight.w800, fontSize: 9.sp),
-                                            thumbRadius: 10.h,
-                                            timeLabelPadding: 3.h,
+                                            timeLabelTextStyle: TextStyle(color: EaselAppTheme.kWhite, fontWeight: FontWeight.w800, fontSize: 9.sp),
+                                            thumbRadius: 6.h,
+                                            timeLabelPadding: 2.h,
                                             onSeek: (position) {
                                               viewModel.seekAudio(position, false);
                                             },

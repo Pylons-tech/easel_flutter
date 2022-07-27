@@ -632,6 +632,7 @@ class EaselProvider extends ChangeNotifier {
                 StringParam(key: kThumbnailUrl, value: nft.thumbnailUrl),
                 StringParam(key: kCreator, value: nft.creator.trim()),
                 StringParam(key: kCID, value: nft.cid),
+                StringParam(key: kFileSize, value: nft.fileSize),
               ],
               mutableStrings: [],
               transferFee: [Coin(denom: kPylonSymbol, amount: transferFeeAmount)],
@@ -670,6 +671,7 @@ class EaselProvider extends ChangeNotifier {
   }
 
   void onVideoThumbnailPicked() async {
+    videoPlayerController.pause();
     final pickedFile = await repository.pickFile(NftFormat.supportedFormats[0]);
 
     final result = pickedFile.getOrElse(() => PickedFileModel(
@@ -890,6 +892,7 @@ class EaselProvider extends ChangeNotifier {
       height: fileHeight.toString(),
       duration: fileDuration.toString(),
       description: descriptionController.text,
+      fileSize: _fileSize,
       recipeID: recipeId,
       fileName: _file!.path.split("/").last,
       cid: fileUploadResponse.data?.value?.cid,
