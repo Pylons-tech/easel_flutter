@@ -36,9 +36,12 @@ class _PreviewScreenState extends State<PreviewScreen> {
       backgroundColor: EaselAppTheme.kWhite,
       body: Consumer<EaselProvider>(
         builder: (_, provider, __) => WillPopScope(
-          onWillPop: () async {
+          onWillPop: () {
             provider.setAudioThumbnail(null);
-            return true;
+            provider.setVideoThumbnail(null);
+            provider.stopVideoIfPlaying();
+
+            return Future.value(true);
           },
           child: Stack(
             children: [

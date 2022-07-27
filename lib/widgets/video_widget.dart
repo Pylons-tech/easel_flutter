@@ -86,6 +86,7 @@ class _VideoWidgetState extends State<VideoWidget> {
           width: 120.w,
           child: InkWell(
             onTap: () {
+              easelProvider.stopVideoIfPlaying();
               easelProvider.onVideoThumbnailPicked();
             },
             child: easelProvider.videoThumbnail != null
@@ -206,6 +207,7 @@ class _VideoWidgetState extends State<VideoWidget> {
 
   @override
   void dispose() {
+    easelProvider.disposeVideoController();
     super.dispose();
   }
 }

@@ -233,6 +233,9 @@ class EaselProvider extends ChangeNotifier {
   }
 
   void stopVideoIfPlaying() {
+    if (!videoPlayerController.value.isInitialized) {
+      return;
+    }
     if (videoPlayerController.value.isPlaying) {
       videoPlayerController.pause();
     }

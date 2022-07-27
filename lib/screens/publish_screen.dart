@@ -1,4 +1,4 @@
-import 'dart:ui';
+import 'dart:developer';
 
 import 'package:audio_video_progress_bar/audio_video_progress_bar.dart';
 import 'package:detectable_text_field/detector/sample_regular_expressions.dart';
@@ -33,16 +33,16 @@ import '../widgets/video_progress_widget.dart';
 
 TextStyle _rowTitleTextStyle = TextStyle(color: Colors.white, fontWeight: FontWeight.w700, fontSize: isTablet ? 11.sp : 13.sp);
 
-class PublishedNewScreen extends StatefulWidget {
-  const PublishedNewScreen({
+class PublishScreen extends StatefulWidget {
+  const PublishScreen({
     Key? key,
   }) : super(key: key);
 
   @override
-  State<PublishedNewScreen> createState() => _PublishedNewScreenState();
+  State<PublishScreen> createState() => _PublishScreenState();
 }
 
-class _PublishedNewScreenState extends State<PublishedNewScreen> {
+class _PublishScreenState extends State<PublishScreen> {
   var repository = GetIt.I.get<Repository>();
   var easelProvider = GetIt.I.get<EaselProvider>();
   var homeViewModel = GetIt.I.get<HomeViewModel>();
@@ -57,6 +57,7 @@ class _PublishedNewScreenState extends State<PublishedNewScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: EaselAppTheme.kBlack,
       body: Consumer<EaselProvider>(builder: (_, easelProvider, __) {
         return Stack(
           children: [
@@ -66,10 +67,10 @@ class _PublishedNewScreenState extends State<PublishedNewScreen> {
                 top: 50.h,
                 child: IconButton(
                   onPressed: () {
-                    easelProvider.videoLoadingError = '';
-                    easelProvider.isVideoLoading = true;
                     homeViewModel.currentPage = ValueNotifier(1);
                     homeViewModel.currentStep = ValueNotifier(1);
+                    easelProvider.videoLoadingError = '';
+                    easelProvider.isVideoLoading = true;
                     homeViewModel.previousPage();
                   },
                   icon: const Icon(
@@ -197,7 +198,7 @@ class _OwnerBottomDrawerState extends State<OwnerBottomDrawer> {
                                     builder: (_, value, __) {
                                       switch (value) {
                                         case ButtonState.loading:
-                                          return SizedBox(height: 35.h, width: 22.h, child: CircularProgressIndicator(strokeWidth: 2.w, color: Colors.black));
+                                          return SizedBox(height: 22.h, width: 22.h, child: CircularProgressIndicator(strokeWidth: 2.w, color: EaselAppTheme.kWhite));
                                         case ButtonState.paused:
                                           return InkWell(
                                             onTap: () {
@@ -239,7 +240,7 @@ class _OwnerBottomDrawerState extends State<OwnerBottomDrawer> {
                                           bufferedBarColor: EaselAppTheme.kLightGrey,
                                           buffered: value.buffered,
                                           total: value.total,
-                                          timeLabelTextStyle: TextStyle(color: EaselAppTheme.kDartGrey, fontWeight: FontWeight.w800, fontSize: 9.sp),
+                                          timeLabelTextStyle: TextStyle(color: EaselAppTheme.kWhite, fontWeight: FontWeight.w800, fontSize: 9.sp),
                                           thumbRadius: 10.h,
                                           timeLabelPadding: 3.h,
                                           onSeek: (position) {
@@ -284,8 +285,8 @@ class _OwnerBottomDrawerState extends State<OwnerBottomDrawer> {
                         onPressed: () {
                           viewModel.toChangeCollapse();
                         },
-                        iconSize: 32,
-                        color: Colors.white,
+                        iconSize: 32.sp,
+                        color: EaselAppTheme.kWhite,
                       )),
                     ),
                   ),
@@ -350,7 +351,7 @@ class _OwnerBottomDrawerState extends State<OwnerBottomDrawer> {
                                       builder: (_, value, __) {
                                         switch (value) {
                                           case ButtonState.loading:
-                                            return SizedBox(height: 35.h, width: 22.h, child: CircularProgressIndicator(strokeWidth: 2.w, color: EaselAppTheme.kWhite));
+                                            return SizedBox(height: 22.h, width: 22.h, child: CircularProgressIndicator(strokeWidth: 2.w, color: EaselAppTheme.kWhite));
                                           case ButtonState.paused:
                                             return InkWell(
                                               onTap: () {
@@ -392,7 +393,7 @@ class _OwnerBottomDrawerState extends State<OwnerBottomDrawer> {
                                             bufferedBarColor: EaselAppTheme.kLightGrey,
                                             buffered: value.buffered,
                                             total: value.total,
-                                            timeLabelTextStyle: TextStyle(color: EaselAppTheme.kDartGrey, fontWeight: FontWeight.w800, fontSize: 9.sp),
+                                            timeLabelTextStyle: TextStyle(color: EaselAppTheme.kWhite, fontWeight: FontWeight.w800, fontSize: 9.sp),
                                             thumbRadius: 10.h,
                                             timeLabelPadding: 3.h,
                                             onSeek: (position) {
