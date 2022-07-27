@@ -233,6 +233,9 @@ class EaselProvider extends ChangeNotifier {
   }
 
   void stopVideoIfPlaying() {
+    if (!videoPlayerController.value.isInitialized) {
+      return;
+    }
     if (videoPlayerController.value.isPlaying) {
       videoPlayerController.pause();
     }
@@ -519,7 +522,7 @@ class EaselProvider extends ChangeNotifier {
           context: navigatorKey.currentState!.overlay!.context,
           errorMessage: 'download_pylons_description'.tr(),
           buttonMessage: 'download_pylons_app'.tr(),
-          onDownloadPressed: () {
+          onButtonPressed: () {
             PylonsWallet.instance.goToInstall();
           },
           onClose: () {
@@ -538,8 +541,25 @@ class EaselProvider extends ChangeNotifier {
           context: navigatorKey.currentState!.overlay!.context,
           errorMessage: 'create_username_description'.tr(),
           buttonMessage: 'open_pylons_app'.tr(),
-          onDownloadPressed: () {
+          onButtonPressed: () {
             PylonsWallet.instance.goToPylons();
+          },
+          onClose: () {
+            Navigator.of(navigatorKey.currentState!.overlay!.context).pop();
+          });
+      showWalletInstallDialog.show();
+
+      return false;
+    }
+
+    if (!stripeAccountExists && _selectedDenom.symbol == kUsdSymbol && !isFreeDrop) {
+      ShowWalletInstallDialog showWalletInstallDialog = ShowWalletInstallDialog(
+          context: navigatorKey.currentState!.overlay!.context,
+          errorMessage: 'create_stripe_description'.tr(),
+          buttonMessage: 'start'.tr(),
+          onButtonPressed: () async {
+            Navigator.pop(navigatorKey.currentState!.overlay!.context);
+            await PylonsWallet.instance.showStripe();
           },
           onClose: () {
             Navigator.of(navigatorKey.currentState!.overlay!.context).pop();
@@ -559,12 +579,6 @@ class EaselProvider extends ChangeNotifier {
   /// sends a createRecipe Tx message to the wallet
   /// return true or false depending on the response from the wallet app
   Future<bool> createRecipe({required NFT nft}) async {
-    if (nft.isFreeDrop == false) {
-      if (!await shouldMintUSDOrNot()) {
-        return false;
-      }
-    }
-
     // get device cookbook id
     _cookbookId = repository.getCookbookId();
     String savedUserName = repository.getCookBookGeneratorUsername();
@@ -725,8 +739,8 @@ class EaselProvider extends ChangeNotifier {
   /// true  || false (Stripe account exists and selected denom is not USD ) returns true
   /// false || false (Stripe account doesnt exists and selected denom is USD) return false
   /// false || true (Stripe account doesnt exists and selected denom is not  USD) return true
-  Future<bool> shouldMintUSDOrNot() async {
-    if (stripeAccountExists || _selectedDenom.symbol != kUsdSymbol || isFreeDrop) {
+  Future<bool> shouldMintWithUSD() async {
+    if (stripeAccountExists && _selectedDenom.symbol == kUsdSymbol) {
       return true;
     }
 

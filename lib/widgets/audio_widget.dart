@@ -88,7 +88,7 @@ class _AudioWidgetState extends State<AudioWidget> with WidgetsBindingObserver {
                                   builder: (_, value, __) {
                                     switch (value) {
                                       case ButtonState.loading:
-                                        return SizedBox(height: 35.h, width: 22.h, child: CircularProgressIndicator(strokeWidth: 2.w, color: Colors.black));
+                                        return SizedBox(height: 22.h, width: 22.h, child: CircularProgressIndicator(strokeWidth: 2.w, color: Colors.black));
                                       case ButtonState.paused:
                                         return InkWell(
                                           onTap: () {
@@ -187,11 +187,7 @@ class _AudioWidgetState extends State<AudioWidget> with WidgetsBindingObserver {
   }
 
   void audioThumbnailPicker() async {
-    if (!widget.previewFlag) {
-      easelProvider.audioPlayerHelperForUrl.pauseAudio();
-    } else {
-      easelProvider.audioPlayerHelperForFile.pauseAudio();
-    }
+    easelProvider.pauseAudio(true);
     final pickedFile = await repository.pickFile(NftFormat.supportedFormats[0]);
     final result = pickedFile.getOrElse(() => PickedFileModel(path: "", fileName: "", extension: ""));
     if (result.path.isEmpty) {

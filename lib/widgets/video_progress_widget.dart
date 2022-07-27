@@ -102,7 +102,7 @@ class VideoProgressWidget extends StatelessWidget {
                               padding: EdgeInsets.only(left: 8.w),
                               child: Text(
                                 duration,
-                                style: TextStyle(color: darkMode ? EaselAppTheme.kWhite : EaselAppTheme.kBlack, fontSize: 9.sp),
+                                style: TextStyle(color: darkMode ? EaselAppTheme.kWhite : EaselAppTheme.kBlack, fontWeight: FontWeight.w800, fontSize: 10.sp),
                               ),
                             );
                           }
@@ -110,7 +110,7 @@ class VideoProgressWidget extends StatelessWidget {
                         }),
                     Text(
                       isForFile ? formatDuration(easelProvider.fileDuration ~/ kSecInMillis) : formatDuration(easelProvider.videoPlayerController.value.duration.inSeconds),
-                      style: TextStyle(color: darkMode ? EaselAppTheme.kWhite : EaselAppTheme.kBlack, fontSize: 9.sp),
+                      style: TextStyle(color: darkMode ? EaselAppTheme.kWhite : EaselAppTheme.kBlack, fontWeight: FontWeight.w800, fontSize: 10.sp),
                     ),
                   ],
                 ),
