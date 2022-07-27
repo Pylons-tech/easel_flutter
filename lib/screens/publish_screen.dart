@@ -95,6 +95,7 @@ class _PublishScreenState extends State<PublishScreen> {
       case kVideoText:
         return Center(
           child: VideoWidget(
+            key: ValueKey(provider.nft.url),
             filePath: provider.nft.url,
             previewFlag: true,
             isForFile: false,
@@ -409,6 +410,9 @@ class _OwnerBottomDrawerState extends State<OwnerBottomDrawer> {
                             );
                           },
                           videoProgressBar: (context) {
+                            if (viewModel.videoLoadingError.isNotEmpty) {
+                              return const SizedBox();
+                            }
                             return Container(
                               width: 250.w,
                               color: EaselAppTheme.kWhite.withOpacity(0.2),

@@ -114,6 +114,7 @@ class _VideoWidgetState extends State<VideoWidget> {
     return !widget.previewFlag;
   }
 
+
   @override
   Widget build(BuildContext context) {
     return ChangeNotifierProvider<EaselProvider>.value(
