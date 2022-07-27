@@ -12,9 +12,9 @@ class ShowWalletInstallDialog {
   String errorMessage;
   String buttonMessage;
   VoidCallback onClose;
-  VoidCallback onDownloadPressed;
+  VoidCallback onButtonPressed;
 
-  ShowWalletInstallDialog({required this.context, required this.errorMessage, required this.buttonMessage, required this.onClose, required this.onDownloadPressed});
+  ShowWalletInstallDialog({required this.context, required this.errorMessage, required this.buttonMessage, required this.onClose, required this.onButtonPressed});
 
   Future show() {
     return showDialog(
@@ -60,7 +60,7 @@ class ShowWalletInstallDialog {
               child: PylonsButton(
                   btnText: buttonMessage,
                   onPressed: () {
-                    onDownloadPressed();
+                    onButtonPressed();
                     Navigator.of(context).pop();
                   },
                   color: EaselAppTheme.kBlue),
@@ -129,7 +129,7 @@ class ShowWalletInstallDialog {
                 child: PylonsButton(
                     btnText: buttonMessage,
                     onPressed: () {
-                      onDownloadPressed();
+                      onButtonPressed();
                       Navigator.of(context).pop();
                     },
                     color: EaselAppTheme.kBlue),
