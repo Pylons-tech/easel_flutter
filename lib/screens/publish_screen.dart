@@ -95,6 +95,7 @@ class _PublishScreenState extends State<PublishScreen> {
       case kVideoText:
         return Center(
           child: VideoWidget(
+            key: ValueKey(provider.nft.url),
             filePath: provider.nft.url,
             previewFlag: true,
             isForFile: false,
@@ -209,7 +210,7 @@ class _OwnerBottomDrawerState extends State<OwnerBottomDrawer> {
                                             child: Icon(
                                               Icons.play_arrow_outlined,
                                               color: EaselAppTheme.kWhite,
-                                              size: 22.h,
+                                              size: 30.h,
                                             ),
                                           );
 
@@ -221,7 +222,7 @@ class _OwnerBottomDrawerState extends State<OwnerBottomDrawer> {
                                             child: Icon(
                                               Icons.pause,
                                               color: EaselAppTheme.kWhite,
-                                              size: 22.h,
+                                              size: 30.h,
                                             ),
                                           );
                                       }
@@ -243,9 +244,8 @@ class _OwnerBottomDrawerState extends State<OwnerBottomDrawer> {
                                           buffered: value.buffered,
                                           total: value.total,
                                           timeLabelTextStyle: TextStyle(color: EaselAppTheme.kWhite, fontWeight: FontWeight.w800, fontSize: 9.sp),
-                                          thumbRadius: 6.h,
-                                          timeLabelPadding: 2.h,
-                                          timeLabelLocation: TimeLabelLocation.none,
+                                          thumbRadius: 10.h,
+                                          timeLabelPadding: 3.h,
                                           onSeek: (position) {
                                             viewModel.seekAudio(position, false);
                                           },
@@ -367,20 +367,19 @@ class _OwnerBottomDrawerState extends State<OwnerBottomDrawer> {
                                               ),
                                             );
 
-                                            case ButtonState.playing:
-                                              return InkWell(
-                                                onTap: () {
-                                                  viewModel.pauseAudio(false);
-                                                },
-                                                child: Icon(
-                                                  Icons.pause,
-                                                  color: EaselAppTheme.kWhite,
-                                                  size: 25.h,
-                                                ),
-                                              );
-                                          }
-                                        },
-                                      ),
+                                          case ButtonState.playing:
+                                            return InkWell(
+                                              onTap: () {
+                                                viewModel.pauseAudio(false);
+                                              },
+                                              child: Icon(
+                                                Icons.pause,
+                                                color: EaselAppTheme.kWhite,
+                                                size: 25.h,
+                                              ),
+                                            );
+                                        }
+                                      },
                                     ),
                                   ),
                                   Expanded(
@@ -398,8 +397,8 @@ class _OwnerBottomDrawerState extends State<OwnerBottomDrawer> {
                                             buffered: value.buffered,
                                             total: value.total,
                                             timeLabelTextStyle: TextStyle(color: EaselAppTheme.kWhite, fontWeight: FontWeight.w800, fontSize: 9.sp),
-                            thumbRadius: 6.h,
-                            timeLabelPadding: 2.h,
+                                            thumbRadius: 6.h,
+                                            timeLabelPadding: 2.h,
                                             onSeek: (position) {
                                               viewModel.seekAudio(position, false);
                                             },
@@ -579,10 +578,11 @@ class _OwnerBottomDrawerState extends State<OwnerBottomDrawer> {
     return Row(
       children: [
         Expanded(
-            child: Text(
-          title,
-          style: _rowTitleTextStyle,
-        )),
+          child: Text(
+            title,
+            style: _rowTitleTextStyle,
+          ),
+        ),
         Expanded(
             child: subtitle.length > 14
                 ? Row(
