@@ -35,55 +35,63 @@ class _PreviewScreenState extends State<PreviewScreen> {
     return Scaffold(
       backgroundColor: EaselAppTheme.kWhite,
       body: Consumer<EaselProvider>(
-        builder: (_, provider, __) => Stack(
-          children: [
-            if (provider.file != null) buildPreviewWidget(provider),
-            Image.asset(kPreviewGradient, width: 1.sw, fit: BoxFit.fill),
-            Column(children: [
-              SizedBox(height: MediaQuery.of(context).viewPadding.top + 20.h),
-              Align(
-                alignment: Alignment.center,
-                child: Text(kPreviewNoticeText,
-                    textAlign: TextAlign.center, style: Theme.of(context).textTheme.bodyText2!.copyWith(color: EaselAppTheme.kLightPurple, fontSize: 15.sp, fontWeight: FontWeight.w600)),
-              ),
-              Align(
-                alignment: Alignment.centerLeft,
-                child: Padding(
-                    padding: EdgeInsets.only(left: 10.sp),
-                    child: IconButton(
-                      onPressed: () {
-                        Navigator.of(context).pop();
-                      },
-                      icon: const Icon(
-                        Icons.arrow_back_ios,
-                        color: EaselAppTheme.kWhite,
-                      ),
-                    )),
-              )
-            ]),
-            Padding(
-              padding: EdgeInsets.only(bottom: 30.h, right: 25.w),
-              child: Align(
-                alignment: Alignment.bottomRight,
-                child: PylonsButton(
-                  onPressed: () async {
-                    final result = await onUploadPressed();
-                    if (result) {
-                      DraftDetailDialog(
-                          context: context,
-                          easelProvider: provider,
-                          onClose: () {
-                            widget.onMoveToNextScreen();
-                          }).show();
-                    }
-                  },
-                  btnText: "upload".tr(),
-                  showArrow: true,
-                  color: EaselAppTheme.kRed,
+        builder: (_, provider, __) => WillPopScope(
+          onWillPop: () async {
+            provider.setAudioThumbnail(null);
+            return true;
+          },
+          child: Stack(
+            children: [
+              if (provider.file != null) buildPreviewWidget(provider),
+              Image.asset(kPreviewGradient, width: 1.sw, fit: BoxFit.fill),
+              Column(children: [
+                SizedBox(height: MediaQuery.of(context).viewPadding.top + 20.h),
+                Align(
+                  alignment: Alignment.center,
+                  child: Text(kPreviewNoticeText,
+                      textAlign: TextAlign.center, style: Theme.of(context).textTheme.bodyText2!.copyWith(color: EaselAppTheme.kLightPurple, fontSize: 15.sp, fontWeight: FontWeight.w600)),
                 ),
-              ),
-            )
-          ],
+                Align(
+                  alignment: Alignment.centerLeft,
+                  child: Padding(
+                      padding: EdgeInsets.only(left: 10.sp),
+                      child: IconButton(
+                        onPressed: () {
+                          provider.setAudioThumbnail(null);
+                          provider.setVideoThumbnail(null);
+                          Navigator.of(context).pop();
+                        },
+                        icon: const Icon(
+                          Icons.arrow_back_ios,
+                          color: EaselAppTheme.kWhite,
+                        ),
+                      )),
+                )
+              ]),
+              Padding(
+                padding: EdgeInsets.only(bottom: 30.h, right: 25.w),
+                child: Align(
+                  alignment: Alignment.bottomRight,
+                  child: PylonsButton(
+                    onPressed: () async {
+                      final result = await onUploadPressed();
+                      if (result) {
+                        DraftDetailDialog(
+                            context: context,
+                            easelProvider: provider,
+                            onClose: () {
+                              widget.onMoveToNextScreen();
+                            }).show();
+                      }
+                    },
+                    btnText: "upload".tr(),
+                    showArrow: true,
+                    color: EaselAppTheme.kRed,
+                  ),
+                ),
+              )
+            ],
+          ),
         ),
       ),
     );
