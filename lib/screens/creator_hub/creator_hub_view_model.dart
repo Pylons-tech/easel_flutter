@@ -17,7 +17,6 @@ class CreatorHubViewModel extends ChangeNotifier {
   CreatorHubViewModel(this.repository);
 
   CollectionType selectedCollectionType = CollectionType.draft;
-  List<NFT> nftdraftList = [];
 
   ViewType viewType = ViewType.viewList;
 
@@ -36,17 +35,14 @@ class CreatorHubViewModel extends ChangeNotifier {
     switch (collectionType) {
       case CollectionType.draft:
         selectedCollectionType = CollectionType.draft;
-        nftList = nftdraftList;
         notifyListeners();
         break;
       case CollectionType.published:
         selectedCollectionType = CollectionType.published;
-        nftList = publishedNFTsList;
         notifyListeners();
         break;
       case CollectionType.forSale:
         selectedCollectionType = CollectionType.forSale;
-        nftList = forSaleList;
         notifyListeners();
         break;
     }
@@ -70,13 +66,27 @@ class CreatorHubViewModel extends ChangeNotifier {
     notifyListeners();
   }
 
-  List<NFT> nftList = [];
+  List<NFT> _nftDraftList = [];
 
-  List<NFT> forSaleList = [];
+  List<NFT> get nftDraftList => _nftDraftList;
 
-  final List<NFT> _publishedNFTsList = [];
+  set nftDraftList(List<NFT> nftDraftList) {
+    _nftDraftList = nftDraftList;
+    notifyListeners();
+  }
 
-  List<NFT> get publishedNFTsList => _publishedNFTsList;
+  List<NFT> _nftForSaleList = [];
+
+  List<NFT> get nftForSaleList => _nftForSaleList;
+
+  set nftForSaleList(List<NFT> nftForSale) {
+    _nftForSaleList = nftForSale;
+    notifyListeners();
+  }
+
+  final List<NFT> _nftPublishedList = [];
+
+  List<NFT> get nftPublishedList => _nftPublishedList;
 
   String? getCookbookIdFromLocalDatasource() {
     return repository.getCookbookId();
@@ -84,21 +94,20 @@ class CreatorHubViewModel extends ChangeNotifier {
 
   void getTotalForSale() {
     forSaleCount = 0;
-    forSaleList = [];
-    for (int i = 0; i < _publishedNFTsList.length; i++) {
-      if (publishedNFTsList[i].isEnabled && publishedNFTsList[i].amountMinted < int.parse(publishedNFTsList[i].quantity)) {
+    nftForSaleList = [];
+    for (int i = 0; i < nftPublishedList.length; i++) {
+      if (nftPublishedList[i].isEnabled && nftPublishedList[i].amountMinted < int.parse(nftPublishedList[i].quantity)) {
         forSaleCount++;
-        forSaleList.add(publishedNFTsList[i]);
+        nftForSaleList.add(nftPublishedList[i]);
       }
     }
+    notifyListeners();
   }
 
   Future<void> getPublishAndDraftData() async {
-
     await getRecipesList();
 
     getTotalForSale();
-    nftList = nftdraftList;
     notifyListeners();
   }
 
@@ -121,16 +130,16 @@ class CreatorHubViewModel extends ChangeNotifier {
     }
 
     final recipesList = recipesListEither.getOrElse(() => []);
-    _publishedNFTsList.clear();
+    _nftPublishedList.clear();
     if (recipesList.isEmpty) {
       return;
     }
     for (final recipe in recipesList) {
       final nft = NFT.fromRecipe(recipe);
-      _publishedNFTsList.add(nft);
+      _nftPublishedList.add(nft);
     }
 
-    publishedRecipeLength = _publishedNFTsList.length;
+    publishedRecipeLength = nftPublishedList.length;
   }
 
   Future<void> getDraftsList() async {
@@ -146,7 +155,7 @@ class CreatorHubViewModel extends ChangeNotifier {
       return;
     }
 
-    nftdraftList = getNftResponse.getOrElse(() => []);
+    nftDraftList = getNftResponse.getOrElse(() => []);
 
     loading.dismiss();
 
@@ -160,7 +169,7 @@ class CreatorHubViewModel extends ChangeNotifier {
       "delete_error".tr().show();
       return;
     }
-    nftdraftList.removeWhere((element) => element.id == id);
+    nftDraftList.removeWhere((element) => element.id == id);
     notifyListeners();
   }
 

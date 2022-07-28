@@ -228,9 +228,7 @@ class _DraftDetailDialogState extends State<_DraftDetailDialog> {
         )),
         Expanded(
           child: Padding(
-            padding: EdgeInsets.only(
-              right: 30.w,
-            ),
+            padding: EdgeInsets.only(right: 20.w),
             child: subtitle.length > 14
                 ? Row(
                     mainAxisAlignment: MainAxisAlignment.end,
