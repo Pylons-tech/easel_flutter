@@ -106,18 +106,7 @@ class _DescribeScreenState extends State<DescribeScreen> {
                                 padding: EdgeInsets.only(right: 20.w),
                                 child: InkWell(
                                   onTap: () {
-                                    FocusScope.of(context).unfocus();
-                                    if (!_formKey.currentState!.validate()) {
-                                      return;
-                                    }
-
-                                    if ((_artNameFieldError.isNotEmpty || _artistNameFieldError.isNotEmpty || _descriptionFieldError.isNotEmpty)) {
-                                      return;
-                                    }
-
-                                    context.read<EaselProvider>().updateNftFromDescription(provider.nft.id!);
-                                    context.read<EaselProvider>().saveArtistName(provider.artistNameController.text.trim());
-                                    context.read<HomeViewModel>().nextPage();
+                                    validateAndUpdateDescription(true);
                                   },
                                   child: Text(
                                     "next".tr(),
@@ -133,7 +122,6 @@ class _DescribeScreenState extends State<DescribeScreen> {
                   tabletScreen: (context) => const VerticalSpace(30),
                 ),
                 VerticalSpace(10.h),
-
                 Padding(
                   padding: EdgeInsets.symmetric(horizontal: 20.w, vertical: 15.h),
                   child: Column(
@@ -246,17 +234,8 @@ class _DescribeScreenState extends State<DescribeScreen> {
                         title: "save_as_draft".tr(),
                         bgColor: EaselAppTheme.kBlue,
                         textColor: EaselAppTheme.kWhite,
-                        onPressed: () async {
-                          FocusScope.of(context).unfocus();
-                          if (!_formKey.currentState!.validate()) {
-                            return;
-                          }
-                          if ((_artNameFieldError.isNotEmpty || _artistNameFieldError.isNotEmpty || _descriptionFieldError.isNotEmpty)) {
-                            return;
-                          }
-                          context.read<EaselProvider>().updateNftFromDescription(provider.nft.id!);
-                          context.read<EaselProvider>().saveArtistName(provider.artistNameController.text.trim());
-                          Navigator.pop(context);
+                        onPressed: () {
+                          validateAndUpdateDescription(false);
                         },
                         cuttingHeight: 15.h,
                         clipperType: ClipperType.bottomLeftTopRight,
@@ -280,12 +259,24 @@ class _DescribeScreenState extends State<DescribeScreen> {
                     ],
                   ),
                 ),
-
               ],
             ),
           );
         }),
       ),
     );
+  }
+
+  void validateAndUpdateDescription(moveNextPage) {
+    FocusScope.of(context).unfocus();
+    if (!_formKey.currentState!.validate()) {
+      return;
+    }
+    if ((_artNameFieldError.isNotEmpty || _artistNameFieldError.isNotEmpty || _descriptionFieldError.isNotEmpty)) {
+      return;
+    }
+    context.read<EaselProvider>().updateNftFromDescription(provider.nft.id!);
+    context.read<EaselProvider>().saveArtistName(provider.artistNameController.text.trim());
+    moveNextPage ? context.read<HomeViewModel>().nextPage() : Navigator.pop(context);
   }
 }

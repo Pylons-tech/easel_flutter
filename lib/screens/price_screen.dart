@@ -102,7 +102,7 @@ class _PriceScreenState extends State<PriceScreen> {
                               child: InkWell(
                                 onTap: () {
                                   FocusScope.of(context).unfocus();
-                                  validateAndUpdatePrice(false);
+                                  validateAndUpdatePrice(true);
                                 },
                                 child: Text(
                                   "next".tr(),
@@ -127,7 +127,6 @@ class _PriceScreenState extends State<PriceScreen> {
                       "is_this_free".tr(),
                       style: TextStyle(fontSize: 18.sp, fontWeight: FontWeight.w500),
                     ),
-
                     SizedBox(
                       height: 10.h,
                     ),
@@ -310,16 +309,14 @@ class _PriceScreenState extends State<PriceScreen> {
                       textColor: EaselAppTheme.kWhite,
                       onPressed: () async {
                         FocusScope.of(context).unfocus();
-                        validateAndUpdatePrice(true);
+                        validateAndUpdatePrice(false);
                       },
                       cuttingHeight: 15.h,
                       clipperType: ClipperType.bottomLeftTopRight,
                       isShadow: false,
                       fontWeight: FontWeight.w700,
                     ),
-
                     VerticalSpace(10.h),
-
                     Center(
                       child: InkWell(
                         onTap: () {
@@ -331,7 +328,6 @@ class _PriceScreenState extends State<PriceScreen> {
                         ),
                       ),
                     ),
-
                     VerticalSpace(5.h),
                   ],
                 ),
@@ -343,18 +339,18 @@ class _PriceScreenState extends State<PriceScreen> {
     );
   }
 
-  validateAndUpdatePrice(bool isSaveAsDraft) async {
+  validateAndUpdatePrice(bool moveNextPage) async {
     if (!_formKey.currentState!.validate()) {
       return;
     }
     if (context.read<EaselProvider>().isFreeDrop) {
       if (_royaltiesFieldError.isNotEmpty || _noOfEditionsFieldError.isNotEmpty) return;
       await context.read<EaselProvider>().updateNftFromPrice(nft!.id!);
-      isSaveAsDraft ? Navigator.pop(context) : context.read<HomeViewModel>().nextPage();
+      moveNextPage ? context.read<HomeViewModel>().nextPage() : Navigator.pop(context);
     } else {
       if (_royaltiesFieldError.isNotEmpty || _noOfEditionsFieldError.isNotEmpty || _priceFieldError.isNotEmpty) return;
       await context.read<EaselProvider>().updateNftFromPrice(nft!.id!);
-      isSaveAsDraft ? Navigator.pop(context) : context.read<HomeViewModel>().nextPage();
+      moveNextPage ? context.read<HomeViewModel>().nextPage() : Navigator.pop(context);
     }
   }
 }
