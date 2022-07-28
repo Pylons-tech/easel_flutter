@@ -239,7 +239,7 @@ class _DraftDetailDialogState extends State<_DraftDetailDialog> {
             mainAxisAlignment: MainAxisAlignment.end,
             children: [
               Text(
-                subtitle.trimString(12),
+                subtitle.trimString(kTwelve),
                 style: _rowTitleTextStyle(color),
               ),
               canCopy

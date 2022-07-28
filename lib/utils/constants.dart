@@ -83,6 +83,7 @@ const kMaxPriceLength = 14;
 const kSecInMillis = 1000;
 const double TABLET_MIN_WIDTH = 600;
 const int kNumberOfSeconds = 1000;
+const int kTwelve = 12;
 const int kSixtySeconds = 60;
 const int kFileCompressQuality = 50;
 
