@@ -9,6 +9,7 @@ import 'package:easel_flutter/viewmodels/home_viewmodel.dart';
 import 'package:flutter/material.dart';
 import 'package:get_it/get_it.dart';
 import 'package:provider/provider.dart';
+
 import 'choose_format_screen.dart';
 
 class HomeScreen extends StatefulWidget {
@@ -38,7 +39,12 @@ class _HomeScreenState extends State<HomeScreen> {
     homeViewModel.init(
       setTextField: () {
         easelProvider.setTextFieldValuesDescription(artName: homeViewModel.nft?.name, description: homeViewModel.nft?.description, hashtags: homeViewModel.nft?.hashtags);
-        easelProvider.setTextFieldValuesPrice(royalties: homeViewModel.nft?.tradePercentage, price: homeViewModel.nft?.price, edition: homeViewModel.nft?.quantity.toString(), denom: homeViewModel.nft?.denom, freeDrop: homeViewModel.nft!.isFreeDrop);
+        easelProvider.setTextFieldValuesPrice(
+            royalties: homeViewModel.nft?.tradePercentage,
+            price: homeViewModel.nft?.price,
+            edition: homeViewModel.nft?.quantity.toString(),
+            denom: homeViewModel.nft?.denom,
+            freeDrop: homeViewModel.nft!.isFreeDrop);
       },
     );
   }
@@ -81,36 +87,30 @@ class HomeScreenContent extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final homeViewModel = context.watch<HomeViewModel>();
-    return Column(
-      children: [
-        Expanded(
-          child: PageView.builder(
-            controller: homeViewModel.pageController,
-            physics: const NeverScrollableScrollPhysics(),
-            onPageChanged: (int page) {
-              homeViewModel.currentPage.value = page;
-              switch (page) {
-                case 0:
-                  homeViewModel.currentStep.value = 0;
-                  break;
-                case 1:
-                case 2:
-                  homeViewModel.currentStep.value = 1;
-                  break;
+    return PageView.builder(
+      controller: homeViewModel.pageController,
+      physics: const NeverScrollableScrollPhysics(),
+      onPageChanged: (int page) {
+        homeViewModel.currentPage.value = page;
+        switch (page) {
+          case 0:
+            homeViewModel.currentStep.value = 0;
+            break;
+          case 1:
+          case 2:
+            homeViewModel.currentStep.value = 1;
+            break;
 
-                case 3:
-                  homeViewModel.currentStep.value = 2;
-                  break;
-              }
-            },
-            itemBuilder: (BuildContext context, int index) {
-              final map = {0: chooseFormatScreen, 1: describeScreen, 2: priceScreen, 3: publishScreen};
+          case 3:
+            homeViewModel.currentStep.value = 2;
+            break;
+        }
+      },
+      itemBuilder: (BuildContext context, int index) {
+        final map = {0: chooseFormatScreen, 1: describeScreen, 2: priceScreen, 3: publishScreen};
 
-              return map[index]?.call() ?? const SizedBox();
-            },
-          ),
-        ),
-      ],
+        return map[index]?.call() ?? const SizedBox();
+      },
     );
   }
 
