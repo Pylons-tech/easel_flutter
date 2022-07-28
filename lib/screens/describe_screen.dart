@@ -103,7 +103,7 @@ class _DescribeScreenState extends State<DescribeScreen> {
                       child: ValueListenableBuilder(
                           valueListenable: homeViewModel.currentPage,
                           builder: (_, int currentPage, __) => Padding(
-                                padding: EdgeInsets.only(right: 15.w),
+                                padding: EdgeInsets.only(right: 20.w),
                                 child: InkWell(
                                   onTap: () {
                                     FocusScope.of(context).unfocus();

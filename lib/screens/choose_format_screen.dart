@@ -94,7 +94,6 @@ class _ChooseFormatScreenState extends State<ChooseFormatScreen> {
                       child: IconButton(
                         onPressed: () {
                           ScaffoldMessenger.of(context).hideCurrentSnackBar();
-                          GetIt.I.get<CreatorHubViewModel>().getDraftsList();
                           Navigator.of(context).pop();
                         },
                         icon: const Icon(
