@@ -3,17 +3,16 @@ import 'package:easel_flutter/easel_provider.dart';
 import 'package:easel_flutter/main.dart';
 import 'package:easel_flutter/models/nft.dart';
 import 'package:easel_flutter/screens/creator_hub/widgets/published_nfts_bottom_sheet.dart';
-import 'package:easel_flutter/screens/creator_hub/widgets/video_placeholder.dart';
 import 'package:easel_flutter/utils/constants.dart';
 import 'package:easel_flutter/utils/easel_app_theme.dart';
 import 'package:easel_flutter/utils/enums.dart';
 import 'package:easel_flutter/utils/extension_util.dart';
-import 'package:easel_flutter/widgets/model_viewer.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:get_it/get_it.dart';
+import 'package:model_viewer_plus/model_viewer_plus.dart';
 import 'package:shimmer_animation/shimmer_animation.dart';
 
 class NFTsListTile extends StatelessWidget {
@@ -59,12 +58,24 @@ class NFTsListTile extends StatelessWidget {
                       imageUrl: publishedNFT.url,
                       fit: BoxFit.cover,
                     ),
-                    onVideo: (context) => VideoPlaceHolder(nftUrl: publishedNFT.url, nftName: publishedNFT.name, thumbnailUrl: publishedNFT.thumbnailUrl),
-                    onAudio: (context) => SvgPicture.asset(
-                      kSvgNftFormatAudio,
-                      color: EaselAppTheme.kBlack,
+                    onVideo: (context) => CachedNetworkImage(
+                      fit: BoxFit.fill,
+                      imageUrl: publishedNFT.thumbnailUrl,
+                      errorWidget: (a, b, c) => const Center(child: Icon(Icons.error_outline)),
+                      placeholder: (context, url) => Shimmer(color: EaselAppTheme.cardBackground, child: const SizedBox.expand()),
                     ),
-                    on3D: (context) => Model3dViewer(isFile: false, path: publishedNFT.url),
+                    onAudio: (context) => CachedNetworkImage(
+                      fit: BoxFit.fill,
+                      imageUrl: publishedNFT.thumbnailUrl,
+                      errorWidget: (a, b, c) => const Center(child: Icon(Icons.error_outline)),
+                      placeholder: (context, url) => Shimmer(color: EaselAppTheme.cardBackground, child: const SizedBox.expand()),
+                    ),
+                    on3D: (context) => ModelViewer(
+                      src: publishedNFT.url,
+                      ar: false,
+                      autoRotate: false,
+                      cameraControls: false,
+                    ),
                     assetType: publishedNFT.assetType.toAssetTypeEnum(),
                   )),
               SizedBox(
@@ -97,7 +108,7 @@ class NFTsListTile extends StatelessWidget {
                           ),
                         ),
                         SizedBox(width: 9.w),
-                        if (publishedNFT.isEnabled && publishedNFT.amountMinted < publishedNFT.quantity)
+                        if (publishedNFT.isEnabled && publishedNFT.amountMinted < int.parse(publishedNFT.quantity))
                           Container(
                             padding: EdgeInsets.symmetric(horizontal: 6.w, vertical: 3.h),
                             child: Text(

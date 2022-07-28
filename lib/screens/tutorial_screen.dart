@@ -1,10 +1,7 @@
-import 'package:auto_size_text/auto_size_text.dart';
 import 'package:bottom_drawer/bottom_drawer.dart';
 import 'package:easel_flutter/easel_provider.dart';
-import 'package:easel_flutter/screens/welcome_screen/widgets/show_something_wrong_dialog.dart';
-import 'package:easel_flutter/screens/welcome_screen/widgets/show_wallet_install_dialog.dart';
-import 'package:easel_flutter/services/datasources/local_datasource.dart';
 import 'package:easel_flutter/main.dart';
+import 'package:easel_flutter/repository/repository.dart';
 import 'package:easel_flutter/utils/easel_app_theme.dart';
 import 'package:easel_flutter/utils/extension_util.dart';
 import 'package:easel_flutter/utils/route_util.dart';
@@ -70,56 +67,14 @@ class _TutorialScreenState extends State<TutorialScreen> {
                     padding: EdgeInsets.symmetric(horizontal: 0.22.sw),
                     child: Image.asset(
                       item['image'],
-                      fit: BoxFit.contain,
+                      height: 40,
+                      width: 40,
+                      fit: BoxFit.fill,
                     )),
-                if (kTutorialItems.indexOf(item) == kTutorialItems.length - 1) ...[
-                  SizedBox(
-                    height: 0.15.sh,
-                    child: Align(
-                      alignment: Alignment.bottomRight,
-                      child: GestureDetector(
-                        child: Container(
-                          alignment: Alignment.center,
-                          margin: EdgeInsets.only(right: isTablet ? 50.w : 10.w, bottom: 2.h),
-                          padding: EdgeInsets.only(bottom: 8.h),
-                          width: 0.17.sh,
-                          height: 0.08.sh,
-                          decoration: const BoxDecoration(
-                            image: DecorationImage(image: AssetImage(kTooltipBalloon), fit: BoxFit.contain),
-                          ),
-                          child:  AutoSizeText(
-                            kWhyAppNeeded,
-                            maxFontSize: isTablet ? 18 : 14,
-                            style: TextStyle(fontSize: isTablet ? 18 : 14, fontWeight: FontWeight.w400, color: EaselAppTheme.kWhite),
-                          ),
-                        ),
-                        onTap: () {
-                          myBottomDrawerController.open();
-                        },
-                      ),
-                    ),
-                  ),
-                  RichText(
-                    text: TextSpan(
-                      style: TextStyle(fontSize: isTablet ? 16.sp: 18.sp, fontWeight: FontWeight.w800, color: EaselAppTheme.kDartGrey),
-                      children: <TextSpan>[
-                        TextSpan(text: item['header']),
-                        TextSpan(text: item['header1'], style: const TextStyle(color: EaselAppTheme.kPurple02)),
-                      ],
-                    ),
-                  )
-                ] else ...[
-                  SizedBox(height: 0.15.sh),
-                  Text(item['header'],
-                      style: TextStyle(fontSize: isTablet ? 16.sp: 18.sp, fontWeight: FontWeight.w800, color: EaselAppTheme.kDartGrey),
-                      textAlign: TextAlign.center),
-                ],
+                SizedBox(height: 0.15.sh),
+                Text(item['header'], style: TextStyle(fontSize: isTablet ? 16.sp : 18.sp, fontWeight: FontWeight.w800, color: EaselAppTheme.kDartGrey), textAlign: TextAlign.center),
                 const SizedBox(height: 15),
-                Container(
-                    padding: EdgeInsets.symmetric(horizontal: 20.w),
-                    child: Text(item['description'],
-                        style: TextStyle(color: Colors.black, fontSize: 16.sp, fontWeight: FontWeight.w400),
-                        textAlign: TextAlign.center)),
+                SizedBox(width: 0.63.sw, child: Text(item['description'], style: TextStyle(color: Colors.black, fontSize: 13.sp, fontWeight: FontWeight.w400), textAlign: TextAlign.center)),
               ],
             ))
         .toList();
@@ -132,6 +87,25 @@ class _TutorialScreenState extends State<TutorialScreen> {
 
   @override
   Widget build(BuildContext context) {
+    slides = kTutorialItems
+        .map((item) => Column(
+      children: <Widget>[
+        SizedBox(height: 0.2.sh),
+        Padding(
+            padding: EdgeInsets.symmetric(horizontal: 0.22.sw),
+            child: Image.asset(
+              item['image'],
+              height: isTablet ? 140.w : 200.w,
+              width: isTablet ? 140.w : 200.w,
+              fit: BoxFit.fill,
+            )),
+        SizedBox(height: 0.15.sh),
+        Text(item['header'], style: TextStyle(fontSize: isTablet ? 16.sp : 18.sp, fontWeight: FontWeight.w800, color: EaselAppTheme.kDartGrey), textAlign: TextAlign.center),
+        const SizedBox(height: 15),
+        SizedBox(width: 0.63.sw, child: Text(item['description'], style: TextStyle(color: Colors.black, fontSize: 13.sp, fontWeight: FontWeight.w400), textAlign: TextAlign.center)),
+      ],
+    ))
+        .toList();
     return Scaffold(
       backgroundColor: EaselAppTheme.kWhite03,
       body: Stack(
@@ -152,8 +126,7 @@ class _TutorialScreenState extends State<TutorialScreen> {
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: indicator(),
                 ),
-              )
-              ),
+              )),
           if (isLastPage()) ...[
             Align(
                 alignment: Alignment.bottomRight,
@@ -161,14 +134,12 @@ class _TutorialScreenState extends State<TutorialScreen> {
                   margin: EdgeInsets.only(right: 25.w, bottom: 40.h),
                   child: PylonsButton(
                     onPressed: () async {
+                      GetIt.I.get<Repository>().saveOnBoardingComplete();
 
-                      GetIt.I.get<LocalDataSource>().saveOnBoardingComplete();
-
-
-                      checkPylonsAppExistsOrNot();
+                      populateCoinsAndMoveForward();
                     },
                     btnText: kContinue,
-                    isBlue: false,
+                    color: EaselAppTheme.kRed,
                   ),
                 )
                 //  ),
@@ -208,12 +179,9 @@ class _TutorialScreenState extends State<TutorialScreen> {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Text(kWhyAppNeededDesc1,
-                          style: TextStyle(fontSize: 14.sp, fontWeight: FontWeight.w800, color: Colors.black)),
+                      Text(kWhyAppNeededDesc1, style: TextStyle(fontSize: 14.sp, fontWeight: FontWeight.w800, color: Colors.black)),
                       SizedBox(height: 8.h),
-                      Text(kWhyAppNeededDescSummary1,
-                          style:
-                              TextStyle(fontSize: 13.sp, fontWeight: FontWeight.w400, color: EaselAppTheme.kLightGrey))
+                      Text(kWhyAppNeededDescSummary1, style: TextStyle(fontSize: 13.sp, fontWeight: FontWeight.w400, color: EaselAppTheme.kLightGrey))
                     ],
                   ),
                 )
@@ -236,12 +204,9 @@ class _TutorialScreenState extends State<TutorialScreen> {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Text(kWhyAppNeededDesc2,
-                          style: TextStyle(fontSize: 14.sp, fontWeight: FontWeight.w800, color: Colors.black)),
+                      Text(kWhyAppNeededDesc2, style: TextStyle(fontSize: 14.sp, fontWeight: FontWeight.w800, color: Colors.black)),
                       SizedBox(height: 8.h),
-                      Text(kWhyAppNeededDescSummary2,
-                          style:
-                              TextStyle(fontSize: 13.sp, fontWeight: FontWeight.w400, color: EaselAppTheme.kLightGrey))
+                      Text(kWhyAppNeededDescSummary2, style: TextStyle(fontSize: 13.sp, fontWeight: FontWeight.w400, color: EaselAppTheme.kLightGrey))
                     ],
                   ),
                 )
@@ -264,12 +229,9 @@ class _TutorialScreenState extends State<TutorialScreen> {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Text(kWhyAppNeededDesc3,
-                          style: TextStyle(fontSize: 14.sp, fontWeight: FontWeight.w800, color: Colors.black)),
+                      Text(kWhyAppNeededDesc3, style: TextStyle(fontSize: 14.sp, fontWeight: FontWeight.w800, color: Colors.black)),
                       SizedBox(height: 8.h),
-                      Text(kWhyAppNeededDescSummary3,
-                          style:
-                              TextStyle(fontSize: 13.sp, fontWeight: FontWeight.w400, color: EaselAppTheme.kLightGrey))
+                      Text(kWhyAppNeededDescSummary3, style: TextStyle(fontSize: 13.sp, fontWeight: FontWeight.w400, color: EaselAppTheme.kLightGrey))
                     ],
                   ),
                 )
@@ -284,6 +246,7 @@ class _TutorialScreenState extends State<TutorialScreen> {
                     await onDownloadNowPressed(context);
                   },
                   btnText: 'download_pylons_app'.tr(),
+                  color: EaselAppTheme.kBlue,
                 ),
               ),
               tabletScreen: (BuildContext context) => Center(
@@ -294,6 +257,7 @@ class _TutorialScreenState extends State<TutorialScreen> {
                       await onDownloadNowPressed(context);
                     },
                     btnText: 'download_pylons_app'.tr(),
+                    color: EaselAppTheme.kBlue,
                   ),
                 ),
               ),
@@ -317,53 +281,9 @@ class _TutorialScreenState extends State<TutorialScreen> {
     }
   }
 
-
-
-  void checkPylonsAppExistsOrNot() async {
-    final isExist = await PylonsWallet.instance.exists();
-
-    if (isExist) {
-      getProfile();
-      return;
-    }
-
+  void populateCoinsAndMoveForward() async {
     context.read<EaselProvider>().populateCoinsIfPylonsNotExists();
 
     navigatorKey.currentState!.pushReplacementNamed(RouteUtil.kRouteCreatorHub);
-  }
-
-  Future<void> getProfile() async {
-    final response = await context.read<EaselProvider>().getProfile();
-
-    if (response.success) {
-      await Future.delayed(const Duration(
-        milliseconds: 500,
-      ));
-
-      navigatorKey.currentState!.pushReplacementNamed(RouteUtil.kRouteCreatorHub);
-      return;
-    }
-
-    if (response.errorCode == kErrProfileNotExist) {
-      ShowWalletInstallDialog showWalletInstallDialog = ShowWalletInstallDialog(
-          context: context,
-          errorMessage: 'create_username_description'.tr(),
-          buttonMessage: 'open_pylons_app'.tr(),
-          onDownloadPressed: () {
-            PylonsWallet.instance.goToPylons();
-          },
-          onClose: () {
-            Navigator.of(context).pop();
-          });
-      showWalletInstallDialog.show();
-    } else {
-      ShowSomethingWentWrongDialog somethingWentWrongDialog = ShowSomethingWentWrongDialog(
-          context: context,
-          errorMessage: kPleaseTryAgain,
-          onClose: () {
-            Navigator.of(context).pop();
-          });
-      somethingWentWrongDialog.show();
-    }
   }
 }

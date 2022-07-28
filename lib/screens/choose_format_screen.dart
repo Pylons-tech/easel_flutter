@@ -2,13 +2,13 @@ import 'dart:io';
 
 import 'package:easel_flutter/easel_provider.dart';
 import 'package:easel_flutter/models/nft_format.dart';
+import 'package:easel_flutter/models/picked_file_model.dart';
 import 'package:easel_flutter/screens/preview_screen.dart';
 import 'package:easel_flutter/utils/constants.dart';
 import 'package:easel_flutter/utils/easel_app_theme.dart';
 import 'package:easel_flutter/utils/screen_responsive.dart';
 import 'package:easel_flutter/viewmodels/home_viewmodel.dart';
 import 'package:easy_localization/easy_localization.dart';
-import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/svg.dart';
@@ -25,12 +25,10 @@ class ChooseFormatScreen extends StatefulWidget {
 class _ChooseFormatScreenState extends State<ChooseFormatScreen> {
   ValueNotifier<String> errorText = ValueNotifier(kErrFileNotPicked);
 
-  void proceedToNext({required PlatformFile? result, required EaselProvider easelProvider}) async {
+  void proceedToNext({required PickedFileModel result, required EaselProvider easelProvider}) async {
     EaselProvider provider = context.read();
 
-    if (result == null) {
-      errorText.value = kErrFileNotPicked;
-      showErrorDialog();
+    if (result.path.isEmpty) {
       return;
     }
 
@@ -40,15 +38,19 @@ class _ChooseFormatScreenState extends State<ChooseFormatScreen> {
       return;
     }
 
-    provider.resolveNftFormat(context, result.extension!);
+    NftFormat? nftFormat = await provider.resolveNftFormat(context, result.extension);
 
-    if (easelProvider.fileUtilsHelper.getFileSizeInGB(File(result.path!).lengthSync()) > kFileSizeLimitInGB) {
-      errorText.value = 'could_not_uploaded'.tr(args: [result.name]);
-      showErrorDialog();
+    if (nftFormat == null) {
       return;
     }
 
-    await provider.setFile(context, result);
+    if (easelProvider.repository.getFileSizeInGB(File(result.path).lengthSync()) > kFileSizeLimitForAudiVideoInGB) {
+      errorText.value = 'size_error'.tr();
+      showErrorDialog(type: nftFormat.format);
+      return;
+    }
+
+    await provider.setFile(fileName: result.fileName, filePath: result.path);
 
     Navigator.of(context).push(MaterialPageRoute(
         builder: (_) => PreviewScreen(
@@ -58,11 +60,12 @@ class _ChooseFormatScreenState extends State<ChooseFormatScreen> {
             )));
   }
 
-  void showErrorDialog() {
+  void showErrorDialog({NFTTypes? type}) {
     showDialog(
         context: context,
         builder: (context) => _ErrorMessageWidget(
               errorMessage: errorText.value,
+              nftTypes: type,
               onClose: () {
                 Navigator.of(context).pop();
               },
@@ -137,7 +140,7 @@ class _CardWidget extends StatelessWidget {
     this.bottomPadding = 0.0,
   }) : super(key: key);
 
-  final Function(PlatformFile?) onFilePicked;
+  final Function(PickedFileModel) onFilePicked;
   final int typeIdx;
   final bool selected;
   final Color textIconColor;
@@ -156,7 +159,8 @@ class _CardWidget extends StatelessWidget {
               onTap: () async {
                 EaselProvider provider = context.read();
                 provider.setFormat(context, NftFormat.supportedFormats[typeIdx]);
-                final result = await provider.fileUtilsHelper.pickFile(provider.nftFormat);
+                final pickedFile = await provider.repository.pickFile(provider.nftFormat);
+                final result = pickedFile.getOrElse(() => PickedFileModel(path: "", fileName: "", extension: ""));
                 onFilePicked(result);
               },
               child: Container(
@@ -223,10 +227,11 @@ class _CardWidget extends StatelessWidget {
 }
 
 class _ErrorMessageWidget extends StatelessWidget {
-  const _ErrorMessageWidget({Key? key, required this.errorMessage, required this.onClose}) : super(key: key);
+  const _ErrorMessageWidget({Key? key, required this.errorMessage, required this.onClose, this.nftTypes}) : super(key: key);
 
   final String errorMessage;
   final VoidCallback onClose;
+  final NFTTypes? nftTypes;
 
   @override
   Widget build(BuildContext context) {
@@ -258,7 +263,8 @@ class _ErrorMessageWidget extends StatelessWidget {
             Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text("• ${kFileSizeLimitInGB}GB Limit", style: Theme.of(context).textTheme.bodyText2!.copyWith(color: Colors.white, fontSize: 16.sp, fontWeight: FontWeight.w800)),
+                Text((nftTypes == NFTTypes.video || nftTypes == NFTTypes.audio) ? "• ${(kFileSizeLimitForAudiVideoInGB * 1000).toStringAsFixed(0)}MB Limit" : "• ${kFileSizeLimitInGB}GB Limit",
+                    style: Theme.of(context).textTheme.bodyText2!.copyWith(color: Colors.white, fontSize: 16.sp, fontWeight: FontWeight.w800)),
                 Text(kUploadHint2, style: Theme.of(context).textTheme.bodyText2!.copyWith(color: Colors.white, fontSize: 16.sp, fontWeight: FontWeight.w800)),
                 Text(kUploadHint3, style: Theme.of(context).textTheme.bodyText2!.copyWith(color: Colors.white, fontSize: 16.sp, fontWeight: FontWeight.w800)),
               ],
@@ -313,7 +319,8 @@ class _ErrorMessageWidget extends StatelessWidget {
             Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text("• ${kFileSizeLimitInGB}GB Limit", style: Theme.of(context).textTheme.bodyText2!.copyWith(color: Colors.white, fontSize: 16.sp, fontWeight: FontWeight.w800)),
+                Text((nftTypes == NFTTypes.video || nftTypes == NFTTypes.audio) ? "• ${(kFileSizeLimitForAudiVideoInGB * 1000).toStringAsFixed(0)}MB Limit" : "• ${kFileSizeLimitInGB}GB Limit",
+                    style: Theme.of(context).textTheme.bodyText2!.copyWith(color: Colors.white, fontSize: 16.sp, fontWeight: FontWeight.w800)),
                 Text(kUploadHint2, style: Theme.of(context).textTheme.bodyText2!.copyWith(color: Colors.white, fontSize: 16.sp, fontWeight: FontWeight.w800)),
                 Text(kUploadHint3, style: Theme.of(context).textTheme.bodyText2!.copyWith(color: Colors.white, fontSize: 16.sp, fontWeight: FontWeight.w800)),
               ],

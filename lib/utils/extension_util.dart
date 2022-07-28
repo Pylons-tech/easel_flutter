@@ -1,10 +1,14 @@
+import 'dart:math';
+
 import 'package:easel_flutter/main.dart';
 import 'package:easel_flutter/models/nft.dart';
 import 'package:easel_flutter/utils/constants.dart';
 import 'package:easel_flutter/utils/enums.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:path/path.dart' as path;
 import 'package:pylons_sdk/pylons_sdk.dart';
+
 import 'constants.dart';
 
 extension ScaffoldHelper on BuildContext? {
@@ -69,13 +73,12 @@ extension IBCCoinsPar on String {
 extension AssetTypePar on String {
   AssetType toAssetTypeEnum() {
     var value = this;
-    if(value == k3dText){
+    if (value == k3dText) {
       value = kThreeDText;
     }
 
     return AssetType.values.firstWhere((e) => e.toString() == 'AssetType.$value', orElse: () => AssetType.Image);
   }
-
 }
 
 extension DurationConverter on int {
@@ -110,5 +113,50 @@ extension MyStringSnackBar on String {
         duration: const Duration(seconds: 3),
       ),
     );
+  }
+}
+
+extension FileExtension on String {
+  String getFileExtension() {
+    return path.extension(this).replaceAll(".", "");
+  }
+}
+
+extension FileSizeInGB on int {
+  double getFileSizeInGB() {
+    return this / (1024 * 1024 * 1024).toDouble();
+  }
+}
+
+extension FileSizeString on int {
+  String getFileSizeString({required int precision}) {
+    var i = (log(this) / log(1024)).floor();
+    return ((this / pow(1024, i)).toStringAsFixed(precision)) + suffixes[i];
+  }
+}
+
+extension GenerateEaselLink on String {
+  String generateEaselLinkToShare({required String cookbookId}) {
+    return "$kWalletWebLink/?action=purchase_nft&recipe_id=$this&cookbook_id=$cookbookId";
+  }
+}
+
+extension GenerateEaselLinkToOpenPylons on String {
+  String generateEaselLinkForOpeningInPylonsApp({required String cookbookId}) {
+    return Uri.https('pylons.page.link', "/", {
+      "amv": "1",
+      "apn": "tech.pylons.wallet",
+      "ibi": "xyz.pylons.wallet",
+      "imv": "1",
+      "link": "https://wallet.pylons.tech/?action=purchase_nft&recipe_id=$this&cookbook_id=$cookbookId&nft_amount=1"
+    }).toString();
+  }
+}
+
+extension IsSvgExtension on String {
+  bool isSvg() {
+    String _extension = "";
+    _extension = path.extension(this);
+    return _extension == ".svg";
   }
 }

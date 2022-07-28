@@ -67,6 +67,11 @@ abstract class LocalDataSource {
   /// Output: [bool] returns whether the operation is successful or not
   Future<bool> updateNftFromDescription(SaveNft saveNft);
 
+  /// This method will update draft in the local database from description Page
+  /// Input: [id] of the NFT that you want to update
+  /// Output: [bool] returns whether the operation is successful or not
+  Future<bool> updateNFTDialogShown(int id);
+
   /// This method will update draft in the local database from Pricing page
   /// Input: [saveNft] contains the details to be updated in the NFT
   /// Output: [bool] returns whether the operation is successful or not
@@ -195,10 +200,10 @@ class LocalDataSourceImpl implements LocalDataSource {
   Future<bool> updateNftFromDescription(SaveNft saveNft) async {
     try {
       if (!checkValuesForDescription(saveNft: saveNft)) return false;
-      await database.nftDao.updateNFTFromDescription(saveNft.id!, saveNft.nftName!, saveNft.nftDescription!, saveNft.creatorName!, saveNft.step!, saveNft.hashtags!);
+      await database.nftDao.updateNFTFromDescription(saveNft.id!, saveNft.nftName!, saveNft.nftDescription!, saveNft.creatorName!, saveNft.step!, saveNft.hashtags!, saveNft.dateTime!);
       return true;
     } catch (e) {
-      return throw "save_error".tr();
+      return throw "upload_error".tr();
     }
   }
 
@@ -206,10 +211,20 @@ class LocalDataSourceImpl implements LocalDataSource {
   Future<bool> updateNftFromPrice(SaveNft saveNft) async {
     try {
       if (!checkValuesForPrice(saveNft: saveNft)) return false;
-      await database.nftDao.updateNFTFromPrice(saveNft.id!, saveNft.tradePercentage!, saveNft.price!, saveNft.quantity!, saveNft.step!, saveNft.denomSymbol!, saveNft.isFreeDrop!);
+      await database.nftDao.updateNFTFromPrice(saveNft.id!, saveNft.tradePercentage!, saveNft.price!, saveNft.quantity!, saveNft.step!, saveNft.denomSymbol!, saveNft.isFreeDrop!, saveNft.dateTime!);
       return true;
     } catch (e) {
-      throw CacheFailure("save_error".tr());
+      throw CacheFailure("upload_error".tr());
+    }
+  }
+
+  @override
+  Future<bool> updateNFTDialogShown(int id) async {
+    try {
+      await database.nftDao.updateNFTDialogShown(id);
+      return true;
+    } catch (e) {
+      throw CacheFailure("upload_error".tr());
     }
   }
 

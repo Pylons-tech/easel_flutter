@@ -2,6 +2,7 @@ import 'package:auto_size_text/auto_size_text.dart';
 import 'package:easel_flutter/utils/constants.dart';
 import 'package:easel_flutter/utils/easel_app_theme.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:provider/provider.dart';
 import 'package:easel_flutter/main.dart';
@@ -68,7 +69,10 @@ class _HashtagInputFieldState extends State<EaselHashtagInputField> {
                                   hintStyle: TextStyle(fontSize: isTablet ? 16.sp : 18.sp, color: EaselAppTheme.kGrey),
                                   border: const OutlineInputBorder(borderSide: BorderSide.none),
                                   floatingLabelBehavior: FloatingLabelBehavior.always,
-                                  contentPadding: EdgeInsets.fromLTRB(10.w, 0.h, 10.w, 0.h)),
+                                  contentPadding: EdgeInsets.fromLTRB(10.w, 0.h, 10.w, 0.h),),inputFormatters: [
+                              FilteringTextInputFormatter.deny(
+                                  RegExp(r'\s')),
+                            ],
                             )))),
                 Stack(
                   alignment: Alignment.center,

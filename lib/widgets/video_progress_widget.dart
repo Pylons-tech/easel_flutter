@@ -1,11 +1,9 @@
-
 import 'package:easel_flutter/easel_provider.dart';
 import 'package:easel_flutter/utils/constants.dart';
 import 'package:easel_flutter/utils/easel_app_theme.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:provider/provider.dart';
-
 import 'package:video_player/video_player.dart';
 
 class VideoProgressWidget extends StatelessWidget {
@@ -35,88 +33,83 @@ class VideoProgressWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     final easelProvider = context.watch<EaselProvider>();
 
-
     return Padding(
-        padding: EdgeInsets.only(right: 10.w, bottom: 10.h, top: 10.h, left: 5.w),
-        child: Padding(
-            padding: EdgeInsets.symmetric(horizontal: 20.w),
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                if (easelProvider.videoLoadingError.isNotEmpty)
-                  const SizedBox()
-                else
-                  easelProvider.isVideoLoading
-                      ? const SizedBox()
-                      : Row(
-                          children: [
-                            if (easelProvider.isVideoLoading)
-                              SizedBox(height: 22.h, width: 22.h, child: CircularProgressIndicator(strokeWidth: 2.w, color: EaselAppTheme.kBlack))
-                            else if (easelProvider.videoPlayerController.value.isPlaying)
-                              InkWell(
-                                onTap: easelProvider.pauseVideo,
-                                child: Icon(
-                                  Icons.pause,
-                                  color: darkMode ? EaselAppTheme.kWhite : EaselAppTheme.kDarkBlue,
-                                  size: 25.h,
-                                ),
-                              )
-                            else
-                              InkWell(
-                                onTap: easelProvider.playVideo,
-                                child: Icon(
-                                  Icons.play_arrow,
-                                  color: darkMode ? EaselAppTheme.kWhite : EaselAppTheme.kDarkBlue,
-                                  size: 25.h,
-                                ),
-                              ),
-                            SizedBox(width: 10.w),
-                            Expanded(
-                              child: VideoProgressIndicator(
-                                easelProvider.videoPlayerController,
-                                allowScrubbing: true,
-                                colors: VideoProgressColors(
-                                  backgroundColor: darkMode ? EaselAppTheme.kWhite : EaselAppTheme.kBlack,
-                                  playedColor: EaselAppTheme.kLightRed,
-                                  bufferedColor: EaselAppTheme.kWhite.withOpacity(0.7),
-                                ),
-                              ),
-                            ),
-                          ],
-                        ),
-                if (easelProvider.videoLoadingError.isNotEmpty || easelProvider.isVideoLoading)
-                  const SizedBox()
-                else
-                  SizedBox(
-                    height: 15.h,
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        padding: EdgeInsets.only(right: 30.w, bottom: 10.h, top: 10.h, left: 25.w),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            if (easelProvider.videoLoadingError.isNotEmpty)
+              const SizedBox()
+            else
+              easelProvider.isVideoLoading
+                  ? const SizedBox()
+                  : Row(
                       children: [
-                        StreamBuilder<Duration?>(
-                            stream: easelProvider.videoPlayerController.position.asStream(),
-                            builder: (BuildContext context, AsyncSnapshot<Duration?> snapshot) {
-                              if (snapshot.hasData) {
-                                final String duration = _getDuration(snapshot.data!);
-                                return Padding(
-                                  padding: EdgeInsets.only(left: 8.w),
-                                  child: Text(
-                                    duration,
-                                    style: TextStyle(color: darkMode ? EaselAppTheme.kWhite : EaselAppTheme.kBlack),
-                                  ),
-                                );
-                              } else {
-                                return SizedBox(width: 15.w, child: CircularProgressIndicator(strokeWidth: 1.w, color: darkMode ? EaselAppTheme.kWhite : EaselAppTheme.kBlack));
-                              }
-                            }),
-                        Text(
-                          isForFile ? formatDuration(easelProvider.fileDuration ~/ kSecInMillis) :  formatDuration(easelProvider.videoPlayerController.value.duration.inSeconds) ,
-                          style: TextStyle(color: darkMode ? EaselAppTheme.kWhite : EaselAppTheme.kBlack),
+                        if (easelProvider.isVideoLoading)
+                          SizedBox(height: 22.h, width: 22.h, child: Image.asset(kLoadingGif))
+                        else if (easelProvider.videoPlayerController.value.isPlaying)
+                          InkWell(
+                            onTap: easelProvider.pauseVideo,
+                            child: Icon(
+                              Icons.pause,
+                              color: darkMode ? EaselAppTheme.kWhite : EaselAppTheme.kDarkBlue,
+                              size: 25.h,
+                            ),
+                          )
+                        else
+                          InkWell(
+                            onTap: easelProvider.playVideo,
+                            child: Icon(
+                              Icons.play_arrow,
+                              color: darkMode ? EaselAppTheme.kWhite : EaselAppTheme.kDarkBlue,
+                              size: 25.h,
+                            ),
+                          ),
+                        SizedBox(width: 10.w),
+                        Expanded(
+                          child: VideoProgressIndicator(
+                            easelProvider.videoPlayerController,
+                            allowScrubbing: true,
+                            colors: VideoProgressColors(
+                              backgroundColor: darkMode ? EaselAppTheme.kWhite : EaselAppTheme.kBlack,
+                              playedColor: EaselAppTheme.kLightRed,
+                              bufferedColor: darkMode ? EaselAppTheme.kBlack.withOpacity(0.7) : EaselAppTheme.kWhite.withOpacity(0.7),
+                            ),
+                          ),
                         ),
                       ],
                     ),
-                  ),
-              ],
-            ),
+            if (easelProvider.videoLoadingError.isNotEmpty || easelProvider.isVideoLoading)
+              const SizedBox()
+            else
+              SizedBox(
+                height: 15.h,
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    StreamBuilder<Duration?>(
+                        stream: easelProvider.videoPlayerController.position.asStream(),
+                        builder: (BuildContext context, AsyncSnapshot<Duration?> snapshot) {
+                          if (snapshot.hasData) {
+                            final String duration = _getDuration(snapshot.data!);
+                            return Padding(
+                              padding: EdgeInsets.only(left: 8.w),
+                              child: Text(
+                                duration,
+                                style: TextStyle(color: darkMode ? EaselAppTheme.kWhite : EaselAppTheme.kBlack),
+                              ),
+                            );
+                          }
+                          return SizedBox(width: 30.w, child: Image.asset(kLoadingGif));
+                        }),
+                    Text(
+                      isForFile ? formatDuration(easelProvider.fileDuration ~/ kSecInMillis) : formatDuration(easelProvider.videoPlayerController.value.duration.inSeconds),
+                      style: TextStyle(color: darkMode ? EaselAppTheme.kWhite : EaselAppTheme.kBlack),
+                    ),
+                  ],
+                ),
+              ),
+          ],
         ));
   }
 }

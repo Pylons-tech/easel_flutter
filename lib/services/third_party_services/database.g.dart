@@ -66,7 +66,7 @@ class _$AppDatabase extends AppDatabase {
   Future<sqflite.Database> open(String path, List<Migration> migrations,
       [Callback? callback]) async {
     final databaseOptions = sqflite.OpenDatabaseOptions(
-      version: 2,
+      version: 4,
       onConfigure: (database) async {
         await database.execute('PRAGMA foreign_keys = ON');
         await callback?.onConfigure?.call(database);
@@ -82,7 +82,7 @@ class _$AppDatabase extends AppDatabase {
       },
       onCreate: (database, version) async {
         await database.execute(
-            'CREATE TABLE IF NOT EXISTS `NFT` (`id` INTEGER, `url` TEXT NOT NULL, `thumbnailUrl` TEXT NOT NULL, `name` TEXT NOT NULL, `description` TEXT NOT NULL, `denom` TEXT NOT NULL, `price` TEXT NOT NULL, `creator` TEXT NOT NULL, `owner` TEXT NOT NULL, `amountMinted` INTEGER NOT NULL, `quantity` INTEGER NOT NULL, `tradePercentage` TEXT NOT NULL, `cookbookID` TEXT NOT NULL, `recipeID` TEXT NOT NULL, `itemID` TEXT NOT NULL, `width` TEXT NOT NULL, `height` TEXT NOT NULL, `appType` TEXT NOT NULL, `tradeID` TEXT NOT NULL, `ownerAddress` TEXT NOT NULL, `step` TEXT NOT NULL, `ibcCoins` TEXT NOT NULL, `isFreeDrop` INTEGER NOT NULL, `type` TEXT NOT NULL, `assetType` TEXT NOT NULL, `duration` TEXT NOT NULL, `hashtags` TEXT NOT NULL, `fileName` TEXT NOT NULL, `cid` TEXT NOT NULL, PRIMARY KEY (`id`))');
+            'CREATE TABLE IF NOT EXISTS `NFT` (`id` INTEGER, `url` TEXT NOT NULL, `thumbnailUrl` TEXT NOT NULL, `name` TEXT NOT NULL, `description` TEXT NOT NULL, `denom` TEXT NOT NULL, `price` TEXT NOT NULL, `creator` TEXT NOT NULL, `owner` TEXT NOT NULL, `amountMinted` INTEGER NOT NULL, `quantity` TEXT NOT NULL, `tradePercentage` TEXT NOT NULL, `cookbookID` TEXT NOT NULL, `recipeID` TEXT NOT NULL, `itemID` TEXT NOT NULL, `width` TEXT NOT NULL, `height` TEXT NOT NULL, `appType` TEXT NOT NULL, `tradeID` TEXT NOT NULL, `ownerAddress` TEXT NOT NULL, `step` TEXT NOT NULL, `ibcCoins` TEXT NOT NULL, `isFreeDrop` INTEGER NOT NULL, `type` TEXT NOT NULL, `assetType` TEXT NOT NULL, `duration` TEXT NOT NULL, `hashtags` TEXT NOT NULL, `fileName` TEXT NOT NULL, `cid` TEXT NOT NULL, `dateTime` INTEGER NOT NULL, `isDialogShown` INTEGER NOT NULL, `isEnabled` INTEGER NOT NULL, PRIMARY KEY (`id`))');
 
         await callback?.onCreate?.call(database, version);
       },
@@ -131,7 +131,10 @@ class _$NftDao extends NftDao {
                   'duration': item.duration,
                   'hashtags': item.hashtags,
                   'fileName': item.fileName,
-                  'cid': item.cid
+                  'cid': item.cid,
+                  'dateTime': item.dateTime,
+                  'isDialogShown': item.isDialogShown ? 1 : 0,
+                  'isEnabled': item.isEnabled ? 1 : 0
                 });
 
   final sqflite.DatabaseExecutor database;
@@ -144,7 +147,7 @@ class _$NftDao extends NftDao {
 
   @override
   Future<List<NFT>> findAllNft() async {
-    return _queryAdapter.queryList('SELECT * FROM nft',
+    return _queryAdapter.queryList('SELECT * FROM nft ORDER BY dateTime DESC',
         mapper: (Map<String, Object?> row) => NFT(
             id: row['id'] as int?,
             url: row['url'] as String,
@@ -164,7 +167,7 @@ class _$NftDao extends NftDao {
             height: row['height'] as String,
             tradePercentage: row['tradePercentage'] as String,
             amountMinted: row['amountMinted'] as int,
-            quantity: row['quantity'] as int,
+            quantity: row['quantity'] as String,
             appType: row['appType'] as String,
             ibcCoins: row['ibcCoins'] as String,
             tradeID: row['tradeID'] as String,
@@ -173,7 +176,10 @@ class _$NftDao extends NftDao {
             duration: row['duration'] as String,
             hashtags: row['hashtags'] as String,
             fileName: row['fileName'] as String,
-            cid: row['cid'] as String));
+            cid: row['cid'] as String,
+            isEnabled: (row['isEnabled'] as int) != 0,
+            isDialogShown: (row['isDialogShown'] as int) != 0,
+            dateTime: row['dateTime'] as int));
   }
 
   @override
@@ -198,7 +204,7 @@ class _$NftDao extends NftDao {
             height: row['height'] as String,
             tradePercentage: row['tradePercentage'] as String,
             amountMinted: row['amountMinted'] as int,
-            quantity: row['quantity'] as int,
+            quantity: row['quantity'] as String,
             appType: row['appType'] as String,
             ibcCoins: row['ibcCoins'] as String,
             tradeID: row['tradeID'] as String,
@@ -207,7 +213,10 @@ class _$NftDao extends NftDao {
             duration: row['duration'] as String,
             hashtags: row['hashtags'] as String,
             fileName: row['fileName'] as String,
-            cid: row['cid'] as String),
+            cid: row['cid'] as String,
+            isEnabled: (row['isEnabled'] as int) != 0,
+            isDialogShown: (row['isDialogShown'] as int) != 0,
+            dateTime: row['dateTime'] as int),
         arguments: [id]);
   }
 
@@ -224,17 +233,40 @@ class _$NftDao extends NftDao {
       String nftDescription,
       String creatorName,
       String step,
-      String hashtags) async {
+      String hashtags,
+      int dateTime) async {
     await _queryAdapter.queryNoReturn(
-        'UPDATE nft SET name = ?2, description= ?3, creator = ?4, step = ?5,hashtags = ?6 WHERE id = ?1',
-        arguments: [id, nftName, nftDescription, creatorName, step, hashtags]);
+        'UPDATE nft SET name = ?2, description= ?3, creator = ?4, step = ?5,hashtags = ?6, dateTime = ?7 WHERE id = ?1',
+        arguments: [
+          id,
+          nftName,
+          nftDescription,
+          creatorName,
+          step,
+          hashtags,
+          dateTime
+        ]);
   }
 
   @override
-  Future<void> updateNFTFromPrice(int id, String tradePercentage, String price,
-      String quantity, String step, String denom, bool isFreeDrop) async {
+  Future<void> updateNFTDialogShown(int id) async {
     await _queryAdapter.queryNoReturn(
-        'UPDATE nft SET tradePercentage = ?2, price= ?3, quantity = ?4, denom =?6, step = ?5, isFreeDrop = ?7 WHERE id = ?1',
+        'UPDATE nft SET isDialogShown = true WHERE id = ?1',
+        arguments: [id]);
+  }
+
+  @override
+  Future<void> updateNFTFromPrice(
+      int id,
+      String tradePercentage,
+      String price,
+      String quantity,
+      String step,
+      String denom,
+      bool isFreeDrop,
+      int dateTime) async {
+    await _queryAdapter.queryNoReturn(
+        'UPDATE nft SET tradePercentage = ?2, price= ?3, quantity = ?4, denom =?6, step = ?5, isFreeDrop = ?7, dateTime = ?8 WHERE id = ?1',
         arguments: [
           id,
           tradePercentage,
@@ -242,7 +274,8 @@ class _$NftDao extends NftDao {
           quantity,
           step,
           denom,
-          isFreeDrop ? 1 : 0
+          isFreeDrop ? 1 : 0,
+          dateTime
         ]);
   }
 

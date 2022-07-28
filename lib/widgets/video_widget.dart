@@ -2,7 +2,6 @@ import 'dart:async';
 import 'dart:io';
 
 import 'package:easel_flutter/easel_provider.dart';
-
 import 'package:easel_flutter/screens/clippers/custom_triangle_clipper.dart';
 import 'package:easel_flutter/screens/clippers/small_bottom_corner_clipper.dart';
 import 'package:easel_flutter/utils/constants.dart';
@@ -18,16 +17,14 @@ import 'package:get_it/get_it.dart';
 import 'package:provider/provider.dart';
 import 'package:video_player/video_player.dart';
 
-
-
-
 class VideoWidget extends StatefulWidget {
   final File? file;
   final String? filePath;
   final bool previewFlag;
   final bool isForFile;
+  final bool isDarkMode;
 
-  const VideoWidget({Key? key, this.file, this.filePath, required this.previewFlag, required this.isForFile}) : super(key: key);
+  const VideoWidget({Key? key, this.file, this.filePath, required this.isDarkMode, required this.previewFlag, required this.isForFile}) : super(key: key);
 
   @override
   _VideoWidgetState createState() => _VideoWidgetState();
@@ -35,9 +32,6 @@ class VideoWidget extends StatefulWidget {
 
 class _VideoWidgetState extends State<VideoWidget> {
   EaselProvider get easelProvider => GetIt.I.get();
-
-
-
 
   @override
   void initState() {
@@ -105,7 +99,7 @@ class _VideoWidgetState extends State<VideoWidget> {
                           easelProvider.videoThumbnail!,
                           height: 60.h,
                           width: 60.w,
-                          fit: BoxFit.fill,
+                          fit: BoxFit.cover,
                         )),
                   )
                 : SvgPicture.asset(kUploadThumbnail),
@@ -115,7 +109,7 @@ class _VideoWidgetState extends State<VideoWidget> {
     );
   }
 
-  bool shouldShowThumbnailButtonOrStepsOrNot() {
+  bool shouldShowThumbnailButton() {
     return !widget.previewFlag;
   }
 
@@ -133,64 +127,77 @@ class _VideoWidgetState extends State<VideoWidget> {
           child: SingleChildScrollView(
             child: Column(
               children: [
-                SizedBox(height: MediaQuery.of(context).viewPadding.top + 20.h),
-                if (shouldShowThumbnailButtonOrStepsOrNot()) ...[
-                  VerticalSpace(50.h),
+                shouldShowThumbnailButton() ? VerticalSpace(80.h) : const SizedBox(),
+                if (!shouldShowThumbnailButton()) ...[
+                  VideoBuilder(
+                      onVideoLoading: (BuildContext context) => Center(
+                            child: SizedBox(
+                              height: 50.0.h,
+                              child: Image.asset(
+                                kLoadingGif,
+                              ),
+                            ),
+                          ),
+                      onVideoHasError: (BuildContext context) => Center(
+                            child: Padding(
+                              padding: const EdgeInsets.all(10),
+                              child: Text(
+                                videoPlayerError,
+                                style: TextStyle(fontSize: 18.sp, color: EaselAppTheme.kWhite),
+                              ),
+                            ),
+                          ),
+                      onVideoInitialized: (BuildContext context) => AspectRatio(
+                            aspectRatio: easelProvider.videoPlayerController.value.aspectRatio,
+                            child: VideoPlayer(easelProvider.videoPlayerController),
+                          ),
+                      easelProvider: easelProvider)
                 ],
-                SizedBox(
-                  height: 20.w,
-                ),
-                SizedBox(
-                  width: 280.w,
-                  child: Column(
-                    children: [
-                      SizedBox(
-                        height: 200.h,
-                        child: Stack(
-                          children: [
-                            VideoBuilder(
-                                onVideoLoading: (BuildContext context) => const Center(
-                                      child: CircularProgressIndicator(
-                                        strokeWidth: 2,
-                                        valueColor: AlwaysStoppedAnimation<Color>(EaselAppTheme.kBlack),
-                                      ),
-                                    ),
-                                onVideoHasError: (BuildContext context) => Center(
-                                        child: Padding(
-                                      padding: const EdgeInsets.all(10),
-                                      child: Text(
-                                        videoPlayerError,
-                                        style: TextStyle(fontSize: 18.sp, color: EaselAppTheme.kBlack),
-                                      ),
-                                    )),
-                                onVideoInitialized: (BuildContext context) => Center(
-                                      child: Stack(
-                                        children: [
-                                          AspectRatio(
-                                            aspectRatio: easelProvider.videoPlayerController.value.aspectRatio,
-                                            child: VideoPlayer(easelProvider.videoPlayerController),
-                                          ),
-                                          _buildVideoFullScreenIcon(),
-                                        ],
-                                      ),
-                                    ),
-                                easelProvider: easelProvider),
-                          ],
-                        ),
-                      ),
-                    ],
+                if (shouldShowThumbnailButton()) ...[
+                  SizedBox(
+                    height: 200.h,
+                    child: VideoBuilder(
+                        onVideoLoading: (BuildContext context) => Center(
+                              child: SizedBox(
+                                height: 50.0.h,
+                                child: Image.asset(
+                                  kLoadingGif,
+                                ),
+                              ),
+                            ),
+                        onVideoHasError: (BuildContext context) => Center(
+                                child: Padding(
+                              padding: const EdgeInsets.all(10),
+                              child: Text(
+                                videoPlayerError,
+                                style: TextStyle(fontSize: 18.sp, color: EaselAppTheme.kBlack),
+                              ),
+                            )),
+                        onVideoInitialized: (BuildContext context) => Center(
+                              child: Stack(
+                                children: [
+                                  AspectRatio(
+                                    aspectRatio: easelProvider.videoPlayerController.value.aspectRatio,
+                                    child: VideoPlayer(easelProvider.videoPlayerController),
+                                  ),
+                                  _buildVideoFullScreenIcon(),
+                                ],
+                              ),
+                            ),
+                        easelProvider: easelProvider),
                   ),
-                ),
+                  SizedBox(
+                    height: 10.w,
+                  ),
+                  Padding(
+                    padding: EdgeInsets.only(bottom: 70.h),
+                    child: VideoProgressWidget(darkMode: false, isForFile: widget.isForFile),
+                  ),
+                ],
                 SizedBox(
                   height: 10.w,
                 ),
-                Padding(
-                  padding: EdgeInsets.only(bottom: 70.h),
-                  child: VideoProgressWidget(darkMode: false, isForFile: widget.isForFile),
-                ),
-                if (shouldShowThumbnailButtonOrStepsOrNot()) ...[
-                  _buildThumbnailButton(),
-                ],
+                shouldShowThumbnailButton() ? _buildThumbnailButton() : const SizedBox(),
               ],
             ),
           ),
