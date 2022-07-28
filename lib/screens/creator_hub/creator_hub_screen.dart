@@ -111,14 +111,15 @@ class _CreatorHubContentState extends State<CreatorHubContent> {
                     padding: EdgeInsets.symmetric(horizontal: 16.w),
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.end,
+                      crossAxisAlignment: CrossAxisAlignment.center,
                       children: [
                         Padding(
-                          padding: EdgeInsets.symmetric(horizontal: 5.w),
+                          padding: EdgeInsets.symmetric(horizontal: 8.w),
                           child: IconButton(
                               onPressed: () => scheduleMicrotask(() {
                                     viewModel.getRecipesList();
                                   }),
-                              icon: Icon(Icons.refresh, color: EaselAppTheme.kBlack, size: 25.h)),
+                              icon: Icon(Icons.refresh, color: EaselAppTheme.kBlack, size: 20.h)),
                         ),
                         InkWell(
                           onTap: () => Navigator.of(context).pushNamed(RouteUtil.kRouteHome),
