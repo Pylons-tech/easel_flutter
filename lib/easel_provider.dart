@@ -436,6 +436,15 @@ class EaselProvider extends ChangeNotifier {
     }
   }
 
+  void populateUserName() {
+    if (currentUsername.isEmpty) {
+      String savedArtistName = repository.getArtistName();
+
+      currentUsername = savedArtistName;
+      notifyListeners();
+    }
+  }
+
   Future<void> setFile({required String filePath, required String fileName}) async {
     _file = File(filePath);
     _fileName = fileName;

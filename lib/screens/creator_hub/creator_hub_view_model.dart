@@ -6,13 +6,11 @@ import 'package:easel_flutter/widgets/loading.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:pylons_sdk/pylons_sdk.dart';
-enum ViewType{
-  viewGrid, viewList
-}
 
-enum CollectionType{
-  draft, published, forSale
-}
+enum ViewType { viewGrid, viewList }
+
+enum CollectionType { draft, published, forSale }
+
 class CreatorHubViewModel extends ChangeNotifier {
   final Repository repository;
 
@@ -21,7 +19,7 @@ class CreatorHubViewModel extends ChangeNotifier {
   CollectionType selectedCollectionType = CollectionType.draft;
   List<NFT> nftdraftList = [];
 
-  ViewType viewType =ViewType.viewList;
+  ViewType viewType = ViewType.viewList;
 
   int _publishedRecipesLength = 0;
   int forSaleCount = 0;
@@ -37,18 +35,18 @@ class CreatorHubViewModel extends ChangeNotifier {
   changeSelectedCollection(CollectionType collectionType) {
     switch (collectionType) {
       case CollectionType.draft:
-        selectedCollectionType=CollectionType.draft;
-        nftList= nftdraftList;
+        selectedCollectionType = CollectionType.draft;
+        nftList = nftdraftList;
         notifyListeners();
         break;
       case CollectionType.published:
-        selectedCollectionType=CollectionType.published;
-        nftList= publishedNFTsList;
+        selectedCollectionType = CollectionType.published;
+        nftList = publishedNFTsList;
         notifyListeners();
         break;
       case CollectionType.forSale:
-        selectedCollectionType=CollectionType.forSale;
-        nftList= forSaleList;
+        selectedCollectionType = CollectionType.forSale;
+        nftList = forSaleList;
         notifyListeners();
         break;
     }
@@ -86,7 +84,7 @@ class CreatorHubViewModel extends ChangeNotifier {
 
   void getTotalForSale() {
     forSaleCount = 0;
-    forSaleList=[];
+    forSaleList = [];
     for (int i = 0; i < _publishedNFTsList.length; i++) {
       if (publishedNFTsList[i].isEnabled && publishedNFTsList[i].amountMinted < int.parse(publishedNFTsList[i].quantity)) {
         forSaleCount++;
@@ -96,6 +94,7 @@ class CreatorHubViewModel extends ChangeNotifier {
   }
 
   Future<void> getPublishAndDraftData() async {
+
     await getRecipesList();
 
     getTotalForSale();
@@ -170,9 +169,8 @@ class CreatorHubViewModel extends ChangeNotifier {
     repository.setCacheString(key: fromKey, value: kDraft);
   }
 
-  void updateViewType(ViewType selectedViewType){
-
-    viewType= selectedViewType;
+  void updateViewType(ViewType selectedViewType) {
+    viewType = selectedViewType;
     notifyListeners();
   }
 }
