@@ -84,18 +84,9 @@ class DraftsMoreBottomSheet extends StatelessWidget {
             const Divider(
               color: EaselAppTheme.kGrey,
             ),
-            moreOptionTile(
-                onPressed: () async {
-                  Navigator.of(context).pop();
-                  await Clipboard.setData(ClipboardData(text: nft.cid));
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    SnackBar(content: Text("copied_to_clipboard".tr())),
-                  );
-                },
-                title: "copy_cid".tr(),
-                image: kSvgIpfsLogo,
-                isSvg: false),
-          ],
+            moreOptionTile(title: "view", image: kSvgView,isSvg: true, onPressed: () => onViewOnIPFSPressed(context: context, nft: nft)),
+
+             ],
         ),
       ),
     );

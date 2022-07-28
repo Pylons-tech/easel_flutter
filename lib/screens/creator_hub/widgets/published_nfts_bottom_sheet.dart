@@ -69,16 +69,13 @@ class BuildPublishedNFTsBottomSheet {
                       image: kSvgPylonsLogo),
                   Divider(thickness: 1.h),
                   moreOptionTile(
-                      onPressed: () async {
-                        Navigator.of(context).pop();
-                        await Clipboard.setData(ClipboardData(text: nft.cid));
-                        ScaffoldMessenger.of(context).showSnackBar(
-                          SnackBar(content: Text("copied_to_clipboard".tr())),
-                        );
+                      onPressed: () {
+                        onViewOnIPFSPressed(nft: nft);
                       },
-                      title: "copy_cid".tr(),
-                      image: kSvgIpfsLogo,
-                      isSvg: false),
+                      title: "view".tr(),
+                      image: kSvgView,
+                  isSvg: true),
+
                 ],
               ),
             ),

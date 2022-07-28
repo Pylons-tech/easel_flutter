@@ -53,7 +53,6 @@ const kVideoIcon = 'assets/images/video_icon.png';
 
 const kSvgPylonsLogo = 'assets/images/svg/pylons_logo.svg';
 const kSvgIpfsLogo = 'assets/images/ipfs_logo.png';
-const kSvgViewIcon = 'assets/images/svg/view_icon.svg';
 const kOwnerVerifiedIcon = 'assets/images/svg/verified.svg';
 
 const String kLoadingGif = 'assets/images/gifs/loading.gif';

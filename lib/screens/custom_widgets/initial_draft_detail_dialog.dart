@@ -175,6 +175,15 @@ class _DraftDetailDialogState extends State<_DraftDetailDialog> {
                       canCopy: true,
                     ),
                     SizedBox(
+                      height: 5.h,
+                    ),
+                    buildViewOnIPFS(
+                        title: "tx_receipt".tr(),
+                        subtitle: "view".tr(),
+                        onPressed: () {
+                          onViewOnIPFSPressed(provider: easelProvider);
+                        }),
+                    SizedBox(
                       height: 30.h,
                     ),
                     SizedBox(
@@ -217,63 +226,85 @@ class _DraftDetailDialogState extends State<_DraftDetailDialog> {
 
   Widget buildRow({required String title, required String subtitle, final color = Colors.white, final bool canCopy = false}) {
     return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
-        Expanded(
-            child: Padding(
+        Padding(
           padding: EdgeInsets.only(left: isTablet ? 20.w : 40.w, right: 5.w),
           child: Text(
-            title,
-            style: TextStyle(color: EaselAppTheme.kWhite, fontWeight: FontWeight.w700, fontSize: isTablet ? 11.sp : 10.sp),
+        title,
+        style: TextStyle(color: EaselAppTheme.kWhite, fontWeight: FontWeight.w700, fontSize: isTablet ? 11.sp : 10.sp),
           ),
-        )),
-        Expanded(
+        ),
+        Padding(
+          padding: EdgeInsets.only(
+            right: 30.w,
+          ),
+          child: subtitle.length > 14
+              ? Row(
+                  mainAxisAlignment: MainAxisAlignment.end,
+                  children: [
+                    Text(
+                      subtitle.substring(0, 8),
+                      style: _rowTitleTextStyle(color),
+                    ),
+                    const Text("...",
+                        style: TextStyle(
+                          color: Colors.white,
+                        )),
+                    Text(
+                      subtitle.substring(subtitle.length - 4, subtitle.length),
+                      style: _rowTitleTextStyle(color),
+                    ),
+                    canCopy
+                        ? InkWell(
+                            onTap: () async {
+                              await Clipboard.setData(ClipboardData(text: subtitle));
+                              if (!mounted) return;
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                SnackBar(content: Text("copied_to_clipboard".tr())),
+                              );
+                            },
+                            child: Icon(
+                              Icons.copy,
+                              size: 12.h,
+                              color: EaselAppTheme.kWhite,
+                            ),
+                          )
+                        : const SizedBox()
+                  ],
+                )
+              : Text(
+                subtitle,
+                style: _rowTitleTextStyle(color),
+              ),
+        )
+      ],
+    );
+  }
+
+  Widget buildViewOnIPFS({required String title, required String subtitle, required Function onPressed}) {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      children: [
+        Padding(
+          padding: EdgeInsets.only(left: isTablet ? 20.w : 40.w, right: 5.w),
+          child: Text(
+        title,
+        style: TextStyle(color: EaselAppTheme.kWhite, fontWeight: FontWeight.w700, fontSize: isTablet ? 11.sp : 10.sp),
+          ),
+        ),
+        InkWell(
+          onTap: () {
+            onPressed();
+          },
           child: Padding(
             padding: EdgeInsets.only(
               right: 30.w,
             ),
-            child: subtitle.length > 14
-                ? Row(
-                    mainAxisAlignment: MainAxisAlignment.end,
-                    children: [
-                      Text(
-                        subtitle.substring(0, 8),
-                        style: _rowTitleTextStyle(color),
-                      ),
-                      const Text("...",
-                          style: TextStyle(
-                            color: Colors.white,
-                          )),
-                      Text(
-                        subtitle.substring(subtitle.length - 5, subtitle.length),
-                        style: _rowTitleTextStyle(color),
-                      ),
-                      canCopy
-                          ? InkWell(
-                              onTap: () async {
-                                await Clipboard.setData(ClipboardData(text: subtitle));
-                                if (!mounted) return;
-                                ScaffoldMessenger.of(context).showSnackBar(
-                                  SnackBar(content: Text("copied_to_clipboard".tr())),
-                                );
-                              },
-                              child: Icon(
-                                Icons.copy,
-                                size: 12.h,
-                                color: EaselAppTheme.kWhite,
-                              ),
-                            )
-                          : const SizedBox()
-                    ],
-                  )
-                : Row(
-                    mainAxisAlignment: MainAxisAlignment.end,
-                    children: [
-                      Text(
-                        subtitle,
-                        style: _rowTitleTextStyle(color),
-                      ),
-                    ],
-                  ),
+            child:  Text(
+              subtitle,
+              style: _rowTitleTextStyle(EaselAppTheme.kLightPurple),
+            )
           ),
         )
       ],
