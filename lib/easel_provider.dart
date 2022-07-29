@@ -233,6 +233,9 @@ class EaselProvider extends ChangeNotifier {
   }
 
   void stopVideoIfPlaying() {
+    if (!videoPlayerController.value.isInitialized) {
+      return;
+    }
     if (videoPlayerController.value.isPlaying) {
       videoPlayerController.pause();
     }
@@ -519,7 +522,7 @@ class EaselProvider extends ChangeNotifier {
           context: navigatorKey.currentState!.overlay!.context,
           errorMessage: 'download_pylons_description'.tr(),
           buttonMessage: 'download_pylons_app'.tr(),
-          onDownloadPressed: () {
+          onButtonPressed: () {
             PylonsWallet.instance.goToInstall();
           },
           onClose: () {
@@ -538,8 +541,25 @@ class EaselProvider extends ChangeNotifier {
           context: navigatorKey.currentState!.overlay!.context,
           errorMessage: 'create_username_description'.tr(),
           buttonMessage: 'open_pylons_app'.tr(),
-          onDownloadPressed: () {
+          onButtonPressed: () {
             PylonsWallet.instance.goToPylons();
+          },
+          onClose: () {
+            Navigator.of(navigatorKey.currentState!.overlay!.context).pop();
+          });
+      showWalletInstallDialog.show();
+
+      return false;
+    }
+
+    if (!stripeAccountExists && _selectedDenom.symbol == kUsdSymbol && !isFreeDrop) {
+      ShowWalletInstallDialog showWalletInstallDialog = ShowWalletInstallDialog(
+          context: navigatorKey.currentState!.overlay!.context,
+          errorMessage: 'create_stripe_description'.tr(),
+          buttonMessage: 'start'.tr(),
+          onButtonPressed: () async {
+            Navigator.pop(navigatorKey.currentState!.overlay!.context);
+            await PylonsWallet.instance.showStripe();
           },
           onClose: () {
             Navigator.of(navigatorKey.currentState!.overlay!.context).pop();
@@ -559,12 +579,6 @@ class EaselProvider extends ChangeNotifier {
   /// sends a createRecipe Tx message to the wallet
   /// return true or false depending on the response from the wallet app
   Future<bool> createRecipe({required NFT nft}) async {
-    if (nft.isFreeDrop == false) {
-      if (!await shouldMintUSDOrNot()) {
-        return false;
-      }
-    }
-
     // get device cookbook id
     _cookbookId = repository.getCookbookId();
     String savedUserName = repository.getCookBookGeneratorUsername();
@@ -632,6 +646,7 @@ class EaselProvider extends ChangeNotifier {
                 StringParam(key: kThumbnailUrl, value: nft.thumbnailUrl),
                 StringParam(key: kCreator, value: nft.creator.trim()),
                 StringParam(key: kCID, value: nft.cid),
+                StringParam(key: kFileSize, value: nft.fileSize),
               ],
               mutableStrings: [],
               transferFee: [Coin(denom: kPylonSymbol, amount: transferFeeAmount)],
@@ -670,6 +685,7 @@ class EaselProvider extends ChangeNotifier {
   }
 
   void onVideoThumbnailPicked() async {
+    videoPlayerController.pause();
     final pickedFile = await repository.pickFile(NftFormat.supportedFormats[0]);
 
     final result = pickedFile.getOrElse(() => PickedFileModel(
@@ -719,42 +735,6 @@ class EaselProvider extends ChangeNotifier {
     return sdkResponse;
   }
 
-  /// false || true (Stripe account doesn't exists and selected Denom is not USD) return true
-  /// true  || false (Stripe account exists and selected denom is not USD ) returns true
-  /// false || false (Stripe account doesnt exists and selected denom is USD) return false
-  /// false || true (Stripe account doesnt exists and selected denom is not  USD) return true
-  Future<bool> shouldMintUSDOrNot() async {
-    if (stripeAccountExists || _selectedDenom.symbol != kUsdSymbol || isFreeDrop) {
-      return true;
-    }
-
-    Completer<bool> stripeTryAgainCompleter = Completer<bool>();
-
-    ScaffoldMessenger.maybeOf(navigatorKey.currentState!.overlay!.context)?.hideCurrentSnackBar();
-    ScaffoldMessenger.maybeOf(navigatorKey.currentState!.overlay!.context)!.showSnackBar(SnackBar(
-      content: Text(
-        kErrNoStripeAccount,
-        textAlign: TextAlign.start,
-        style: TextStyle(
-          fontSize: 14.sp,
-        ),
-      ),
-      duration: const Duration(days: 1),
-      action: SnackBarAction(
-        onPressed: () async {
-          await getProfile();
-          stripeTryAgainCompleter.complete(stripeAccountExists);
-        },
-        label: kTryAgain,
-      ),
-    ));
-
-    await Future.delayed(const Duration(seconds: 1));
-
-    PylonsWallet.instance.showStripe();
-
-    return stripeTryAgainCompleter.future;
-  }
 
   Future initializeAudioPlayerForFile({required File file}) async {
     audioProgressNotifier = ValueNotifier<ProgressBarState>(
@@ -890,6 +870,7 @@ class EaselProvider extends ChangeNotifier {
       height: fileHeight.toString(),
       duration: fileDuration.toString(),
       description: descriptionController.text,
+      fileSize: _fileSize,
       recipeID: recipeId,
       fileName: _file!.path.split("/").last,
       cid: fileUploadResponse.data?.value?.cid,

@@ -244,6 +244,7 @@ const kEaselNFT = "Easel_NFT";
 const kUpylon = "upylon";
 const kExtraInfo = "extraInfo";
 const kDuration = "Duration";
+const kFileSize = "fileSize";
 
 const kThumbnailFileName = "temp.jpg";
 
@@ -269,6 +270,11 @@ const String kWidthKey = "Width";
 const String kHeightKey = "Height";
 const String kQuantityKey = "Quantity";
 const String kHashtagKey = "Hashtags";
+
+
+const String kDescriptionTutorial = "description";
+const String kHeaderTutorial = "header";
+const String kImageTutorial = "image";
 
 const String kNoInternet = 'No internet';
 const String kRecipeNotFound = 'Recipe not found';

@@ -40,6 +40,7 @@ class NFT extends Equatable {
   String duration = "";
   String hashtags = "";
   String fileName = "";
+  String fileSize = "";
   String cid = "";
   int dateTime = 0;
   bool isDialogShown = false;
@@ -66,6 +67,7 @@ class NFT extends Equatable {
     this.tradePercentage = "0",
     this.amountMinted = 0,
     this.quantity = "0",
+    this.fileSize = "0",
     this.appType = "",
     required this.ibcCoins,
     this.tradeID = "",
