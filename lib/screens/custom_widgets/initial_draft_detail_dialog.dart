@@ -243,7 +243,7 @@ class _DraftDetailDialogState extends State<_DraftDetailDialog> {
         Expanded(
           child: Padding(
             padding: EdgeInsets.only(
-              right: 30.w,
+              right: 20.w,
             ),
             child: Row(
               mainAxisAlignment: MainAxisAlignment.end,

@@ -47,21 +47,7 @@ class _PriceScreenState extends State<PriceScreen> {
     nft = repository.getCacheDynamicType(key: nftKey);
     super.initState();
   }
-
-  validateAndSavePrice() async {
-    if (!_formKey.currentState!.validate()) {
-      return;
-    }
-    if (context.read<EaselProvider>().isFreeDrop) {
-      if (_royaltiesFieldError.isNotEmpty || _noOfEditionsFieldError.isNotEmpty) return;
-      await context.read<EaselProvider>().updateNftFromPrice(nft!.id!);
-      Navigator.pop(context);
-    } else {
-      if (_royaltiesFieldError.isNotEmpty || _noOfEditionsFieldError.isNotEmpty || _priceFieldError.isNotEmpty) return;
-      await context.read<EaselProvider>().updateNftFromPrice(nft!.id!);
-      Navigator.pop(context);
-    }
-  }
+  
 
   @override
   Widget build(BuildContext context) {
