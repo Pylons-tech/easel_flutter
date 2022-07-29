@@ -58,9 +58,8 @@ class NftGridViewItem extends StatelessWidget {
               ),
               assetType: nft.assetType.toAssetTypeEnum(),
             )),
-        Positioned(
-          right: 10.w,
-          top: 10.h,
+        Align(
+          alignment: Alignment.topRight,
           child: InkWell(
               onTap: () {
                 if (context.read<CreatorHubViewModel>().selectedCollectionType == CollectionType.draft) {
@@ -73,9 +72,12 @@ class NftGridViewItem extends StatelessWidget {
                 }
                 buildBottomSheet(context: context);
               },
-              child: SvgPicture.asset(
-                kSvgMoreOption,
-                color: EaselAppTheme.kWhite,
+              child: Padding(
+                padding: EdgeInsets.all(8.w),
+                child: SvgPicture.asset(
+                  kSvgMoreOption,
+                  color: EaselAppTheme.kWhite,
+                ),
               )),
         )
       ],
