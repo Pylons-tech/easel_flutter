@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:easel_flutter/easel_provider.dart';
 import 'package:easel_flutter/repository/repository.dart';
 import 'package:easel_flutter/screens/creator_hub/creator_hub_view_model.dart';
@@ -5,7 +7,7 @@ import 'package:easel_flutter/screens/custom_widgets/step_labels.dart';
 import 'package:easel_flutter/screens/custom_widgets/steps_indicator.dart';
 import 'package:easel_flutter/screens/describe_screen.dart';
 import 'package:easel_flutter/screens/price_screen.dart';
-import 'package:easel_flutter/screens/published_screen.dart';
+import 'package:easel_flutter/screens/publish_screen.dart';
 import 'package:easel_flutter/utils/easel_app_theme.dart';
 import 'package:easel_flutter/utils/screen_responsive.dart';
 import 'package:easel_flutter/utils/space_utils.dart';
@@ -62,15 +64,22 @@ class _HomeScreenState extends State<HomeScreen> {
     super.dispose();
   }
 
+  void onBackPressed() {
+    easelProvider.videoLoadingError = '';
+    easelProvider.isVideoLoading = true;
+    ScaffoldMessenger.of(context).hideCurrentSnackBar();
+    homeViewModel.previousPage();
+    if (homeViewModel.currentPage.value == 0) {
+      GetIt.I.get<CreatorHubViewModel>().getDraftsList();
+      Navigator.of(context).pop();
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return WillPopScope(
       onWillPop: () async {
-        GetIt.I.get<CreatorHubViewModel>().getDraftsList();
-        easelProvider.videoLoadingError = '';
-        easelProvider.isVideoLoading = true;
-        Navigator.of(context).pop();
-
+        onBackPressed();
         return false;
       },
       child: Container(
@@ -116,6 +125,8 @@ class HomeScreenContent extends StatelessWidget {
                         padding: EdgeInsets.only(left: 10.sp),
                         child: IconButton(
                           onPressed: () {
+                            context.read<EaselProvider>().videoLoadingError = '';
+                            context.read<EaselProvider>().isVideoLoading = true;
                             ScaffoldMessenger.of(context).hideCurrentSnackBar();
                             homeViewModel.previousPage();
                             if (homeViewModel.currentPage.value == 0) {
@@ -189,6 +200,6 @@ class HomeScreenContent extends StatelessWidget {
   }
 
   Widget publishScreen() {
-    return const PublishedNewScreen();
+    return const PublishScreen();
   }
 }

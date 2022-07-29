@@ -66,15 +66,15 @@ class _TutorialScreenState extends State<TutorialScreen> {
                 Padding(
                     padding: EdgeInsets.symmetric(horizontal: 0.22.sw),
                     child: Image.asset(
-                      item['image'],
+                      item[kImageTutorial],
                       height: 40,
                       width: 40,
                       fit: BoxFit.fill,
                     )),
                 SizedBox(height: 0.15.sh),
-                Text(item['header'], style: TextStyle(fontSize: isTablet ? 16.sp : 18.sp, fontWeight: FontWeight.w800, color: EaselAppTheme.kDartGrey), textAlign: TextAlign.center),
+                Text(item[kHeaderTutorial], style: TextStyle(fontSize: isTablet ? 16.sp : 18.sp, fontWeight: FontWeight.w800, color: EaselAppTheme.kDartGrey), textAlign: TextAlign.center),
                 const SizedBox(height: 15),
-                SizedBox(width: 0.63.sw, child: Text(item['description'], style: TextStyle(color: Colors.black, fontSize: 13.sp, fontWeight: FontWeight.w400), textAlign: TextAlign.center)),
+                SizedBox(width: 0.63.sw, child: Text(item[kDescriptionTutorial], style: TextStyle(color: Colors.black, fontSize: 13.sp, fontWeight: FontWeight.w400), textAlign: TextAlign.center)),
               ],
             ))
         .toList();
@@ -89,22 +89,22 @@ class _TutorialScreenState extends State<TutorialScreen> {
   Widget build(BuildContext context) {
     slides = kTutorialItems
         .map((item) => Column(
-      children: <Widget>[
-        SizedBox(height: 0.2.sh),
-        Padding(
-            padding: EdgeInsets.symmetric(horizontal: 0.22.sw),
-            child: Image.asset(
-              item['image'],
-              height: isTablet ? 140.w : 200.w,
-              width: isTablet ? 140.w : 200.w,
-              fit: BoxFit.fill,
-            )),
-        SizedBox(height: 0.15.sh),
-        Text(item['header'], style: TextStyle(fontSize: isTablet ? 16.sp : 18.sp, fontWeight: FontWeight.w800, color: EaselAppTheme.kDartGrey), textAlign: TextAlign.center),
-        const SizedBox(height: 15),
-        SizedBox(width: 0.63.sw, child: Text(item['description'], style: TextStyle(color: Colors.black, fontSize: 13.sp, fontWeight: FontWeight.w400), textAlign: TextAlign.center)),
-      ],
-    ))
+              children: <Widget>[
+                SizedBox(height: 0.2.sh),
+                Padding(
+                    padding: EdgeInsets.symmetric(horizontal: 0.22.sw),
+                    child: Image.asset(
+                      item[kImageTutorial],
+                      height: isTablet ? 140.w : 200.w,
+                      width: isTablet ? 140.w : 200.w,
+                      fit: BoxFit.fill,
+                    )),
+                SizedBox(height: 0.15.sh),
+                Text(item[kHeaderTutorial], style: TextStyle(fontSize: isTablet ? 16.sp : 18.sp, fontWeight: FontWeight.w800, color: EaselAppTheme.kDartGrey), textAlign: TextAlign.center),
+                const SizedBox(height: 15),
+                SizedBox(width: 0.63.sw, child: Text(item[kDescriptionTutorial], style: TextStyle(color: Colors.black, fontSize: 13.sp, fontWeight: FontWeight.w400), textAlign: TextAlign.center)),
+              ],
+            ))
         .toList();
     return Scaffold(
       backgroundColor: EaselAppTheme.kWhite03,
