@@ -11,6 +11,7 @@ class ProgressBarBuilder extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     if (assetType == kVideoText) return videoProgressBar(context);
-    return audioProgressBar(context);
+    if (assetType == kAudioText) return audioProgressBar(context);
+    return const SizedBox();
   }
 }
