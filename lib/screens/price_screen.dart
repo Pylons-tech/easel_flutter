@@ -45,6 +45,21 @@ class _PriceScreenState extends State<PriceScreen> {
     super.initState();
   }
 
+  validateAndSavePrice() async {
+    if (!_formKey.currentState!.validate()) {
+      return;
+    }
+    if (context.read<EaselProvider>().isFreeDrop) {
+      if (_royaltiesFieldError.isNotEmpty || _noOfEditionsFieldError.isNotEmpty) return;
+      await context.read<EaselProvider>().updateNftFromPrice(nft!.id!);
+      Navigator.pop(context);
+    } else {
+      if (_royaltiesFieldError.isNotEmpty || _noOfEditionsFieldError.isNotEmpty || _priceFieldError.isNotEmpty) return;
+      await context.read<EaselProvider>().updateNftFromPrice(nft!.id!);
+      Navigator.pop(context);
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -242,7 +257,7 @@ class _PriceScreenState extends State<PriceScreen> {
                     PylonsButton(
                       onPressed: () async {
                         FocusScope.of(context).unfocus();
-                        validateAndUpdatePrice();
+                        validateAndSavePrice();
                       },
                       btnText: "save".tr(),
                       showArrow: false,
@@ -253,7 +268,7 @@ class _PriceScreenState extends State<PriceScreen> {
                     PylonsButton(
                       onPressed: () async {
                         FocusScope.of(context).unfocus();
-                        validateAndUpdatePrice();
+                        validateAndContinuePrice();
                       },
                       btnText: kContinue,
                       showArrow: false,
@@ -271,7 +286,7 @@ class _PriceScreenState extends State<PriceScreen> {
     );
   }
 
-  validateAndUpdatePrice() async {
+  validateAndContinuePrice() async {
     if (!_formKey.currentState!.validate()) {
       return;
     }
