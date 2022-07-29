@@ -31,9 +31,9 @@ class _DescribeScreenState extends State<DescribeScreen> {
   EaselProvider provider = GetIt.I.get<EaselProvider>();
   final _formKey = GlobalKey<FormState>();
 
-  ValueNotifier<String> _artNameFieldError = ValueNotifier("");
-  ValueNotifier<String> _artistNameFieldError = ValueNotifier("");
-  ValueNotifier<String> _descriptionFieldError = ValueNotifier("");
+  final ValueNotifier<String> _artNameFieldError = ValueNotifier("");
+  final ValueNotifier<String> _artistNameFieldError = ValueNotifier("");
+  final ValueNotifier<String> _descriptionFieldError = ValueNotifier("");
 
   @override
   void dispose() {
@@ -81,7 +81,7 @@ class _DescribeScreenState extends State<DescribeScreen> {
                               child: IconButton(
                                 onPressed: () {
                                   ScaffoldMessenger.of(context).hideCurrentSnackBar();
-                                  homeViewModel.previousPage();
+                                  Navigator.pop(context);
                                 },
                                 icon: const Icon(
                                   Icons.arrow_back_ios,

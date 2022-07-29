@@ -32,9 +32,9 @@ class _PriceScreenState extends State<PriceScreen> {
   var repository = GetIt.I.get<Repository>();
   NFT? nft;
 
-  ValueNotifier<String> _royaltiesFieldError = ValueNotifier("");
-  ValueNotifier<String> _noOfEditionsFieldError = ValueNotifier("");
-  ValueNotifier<String> _priceFieldError = ValueNotifier("");
+  final ValueNotifier<String> _royaltiesFieldError = ValueNotifier("");
+  final ValueNotifier<String> _noOfEditionsFieldError = ValueNotifier("");
+  final ValueNotifier<String> _priceFieldError = ValueNotifier("");
 
   @override
   void dispose() {

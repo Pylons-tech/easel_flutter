@@ -1,6 +1,5 @@
 import 'package:easel_flutter/easel_provider.dart';
 import 'package:easel_flutter/repository/repository.dart';
-import 'package:easel_flutter/screens/creator_hub/creator_hub_view_model.dart';
 import 'package:easel_flutter/screens/describe_screen.dart';
 import 'package:easel_flutter/screens/price_screen.dart';
 import 'package:easel_flutter/screens/publish_screen.dart';
@@ -60,8 +59,7 @@ class _HomeScreenState extends State<HomeScreen> {
     easelProvider.isVideoLoading = true;
     ScaffoldMessenger.of(context).hideCurrentSnackBar();
     homeViewModel.previousPage();
-    if (homeViewModel.currentPage.value == 0) {
-      GetIt.I.get<CreatorHubViewModel>().getDraftsList();
+    if (homeViewModel.currentPage.value == 1) {
       Navigator.of(context).pop();
     }
   }
