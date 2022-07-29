@@ -76,6 +76,7 @@ class _PriceScreenState extends State<PriceScreen> {
                               padding: EdgeInsets.only(left: 10.sp),
                               child: IconButton(
                                 onPressed: () {
+                                  FocusScope.of(context).unfocus();
                                   ScaffoldMessenger.of(context).hideCurrentSnackBar();
                                   homeViewModel.previousPage();
                                 },

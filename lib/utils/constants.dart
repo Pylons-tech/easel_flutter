@@ -252,7 +252,7 @@ const kCompressingMessage = "Compressing Thumbnail";
 const kUploadingMessage = "Uploading";
 const kLoadingMessage = "Loading...";
 
-final List stepLabels = ["upload", "draft", "publish"];
+final List<String> stepLabels = ["upload", "draft", "publish"];
 
 final List<String> imageAllowedExts = ["png", "jpg", "jpeg", "svg", "heif"];
 final List<String> audioAllowedExts = ['mp3', 'ogg', 'wav', 'aac'];
