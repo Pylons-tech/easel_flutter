@@ -68,7 +68,7 @@ class EaselProvider extends ChangeNotifier {
 
   bool willLoadFirstTime = true;
 
-  bool collapsed = true;
+  bool collapsed = false;
 
   void setPublishedNFTClicked(NFT nft) {
     _publishedNFTClicked = nft;
@@ -189,7 +189,7 @@ class EaselProvider extends ChangeNotifier {
     hashtagsList.clear();
     willLoadFirstTime = true;
     isFreeDrop = false;
-    collapsed = true;
+    collapsed = false;
     notifyListeners();
   }
 
@@ -439,6 +439,15 @@ class EaselProvider extends ChangeNotifier {
     }
   }
 
+  void populateUserName() {
+    if (currentUsername.isEmpty) {
+      String savedArtistName = repository.getArtistName();
+
+      currentUsername = savedArtistName;
+      notifyListeners();
+    }
+  }
+
   Future<void> setFile({required String filePath, required String fileName}) async {
     _file = File(filePath);
     _fileName = fileName;
@@ -664,14 +673,13 @@ class EaselProvider extends ChangeNotifier {
 
     var response = await PylonsWallet.instance.txCreateRecipe(recipe, requestResponse: false);
 
-    if (response.success) {
-      navigatorKey.currentState!.overlay!.context.show(message: kRecipeCreated);
-      deleteNft(nft.id);
-      return true;
-    } else {
+    if (!response.success) {
       navigatorKey.currentState!.overlay!.context.show(message: "$kErrRecipe ${response.error}");
       return false;
     }
+    navigatorKey.currentState!.overlay!.context.show(message: kRecipeCreated);
+    deleteNft(nft.id);
+    return true;
   }
 
   bool isDifferentUserName(String savedUserName) => (currentUsername.isNotEmpty && savedUserName != currentUsername);

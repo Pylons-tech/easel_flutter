@@ -35,7 +35,7 @@ class ClippedButton extends StatelessWidget {
             child: Center(
                 child: Text(
                   title,
-                  style: TextStyle(color: textColor, fontSize: 16.sp, fontWeight: FontWeight.w400),
+                  style: TextStyle(color: textColor, fontSize: 16.sp, fontWeight: fontWeight),
                   textAlign: TextAlign.center,
                 )),
           ),

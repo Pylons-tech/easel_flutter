@@ -18,8 +18,6 @@ import 'package:get_it/get_it.dart';
 import 'package:provider/provider.dart';
 
 import 'choose_format_screen.dart';
-import 'custom_widgets/step_labels.dart';
-import 'custom_widgets/steps_indicator.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({Key? key}) : super(key: key);
@@ -105,52 +103,9 @@ class HomeScreenContent extends StatelessWidget {
     final homeViewModel = context.watch<HomeViewModel>();
     return Column(
       children: [
-        if (homeViewModel.currentPage.value != 0 && homeViewModel.currentPage.value != 3) ...[
-          const VerticalSpace(20),
-          MyStepsIndicator(currentStep: homeViewModel.currentStep),
-          const VerticalSpace(5),
-          StepLabels(currentPage: homeViewModel.currentPage, currentStep: homeViewModel.currentStep),
-          const VerticalSpace(10),
-        ],
         if (homeViewModel.currentPage.value != 3) ...[
           const VerticalSpace(20),
-          Stack(
-            alignment: Alignment.center,
-            children: [
-              Align(
-                  alignment: Alignment.centerLeft,
-                  child: ValueListenableBuilder(
-                    valueListenable: homeViewModel.currentPage,
-                    builder: (_, int currentPage, __) => Padding(
-                        padding: EdgeInsets.only(left: 10.sp),
-                        child: IconButton(
-                          onPressed: () {
-                            context.read<EaselProvider>().videoLoadingError = '';
-                            context.read<EaselProvider>().isVideoLoading = true;
-                            ScaffoldMessenger.of(context).hideCurrentSnackBar();
-                            homeViewModel.previousPage();
-                            if (homeViewModel.currentPage.value == 0) {
-                              GetIt.I.get<CreatorHubViewModel>().getDraftsList();
-                              Navigator.of(context).pop();
-                            }
-                          },
-                          icon: const Icon(
-                            Icons.arrow_back_ios,
-                            color: EaselAppTheme.kGrey,
-                          ),
-                        )),
-                  )),
-              ValueListenableBuilder(
-                valueListenable: homeViewModel.currentPage,
-                builder: (_, int currentPage, __) {
-                  return Text(
-                    homeViewModel.pageTitles[homeViewModel.currentPage.value],
-                    style: Theme.of(context).textTheme.bodyText1!.copyWith(fontSize: 18.sp, fontWeight: FontWeight.w400, color: EaselAppTheme.kDarkText),
-                  );
-                },
-              ),
-            ],
-          ),
+
           ScreenResponsive(
             mobileScreen: (context) => const VerticalSpace(6),
             tabletScreen: (context) => const VerticalSpace(30),

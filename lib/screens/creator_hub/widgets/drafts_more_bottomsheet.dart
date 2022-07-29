@@ -7,6 +7,7 @@ import 'package:easel_flutter/utils/constants.dart';
 import 'package:easel_flutter/utils/dependency_injection/dependency_injection_container.dart';
 import 'package:easel_flutter/utils/easel_app_theme.dart';
 import 'package:easel_flutter/utils/route_util.dart';
+import 'package:easel_flutter/widgets/cid_or_ipfs.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -16,6 +17,7 @@ import 'package:provider/provider.dart';
 
 import '../../../widgets/clippers/bottom_sheet_clipper.dart';
 import '../creator_hub_view_model.dart';
+TextStyle titleStyle = TextStyle(fontSize: isTablet ? 13.sp : 16.sp, fontWeight: FontWeight.w800, fontFamily: kUniversalFontFamily, color: EaselAppTheme.kBlack);
 
 class DraftsBottomSheet {
   final BuildContext buildContext;
@@ -44,6 +46,7 @@ class DraftsMoreBottomSheet extends StatelessWidget {
   const DraftsMoreBottomSheet({Key? key, required this.nft}) : super(key: key);
 
   final NFT nft;
+  EaselProvider get easelProvider => sl();
 
   void onViewOnIPFSPressed({required BuildContext context, required NFT nft}) async {
     final easelProvider = Provider.of<EaselProvider>(context, listen: false);
@@ -84,21 +87,42 @@ class DraftsMoreBottomSheet extends StatelessWidget {
             const Divider(
               color: EaselAppTheme.kGrey,
             ),
-            moreOptionTile(
-                onPressed: () async {
-                  Navigator.of(context).pop();
-                  await Clipboard.setData(ClipboardData(text: nft.cid));
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    SnackBar(content: Text("copied_to_clipboard".tr())),
+            CidOrIpfs(
+                viewCid: (context) {
+                  return moreOptionTile(
+                    onPressed: () async {
+                      Navigator.of(context).pop();
+                      await Clipboard.setData(ClipboardData(text: nft.cid));
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        SnackBar(content: Text("copied_to_clipboard".tr())),
+                      );
+                    },
+                    title: "copy_cid".tr(),
+                    image: kSvgIpfsLogo,
+                    isSvg: false,
                   );
                 },
-                title: "copy_cid".tr(),
-                image: kSvgIpfsLogo,
-                isSvg: false),
+                viewIpfs: (context) {
+                  return moreOptionTile(
+                    onPressed: () async {
+                      Navigator.of(context).pop();
+                      onViewOnIPFSPressed(nft: nft, context: context);
+                    },
+                    title: "view".tr(),
+                    image: kSvgView,
+                    isSvg: true,
+                  );
+                },
+                type: nft.assetType)
           ],
         ),
       ),
     );
+  }
+  void navigateToPreviewScreen({required BuildContext context, required NFT nft}) {
+    easelProvider.setPublishedNFTClicked(nft);
+    easelProvider.setPublishedNFTDuration(nft.duration);
+    Navigator.of(context).pushReplacementNamed(RouteUtil.kRoutePreviewNFTFullScreen);
   }
 }
 
