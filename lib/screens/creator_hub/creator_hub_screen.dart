@@ -1,5 +1,4 @@
 import 'dart:async';
-import 'dart:developer';
 import 'package:easel_flutter/easel_provider.dart';
 import 'package:easel_flutter/main.dart';
 import 'package:easel_flutter/models/nft.dart';
@@ -106,19 +105,10 @@ class _CreatorHubContentState extends State<CreatorHubContent> {
 
   EaselProvider get easelProvider => sl();
 
-  void onRefreshPressed(CollectionType collectionType) {
-    switch (collectionType) {
-      case CollectionType.draft:
-        GetIt.I.get<CreatorHubViewModel>().getDraftsList();
-
-        break;
-      case CollectionType.published:
-        GetIt.I.get<CreatorHubViewModel>().getRecipesList();
-        break;
-      case CollectionType.forSale:
-        GetIt.I.get<CreatorHubViewModel>().getTotalForSale();
-        break;
-    }
+  void onRefreshPressed() {
+    GetIt.I.get<CreatorHubViewModel>().getDraftsList();
+    GetIt.I.get<CreatorHubViewModel>().getRecipesList();
+    GetIt.I.get<CreatorHubViewModel>().getTotalForSale();
   }
 
   @override
@@ -142,11 +132,7 @@ class _CreatorHubContentState extends State<CreatorHubContent> {
                     children: [
                       Padding(
                         padding: EdgeInsets.symmetric(horizontal: 8.w),
-                        child: IconButton(
-                            onPressed: () => scheduleMicrotask(() {
-                                  onRefreshPressed(viewModel.selectedCollectionType);
-                                }),
-                            icon: Icon(Icons.refresh, color: EaselAppTheme.kBlack, size: 20.h)),
+                        child: IconButton(onPressed: () => scheduleMicrotask(() => onRefreshPressed()), icon: Icon(Icons.refresh, color: EaselAppTheme.kBlack, size: 20.h)),
                       ),
                       InkWell(
                         onTap: () => Navigator.of(context).pushNamed(RouteUtil.kRouteHome),
