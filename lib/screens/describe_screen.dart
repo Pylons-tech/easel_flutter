@@ -127,99 +127,113 @@ class _DescribeScreenState extends State<DescribeScreen> {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
+                      EaselTextField(
+                        label: kGiveNFTNameText,
+                        hint: kHintNftName,
+                        controller: provider.artNameController,
+                        textCapitalization: TextCapitalization.sentences,
+                        validator: (value) {
+                          if (value!.isEmpty) {
+                            _artNameFieldError.value = kEnterNFTNameText;
+                            return;
+                          }
+                          if (value.length <= kMinNFTName) {
+                            _artNameFieldError.value = "$kNameShouldHaveText $kMinNFTName $kCharactersOrMoreText";
+                            return;
+                          }
+                          _artNameFieldError.value = '';
+                          return null;
+                        },
+                      ),
                       ValueListenableBuilder<String>(
-                          valueListenable: _artNameFieldError,
-                          builder: (_, String artNameFieldError, __) => EaselTextField(
-                                label: kGiveNFTNameText,
-                                hint: kHintNftName,
-                                controller: provider.artNameController,
-                                textCapitalization: TextCapitalization.sentences,
-                                validator: (value) {
-                                  if (value!.isEmpty) {
-                                    _artNameFieldError.value = kEnterNFTNameText;
-                                    return;
-                                  }
-                                  if (value.length <= kMinNFTName) {
-                                    _artNameFieldError.value = "$kNameShouldHaveText $kMinNFTName $kCharactersOrMoreText";
-                                    return;
-                                  }
-                                  _artNameFieldError.value = '';
-                                  return null;
-                                },
-                              )),
-                      if (_artNameFieldError.value.isNotEmpty)
-                        Padding(
-                          padding: EdgeInsets.only(left: 10.w, right: 10.w, top: 2.h),
-                          child: Text(
-                            _artNameFieldError.value,
-                            style: TextStyle(
-                              fontSize: 12.sp,
-                              color: Colors.red,
+                        valueListenable: _artNameFieldError,
+                        builder: (_, String artNameFieldError, __) {
+                          if (artNameFieldError.isEmpty) {
+                            return const SizedBox.shrink();
+                          }
+                          return Padding(
+                            padding: EdgeInsets.only(left: 10.w, right: 10.w, top: 2.h),
+                            child: Text(
+                              artNameFieldError,
+                              style: TextStyle(
+                                fontSize: 12.sp,
+                                color: Colors.red,
+                              ),
                             ),
-                          ),
-                        ),
+                          );
+                        },
+                      ),
                       VerticalSpace(20.h),
+                      EaselTextField(
+                        label: kNameAsArtistText,
+                        hint: kHintArtistName,
+                        controller: provider.artistNameController,
+                        textCapitalization: TextCapitalization.sentences,
+                        validator: (value) {
+                          if (value!.isEmpty) {
+                            _artistNameFieldError.value = kEnterArtistNameText;
+                          } else {
+                            _artistNameFieldError.value = '';
+                          }
+                          return null;
+                        },
+                      ),
                       ValueListenableBuilder<String>(
-                          valueListenable: _artistNameFieldError,
-                          builder: (_, String artistNameFieldError, __) => EaselTextField(
-                                label: kNameAsArtistText,
-                                hint: kHintArtistName,
-                                controller: provider.artistNameController,
-                                textCapitalization: TextCapitalization.sentences,
-                                validator: (value) {
-                                  if (value!.isEmpty) {
-                                    _artistNameFieldError.value = kEnterArtistNameText;
-                                  } else {
-                                    _artistNameFieldError.value = '';
-                                  }
-                                  return null;
-                                },
-                              )),
-                      if (_artistNameFieldError.value.isNotEmpty)
-                        Padding(
-                          padding: EdgeInsets.only(left: 10.w, right: 10.w, top: 2.h),
-                          child: Text(
-                            _artistNameFieldError.value,
-                            style: TextStyle(
-                              fontSize: 12.sp,
-                              color: Colors.red,
+                        valueListenable: _artistNameFieldError,
+                        builder: (_, String artistNameFieldError, __) {
+                          if (artistNameFieldError.isEmpty) {
+                            return const SizedBox.shrink();
+                          }
+                          return Padding(
+                            padding: EdgeInsets.only(left: 10.w, right: 10.w, top: 2.h),
+                            child: Text(
+                              artistNameFieldError,
+                              style: TextStyle(
+                                fontSize: 12.sp,
+                                color: Colors.red,
+                              ),
                             ),
-                          ),
-                        ),
+                          );
+                        },
+                      ),
                       VerticalSpace(20.h),
+                      EaselTextField(
+                        label: kDescribeYourNftText,
+                        hint: kHintNftDesc,
+                        noOfLines: 5,
+                        controller: provider.descriptionController,
+                        textCapitalization: TextCapitalization.sentences,
+                        inputFormatters: [LengthLimitingTextInputFormatter(kMaxDescription)],
+                        validator: (value) {
+                          if (value!.isEmpty) {
+                            _descriptionFieldError.value = kEnterNFTDescriptionText;
+                            return;
+                          }
+                          if (value.length <= kMinDescription) {
+                            _descriptionFieldError.value = "$kEnterMoreThanText $kMinDescription $kCharactersText";
+                            return;
+                          }
+                          _descriptionFieldError.value = '';
+                          return null;
+                        },
+                      ),
                       ValueListenableBuilder<String>(
                           valueListenable: _descriptionFieldError,
-                          builder: (_, String descriptionFieldError, __) => EaselTextField(
-                                label: kDescribeYourNftText,
-                                hint: kHintNftDesc,
-                                noOfLines: 5,
-                                controller: provider.descriptionController,
-                                textCapitalization: TextCapitalization.sentences,
-                                inputFormatters: [LengthLimitingTextInputFormatter(kMaxDescription)],
-                                validator: (value) {
-                                  if (value!.isEmpty) {
-                                    _descriptionFieldError.value = kEnterNFTDescriptionText;
-                                    return;
-                                  }
-                                  if (value.length <= kMinDescription) {
-                                    _descriptionFieldError.value = "$kEnterMoreThanText $kMinDescription $kCharactersText";
-                                    return;
-                                  }
-                                  _descriptionFieldError.value = '';
-                                  return null;
-                                },
-                              )),
-                      if (_descriptionFieldError.value.isNotEmpty)
-                        Padding(
-                          padding: EdgeInsets.only(left: 10.w, right: 10.w, top: 2.h),
-                          child: Text(
-                            _descriptionFieldError.value,
-                            style: TextStyle(
-                              fontSize: 12.sp,
-                              color: Colors.red,
-                            ),
-                          ),
-                        ),
+                          builder: (_, String descriptionFieldError, __) {
+                            if (descriptionFieldError.isEmpty) {
+                              return const SizedBox.shrink();
+                            }
+                            return Padding(
+                              padding: EdgeInsets.only(left: 10.w, right: 10.w, top: 2.h),
+                              child: Text(
+                                descriptionFieldError,
+                                style: TextStyle(
+                                  fontSize: 12.sp,
+                                  color: Colors.red,
+                                ),
+                              ),
+                            );
+                          }),
                       Text(
                         "$kMaxDescription $kCharacterLimitText",
                         style: TextStyle(color: EaselAppTheme.kLightPurple, fontSize: 14.sp, fontWeight: FontWeight.w800),
