@@ -17,6 +17,7 @@ import 'package:easel_flutter/utils/read_more.dart';
 import 'package:easel_flutter/utils/route_util.dart';
 import 'package:easel_flutter/viewmodels/home_viewmodel.dart';
 import 'package:easel_flutter/widgets/audio_widget.dart';
+import 'package:easel_flutter/widgets/cid_or_ipfs.dart';
 import 'package:easel_flutter/widgets/clipped_button.dart';
 import 'package:easel_flutter/widgets/image_widget.dart';
 import 'package:easel_flutter/widgets/model_viewer.dart';
@@ -450,9 +451,20 @@ class _OwnerBottomDrawerState extends State<OwnerBottomDrawer> {
                                     subtitle: "${widget.nft.tradePercentage}%",
                                   ),
                                   SizedBox(height: 10.h),
-                                  buildRow(
-                                    title: "content_identifier".tr(),
-                                    subtitle: widget.nft.cid,
+                                  CidOrIpfs(
+                                    viewCid: (context) {
+                                      return buildRow(
+                                        title: "content_identifier".tr(),
+                                        subtitle: widget.nft.cid,
+                                      );
+                                    },
+                                    viewIpfs: (context) {
+                                      return buildRow(
+                                        title: "asset_uri".tr(),
+                                        subtitle: "view".tr(),
+                                      );
+                                    },
+                                    type: widget.nft.assetType,
                                   ),
                                   SizedBox(height: 2.h),
                                   SizedBox(height: 50.h),
@@ -484,13 +496,14 @@ class _OwnerBottomDrawerState extends State<OwnerBottomDrawer> {
                                           bgColor: EaselAppTheme.kLightRed,
                                           textColor: EaselAppTheme.kWhite,
                                           onPressed: () async {
+                                            if (viewModel.nft.assetType == kAudioText) {
+                                              viewModel.disposeAudioController();
+                                            }
                                             bool isRecipeCreated = await viewModel.verifyPylonsAndMint(nft: viewModel.nft);
                                             if (!isRecipeCreated) {
                                               return;
                                             }
-                                            if (viewModel.nft.assetType == kAudioText) {
-                                              viewModel.disposeAudioController();
-                                            }
+
                                             Navigator.of(context).pushNamedAndRemoveUntil(RouteUtil.kRouteCreatorHub, (route) => false);
                                           },
                                           cuttingHeight: 15.h,
