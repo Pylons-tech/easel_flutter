@@ -226,7 +226,7 @@ class _DescribeScreenState extends State<DescribeScreen> {
                       ),
                       VerticalSpace(20.h),
                       const EaselHashtagInputField(),
-                      VerticalSpace(40.h),
+                      VerticalSpace(20.h),
                       ClippedButton(
                         title: "save_as_draft".tr(),
                         bgColor: EaselAppTheme.kBlue,
