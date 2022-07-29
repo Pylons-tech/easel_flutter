@@ -33,8 +33,8 @@ class _CreatorHubScreenState extends State<CreatorHubScreen> {
 
   @override
   void initState() {
-    easelProvider.populateUserName();
     scheduleMicrotask(() {
+      easelProvider.populateUserName();
       creatorHubViewModel.getPublishAndDraftData();
     });
     super.initState();

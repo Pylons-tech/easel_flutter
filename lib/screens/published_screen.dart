@@ -50,7 +50,7 @@ class _PublishedNewScreenState extends State<PublishedNewScreen> {
   @override
   initState() {
     easelProvider.nft = repository.getCacheDynamicType(key: nftKey);
-
+    easelProvider.collapsed=false;
     super.initState();
   }
 
