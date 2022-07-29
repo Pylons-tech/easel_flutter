@@ -201,16 +201,32 @@ class _CreatorHubContentState extends State<CreatorHubContent> {
                     padding: EdgeInsets.symmetric(horizontal: 20.w),
                     child: NFTsViewBuilder(
                         onGridSelected: (context) => BuildNFTsContent(
-                            onDraftList: (context) => BuildGridView(nftsList: viewModel.nftDraftList),
-                            onForSaleList: (context) => BuildGridView(nftsList: viewModel.nftForSaleList),
-                            onPublishedList: (context) => BuildGridView(nftsList: viewModel.nftPublishedList),
-                            onEmptyList: (context) => getEmptyListWidget(),
+                            onDraftList: (context) => BuildGridView(
+                                  nftsList: viewModel.nftDraftList,
+                                  onEmptyList: (context) => getEmptyListWidget(),
+                                ),
+                            onForSaleList: (context) => BuildGridView(
+                                  nftsList: viewModel.nftForSaleList,
+                                  onEmptyList: (context) => getEmptyListWidget(),
+                                ),
+                            onPublishedList: (context) => BuildGridView(
+                                  nftsList: viewModel.nftPublishedList,
+                                  onEmptyList: (context) => getEmptyListWidget(),
+                                ),
                             collectionType: viewModel.selectedCollectionType),
                         onListSelected: (context) => BuildNFTsContent(
-                            onDraftList: (context) => BuildListView(nftsList: viewModel.nftDraftList),
-                            onForSaleList: (context) => BuildListView(nftsList: viewModel.nftForSaleList),
-                            onPublishedList: (context) => BuildListView(nftsList: viewModel.nftPublishedList),
-                            onEmptyList: (context) => getEmptyListWidget(),
+                            onDraftList: (context) => BuildListView(
+                                  nftsList: viewModel.nftDraftList,
+                                  onEmptyList: (context) => getEmptyListWidget(),
+                                ),
+                            onForSaleList: (context) => BuildListView(
+                                  nftsList: viewModel.nftForSaleList,
+                                  onEmptyList: (context) => getEmptyListWidget(),
+                                ),
+                            onPublishedList: (context) => BuildListView(
+                                  nftsList: viewModel.nftPublishedList,
+                                  onEmptyList: (context) => getEmptyListWidget(),
+                                ),
                             collectionType: viewModel.selectedCollectionType),
                         viewType: viewModel.viewType),
                   ),
@@ -272,7 +288,6 @@ class BuildNFTsContent extends StatelessWidget {
   final WidgetBuilder onDraftList;
   final WidgetBuilder onPublishedList;
   final WidgetBuilder onForSaleList;
-  final WidgetBuilder onEmptyList;
   final CollectionType collectionType;
 
   const BuildNFTsContent({
@@ -280,7 +295,6 @@ class BuildNFTsContent extends StatelessWidget {
     required this.onDraftList,
     required this.onForSaleList,
     required this.onPublishedList,
-    required this.onEmptyList,
     required this.collectionType,
   }) : super(key: key);
 
@@ -324,11 +338,15 @@ class NFTsViewBuilder extends StatelessWidget {
 
 class BuildGridView extends StatelessWidget {
   final List<NFT> nftsList;
+  final WidgetBuilder onEmptyList;
 
-  const BuildGridView({Key? key, required this.nftsList}) : super(key: key);
+  const BuildGridView({Key? key, required this.nftsList, required this.onEmptyList}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
+    if (nftsList.isEmpty) {
+      return onEmptyList(context);
+    }
     return GridView.builder(
         itemCount: nftsList.length,
         gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
@@ -346,13 +364,17 @@ class BuildGridView extends StatelessWidget {
 
 class BuildListView extends StatelessWidget {
   final List<NFT> nftsList;
+  final WidgetBuilder onEmptyList;
 
-  const BuildListView({Key? key, required this.nftsList}) : super(key: key);
+  const BuildListView({Key? key, required this.nftsList, required this.onEmptyList}) : super(key: key);
 
   CreatorHubViewModel get viewModel => sl();
 
   @override
   Widget build(BuildContext context) {
+    if (nftsList.isEmpty) {
+      return onEmptyList(context);
+    }
     return ListView.builder(
         shrinkWrap: true,
         itemCount: nftsList.length,
