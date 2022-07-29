@@ -673,14 +673,13 @@ class EaselProvider extends ChangeNotifier {
 
     var response = await PylonsWallet.instance.txCreateRecipe(recipe, requestResponse: false);
 
-    if (response.success) {
-      navigatorKey.currentState!.overlay!.context.show(message: kRecipeCreated);
-      deleteNft(nft.id);
-      return true;
-    } else {
+    if (!response.success) {
       navigatorKey.currentState!.overlay!.context.show(message: "$kErrRecipe ${response.error}");
       return false;
     }
+    navigatorKey.currentState!.overlay!.context.show(message: kRecipeCreated);
+    deleteNft(nft.id);
+    return true;
   }
 
   bool isDifferentUserName(String savedUserName) => (currentUsername.isNotEmpty && savedUserName != currentUsername);
