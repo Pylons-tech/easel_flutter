@@ -6,6 +6,7 @@ class EaselAppTheme {
   static const Color kWhite = Color(0xFFFFFFFF);
   static const Color kBgColor = Color.fromRGBO(242, 239, 234, 1);
   static const Color kGrey = Color(0xFF8D8C8C);
+  static const Color kLightGreyText = Color(0xFF9B9A9A);
   static const Color kLightGrey = Color(0xFFC4C4C4);
   static const Color kLightGrey02 = Color(0xFFF2EFEA);
   static const Color kDartGrey = Color(0xFF333333);

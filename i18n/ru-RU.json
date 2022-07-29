@@ -34,6 +34,9 @@
   "compressing_thumbnail": "Compressing Thumbnail",
   "could_not_uploaded": "{} не удалось загрузить",
   "something_wrong": "что-то пошло не так",
+  "err_add_audio_thumbnail": "Пожалуйста, выберите миниатюру аудио",
+  "err_add_video_thumbnail": "Пожалуйста, выберите миниатюру видео",
+  "loading": "загрузка ...",
   "are_you_sure_you_want_to_delete": "Вы уверены, что хотите удалить этот черновик?",
   "created_by": "Сделано ",
   "currency": "валюта",
@@ -58,13 +61,13 @@
   "status": "Статус",
   "status_value": "{}",
   "copy_cid": "Копировать идентификатор клиента",
-  "error_playing_audio": "Ошибка при воспроизведении аудио, повторите попытку.",
-  "err_add_audio_thumbnail" : "Пожалуйста, выберите миниатюру аудио",
-  "err_add_video_thumbnail" : "Пожалуйста, выберите миниатюру видео",
-  "loading": "загрузка ...",
   "welcome_msg":"Добро пожаловать в Easel, где вы можете управлять своими листингами и черновиками NFT.",
   "hello": "привет, ",
-  "no_nft_created":"Нет созданных NFT."
+  "no_nft_created":"Нет созданных NFT.",
+  "error_playing_audio": "Ошибка при воспроизведении аудио, повторите попытку.",
+  "save_as_draft": "Сохранить как черновик",
+  "discard": "Отказаться",
+  "next": "будущий"
 
 
 }

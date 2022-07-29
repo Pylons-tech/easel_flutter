@@ -7,6 +7,7 @@ import 'package:easel_flutter/utils/constants.dart';
 import 'package:easel_flutter/utils/dependency_injection/dependency_injection_container.dart';
 import 'package:easel_flutter/utils/easel_app_theme.dart';
 import 'package:easel_flutter/utils/route_util.dart';
+import 'package:easel_flutter/widgets/cid_or_ipfs.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -86,17 +87,33 @@ class DraftsMoreBottomSheet extends StatelessWidget {
             const Divider(
               color: EaselAppTheme.kGrey,
             ),
-            moreOptionTile(
-                onPressed: () async {
-                  Navigator.of(context).pop();
-                  await Clipboard.setData(ClipboardData(text: nft.cid));
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    SnackBar(content: Text("copied_to_clipboard".tr())),
+            CidOrIpfs(
+                viewCid: (context) {
+                  return moreOptionTile(
+                    onPressed: () async {
+                      Navigator.of(context).pop();
+                      await Clipboard.setData(ClipboardData(text: nft.cid));
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        SnackBar(content: Text("copied_to_clipboard".tr())),
+                      );
+                    },
+                    title: "copy_cid".tr(),
+                    image: kSvgIpfsLogo,
+                    isSvg: false,
                   );
                 },
-                title: "copy_cid".tr(),
-                image: kSvgIpfsLogo,
-                isSvg: false),
+                viewIpfs: (context) {
+                  return moreOptionTile(
+                    onPressed: () async {
+                      Navigator.of(context).pop();
+                      onViewOnIPFSPressed(nft: nft, context: context);
+                    },
+                    title: "view".tr(),
+                    image: kSvgView,
+                    isSvg: true,
+                  );
+                },
+                type: nft.assetType)
           ],
         ),
       ),

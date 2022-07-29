@@ -4,6 +4,7 @@ import 'package:easel_flutter/models/nft.dart';
 import 'package:easel_flutter/utils/constants.dart';
 import 'package:easel_flutter/utils/easel_app_theme.dart';
 import 'package:easel_flutter/utils/extension_util.dart';
+import 'package:easel_flutter/widgets/cid_or_ipfs.dart';
 import 'package:easel_flutter/widgets/clippers/bottom_sheet_clipper.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
@@ -68,17 +69,33 @@ class BuildPublishedNFTsBottomSheet {
                       title: "view_on_pylons".tr(),
                       image: kSvgPylonsLogo),
                   Divider(thickness: 1.h),
-                  moreOptionTile(
-                      onPressed: () async {
-                        Navigator.of(context).pop();
-                        await Clipboard.setData(ClipboardData(text: nft.cid));
-                        ScaffoldMessenger.of(context).showSnackBar(
-                          SnackBar(content: Text("copied_to_clipboard".tr())),
-                        );
-                      },
-                      title: "copy_cid".tr(),
-                      image: kSvgIpfsLogo,
-                      isSvg: false),
+                  CidOrIpfs(
+                    viewCid: (context) {
+                      return moreOptionTile(
+                        onPressed: () async {
+                          Navigator.of(context).pop();
+                          await Clipboard.setData(ClipboardData(text: nft.cid));
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            SnackBar(content: Text("copied_to_clipboard".tr())),
+                          );
+                        },
+                        title: "copy_cid".tr(),
+                        image: kSvgIpfsLogo,
+                        isSvg: false,
+                      );
+                    },
+                    viewIpfs: (context) {
+                      return moreOptionTile(
+                          onPressed: () async {
+                            Navigator.of(context).pop();
+                            onViewOnIPFSPressed(nft: nft);
+                          },
+                          title: "view".tr(),
+                          image: kSvgViewIcon,
+                          isSvg: true);
+                    },
+                    type: nft.assetType,
+                  )
                 ],
               ),
             ),
