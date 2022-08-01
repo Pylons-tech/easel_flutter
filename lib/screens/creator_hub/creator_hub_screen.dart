@@ -195,7 +195,7 @@ class _CreatorHubContentState extends State<CreatorHubContent> {
                     ],
                   ),
                 ),
-                SizedBox(height: 30.h),
+                SizedBox(height: 20.h),
                 Expanded(
                   child: Padding(
                     padding: EdgeInsets.symmetric(horizontal: 20.w),
@@ -204,28 +204,34 @@ class _CreatorHubContentState extends State<CreatorHubContent> {
                             onDraftList: (context) => BuildGridView(
                                   nftsList: viewModel.nftDraftList,
                                   onEmptyList: (context) => getEmptyListWidget(),
+                                  onRefreshWidget: (context) => const SizedBox.shrink(),
                                 ),
                             onForSaleList: (context) => BuildGridView(
                                   nftsList: viewModel.nftForSaleList,
                                   onEmptyList: (context) => getEmptyListWidget(),
+                                  onRefreshWidget: (context) => getRefreshListWidget(),
                                 ),
                             onPublishedList: (context) => BuildGridView(
                                   nftsList: viewModel.nftPublishedList,
                                   onEmptyList: (context) => getEmptyListWidget(),
+                                  onRefreshWidget: (context) => getRefreshListWidget(),
                                 ),
                             collectionType: viewModel.selectedCollectionType),
                         onListSelected: (context) => BuildNFTsContent(
                             onDraftList: (context) => BuildListView(
                                   nftsList: viewModel.nftDraftList,
                                   onEmptyList: (context) => getEmptyListWidget(),
+                                  onRefreshWidget: (context) => const SizedBox.shrink(),
                                 ),
                             onForSaleList: (context) => BuildListView(
                                   nftsList: viewModel.nftForSaleList,
                                   onEmptyList: (context) => getEmptyListWidget(),
+                                  onRefreshWidget: (context) => getRefreshListWidget(),
                                 ),
                             onPublishedList: (context) => BuildListView(
                                   nftsList: viewModel.nftPublishedList,
                                   onEmptyList: (context) => getEmptyListWidget(),
+                                  onRefreshWidget: (context) => getRefreshListWidget(),
                                 ),
                             collectionType: viewModel.selectedCollectionType),
                         viewType: viewModel.viewType),
@@ -242,6 +248,16 @@ class _CreatorHubContentState extends State<CreatorHubContent> {
       padding: EdgeInsets.symmetric(horizontal: 20.w),
       child: Text(
         "no_nft_created".tr(),
+        style: TextStyle(fontWeight: FontWeight.w700, color: EaselAppTheme.kLightGrey, fontSize: isTablet ? 12.sp : 15.sp),
+      ),
+    );
+  }
+
+  Widget getRefreshListWidget() {
+    return Padding(
+      padding: EdgeInsets.symmetric(horizontal: 20.w, vertical: 10.h).copyWith(top: 0),
+      child: Text(
+        "refresh_nft".tr(),
         style: TextStyle(fontWeight: FontWeight.w700, color: EaselAppTheme.kLightGrey, fontSize: isTablet ? 12.sp : 15.sp),
       ),
     );
@@ -339,34 +355,44 @@ class NFTsViewBuilder extends StatelessWidget {
 class BuildGridView extends StatelessWidget {
   final List<NFT> nftsList;
   final WidgetBuilder onEmptyList;
+  final WidgetBuilder onRefreshWidget;
 
-  const BuildGridView({Key? key, required this.nftsList, required this.onEmptyList}) : super(key: key);
+  const BuildGridView({Key? key, required this.nftsList, required this.onEmptyList, required this.onRefreshWidget}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     if (nftsList.isEmpty) {
       return onEmptyList(context);
     }
-    return GridView.builder(
-        itemCount: nftsList.length,
-        gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-          childAspectRatio: 0.5,
-          crossAxisSpacing: 15.w,
-          mainAxisSpacing: 15.h,
-          crossAxisCount: 3,
-        ),
-        itemBuilder: (context, index) {
-          final nft = nftsList[index];
-          return NftGridViewItem(nft: nft);
-        });
+
+    return SingleChildScrollView(
+      child: Column(
+        children: [
+          onRefreshWidget(context),
+          GridView.builder(
+              itemCount: nftsList.length,
+              gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                childAspectRatio: 0.5,
+                crossAxisSpacing: 15.w,
+                mainAxisSpacing: 15.h,
+                crossAxisCount: 3,
+              ),
+              itemBuilder: (context, index) {
+                final nft = nftsList[index];
+                return NftGridViewItem(nft: nft);
+              }),
+        ],
+      ),
+    );
   }
 }
 
 class BuildListView extends StatelessWidget {
   final List<NFT> nftsList;
   final WidgetBuilder onEmptyList;
+  final WidgetBuilder onRefreshWidget;
 
-  const BuildListView({Key? key, required this.nftsList, required this.onEmptyList}) : super(key: key);
+  const BuildListView({Key? key, required this.nftsList, required this.onEmptyList, required this.onRefreshWidget}) : super(key: key);
 
   CreatorHubViewModel get viewModel => sl();
 
@@ -375,12 +401,20 @@ class BuildListView extends StatelessWidget {
     if (nftsList.isEmpty) {
       return onEmptyList(context);
     }
-    return ListView.builder(
-        shrinkWrap: true,
-        itemCount: nftsList.length,
-        itemBuilder: (context, index) {
-          final nft = nftsList[index];
-          return viewModel.selectedCollectionType == CollectionType.draft ? DraftListTile(nft: nft, viewModel: viewModel) : NFTsListTile(publishedNFT: nft);
-        });
+    return SingleChildScrollView(
+      child: Column(
+        children: [
+          onRefreshWidget(context),
+          ListView.builder(
+              shrinkWrap: true,
+              physics: const NeverScrollableScrollPhysics(),
+              itemCount: nftsList.length,
+              itemBuilder: (context, index) {
+                final nft = nftsList[index];
+                return viewModel.selectedCollectionType == CollectionType.draft ? DraftListTile(nft: nft, viewModel: viewModel) : NFTsListTile(publishedNFT: nft);
+              })
+        ],
+      ),
+    );
   }
 }

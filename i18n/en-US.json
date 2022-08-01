@@ -63,6 +63,7 @@
   "welcome_msg":"Welcome to Easel, where you can manage your NFT listings and drafts.",
   "hello": "Hello, ",
   "no_nft_created":"There are no NFTs created.",
+  "refresh_nft":"If you don't see your NFT, please try using refresh icon.",
   "loading": "loading ...",
   "are_you_sure_you_want_to_delete": "Are you sure you want to delete this draft?",
   "something_wrong_while_uploading": "Something went wrong while uploading. Please try later.",
