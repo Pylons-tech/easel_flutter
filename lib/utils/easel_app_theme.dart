@@ -17,6 +17,7 @@ class EaselAppTheme {
   static const Color kDarkText = Color(0xFF080830);
   static const Color kLightText = Color(0xFF464545);
   static const Color kNightBlue = Color(0xFF0A004A);
+  static const Color kLightWhiteBackground = Color(0xFFE5E5E5);
   static const Color kRed = Color(0xFFFC4403);
   static const Color kWhite02 = Color.fromRGBO(255, 255, 255, 0.2);
   static const Color kWhite03 = Color(0xFFFBFBFB);
