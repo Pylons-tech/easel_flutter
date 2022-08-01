@@ -200,7 +200,6 @@ class _DescribeScreenState extends State<DescribeScreen> {
                       VerticalSpace(20.h),
                       EaselTextField(
                         label: kDescribeYourNftText,
-                        hint: kHintNftDesc,
                         noOfLines: 5,
                         controller: provider.descriptionController,
                         textCapitalization: TextCapitalization.sentences,

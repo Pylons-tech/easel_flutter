@@ -97,19 +97,9 @@ class HomeScreenContent extends StatelessWidget {
       physics: const NeverScrollableScrollPhysics(),
       onPageChanged: (int page) {
         homeViewModel.currentPage.value = page;
-        switch (page) {
-          case 0:
-            homeViewModel.currentStep.value = 0;
-            break;
-          case 1:
-          case 2:
-            homeViewModel.currentStep.value = 1;
-            break;
+        final map = {0: 0, 1: 1, 2: 1, 3: 2};
+        homeViewModel.currentStep.value = map[page]!;
 
-          case 3:
-            homeViewModel.currentStep.value = 2;
-            break;
-        }
       },
       itemBuilder: (BuildContext context, int index) {
         final map = {0: chooseFormatScreen, 1: describeScreen, 2: priceScreen, 3: publishScreen};
