@@ -152,6 +152,16 @@ class _ChooseFormatScreenState extends State<ChooseFormatScreen> {
               bottomPadding: 5.0.h,
             ),
           ),
+          Expanded(
+            child: _CardWidget(
+              typeIdx: 4,
+              selected: provider.nftFormat.format == NftFormat.supportedFormats[4].format,
+              onFilePicked: (result) async {
+                proceedToNext(result: result, easelProvider: provider);
+              },
+              bottomPadding: 5.0.h,
+            ),
+          ),
         ],
       ),
     );

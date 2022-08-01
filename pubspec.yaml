@@ -88,7 +88,7 @@ dependencies:
 
 
 
-  # used for bitmap manipulation, needed for svg to png conversion
+# used for bitmap manipulation, needed for svg to png conversion
 #  bitmap: ^0.1.2
 
   path_provider: ^2.0.6
@@ -115,6 +115,9 @@ dependencies:
   flutter_slidable: 1.3.0
   image_cropper: 2.0.3
 
+  advance_pdf_viewer:
+    git:
+      url: https://github.com/lohanidamodar/pdf_viewer.git
 
 
 dev_dependencies:

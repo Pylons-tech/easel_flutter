@@ -33,7 +33,9 @@ class NftFormat {
           color: EaselAppTheme.kYellow,
         ),
         NftFormat(format: NFTTypes.audio, extensions: ['wav', 'aiff', 'alac', 'flac', 'mp3', 'aac', 'wma', 'ogg'], badge: kSvgNftFormatAudio, color: EaselAppTheme.kLightRed),
-      ];
+        NftFormat(format: NFTTypes.pdf, extensions: ['pdf'], badge: kSvgNftFormatAudio, color: EaselAppTheme.kBlue),
+
+  ];
 
   static List<String> getAllSupportedExts() {
     List<String> allExts = [];
@@ -44,7 +46,7 @@ class NftFormat {
   }
 }
 
-enum NFTTypes { image, video, audio, threeD }
+enum NFTTypes { image, video, audio, threeD , pdf}
 
 extension NFTTypesDetails on NFTTypes {
   String getTitle() {
@@ -57,6 +59,8 @@ extension NFTTypesDetails on NFTTypes {
         return kAudioText;
       case NFTTypes.threeD:
         return k3dText;
+      case NFTTypes.pdf:
+        return kPdfText;
     }
   }
 }
