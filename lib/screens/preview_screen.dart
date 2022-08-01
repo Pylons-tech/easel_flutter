@@ -117,7 +117,10 @@ class _PreviewScreenState extends State<PreviewScreen> {
       case NFTTypes.threeD:
         return Model3dViewer(path: provider.file!.path, isFile: true);
       case NFTTypes.pdf:
-        return PdfViewer(file: provider.file!,);
+        return PdfViewer(
+          file: provider.file!,
+          previewFlag: true,
+        );
     }
   }
 
@@ -145,6 +148,13 @@ class _PreviewScreenState extends State<PreviewScreen> {
         result = await saveToUpload();
         break;
       case NFTTypes.threeD:
+        result = await saveToUpload();
+        break;
+      case NFTTypes.pdf:
+        if (provider.pdfThumbnail == null) {
+          context.show(message: uploadYourThumbnail);
+          return false;
+        }
         result = await saveToUpload();
         break;
     }

@@ -21,7 +21,6 @@ import 'package:easy_localization/easy_localization.dart';
 import 'package:fixnum/fixnum.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:just_audio/just_audio.dart';
 import 'package:media_info/media_info.dart';
 import 'package:pylons_sdk/pylons_sdk.dart';
@@ -90,6 +89,15 @@ class EaselProvider extends ChangeNotifier {
 
   void setVideoThumbnail(File? file) {
     _videoThumbnail = file;
+    notifyListeners();
+  }
+
+  File? _pdfThumbnail;
+
+  File? get pdfThumbnail => _pdfThumbnail;
+
+  void setPdfThumbnail(File? file) {
+    _pdfThumbnail = file;
     notifyListeners();
   }
 
@@ -706,6 +714,19 @@ class EaselProvider extends ChangeNotifier {
     setVideoThumbnail(File(result.path));
   }
 
+  void onPdfThumbnailPicked() async {
+    final pickedFile = await repository.pickFile(NftFormat.supportedFormats[0]);
+
+    final result = pickedFile.getOrElse(() => PickedFileModel(
+          path: "",
+          fileName: "",
+          extension: "",
+        ));
+
+    if (result.path.isEmpty) return;
+    setPdfThumbnail(File(result.path));
+  }
+
   void populateCoinsIfPylonsNotExists() {
     supportedDenomList = Denom.availableDenoms;
 
@@ -742,7 +763,6 @@ class EaselProvider extends ChangeNotifier {
 
     return sdkResponse;
   }
-
 
   Future initializeAudioPlayerForFile({required File file}) async {
     audioProgressNotifier = ValueNotifier<ProgressBarState>(
@@ -816,6 +836,18 @@ class EaselProvider extends ChangeNotifier {
   }
 
   late NFT nft;
+  File getThumbnailType(NFTTypes format) {
+    switch (format) {
+      case NFTTypes.audio:
+        return audioThumbnail!;
+      case NFTTypes.video:
+        return videoThumbnail!;
+      case NFTTypes.pdf:
+        return pdfThumbnail!;
+      default:
+        return File("");
+    }
+  }
 
   Future<bool> saveNftLocally(UploadStep step) async {
     if (nftFormat.format == NFTTypes.audio) {
@@ -837,8 +869,8 @@ class EaselProvider extends ChangeNotifier {
     final loading = Loading()..showLoading(message: kUploadingMessage);
 
     initializeTextEditingControllerWithEmptyValues();
-    if (nftFormat.format == NFTTypes.audio || nftFormat.format == NFTTypes.video) {
-      final uploadResponse = await repository.uploadFile(nftFormat.format == NFTTypes.audio ? audioThumbnail! : videoThumbnail!);
+    if (nftFormat.format == NFTTypes.audio || nftFormat.format == NFTTypes.video || nftFormat.format == NFTTypes.pdf) {
+      final uploadResponse = await repository.uploadFile(getThumbnailType(nftFormat.format));
       if (uploadResponse.isLeft()) {
         loading.dismiss();
         "something_wrong_while_uploading".tr().show();
@@ -883,7 +915,7 @@ class EaselProvider extends ChangeNotifier {
       fileName: _file!.path.split("/").last,
       cid: fileUploadResponse.data?.value?.cid,
       step: step.name,
-      thumbnailUrl: (nftFormat.format == NFTTypes.audio || nftFormat.format == NFTTypes.video) ? "$ipfsDomain/${uploadThumbnailResponse.data?.value?.cid}" : "",
+      thumbnailUrl: (nftFormat.format == NFTTypes.audio || nftFormat.format == NFTTypes.video || nftFormat.format == NFTTypes.pdf) ? "$ipfsDomain/${uploadThumbnailResponse.data?.value?.cid}" : "",
       name: artistNameController.text,
       url: "$ipfsDomain/${fileUploadResponse.data?.value?.cid}",
       price: priceController.text,
@@ -916,7 +948,7 @@ class EaselProvider extends ChangeNotifier {
       step: step.name,
       fileName: _file!.path.split("/").last,
       cid: fileUploadResponse.data?.value?.cid,
-      thumbnailUrl: (nftFormat.format == NFTTypes.audio || nftFormat.format == NFTTypes.video) ? "$ipfsDomain/${uploadThumbnailResponse.data?.value?.cid}" : "",
+      thumbnailUrl: (nftFormat.format == NFTTypes.audio || nftFormat.format == NFTTypes.video || nftFormat.format == NFTTypes.pdf) ? "$ipfsDomain/${uploadThumbnailResponse.data?.value?.cid}" : "",
       name: artistNameController.text,
       url: "$ipfsDomain/${fileUploadResponse.data?.value?.cid}",
       price: priceController.text,

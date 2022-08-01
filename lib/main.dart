@@ -8,6 +8,7 @@ import 'package:easel_flutter/utils/constants.dart';
 import 'package:easel_flutter/utils/dependency_injection/dependency_injection_container.dart' as di;
 import 'package:easel_flutter/utils/easel_app_theme.dart';
 import 'package:easel_flutter/utils/route_util.dart';
+import 'package:easel_flutter/widgets/pdf_viewer_full_screen.dart';
 import 'package:easel_flutter/widgets/video_widget_full_screen.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
@@ -75,6 +76,7 @@ class MyApp extends StatelessWidget {
                   RouteUtil.kRoutePreviewNFTFullScreen: (context) => const PreviewNFTFullScreen(),
                   RouteUtil.kRouteHome: (context) => const HomeScreen(),
                   RouteUtil.kVideoFullScreen: (context) => const VideoWidgetFullScreen(),
+                  RouteUtil.kPdfFullScreen: (context) => const PdfViewerFullScreen(),
                 },
               )),
     );
