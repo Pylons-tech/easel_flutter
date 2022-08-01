@@ -1,19 +1,11 @@
-import 'dart:developer';
-
 import 'package:easel_flutter/easel_provider.dart';
 import 'package:easel_flutter/repository/repository.dart';
-import 'package:easel_flutter/screens/creator_hub/creator_hub_view_model.dart';
-import 'package:easel_flutter/screens/custom_widgets/step_labels.dart';
-import 'package:easel_flutter/screens/custom_widgets/steps_indicator.dart';
 import 'package:easel_flutter/screens/describe_screen.dart';
 import 'package:easel_flutter/screens/price_screen.dart';
 import 'package:easel_flutter/screens/publish_screen.dart';
 import 'package:easel_flutter/utils/easel_app_theme.dart';
-import 'package:easel_flutter/utils/screen_responsive.dart';
-import 'package:easel_flutter/utils/space_utils.dart';
 import 'package:easel_flutter/viewmodels/home_viewmodel.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get_it/get_it.dart';
 import 'package:provider/provider.dart';
 
@@ -67,8 +59,7 @@ class _HomeScreenState extends State<HomeScreen> {
     easelProvider.isVideoLoading = true;
     ScaffoldMessenger.of(context).hideCurrentSnackBar();
     homeViewModel.previousPage();
-    if (homeViewModel.currentPage.value == 0) {
-      GetIt.I.get<CreatorHubViewModel>().getDraftsList();
+    if (homeViewModel.currentPage.value == 1) {
       Navigator.of(context).pop();
     }
   }
@@ -101,44 +92,20 @@ class HomeScreenContent extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final homeViewModel = context.watch<HomeViewModel>();
-    return Column(
-      children: [
-        if (homeViewModel.currentPage.value != 3) ...[
-          const VerticalSpace(20),
+    return PageView.builder(
+      controller: homeViewModel.pageController,
+      physics: const NeverScrollableScrollPhysics(),
+      onPageChanged: (int page) {
+        homeViewModel.currentPage.value = page;
+        final map = {0: 0, 1: 1, 2: 1, 3: 2};
+        homeViewModel.currentStep.value = map[page]!;
 
-          ScreenResponsive(
-            mobileScreen: (context) => const VerticalSpace(6),
-            tabletScreen: (context) => const VerticalSpace(30),
-          ),
-        ],
-        Expanded(
-          child: PageView.builder(
-            controller: homeViewModel.pageController,
-            physics: const NeverScrollableScrollPhysics(),
-            onPageChanged: (int page) {
-              homeViewModel.currentPage.value = page;
-              switch (page) {
-                case 0:
-                  homeViewModel.currentStep.value = 0;
-                  break;
-                case 1:
-                case 2:
-                  homeViewModel.currentStep.value = 1;
-                  break;
+      },
+      itemBuilder: (BuildContext context, int index) {
+        final map = {0: chooseFormatScreen, 1: describeScreen, 2: priceScreen, 3: publishScreen};
 
-                case 3:
-                  homeViewModel.currentStep.value = 2;
-                  break;
-              }
-            },
-            itemBuilder: (BuildContext context, int index) {
-              final map = {0: chooseFormatScreen, 1: describeScreen, 2: priceScreen, 3: publishScreen};
-
-              return map[index]?.call() ?? const SizedBox();
-            },
-          ),
-        ),
-      ],
+        return map[index]?.call() ?? const SizedBox();
+      },
     );
   }
 

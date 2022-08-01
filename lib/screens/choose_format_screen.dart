@@ -110,6 +110,7 @@ class _ChooseFormatScreenState extends State<ChooseFormatScreen> {
               },
             ),
           ]),
+          const VerticalSpace(20),
           Expanded(
             child: _CardWidget(
               typeIdx: 0,
