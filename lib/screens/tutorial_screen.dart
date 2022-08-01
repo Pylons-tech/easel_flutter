@@ -75,7 +75,7 @@ class _TutorialScreenState extends State<TutorialScreen> {
             )),
         SizedBox(height: 0.1.sh),
         Text(item[kHeaderTutorial], style: TextStyle(fontSize: isTablet ? 16.sp : 18.sp, fontWeight: FontWeight.w800, color: EaselAppTheme.kDartGrey), textAlign: TextAlign.center),
-        const SizedBox(height: 15),
+        SizedBox(height: 15.h),
         SizedBox(width: 0.63.sw, child: Text(item[kDescriptionTutorial], style: TextStyle(color: Colors.black, fontSize: 13.sp, fontWeight: FontWeight.w400), textAlign: TextAlign.center)),
       ],
     ))
@@ -110,7 +110,7 @@ class _TutorialScreenState extends State<TutorialScreen> {
             )),
         SizedBox(height: 0.15.sh),
         Text(item[kHeaderTutorial], style: TextStyle(fontSize: isTablet ? 16.sp : 18.sp, fontWeight: FontWeight.w800, color: EaselAppTheme.kDartGrey), textAlign: TextAlign.center),
-        const SizedBox(height: 15),
+        SizedBox(height: 15.h),
         SizedBox(width: 0.63.sw, child: Text(item[kDescriptionTutorial], style: TextStyle(color: Colors.black, fontSize: 13.sp, fontWeight: FontWeight.w400), textAlign: TextAlign.center)),
       ],
     ))
