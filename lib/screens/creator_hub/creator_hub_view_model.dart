@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:easel_flutter/models/nft.dart';
 import 'package:easel_flutter/repository/repository.dart';
 import 'package:easel_flutter/utils/constants.dart';
@@ -7,12 +9,18 @@ import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:pylons_sdk/pylons_sdk.dart';
 
+enum ViewType { viewGrid, viewList }
+
+enum CollectionType { draft, published, forSale }
+
 class CreatorHubViewModel extends ChangeNotifier {
   final Repository repository;
 
   CreatorHubViewModel(this.repository);
 
-  List<NFT> nftList = [];
+  CollectionType selectedCollectionType = CollectionType.draft;
+
+  ViewType viewType = ViewType.viewList;
 
   int _publishedRecipesLength = 0;
   int forSaleCount = 0;
@@ -23,6 +31,23 @@ class CreatorHubViewModel extends ChangeNotifier {
     _publishedRecipesLength = value;
 
     notifyListeners();
+  }
+
+  changeSelectedCollection(CollectionType collectionType) {
+    switch (collectionType) {
+      case CollectionType.draft:
+        selectedCollectionType = CollectionType.draft;
+        notifyListeners();
+        break;
+      case CollectionType.published:
+        selectedCollectionType = CollectionType.published;
+        notifyListeners();
+        break;
+      case CollectionType.forSale:
+        selectedCollectionType = CollectionType.forSale;
+        notifyListeners();
+        break;
+    }
   }
 
   bool _publishCollapse = true;
@@ -43,9 +68,27 @@ class CreatorHubViewModel extends ChangeNotifier {
     notifyListeners();
   }
 
-  final List<NFT> _publishedNFTsList = [];
+  List<NFT> _nftDraftList = [];
 
-  List<NFT> get publishedNFTsList => _publishedNFTsList;
+  List<NFT> get nftDraftList => _nftDraftList;
+
+  set nftDraftList(List<NFT> nftDraftList) {
+    _nftDraftList = nftDraftList;
+    notifyListeners();
+  }
+
+  List<NFT> _nftForSaleList = [];
+
+  List<NFT> get nftForSaleList => _nftForSaleList;
+
+  set nftForSaleList(List<NFT> nftForSale) {
+    _nftForSaleList = nftForSale;
+    notifyListeners();
+  }
+
+  final List<NFT> _nftPublishedList = [];
+
+  List<NFT> get nftPublishedList => _nftPublishedList;
 
   String? getCookbookIdFromLocalDatasource() {
     return repository.getCookbookId();
@@ -53,11 +96,14 @@ class CreatorHubViewModel extends ChangeNotifier {
 
   void getTotalForSale() {
     forSaleCount = 0;
-    for (int i = 0; i < _publishedNFTsList.length; i++) {
-      if (publishedNFTsList[i].isEnabled && publishedNFTsList[i].amountMinted < int.parse(publishedNFTsList[i].quantity)) {
+    nftForSaleList = [];
+    for (int i = 0; i < nftPublishedList.length; i++) {
+      if (nftPublishedList[i].isEnabled && nftPublishedList[i].amountMinted < int.parse(nftPublishedList[i].quantity)) {
         forSaleCount++;
+        nftForSaleList.add(nftPublishedList[i]);
       }
     }
+    notifyListeners();
   }
 
   Future<void> getPublishAndDraftData() async {
@@ -86,16 +132,17 @@ class CreatorHubViewModel extends ChangeNotifier {
     }
 
     final recipesList = recipesListEither.getOrElse(() => []);
-    _publishedNFTsList.clear();
+    log("recipeList: ${recipesList.length}");
+    _nftPublishedList.clear();
     if (recipesList.isEmpty) {
       return;
     }
     for (final recipe in recipesList) {
       final nft = NFT.fromRecipe(recipe);
-      _publishedNFTsList.add(nft);
+      _nftPublishedList.add(nft);
     }
 
-    publishedRecipeLength = _publishedNFTsList.length;
+    publishedRecipeLength = nftPublishedList.length;
   }
 
   Future<void> getDraftsList() async {
@@ -111,7 +158,7 @@ class CreatorHubViewModel extends ChangeNotifier {
       return;
     }
 
-    nftList = getNftResponse.getOrElse(() => []);
+    nftDraftList = getNftResponse.getOrElse(() => []);
 
     loading.dismiss();
 
@@ -125,12 +172,17 @@ class CreatorHubViewModel extends ChangeNotifier {
       "delete_error".tr().show();
       return;
     }
-    nftList.removeWhere((element) => element.id == id);
+    nftDraftList.removeWhere((element) => element.id == id);
     notifyListeners();
   }
 
   void saveNFT({required NFT nft}) {
     repository.setCacheDynamicType(key: nftKey, value: nft);
     repository.setCacheString(key: fromKey, value: kDraft);
+  }
+
+  void updateViewType(ViewType selectedViewType) {
+    viewType = selectedViewType;
+    notifyListeners();
   }
 }

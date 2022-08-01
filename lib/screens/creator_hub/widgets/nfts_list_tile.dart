@@ -46,7 +46,7 @@ class NFTsListTile extends StatelessWidget {
               SizedBox(
                   height: 45.h,
                   width: 45.h,
-                  child: LeadingBuilder(
+                  child: NftTypeBuilder(
                     onImage: (context) => CachedNetworkImage(
                       errorWidget: (context, url, error) => Align(
                         child: SvgPicture.asset(
@@ -72,6 +72,7 @@ class NFTsListTile extends StatelessWidget {
                     ),
                     on3D: (context) => ModelViewer(
                       src: publishedNFT.url,
+                      backgroundColor: EaselAppTheme.kWhite,
                       ar: false,
                       autoRotate: false,
                       cameraControls: false,
@@ -140,14 +141,14 @@ class NFTsListTile extends StatelessWidget {
   }
 }
 
-class LeadingBuilder extends StatelessWidget {
+class NftTypeBuilder extends StatelessWidget {
   final WidgetBuilder onImage;
   final WidgetBuilder onVideo;
   final WidgetBuilder onAudio;
   final WidgetBuilder on3D;
   final AssetType assetType;
 
-  const LeadingBuilder({
+  const NftTypeBuilder({
     Key? key,
     required this.onImage,
     required this.onVideo,

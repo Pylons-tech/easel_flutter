@@ -6,6 +6,7 @@ import 'package:easel_flutter/screens/clippers/right_triangle_clipper.dart';
 import 'package:easel_flutter/utils/constants.dart';
 import 'package:easel_flutter/utils/easel_app_theme.dart';
 import 'package:easel_flutter/utils/route_util.dart';
+import 'package:easel_flutter/widgets/cid_or_ipfs.dart';
 import 'package:easel_flutter/widgets/clipped_button.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
@@ -169,10 +170,23 @@ class _DraftDetailDialogState extends State<_DraftDetailDialog> {
                     SizedBox(
                       height: 5.h,
                     ),
-                    buildRow(
-                      title: "content_id".tr(),
-                      subtitle: easelProvider.nft.cid,
-                      canCopy: true,
+                    CidOrIpfs(
+                      viewCid: (context) {
+                        return buildRow(
+                          title: "content_id".tr(),
+                          subtitle: easelProvider.nft.cid,
+                          canCopy: true,
+                        );
+                      },
+                      viewIpfs: (context) {
+                        return buildRowIpfs(
+                            title: "asset_uri".tr(),
+                            subtitle: "view".tr(),
+                            onTapViewOnIpfs: () {
+                              onViewOnIPFSPressed(provider: easelProvider);
+                            });
+                      },
+                      type: easelProvider.nft.assetType,
                     ),
                     SizedBox(
                       height: 30.h,
@@ -215,7 +229,41 @@ class _DraftDetailDialogState extends State<_DraftDetailDialog> {
     }
   }
 
-  Widget buildRow({required String title, required String subtitle, final color = Colors.white, final bool canCopy = false}) {
+  Widget buildRowIpfs({required String title, required String subtitle, required final VoidCallback onTapViewOnIpfs, final bool canCopy = false, final subTitleColor = Colors.white}) {
+    return Row(
+      children: [
+        Expanded(
+            child: Padding(
+          padding: EdgeInsets.only(left: isTablet ? 20.w : 40.w, right: 5.w),
+          child: Text(
+            title,
+            style: TextStyle(color: EaselAppTheme.kWhite, fontWeight: FontWeight.w700, fontSize: isTablet ? 11.sp : 10.sp),
+          ),
+        )),
+        Expanded(
+          child: Padding(
+            padding: EdgeInsets.only(
+              right: 20.w,
+            ),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.end,
+              children: [
+                InkWell(
+                  onTap: onTapViewOnIpfs,
+                  child: Text(
+                    subtitle,
+                    style: _rowTitleTextStyle(EaselAppTheme.kLightPurple),
+                  ),
+                ),
+              ],
+            ),
+          ),
+        )
+      ],
+    );
+  }
+
+  Widget buildRow({required String title, required String subtitle, final Color color = Colors.white, final bool canCopy = false}) {
     return Row(
       children: [
         Expanded(
@@ -239,10 +287,12 @@ class _DraftDetailDialogState extends State<_DraftDetailDialog> {
                         subtitle.substring(0, 8),
                         style: _rowTitleTextStyle(color),
                       ),
-                      const Text("...",
-                          style: TextStyle(
-                            color: Colors.white,
-                          )),
+                      Text(
+                        "...",
+                        style: TextStyle(
+                          color: color,
+                        ),
+                      ),
                       Text(
                         subtitle.substring(subtitle.length - 5, subtitle.length),
                         style: _rowTitleTextStyle(color),

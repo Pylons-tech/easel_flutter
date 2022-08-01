@@ -50,10 +50,14 @@ const kSvgView = 'assets/images/svg/view.svg';
 
 const kDummyImg = 'assets/images/svg/dummy_img.png';
 const kVideoIcon = 'assets/images/video_icon.png';
+const kViewIpfs = 'assets/images/view_ipfs.png';
+
 
 const kSvgPylonsLogo = 'assets/images/svg/pylons_logo.svg';
 const kSvgIpfsLogo = 'assets/images/ipfs_logo.png';
 const kSvgViewIcon = 'assets/images/svg/view_icon.svg';
+const kGridIcon = 'assets/images/svg/grid.svg';
+const kListIcon = 'assets/images/svg/list.svg';
 const kOwnerVerifiedIcon = 'assets/images/svg/verified.svg';
 
 const String kLoadingGif = 'assets/images/gifs/loading.gif';
@@ -253,7 +257,7 @@ const kCompressingMessage = "Compressing Thumbnail";
 const kUploadingMessage = "Uploading";
 const kLoadingMessage = "Loading...";
 
-final List stepLabels = ["upload", "draft", "publish"];
+final List<String> stepLabels = ["upload", "draft", "publish"];
 
 final List<String> imageAllowedExts = ["png", "jpg", "jpeg", "svg", "heif"];
 final List<String> audioAllowedExts = ['mp3', 'ogg', 'wav', 'aac'];
@@ -307,7 +311,8 @@ const ogg = "ogg";
 const wav = "wav";
 const aac = "aac";
 
-const kDraft = "draft";
+const kDraft = "Draft";
+
 const kVersion = "v0.1.0";
 
 const supportedEmail = "support@pylons.tech";
