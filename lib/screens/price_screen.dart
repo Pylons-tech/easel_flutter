@@ -32,9 +32,9 @@ class _PriceScreenState extends State<PriceScreen> {
   var repository = GetIt.I.get<Repository>();
   NFT? nft;
 
-  ValueNotifier<String> _royaltiesFieldError = ValueNotifier("");
-  ValueNotifier<String> _noOfEditionsFieldError = ValueNotifier("");
-  ValueNotifier<String> _priceFieldError = ValueNotifier("");
+  final ValueNotifier<String> _royaltiesFieldError = ValueNotifier("");
+  final ValueNotifier<String> _noOfEditionsFieldError = ValueNotifier("");
+  final ValueNotifier<String> _priceFieldError = ValueNotifier("");
 
   @override
   void dispose() {
@@ -47,7 +47,6 @@ class _PriceScreenState extends State<PriceScreen> {
     nft = repository.getCacheDynamicType(key: nftKey);
     super.initState();
   }
-  
 
   @override
   Widget build(BuildContext context) {
@@ -77,7 +76,6 @@ class _PriceScreenState extends State<PriceScreen> {
                               padding: EdgeInsets.only(left: 10.sp),
                               child: IconButton(
                                 onPressed: () {
-                                  FocusScope.of(context).unfocus();
                                   ScaffoldMessenger.of(context).hideCurrentSnackBar();
                                   homeViewModel.previousPage();
                                 },
@@ -174,37 +172,40 @@ class _PriceScreenState extends State<PriceScreen> {
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             VerticalSpace(20.h),
+                            EaselPriceInputField(
+                              key: ValueKey("${provider.selectedDenom.name}-amount"),
+                              inputFormatters: [FilteringTextInputFormatter.digitsOnly, LengthLimitingTextInputFormatter(kMaxPriceLength), provider.selectedDenom.getFormatter()],
+                              controller: provider.priceController,
+                              validator: (value) {
+                                if (value!.isEmpty) {
+                                  _priceFieldError.value = kEnterPriceText;
+                                  return;
+                                }
+                                if (double.parse(value.replaceAll(",", "")) < kMinValue) {
+                                  _priceFieldError.value = "$kMinIsText $kMinValue";
+                                  return;
+                                }
+                                _priceFieldError.value = '';
+                                return null;
+                              },
+                            ),
                             ValueListenableBuilder<String>(
                                 valueListenable: _priceFieldError,
-                                builder: (_, String priceFieldError, __) => EaselPriceInputField(
-                                      key: ValueKey("${provider.selectedDenom.name}-amount"),
-                                      inputFormatters: [FilteringTextInputFormatter.digitsOnly, LengthLimitingTextInputFormatter(kMaxPriceLength), provider.selectedDenom.getFormatter()],
-                                      controller: provider.priceController,
-                                      validator: (value) {
-                                        if (value!.isEmpty) {
-                                          _priceFieldError.value = kEnterPriceText;
-                                          return;
-                                        }
-                                        if (double.parse(value.replaceAll(",", "")) < kMinValue) {
-                                          _priceFieldError.value = "$kMinIsText $kMinValue";
-                                          return;
-                                        }
-                                        _priceFieldError.value = '';
-                                        return null;
-                                      },
-                                    )),
-                            _priceFieldError.value.isNotEmpty
-                                ? Padding(
+                                builder: (_, String priceFieldError, __) {
+                                  if (priceFieldError.isEmpty) {
+                                    return const SizedBox.shrink();
+                                  }
+                                  return Padding(
                                     padding: EdgeInsets.only(left: 8.w, right: 10.w, top: 2.h),
                                     child: Text(
-                                      _priceFieldError.value,
+                                      priceFieldError,
                                       style: TextStyle(
                                         fontSize: 12.sp,
                                         color: Colors.red,
                                       ),
                                     ),
-                                  )
-                                : const SizedBox.shrink(),
+                                  );
+                                }),
                             Text(
                               kNetworkFeeWarnText,
                               style: TextStyle(color: EaselAppTheme.kLightPurple, fontSize: 14.sp, fontWeight: FontWeight.w800),
@@ -212,93 +213,102 @@ class _PriceScreenState extends State<PriceScreen> {
                           ],
                         ),
                       VerticalSpace(20.h),
+                      EaselTextField(
+                        label: kRoyaltiesText,
+                        hint: kRoyaltyHintText,
+                        keyboardType: TextInputType.number,
+                        inputFormatters: [
+                          FilteringTextInputFormatter.digitsOnly,
+                          LengthLimitingTextInputFormatter(2),
+                          AmountFormatter(
+                            maxDigits: 2,
+                          )
+                        ],
+                        controller: provider.royaltyController,
+                        validator: (value) {
+                          if (value!.isEmpty) {
+                            _royaltiesFieldError.value = kEnterRoyaltyText;
+                            return;
+                          }
+                          if (int.parse(value) > kMaxRoyalty) {
+                            _royaltiesFieldError.value = "$kRoyaltyRangeText $kMinRoyalty-$kMaxRoyalty %";
+                            return;
+                          }
+                          _royaltiesFieldError.value = '';
+                          return null;
+                        },
+                      ),
                       ValueListenableBuilder<String>(
-                          valueListenable: _royaltiesFieldError,
-                          builder: (_, String royaltiesFieldError, __) => EaselTextField(
-                                label: kRoyaltiesText,
-                                hint: kRoyaltyHintText,
-                                keyboardType: TextInputType.number,
-                                inputFormatters: [
-                                  FilteringTextInputFormatter.digitsOnly,
-                                  LengthLimitingTextInputFormatter(2),
-                                  AmountFormatter(
-                                    maxDigits: 2,
-                                  )
-                                ],
-                                controller: provider.royaltyController,
-                                validator: (value) {
-                                  if (value!.isEmpty) {
-                                    _royaltiesFieldError.value = kEnterRoyaltyText;
-                                    return;
-                                  }
-                                  if (int.parse(value) > kMaxRoyalty) {
-                                    _royaltiesFieldError.value = "$kRoyaltyRangeText $kMinRoyalty-$kMaxRoyalty %";
-                                    return;
-                                  }
-                                  _royaltiesFieldError.value = '';
-                                  return null;
-                                },
-                              )),
-                      _royaltiesFieldError.value.isNotEmpty
-                          ? Padding(
-                              padding: EdgeInsets.only(left: 10.w, right: 10.w, top: 2.h),
-                              child: Text(
-                                _royaltiesFieldError.value,
-                                style: TextStyle(
-                                  fontSize: 12.sp,
-                                  color: Colors.red,
-                                ),
+                        valueListenable: _royaltiesFieldError,
+                        builder: (_, String royaltiesFieldError, __) {
+                          if (royaltiesFieldError.isEmpty) {
+                            return const SizedBox.shrink();
+                          }
+                          return Padding(
+                            padding: EdgeInsets.only(left: 10.w, right: 10.w, top: 2.h),
+                            child: Text(
+                              royaltiesFieldError,
+                              style: TextStyle(
+                                fontSize: 12.sp,
+                                color: Colors.red,
                               ),
-                            )
-                          : const SizedBox.shrink(),
+                            ),
+                          );
+                        },
+                      ),
                       Text(
                         "$kRoyaltyNoteText “$kMinRoyalty”.",
                         style: TextStyle(color: EaselAppTheme.kLightPurple, fontWeight: FontWeight.w800, fontSize: 14.sp),
                       ),
                       VerticalSpace(20.h),
+                      EaselTextField(
+                        key: ValueKey(provider.selectedDenom.name),
+                        label: kNoOfEditionText,
+                        hint: kHintNoEdition,
+                        keyboardType: TextInputType.number,
+                        inputFormatters: [
+                          FilteringTextInputFormatter.digitsOnly,
+                          LengthLimitingTextInputFormatter(5),
+                          AmountFormatter(
+                            maxDigits: 5,
+                          )
+                        ],
+                        controller: provider.noOfEditionController,
+                        validator: (value) {
+                          if (value!.isEmpty) {
+                            _noOfEditionsFieldError.value = kEnterEditionText;
+                            return;
+                          }
+                          if (int.parse(value.replaceAll(",", "")) < kMinEditionValue) {
+                            _noOfEditionsFieldError.value = "$kMinIsText $kMinEditionValue";
+                            return;
+                          }
+                          if (int.parse(value.replaceAll(",", "")) > kMaxEdition) {
+                            _noOfEditionsFieldError.value = "$kMaxIsTextText $kMaxEdition";
+                            return;
+                          }
+                          _noOfEditionsFieldError.value = '';
+                          return null;
+                        },
+                      ),
                       ValueListenableBuilder<String>(
-                          valueListenable: _noOfEditionsFieldError,
-                          builder: (_, String noOfEditionsFieldError, __) => EaselTextField(
-                                key: ValueKey(provider.selectedDenom.name),
-                                label: kNoOfEditionText,
-                                hint: kHintNoEdition,
-                                keyboardType: TextInputType.number,
-                                inputFormatters: [
-                                  FilteringTextInputFormatter.digitsOnly,
-                                  LengthLimitingTextInputFormatter(5),
-                                  AmountFormatter(
-                                    maxDigits: 5,
-                                  )
-                                ],
-                                controller: provider.noOfEditionController,
-                                validator: (value) {
-                                  if (value!.isEmpty) {
-                                    _noOfEditionsFieldError.value = kEnterEditionText;
-                                    return;
-                                  }
-                                  if (int.parse(value.replaceAll(",", "")) < kMinEditionValue) {
-                                    _noOfEditionsFieldError.value = "$kMinIsText $kMinEditionValue";
-                                    return;
-                                  }
-                                  if (int.parse(value.replaceAll(",", "")) > kMaxEdition) {
-                                    _noOfEditionsFieldError.value = "$kMaxIsTextText $kMaxEdition";
-                                    return;
-                                  }
-                                  _noOfEditionsFieldError.value = '';
-                                  return null;
-                                },
-                              )),
-                      if (_noOfEditionsFieldError.value.isNotEmpty)
-                        Padding(
-                          padding: EdgeInsets.only(left: 10.w, right: 10.w, top: 2.h),
-                          child: Text(
-                            _noOfEditionsFieldError.value,
-                            style: TextStyle(
-                              fontSize: 12.sp,
-                              color: Colors.red,
+                        valueListenable: _noOfEditionsFieldError,
+                        builder: (_, String noOfEditionsFieldError, __) {
+                          if (noOfEditionsFieldError.isEmpty) {
+                            return const SizedBox.shrink();
+                          }
+                          return Padding(
+                            padding: EdgeInsets.only(left: 10.w, right: 10.w, top: 2.h),
+                            child: Text(
+                              noOfEditionsFieldError,
+                              style: TextStyle(
+                                fontSize: 12.sp,
+                                color: Colors.red,
+                              ),
                             ),
-                          ),
-                        ),
+                          );
+                        },
+                      ),
                       Text(
                         "${NumberFormat.decimalPattern().format(kMaxEdition)} $kMaxText",
                         style: TextStyle(color: EaselAppTheme.kLightPurple, fontSize: 14.sp, fontWeight: FontWeight.w800),
