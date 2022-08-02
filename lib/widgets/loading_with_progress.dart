@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:easel_flutter/easel_provider.dart';
 import 'package:easel_flutter/main.dart';
+import 'package:easel_flutter/models/upload_progress.dart';
 import 'package:easel_flutter/utils/easel_app_theme.dart';
 import 'package:easel_flutter/utils/image_util.dart';
 import 'package:flutter/material.dart';

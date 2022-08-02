@@ -64,6 +64,12 @@ class NFTsListTile extends StatelessWidget {
                       errorWidget: (a, b, c) => const Center(child: Icon(Icons.error_outline)),
                       placeholder: (context, url) => Shimmer(color: EaselAppTheme.cardBackground, child: const SizedBox.expand()),
                     ),
+                    onPdf: (context) => CachedNetworkImage(
+                      fit: BoxFit.fill,
+                      imageUrl: publishedNFT.thumbnailUrl,
+                      errorWidget: (a, b, c) => const Center(child: Icon(Icons.error_outline)),
+                      placeholder: (context, url) => Shimmer(color: EaselAppTheme.cardBackground, child: const SizedBox.expand()),
+                    ),
                     onAudio: (context) => CachedNetworkImage(
                       fit: BoxFit.fill,
                       imageUrl: publishedNFT.thumbnailUrl,
@@ -146,6 +152,7 @@ class NftTypeBuilder extends StatelessWidget {
   final WidgetBuilder onVideo;
   final WidgetBuilder onAudio;
   final WidgetBuilder on3D;
+  final WidgetBuilder onPdf;
   final AssetType assetType;
 
   const NftTypeBuilder({
@@ -154,6 +161,7 @@ class NftTypeBuilder extends StatelessWidget {
     required this.onVideo,
     required this.onAudio,
     required this.on3D,
+    required this.onPdf,
     required this.assetType,
   }) : super(key: key);
 
@@ -165,8 +173,9 @@ class NftTypeBuilder extends StatelessWidget {
       case AssetType.Image:
         return onImage(context);
       case AssetType.Video:
-      case AssetType.Pdf:
         return onVideo(context);
+      case AssetType.Pdf:
+        return onPdf(context);
       case AssetType.ThreeD:
         return on3D(context);
     }

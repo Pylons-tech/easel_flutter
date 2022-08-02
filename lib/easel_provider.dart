@@ -8,6 +8,7 @@ import 'package:easel_flutter/models/nft.dart';
 import 'package:easel_flutter/models/nft_format.dart';
 import 'package:easel_flutter/models/picked_file_model.dart';
 import 'package:easel_flutter/models/save_nft.dart';
+import 'package:easel_flutter/models/upload_progress.dart';
 import 'package:easel_flutter/repository/repository.dart';
 import 'package:easel_flutter/screens/welcome_screen/widgets/show_wallet_install_dialog.dart';
 import 'package:easel_flutter/services/third_party_services/audio_player_helper.dart';
@@ -1061,13 +1062,3 @@ class EaselProvider extends ChangeNotifier {
 
 
 enum ButtonState { paused, playing, loading }
-
-
-class UploadProgress {
-  int totalSize;
-  int sendSize;
-  double uploadedProgressData;
-
-  UploadProgress({required this.totalSize, required this.sendSize, required this.uploadedProgressData});
-
-}

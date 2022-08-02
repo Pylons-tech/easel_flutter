@@ -12,15 +12,17 @@ class PdfViewerFullOrHalf extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return isLoading
-        ? SizedBox(
-            height: 50.0.h,
-            child: Image.asset(
-              kLoadingGif,
-            ),
-          )
-        : previewFlag
-            ? pdfViewerHalfScreen(context)
-            : pdfViewerFullScreen(context);
+    if (isLoading) {
+      return SizedBox(
+        height: 50.0.h,
+        child: Image.asset(
+          kLoadingGif,
+        ),
+      );
+    }
+    if (previewFlag) {
+      return pdfViewerHalfScreen(context);
+    }
+    return pdfViewerFullScreen(context);
   }
 }

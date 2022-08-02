@@ -48,6 +48,12 @@ class NftGridViewItem extends StatelessWidget {
                 errorWidget: (a, b, c) => const Center(child: Icon(Icons.error_outline)),
                 placeholder: (context, url) => Shimmer(color: EaselAppTheme.cardBackground, child: const SizedBox.expand()),
               ),
+              onPdf: (context) => CachedNetworkImage(
+                fit: BoxFit.fill,
+                imageUrl: nft.thumbnailUrl,
+                errorWidget: (a, b, c) => const Center(child: Icon(Icons.error_outline)),
+                placeholder: (context, url) => Shimmer(color: EaselAppTheme.cardBackground, child: const SizedBox.expand()),
+              ),
               on3D: (context) => ModelViewer(
                 src: nft.url,
                 ar: false,
