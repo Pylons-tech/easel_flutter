@@ -41,7 +41,7 @@ class BuildPublishedNFTsBottomSheet {
   }
 
   void onViewOnIPFSPressed({required NFT nft}) async {
-    await easelProvider.repository.launchMyUrl(url: nft.url);
+    await easelProvider.repository.launchMyUrl(url: nft.url.changeDomain());
   }
 
   void onViewOnPylonsPressed({required NFT nft}) async {

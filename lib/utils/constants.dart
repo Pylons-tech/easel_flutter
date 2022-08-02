@@ -52,7 +52,6 @@ const kDummyImg = 'assets/images/svg/dummy_img.png';
 const kVideoIcon = 'assets/images/video_icon.png';
 const kViewIpfs = 'assets/images/view_ipfs.png';
 
-
 const kSvgPylonsLogo = 'assets/images/svg/pylons_logo.svg';
 const kSvgIpfsLogo = 'assets/images/ipfs_logo.png';
 const kSvgViewIcon = 'assets/images/svg/view_icon.svg';
@@ -64,6 +63,7 @@ const String kLoadingGif = 'assets/images/gifs/loading.gif';
 
 /// ```URL constants
 const ipfsDomain = 'https://ipfs.io/ipfs';
+const proxyIpfsDomain = 'https://proxy.pylons.tech/ipfs';
 const kPlayStoreUrl = 'https://play.google.com/store/apps/details?id=tech.pylons.wallet';
 const kWalletIOSId = 'xyz.pylons.wallet';
 const kWalletAndroidId = 'tech.pylons.wallet';
@@ -274,7 +274,6 @@ const String kWidthKey = "Width";
 const String kHeightKey = "Height";
 const String kQuantityKey = "Quantity";
 const String kHashtagKey = "Hashtags";
-
 
 const String kDescriptionTutorial = "description";
 const String kHeaderTutorial = "header";

@@ -1,5 +1,3 @@
-import 'dart:developer';
-
 import 'package:audio_video_progress_bar/audio_video_progress_bar.dart';
 import 'package:detectable_text_field/detector/sample_regular_expressions.dart';
 import 'package:detectable_text_field/widgets/detectable_text.dart';
@@ -12,6 +10,7 @@ import 'package:easel_flutter/screens/clippers/right_triangle_clipper.dart';
 import 'package:easel_flutter/utils/constants.dart';
 import 'package:easel_flutter/utils/easel_app_theme.dart';
 import 'package:easel_flutter/utils/enums.dart';
+import 'package:easel_flutter/utils/extension_util.dart';
 import 'package:easel_flutter/utils/progress_bar_builder.dart';
 import 'package:easel_flutter/utils/read_more.dart';
 import 'package:easel_flutter/utils/route_util.dart';
@@ -51,7 +50,7 @@ class _PublishScreenState extends State<PublishScreen> {
   @override
   initState() {
     easelProvider.nft = repository.getCacheDynamicType(key: nftKey);
-    easelProvider.collapsed=false;
+    easelProvider.collapsed = false;
     super.initState();
   }
 
@@ -583,7 +582,7 @@ class _OwnerBottomDrawerState extends State<OwnerBottomDrawer> {
   }
 
   void onViewOnIPFSPressed({required EaselProvider provider}) async {
-    await provider.repository.launchMyUrl(url: provider.nft.url);
+    await provider.repository.launchMyUrl(url: provider.nft.url.changeDomain());
   }
 
   Widget buildRow({required String title, required String subtitle}) {

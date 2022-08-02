@@ -21,7 +21,6 @@ import 'package:easy_localization/easy_localization.dart';
 import 'package:fixnum/fixnum.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:just_audio/just_audio.dart';
 import 'package:media_info/media_info.dart';
 import 'package:pylons_sdk/pylons_sdk.dart';
@@ -742,7 +741,6 @@ class EaselProvider extends ChangeNotifier {
 
     return sdkResponse;
   }
-
 
   Future initializeAudioPlayerForFile({required File file}) async {
     audioProgressNotifier = ValueNotifier<ProgressBarState>(

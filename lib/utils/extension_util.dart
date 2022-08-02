@@ -160,3 +160,7 @@ extension IsSvgExtension on String {
     return _extension == ".svg";
   }
 }
+
+extension ChangeDomain on String {
+  String changeDomain() => replaceAll(ipfsDomain, proxyIpfsDomain);
+}
