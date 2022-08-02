@@ -216,13 +216,10 @@ class _PriceScreenState extends State<PriceScreen> {
                       EaselTextField(
                         label: kRoyaltiesText,
                         hint: kRoyaltyHintText,
-                        keyboardType: TextInputType.number,
+                        keyboardType: TextInputType.text,
                         inputFormatters: [
-                          FilteringTextInputFormatter.digitsOnly,
-                          LengthLimitingTextInputFormatter(2),
-                          AmountFormatter(
-                            maxDigits: 2,
-                          )
+                          FilteringTextInputFormatter.allow(RegExp("[0-9.]")),
+                          LengthLimitingTextInputFormatter(3),
                         ],
                         controller: provider.royaltyController,
                         validator: (value) {
@@ -230,7 +227,7 @@ class _PriceScreenState extends State<PriceScreen> {
                             _royaltiesFieldError.value = kEnterRoyaltyText;
                             return;
                           }
-                          if (int.parse(value) > kMaxRoyalty) {
+                          if (double.parse(value) < kMinRoyalty || double.parse(value) > kMaxRoyalty) {
                             _royaltiesFieldError.value = "$kRoyaltyRangeText $kMinRoyalty-$kMaxRoyalty %";
                             return;
                           }
