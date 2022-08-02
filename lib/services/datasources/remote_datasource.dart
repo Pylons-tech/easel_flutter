@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:dio/dio.dart';
+import 'package:easel_flutter/easel_provider.dart';
 import 'package:easel_flutter/models/api_response.dart';
 import 'package:easel_flutter/models/storage_response_model.dart';
 import 'package:easy_localization/easy_localization.dart';
@@ -8,9 +9,9 @@ import 'package:pylons_sdk/pylons_sdk.dart';
 
 abstract class RemoteDataSource {
   /// This method is used uploading provided file to the server using [httpClient]
-  /// Input : [file] which needs to be uploaded
+  /// Input : [file] which needs to be uploaded , [onUploadProgressCallback] a callback method which needs to be call on each progress
   /// Output : [Future<ApiResponse<StorageResponseModel>>] the ApiResponse which can contain [success] or [error] response
-  Future<ApiResponse<StorageResponseModel>> uploadFile(File file);
+  Future<ApiResponse<StorageResponseModel>> uploadFile({required OnUploadProgressCallback uploadProgressCallback, required File file});
 
   /// This method is used to getRecipesList based on CookbookID
   /// Input : [cookBookID] against which recipes needs to be fetched
@@ -24,13 +25,17 @@ class RemoteDataSourceImpl implements RemoteDataSource {
   RemoteDataSourceImpl({required this.httpClient});
 
   @override
-  Future<ApiResponse<StorageResponseModel>> uploadFile(File file) async {
+  Future<ApiResponse<StorageResponseModel>>  uploadFile({required OnUploadProgressCallback uploadProgressCallback, required File file}) async {
     final response = await httpClient.post(
       "/upload",
       data: Stream.fromIterable(file.readAsBytesSync().map((e) => [e])),
       options: Options(headers: {
         'Content-Length': file.lengthSync().toString(),
       }),
+      onSendProgress: (uploaded,total){
+        double uploadedPercentage=uploaded/total;
+        uploadProgressCallback(UploadProgress(totalSize: total, sendSize: uploaded, uploadedProgressData: uploadedPercentage));
+      }
     );
 
     if (response.statusCode == HttpStatus.ok) {

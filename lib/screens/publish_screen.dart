@@ -57,7 +57,7 @@ class _PublishScreenState extends State<PublishScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: easelProvider.nft.assetType == kPdfText ? EaselAppTheme.kWhite : EaselAppTheme.kBlack,
+      backgroundColor: EaselAppTheme.kBlack,
       body: Consumer<EaselProvider>(builder: (_, easelProvider, __) {
         return Stack(
           children: [

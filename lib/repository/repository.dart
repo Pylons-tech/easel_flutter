@@ -2,6 +2,7 @@ import 'dart:developer';
 import 'dart:io';
 
 import 'package:dartz/dartz.dart';
+import 'package:easel_flutter/easel_provider.dart';
 import 'package:easel_flutter/models/api_response.dart';
 import 'package:easel_flutter/models/nft.dart';
 import 'package:easel_flutter/models/nft_format.dart';
@@ -103,9 +104,9 @@ abstract class Repository {
   Future<Either<Failure, bool>> updateNftFromPrice({required SaveNft saveNft});
 
   /// This method is used uploading provided file to the server using [httpClient]
-  /// Input : [file] which needs to be uploaded
+  /// Input : [file] which needs to be uploaded , [onUploadProgressCallback] a callback method which needs to be call on each progress
   /// Output : [ApiResponse] the ApiResponse which can contain [success] or [error] response
-  Future<Either<Failure, ApiResponse>> uploadFile(File file);
+  Future<Either<Failure, ApiResponse>> uploadFile({required File file, required OnUploadProgressCallback onUploadProgressCallback});
 
   /// This method will get the drafts List from the local database
   /// Output: [List] returns that contains a number of [NFT]
@@ -298,9 +299,9 @@ class RepositoryImp implements Repository {
   }
 
   @override
-  Future<Either<Failure, ApiResponse>> uploadFile(File file) async {
+  Future<Either<Failure, ApiResponse>> uploadFile({required File file, required OnUploadProgressCallback onUploadProgressCallback}) async {
     try {
-      ApiResponse apiResponse = await remoteDataSource.uploadFile(file);
+      ApiResponse apiResponse = await remoteDataSource.uploadFile(file: file, uploadProgressCallback: onUploadProgressCallback);
 
       return Right(apiResponse);
     } on Exception catch (_) {

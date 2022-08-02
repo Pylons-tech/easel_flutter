@@ -33,7 +33,7 @@ class NftFormat {
           color: EaselAppTheme.kYellow,
         ),
         NftFormat(format: NFTTypes.audio, extensions: ['wav', 'aiff', 'alac', 'flac', 'mp3', 'aac', 'wma', 'ogg'], badge: kSvgNftFormatAudio, color: EaselAppTheme.kLightRed),
-        NftFormat(format: NFTTypes.pdf, extensions: ['pdf'], badge: kSvgNftFormatAudio, color: EaselAppTheme.kBlue),
+        NftFormat(format: NFTTypes.pdf, extensions: ['pdf'], badge: kSvgNftFormatAudio, color: EaselAppTheme.kpurpleButtonColor),
 
   ];
 

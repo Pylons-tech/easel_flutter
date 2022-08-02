@@ -8,6 +8,7 @@ import 'package:easel_flutter/screens/clippers/small_bottom_corner_clipper.dart'
 import 'package:easel_flutter/utils/constants.dart';
 import 'package:easel_flutter/utils/easel_app_theme.dart';
 import 'package:easel_flutter/utils/route_util.dart';
+import 'package:easel_flutter/widgets/pdf_viewer_full_half_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/svg.dart';
@@ -33,6 +34,9 @@ class _PdfViewerState extends State<PdfViewer> {
 
   @override
   void initState() {
+    scheduleMicrotask(() {
+      easelProvider.setPdfThumbnail(null);
+    });
     initializeDoc();
     super.initState();
   }
@@ -52,55 +56,55 @@ class _PdfViewerState extends State<PdfViewer> {
     return ChangeNotifierProvider<EaselProvider>.value(
       value: easelProvider,
       child: Center(
-          child: _isLoading
-              ? SizedBox(
+        child: PdfViewerFullOrHalf(
+            pdfViewerFullScreen: (context) {
+              return PDFViewer(
+                document: doc,
+                showNavigation: false,
+                showPicker: false,
+                progressIndicator: SizedBox(
                   height: 50.0.h,
                   child: Image.asset(
                     kLoadingGif,
                   ),
-                )
-              : !widget.previewFlag
-                  ? PDFViewer(
-                      document: doc,
-                      showNavigation: false,
-                      showPicker: false,
-                      progressIndicator: SizedBox(
-                        height: 50.0.h,
-                        child: Image.asset(
-                          kLoadingGif,
-                        ),
-                      ),
-                    )
-                  : SingleChildScrollView(
-                      child: Column(
-                      children: [
-                        Padding(
-                          padding: EdgeInsets.symmetric(horizontal: 4.w),
-                          child: SizedBox(
-                              height: 200.h,
-                              child: Stack(
-                                children: [
-                                  PDFViewer(
-                                    document: doc,
-                                    showNavigation: false,
-                                    showPicker: false,
-                                    progressIndicator: SizedBox(
-                                      height: 50.0.h,
-                                      child: Image.asset(
-                                        kLoadingGif,
-                                      ),
-                                    ),
-                                  ),
-                                  _buildPdfFullScreenIcon()
-                                ],
-                              )),
-                        ),
-                        SizedBox(
-                          height: 50.h,
-                        ),
-                        _buildThumbnailButton(),
-                      ],
-                    ))),
+                ),
+              );
+            },
+            pdfViewerHalfScreen: (context) {
+              return SingleChildScrollView(
+                  child: Column(
+                children: [
+                  Padding(
+                    padding: EdgeInsets.symmetric(horizontal: 4.w),
+                    child: SizedBox(
+                        height: 200.h,
+                        child: Stack(
+                          children: [
+                            PDFViewer(
+                              document: doc,
+                              showNavigation: false,
+                              showPicker: false,
+                              progressIndicator: SizedBox(
+                                height: 50.0.h,
+                                child: Image.asset(
+                                  kLoadingGif,
+                                ),
+                              ),
+                            ),
+                            _buildPdfFullScreenIcon()
+                          ],
+                        )),
+                  ),
+                  SizedBox(
+                    height: 50.h,
+                  ),
+                  _buildThumbnailButton(),
+                ],
+              ));
+            },
+            previewFlag: widget.previewFlag,
+            isLoading: _isLoading),
+      ),
     );
   }
 
