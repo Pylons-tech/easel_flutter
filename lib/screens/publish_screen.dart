@@ -91,12 +91,12 @@ class _PublishScreenState extends State<PublishScreen> {
   Widget buildPreviewWidget(EaselProvider provider) {
     switch (provider.nft.assetType) {
       case kImageText:
-        return ImageWidget(filePath: provider.nft.url);
+        return ImageWidget(filePath: provider.nft.url.changeDomain());
       case kVideoText:
         return Center(
           child: VideoWidget(
-            key: ValueKey(provider.nft.url),
-            filePath: provider.nft.url,
+            key: ValueKey(provider.nft.url.changeDomain()),
+            filePath: provider.nft.url.changeDomain(),
             previewFlag: true,
             isForFile: false,
             isDarkMode: true,
@@ -107,11 +107,11 @@ class _PublishScreenState extends State<PublishScreen> {
             height: double.infinity,
             width: 1.sw,
             child: Model3dViewer(
-              path: provider.nft.url,
+              path: provider.nft.url.changeDomain(),
               isFile: false,
             ));
       case kAudioText:
-        return AudioWidget(filePath: provider.nft.url, previewFlag: false);
+        return AudioWidget(filePath: provider.nft.url.changeDomain(), previewFlag: false);
     }
     return const SizedBox.shrink();
   }

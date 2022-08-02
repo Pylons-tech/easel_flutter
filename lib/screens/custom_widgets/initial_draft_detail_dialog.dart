@@ -61,7 +61,7 @@ class _DraftDetailDialogState extends State<_DraftDetailDialog> {
     EaselProvider easelProvider = context.read<EaselProvider>();
     if (easelProvider.nft.assetType == k3dText) {
       previewWidget = ModelViewer(
-        src: easelProvider.nft.url,
+        src: easelProvider.nft.url.changeDomain(),
         ar: false,
         autoRotate: false,
         cameraControls: false,
@@ -224,9 +224,9 @@ class _DraftDetailDialogState extends State<_DraftDetailDialog> {
 
   String getImageUrl(EaselProvider easelProvider) {
     if (easelProvider.nft.assetType == kImageText) {
-      return easelProvider.nft.url;
+      return easelProvider.nft.url.changeDomain();
     } else {
-      return easelProvider.nft.thumbnailUrl;
+      return easelProvider.nft.thumbnailUrl.changeDomain();
     }
   }
 
