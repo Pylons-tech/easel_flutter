@@ -99,7 +99,6 @@ class HomeScreenContent extends StatelessWidget {
         homeViewModel.currentPage.value = page;
         final map = {0: 0, 1: 1, 2: 1, 3: 2};
         homeViewModel.currentStep.value = map[page]!;
-
       },
       itemBuilder: (BuildContext context, int index) {
         final map = {0: chooseFormatScreen, 1: describeScreen, 2: priceScreen, 3: publishScreen};

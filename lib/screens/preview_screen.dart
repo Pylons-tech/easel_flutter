@@ -40,7 +40,6 @@ class _PreviewScreenState extends State<PreviewScreen> {
             provider.setAudioThumbnail(null);
             provider.setVideoThumbnail(null);
             provider.stopVideoIfPlaying();
-
             return Future.value(true);
           },
           child: Stack(
