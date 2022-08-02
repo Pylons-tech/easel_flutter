@@ -1,23 +1,15 @@
 import 'package:easel_flutter/easel_provider.dart';
 import 'package:easel_flutter/repository/repository.dart';
-import 'package:easel_flutter/screens/creator_hub/creator_hub_view_model.dart';
-import 'package:easel_flutter/screens/custom_widgets/step_labels.dart';
-import 'package:easel_flutter/screens/custom_widgets/steps_indicator.dart';
 import 'package:easel_flutter/screens/describe_screen.dart';
 import 'package:easel_flutter/screens/price_screen.dart';
-import 'package:easel_flutter/screens/published_screen.dart';
+import 'package:easel_flutter/screens/publish_screen.dart';
 import 'package:easel_flutter/utils/easel_app_theme.dart';
-import 'package:easel_flutter/utils/screen_responsive.dart';
-import 'package:easel_flutter/utils/space_utils.dart';
 import 'package:easel_flutter/viewmodels/home_viewmodel.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get_it/get_it.dart';
 import 'package:provider/provider.dart';
 
 import 'choose_format_screen.dart';
-import 'custom_widgets/step_labels.dart';
-import 'custom_widgets/steps_indicator.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({Key? key}) : super(key: key);
@@ -62,15 +54,21 @@ class _HomeScreenState extends State<HomeScreen> {
     super.dispose();
   }
 
+  void onBackPressed() {
+    easelProvider.videoLoadingError = '';
+    easelProvider.isVideoLoading = true;
+    ScaffoldMessenger.of(context).hideCurrentSnackBar();
+    homeViewModel.previousPage();
+    if (homeViewModel.currentPage.value == 1) {
+      Navigator.of(context).pop();
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return WillPopScope(
       onWillPop: () async {
-        GetIt.I.get<CreatorHubViewModel>().getDraftsList();
-        easelProvider.videoLoadingError = '';
-        easelProvider.isVideoLoading = true;
-        Navigator.of(context).pop();
-
+        onBackPressed();
         return false;
       },
       child: Container(
@@ -94,85 +92,19 @@ class HomeScreenContent extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final homeViewModel = context.watch<HomeViewModel>();
-    return Column(
-      children: [
-        if (homeViewModel.currentPage.value != 0 && homeViewModel.currentPage.value != 3) ...[
-          const VerticalSpace(20),
-          MyStepsIndicator(currentStep: homeViewModel.currentStep),
-          const VerticalSpace(5),
-          StepLabels(currentPage: homeViewModel.currentPage, currentStep: homeViewModel.currentStep),
-          const VerticalSpace(10),
-        ],
-        if (homeViewModel.currentPage.value != 3) ...[
-          const VerticalSpace(20),
-          Stack(
-            alignment: Alignment.center,
-            children: [
-              Align(
-                  alignment: Alignment.centerLeft,
-                  child: ValueListenableBuilder(
-                    valueListenable: homeViewModel.currentPage,
-                    builder: (_, int currentPage, __) => Padding(
-                        padding: EdgeInsets.only(left: 10.sp),
-                        child: IconButton(
-                          onPressed: () {
-                            ScaffoldMessenger.of(context).hideCurrentSnackBar();
-                            homeViewModel.previousPage();
-                            if (homeViewModel.currentPage.value == 0) {
-                              GetIt.I.get<CreatorHubViewModel>().getDraftsList();
-                              Navigator.of(context).pop();
-                            }
-                          },
-                          icon: const Icon(
-                            Icons.arrow_back_ios,
-                            color: EaselAppTheme.kGrey,
-                          ),
-                        )),
-                  )),
-              ValueListenableBuilder(
-                valueListenable: homeViewModel.currentPage,
-                builder: (_, int currentPage, __) {
-                  return Text(
-                    homeViewModel.pageTitles[homeViewModel.currentPage.value],
-                    style: Theme.of(context).textTheme.bodyText1!.copyWith(fontSize: 18.sp, fontWeight: FontWeight.w400, color: EaselAppTheme.kDarkText),
-                  );
-                },
-              ),
-            ],
-          ),
-          ScreenResponsive(
-            mobileScreen: (context) => const VerticalSpace(6),
-            tabletScreen: (context) => const VerticalSpace(30),
-          ),
-        ],
-        Expanded(
-          child: PageView.builder(
-            controller: homeViewModel.pageController,
-            physics: const NeverScrollableScrollPhysics(),
-            onPageChanged: (int page) {
-              homeViewModel.currentPage.value = page;
-              switch (page) {
-                case 0:
-                  homeViewModel.currentStep.value = 0;
-                  break;
-                case 1:
-                case 2:
-                  homeViewModel.currentStep.value = 1;
-                  break;
+    return PageView.builder(
+      controller: homeViewModel.pageController,
+      physics: const NeverScrollableScrollPhysics(),
+      onPageChanged: (int page) {
+        homeViewModel.currentPage.value = page;
+        final map = {0: 0, 1: 1, 2: 1, 3: 2};
+        homeViewModel.currentStep.value = map[page]!;
+      },
+      itemBuilder: (BuildContext context, int index) {
+        final map = {0: chooseFormatScreen, 1: describeScreen, 2: priceScreen, 3: publishScreen};
 
-                case 3:
-                  homeViewModel.currentStep.value = 2;
-                  break;
-              }
-            },
-            itemBuilder: (BuildContext context, int index) {
-              final map = {0: chooseFormatScreen, 1: describeScreen, 2: priceScreen, 3: publishScreen};
-
-              return map[index]?.call() ?? const SizedBox();
-            },
-          ),
-        ),
-      ],
+        return map[index]?.call() ?? const SizedBox();
+      },
     );
   }
 
@@ -189,6 +121,6 @@ class HomeScreenContent extends StatelessWidget {
   }
 
   Widget publishScreen() {
-    return const PublishedNewScreen();
+    return const PublishScreen();
   }
 }

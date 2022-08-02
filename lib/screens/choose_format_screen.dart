@@ -7,6 +7,7 @@ import 'package:easel_flutter/screens/preview_screen.dart';
 import 'package:easel_flutter/utils/constants.dart';
 import 'package:easel_flutter/utils/easel_app_theme.dart';
 import 'package:easel_flutter/utils/screen_responsive.dart';
+import 'package:easel_flutter/utils/space_utils.dart';
 import 'package:easel_flutter/viewmodels/home_viewmodel.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
@@ -44,18 +45,10 @@ class _ChooseFormatScreenState extends State<ChooseFormatScreen> {
       return;
     }
 
-    if (nftFormat.format == NFTTypes.audio || nftFormat.format == NFTTypes.video) {
-      if (easelProvider.repository.getFileSizeInGB(File(result.path).lengthSync()) > kFileSizeLimitForAudiVideoInGB) {
-        errorText.value = 'size_error'.tr();
-        showErrorDialog(type: nftFormat.format);
-        return;
-      }
-    } else {
-      if (easelProvider.repository.getFileSizeInGB(File(result.path).lengthSync()) > kFileSizeLimitInGB) {
-        errorText.value = 'size_error'.tr();
-        showErrorDialog(type: nftFormat.format);
-        return;
-      }
+    if (easelProvider.repository.getFileSizeInGB(File(result.path).lengthSync()) > kFileSizeLimitForAudiVideoInGB) {
+      errorText.value = 'size_error'.tr();
+      showErrorDialog(type: nftFormat.format);
+      return;
     }
 
     await provider.setFile(fileName: result.fileName, filePath: result.path);
@@ -82,56 +75,85 @@ class _ChooseFormatScreenState extends State<ChooseFormatScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final homeViewModel = context.watch<HomeViewModel>();
+
     EaselProvider provider = context.read();
     return Scaffold(
-      body: Container(
-        color: EaselAppTheme.kBlack,
-        child: Column(
-          children: [
-            Expanded(
-              child: _CardWidget(
-                typeIdx: 0,
-                selected: provider.nftFormat.format == NftFormat.supportedFormats[0].format,
-                onFilePicked: (result) async {
-                  proceedToNext(result: result, easelProvider: provider);
-                },
-                topPadding: 5.0.h,
-                bottomPadding: 5.0.h,
-              ),
+      body: Column(
+        children: [
+          const VerticalSpace(20),
+          Stack(alignment: Alignment.center, children: [
+            Align(
+                alignment: Alignment.centerLeft,
+                child: ValueListenableBuilder(
+                  valueListenable: homeViewModel.currentPage,
+                  builder: (_, int currentPage, __) => Padding(
+                      padding: EdgeInsets.only(left: 10.sp),
+                      child: IconButton(
+                        onPressed: () {
+                          ScaffoldMessenger.of(context).hideCurrentSnackBar();
+                          Navigator.of(context).pop();
+                        },
+                        icon: const Icon(
+                          Icons.arrow_back_ios,
+                          color: EaselAppTheme.kGrey,
+                        ),
+                      )),
+                )),
+            ValueListenableBuilder(
+              valueListenable: homeViewModel.currentPage,
+              builder: (_, int currentPage, __) {
+                return Text(
+                  homeViewModel.pageTitles[homeViewModel.currentPage.value],
+                  style: Theme.of(context).textTheme.bodyText1!.copyWith(fontSize: 18.sp, fontWeight: FontWeight.w400, color: EaselAppTheme.kDarkText),
+                );
+              },
             ),
-            Expanded(
-              child: _CardWidget(
-                typeIdx: 1,
-                selected: provider.nftFormat.format == NftFormat.supportedFormats[1].format,
-                onFilePicked: (result) async {
-                  proceedToNext(result: result, easelProvider: provider);
-                },
-                bottomPadding: 5.0.h,
-              ),
+          ]),
+          const VerticalSpace(20),
+          Expanded(
+            child: _CardWidget(
+              typeIdx: 0,
+              selected: provider.nftFormat.format == NftFormat.supportedFormats[0].format,
+              onFilePicked: (result) async {
+                proceedToNext(result: result, easelProvider: provider);
+              },
+              topPadding: 5.0.h,
+              bottomPadding: 5.0.h,
             ),
-            Expanded(
-              child: _CardWidget(
-                typeIdx: 2,
-                selected: provider.nftFormat.format == NftFormat.supportedFormats[2].format,
-                onFilePicked: (result) async {
-                  proceedToNext(result: result, easelProvider: provider);
-                },
-                textIconColor: EaselAppTheme.kNightBlue,
-                bottomPadding: 5.0.h,
-              ),
+          ),
+          Expanded(
+            child: _CardWidget(
+              typeIdx: 1,
+              selected: provider.nftFormat.format == NftFormat.supportedFormats[1].format,
+              onFilePicked: (result) async {
+                proceedToNext(result: result, easelProvider: provider);
+              },
+              bottomPadding: 5.0.h,
             ),
-            Expanded(
-              child: _CardWidget(
-                typeIdx: 3,
-                selected: provider.nftFormat.format == NftFormat.supportedFormats[3].format,
-                onFilePicked: (result) async {
-                  proceedToNext(result: result, easelProvider: provider);
-                },
-                bottomPadding: 5.0.h,
-              ),
+          ),
+          Expanded(
+            child: _CardWidget(
+              typeIdx: 2,
+              selected: provider.nftFormat.format == NftFormat.supportedFormats[2].format,
+              onFilePicked: (result) async {
+                proceedToNext(result: result, easelProvider: provider);
+              },
+              textIconColor: EaselAppTheme.kNightBlue,
+              bottomPadding: 5.0.h,
             ),
-          ],
-        ),
+          ),
+          Expanded(
+            child: _CardWidget(
+              typeIdx: 3,
+              selected: provider.nftFormat.format == NftFormat.supportedFormats[3].format,
+              onFilePicked: (result) async {
+                proceedToNext(result: result, easelProvider: provider);
+              },
+              bottomPadding: 5.0.h,
+            ),
+          ),
+        ],
       ),
     );
   }
@@ -157,79 +179,82 @@ class _CardWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      mainAxisSize: MainAxisSize.max,
-      children: [
-        Expanded(
-          child: Padding(
-            padding: EdgeInsets.only(top: topPadding, bottom: bottomPadding),
-            child: GestureDetector(
-              onTap: () async {
-                EaselProvider provider = context.read();
-                provider.setFormat(context, NftFormat.supportedFormats[typeIdx]);
-                final pickedFile = await provider.repository.pickFile(provider.nftFormat);
-                final result = pickedFile.getOrElse(() => PickedFileModel(path: "", fileName: "", extension: ""));
-                onFilePicked(result);
-              },
-              child: Container(
-                  width: double.infinity,
-                  padding: EdgeInsets.symmetric(horizontal: 0.02.sw, vertical: 4.5.h),
-                  decoration: BoxDecoration(color: NftFormat.supportedFormats[typeIdx].color),
-                  child: Stack(
-                    children: [
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.start,
-                        children: [
-                          SizedBox(
-                            width: 10.0.w,
-                          ),
-                          SvgPicture.asset(
-                            NftFormat.supportedFormats[typeIdx].badge,
-                          ),
-                          SizedBox(
-                            width: 10.0.w,
-                          ),
-                          Expanded(
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: [
-                                Text(
-                                  NftFormat.supportedFormats[typeIdx].format.getTitle(),
-                                  style: Theme.of(context).textTheme.bodyText1!.copyWith(color: textIconColor, fontSize: 45.sp, fontWeight: FontWeight.bold),
-                                ),
-                                SizedBox(height: 3.h),
-                                RichText(
-                                  overflow: TextOverflow.ellipsis,
-                                  textAlign: TextAlign.center,
-                                  text: TextSpan(
-                                    style: Theme.of(context).textTheme.bodyText1!.copyWith(color: textIconColor, fontSize: 12.sp, fontWeight: FontWeight.w600),
-                                    text: NftFormat.supportedFormats[typeIdx].getExtensionsList(),
-                                  ),
-                                ),
-                              ],
+    return Container(
+      color: EaselAppTheme.kBlack,
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Expanded(
+            child: Padding(
+              padding: EdgeInsets.only(top: topPadding, bottom: bottomPadding),
+              child: GestureDetector(
+                onTap: () async {
+                  EaselProvider provider = context.read();
+                  provider.setFormat(context, NftFormat.supportedFormats[typeIdx]);
+                  final pickedFile = await provider.repository.pickFile(provider.nftFormat);
+                  final result = pickedFile.getOrElse(() => PickedFileModel(path: "", fileName: "", extension: ""));
+                  onFilePicked(result);
+                },
+                child: Container(
+                    width: double.infinity,
+                    padding: EdgeInsets.symmetric(horizontal: 0.02.sw, vertical: 4.5.h),
+                    decoration: BoxDecoration(color: NftFormat.supportedFormats[typeIdx].color),
+                    child: Stack(
+                      children: [
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.start,
+                          children: [
+                            SizedBox(
+                              width: 10.0.w,
                             ),
-                          ),
-                        ],
-                      ),
-                      Padding(
-                        padding: EdgeInsets.symmetric(horizontal: 10.0.w, vertical: 5.0.h),
-                        child: Align(
-                          alignment: Alignment.topRight,
-                          child: SizedBox(
-                            child: SvgPicture.asset(
-                              kSvgForwardArrowIcon,
-                              color: textIconColor,
+                            SvgPicture.asset(
+                              NftFormat.supportedFormats[typeIdx].badge,
+                            ),
+                            SizedBox(
+                              width: 10.0.w,
+                            ),
+                            Expanded(
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  Text(
+                                    NftFormat.supportedFormats[typeIdx].format.getTitle(),
+                                    style: Theme.of(context).textTheme.bodyText1!.copyWith(color: textIconColor, fontSize: 45.sp, fontWeight: FontWeight.bold),
+                                  ),
+                                  SizedBox(height: 3.h),
+                                  RichText(
+                                    overflow: TextOverflow.ellipsis,
+                                    textAlign: TextAlign.center,
+                                    text: TextSpan(
+                                      style: Theme.of(context).textTheme.bodyText1!.copyWith(color: textIconColor, fontSize: 12.sp, fontWeight: FontWeight.w600),
+                                      text: NftFormat.supportedFormats[typeIdx].getExtensionsList(),
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ],
+                        ),
+                        Padding(
+                          padding: EdgeInsets.symmetric(horizontal: 10.0.w, vertical: 5.0.h),
+                          child: Align(
+                            alignment: Alignment.topRight,
+                            child: SizedBox(
+                              child: SvgPicture.asset(
+                                kSvgForwardArrowIcon,
+                                color: textIconColor,
+                              ),
                             ),
                           ),
                         ),
-                      ),
-                    ],
-                  )),
+                      ],
+                    )),
+              ),
             ),
           ),
-        ),
-      ],
+        ],
+      ),
     );
   }
 }

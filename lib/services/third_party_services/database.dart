@@ -7,7 +7,7 @@ import 'package:sqflite/sqflite.dart' as sqflite;
 
 part 'database.g.dart';
 
-@Database(version: 4, entities: [NFT])
+@Database(version: 5, entities: [NFT])
 abstract class AppDatabase extends FloorDatabase {
   NftDao get nftDao;
 }

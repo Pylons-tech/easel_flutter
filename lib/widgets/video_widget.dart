@@ -86,6 +86,7 @@ class _VideoWidgetState extends State<VideoWidget> {
           width: 120.w,
           child: InkWell(
             onTap: () {
+              easelProvider.stopVideoIfPlaying();
               easelProvider.onVideoThumbnailPicked();
             },
             child: easelProvider.videoThumbnail != null
@@ -113,6 +114,7 @@ class _VideoWidgetState extends State<VideoWidget> {
     return !widget.previewFlag;
   }
 
+
   @override
   Widget build(BuildContext context) {
     return ChangeNotifierProvider<EaselProvider>.value(
@@ -130,20 +132,23 @@ class _VideoWidgetState extends State<VideoWidget> {
                 shouldShowThumbnailButton() ? VerticalSpace(80.h) : const SizedBox(),
                 if (!shouldShowThumbnailButton()) ...[
                   VideoBuilder(
-                      onVideoLoading: (BuildContext context) => const Center(
-                            child: CircularProgressIndicator(
-                              strokeWidth: 2,
-                              valueColor: AlwaysStoppedAnimation<Color>(EaselAppTheme.kWhite),
+                      onVideoLoading: (BuildContext context) => Center(
+                            child: SizedBox(
+                              height: 50.0.h,
+                              child: Image.asset(
+                                kLoadingGif,
+                              ),
                             ),
                           ),
                       onVideoHasError: (BuildContext context) => Center(
-                              child: Padding(
-                            padding: const EdgeInsets.all(10),
-                            child: Text(
-                              videoPlayerError,
-                              style: TextStyle(fontSize: 18.sp, color: EaselAppTheme.kWhite),
+                            child: Padding(
+                              padding: const EdgeInsets.all(10),
+                              child: Text(
+                                videoPlayerError,
+                                style: TextStyle(fontSize: 18.sp, color: EaselAppTheme.kWhite),
+                              ),
                             ),
-                          )),
+                          ),
                       onVideoInitialized: (BuildContext context) => AspectRatio(
                             aspectRatio: easelProvider.videoPlayerController.value.aspectRatio,
                             child: VideoPlayer(easelProvider.videoPlayerController),
@@ -154,10 +159,12 @@ class _VideoWidgetState extends State<VideoWidget> {
                   SizedBox(
                     height: 200.h,
                     child: VideoBuilder(
-                        onVideoLoading: (BuildContext context) => const Center(
-                              child: CircularProgressIndicator(
-                                strokeWidth: 2,
-                                valueColor: AlwaysStoppedAnimation<Color>(EaselAppTheme.kBlack),
+                        onVideoLoading: (BuildContext context) => Center(
+                              child: SizedBox(
+                                height: 50.0.h,
+                                child: Image.asset(
+                                  kLoadingGif,
+                                ),
                               ),
                             ),
                         onVideoHasError: (BuildContext context) => Center(
@@ -201,6 +208,7 @@ class _VideoWidgetState extends State<VideoWidget> {
 
   @override
   void dispose() {
+    easelProvider.disposeVideoController();
     super.dispose();
   }
 }
