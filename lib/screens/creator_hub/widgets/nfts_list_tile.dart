@@ -165,6 +165,7 @@ class NftTypeBuilder extends StatelessWidget {
       case AssetType.Image:
         return onImage(context);
       case AssetType.Video:
+      case AssetType.Pdf:
         return onVideo(context);
       case AssetType.ThreeD:
         return on3D(context);
