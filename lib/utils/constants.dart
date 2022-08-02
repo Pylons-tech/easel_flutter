@@ -184,6 +184,7 @@ const kImageText = 'Image';
 const kVideoText = 'Video';
 const kAudioText = 'Audio';
 const k3dText = '3D';
+const kPdfText = 'Pdf';
 const String kThreeDText = "ThreeD";
 const kGetStarted = 'Get Started';
 const kContinue = 'Continue';

@@ -12,6 +12,7 @@ class CidOrIpfs extends StatelessWidget {
   Widget build(BuildContext context) {
     switch (type) {
       case k3dText:
+      case kPdfText:
         return viewCid(context);
       default:
         return viewIpfs(context);

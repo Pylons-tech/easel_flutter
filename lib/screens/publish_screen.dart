@@ -1,5 +1,3 @@
-import 'dart:developer';
-
 import 'package:audio_video_progress_bar/audio_video_progress_bar.dart';
 import 'package:detectable_text_field/detector/sample_regular_expressions.dart';
 import 'package:detectable_text_field/widgets/detectable_text.dart';
@@ -21,6 +19,7 @@ import 'package:easel_flutter/widgets/cid_or_ipfs.dart';
 import 'package:easel_flutter/widgets/clipped_button.dart';
 import 'package:easel_flutter/widgets/image_widget.dart';
 import 'package:easel_flutter/widgets/model_viewer.dart';
+import 'package:easel_flutter/widgets/pdf_viewer.dart';
 import 'package:easel_flutter/widgets/video_widget.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
@@ -51,7 +50,7 @@ class _PublishScreenState extends State<PublishScreen> {
   @override
   initState() {
     easelProvider.nft = repository.getCacheDynamicType(key: nftKey);
-    easelProvider.collapsed=false;
+    easelProvider.collapsed = false;
     super.initState();
   }
 
@@ -74,9 +73,9 @@ class _PublishScreenState extends State<PublishScreen> {
                     easelProvider.isVideoLoading = true;
                     homeViewModel.previousPage();
                   },
-                  icon: const Icon(
+                  icon: Icon(
                     Icons.arrow_back_ios,
-                    color: EaselAppTheme.kWhite,
+                    color: easelProvider.nft.assetType == kPdfText ? EaselAppTheme.kGrey : EaselAppTheme.kWhite,
                   ),
                 )),
             Align(
@@ -113,6 +112,12 @@ class _PublishScreenState extends State<PublishScreen> {
             ));
       case kAudioText:
         return AudioWidget(filePath: provider.nft.url, previewFlag: false);
+
+      case kPdfText:
+        return PdfViewer(
+          fileUrl: provider.nft.url,
+          previewFlag: false,
+        );
     }
     return const SizedBox.shrink();
   }
