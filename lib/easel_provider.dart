@@ -21,7 +21,6 @@ import 'package:easy_localization/easy_localization.dart';
 import 'package:fixnum/fixnum.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:just_audio/just_audio.dart';
 import 'package:media_info/media_info.dart';
 import 'package:pylons_sdk/pylons_sdk.dart';
@@ -612,6 +611,7 @@ class EaselProvider extends ChangeNotifier {
     String residual = nft.tradePercentage.trim();
 
     String price = isFreeDrop ? "0" : _selectedDenom.formatAmount(price: priceController.text);
+
     var recipe = Recipe(
         cookbookId: _cookbookId,
         id: _recipeId,
@@ -659,7 +659,7 @@ class EaselProvider extends ChangeNotifier {
               ],
               mutableStrings: [],
               transferFee: [Coin(denom: kPylonSymbol, amount: transferFeeAmount)],
-              tradePercentage: nft.tradePercentage.trim(),
+              tradePercentage: BigInt.parse(nft.tradePercentage.trim()).pow(17).toString(),
               tradeable: true,
               amountMinted: Int64(0),
               quantity: Int64(int.parse(nft.quantity.toString().replaceAll(",", "").trim()))),
@@ -742,7 +742,6 @@ class EaselProvider extends ChangeNotifier {
 
     return sdkResponse;
   }
-
 
   Future initializeAudioPlayerForFile({required File file}) async {
     audioProgressNotifier = ValueNotifier<ProgressBarState>(
