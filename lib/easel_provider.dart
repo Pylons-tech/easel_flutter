@@ -613,7 +613,7 @@ class EaselProvider extends ChangeNotifier {
     String residual = nft.tradePercentage.trim();
 
     String price = isFreeDrop ? "0" : _selectedDenom.formatAmount(price: priceController.text);
-    String tradePercentage = (double.parse(nft.tradePercentage.trim()) / 1000000000000000000).toString();
+    String tradePercentage = (double.parse(nft.tradePercentage.trim()) * 10000000000000000).toInt().toString();
 
     var recipe = Recipe(
         cookbookId: _cookbookId,
