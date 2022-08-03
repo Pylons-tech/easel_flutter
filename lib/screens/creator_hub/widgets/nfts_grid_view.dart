@@ -33,18 +33,18 @@ class NftGridViewItem extends StatelessWidget {
               onImage: (context) => CachedNetworkImage(
                 errorWidget: (a, b, c) => const Center(child: Icon(Icons.error_outline)),
                 placeholder: (context, url) => Shimmer(color: EaselAppTheme.cardBackground, child: const SizedBox.expand()),
-                imageUrl: nft.url,
+                imageUrl: nft.url.changeDomain(),
                 fit: BoxFit.cover,
               ),
               onVideo: (context) => CachedNetworkImage(
                 fit: BoxFit.fill,
-                imageUrl: nft.thumbnailUrl,
+                imageUrl: nft.thumbnailUrl.changeDomain(),
                 errorWidget: (a, b, c) => const Center(child: Icon(Icons.error_outline)),
                 placeholder: (context, url) => Shimmer(color: EaselAppTheme.cardBackground, child: const SizedBox.expand()),
               ),
               onAudio: (context) => CachedNetworkImage(
                 fit: BoxFit.fill,
-                imageUrl: nft.thumbnailUrl,
+                imageUrl: nft.thumbnailUrl.changeDomain(),
                 errorWidget: (a, b, c) => const Center(child: Icon(Icons.error_outline)),
                 placeholder: (context, url) => Shimmer(color: EaselAppTheme.cardBackground, child: const SizedBox.expand()),
               ),
@@ -55,7 +55,7 @@ class NftGridViewItem extends StatelessWidget {
                 placeholder: (context, url) => Shimmer(color: EaselAppTheme.cardBackground, child: const SizedBox.expand()),
               ),
               on3D: (context) => ModelViewer(
-                src: nft.url,
+                src: nft.url.changeDomain(),
                 ar: false,
                 autoRotate: false,
                 backgroundColor: EaselAppTheme.kWhite,

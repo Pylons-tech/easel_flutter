@@ -445,12 +445,12 @@ class EaselProvider extends ChangeNotifier {
   void initializePlayers({required NFT publishedNFT}) {
     switch (publishedNFT.assetType.toAssetTypeEnum()) {
       case AssetType.Audio:
-        initializeAudioPlayer(publishedNFTUrl: publishedNFT.url);
+        initializeAudioPlayer(publishedNFTUrl: publishedNFT.url.changeDomain());
         break;
       case AssetType.Image:
         break;
       case AssetType.Video:
-        initializeVideoPlayerWithUrl(publishedNftUrl: publishedNFT.url);
+        initializeVideoPlayerWithUrl(publishedNftUrl: publishedNFT.url.changeDomain());
         break;
 
       default:

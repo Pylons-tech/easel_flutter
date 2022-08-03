@@ -5,6 +5,7 @@ import 'package:easel_flutter/screens/clippers/right_triangle_clipper.dart' as c
 import 'package:easel_flutter/screens/clippers/right_triangle_clipper.dart';
 import 'package:easel_flutter/utils/constants.dart';
 import 'package:easel_flutter/utils/easel_app_theme.dart';
+import 'package:easel_flutter/utils/extension_util.dart';
 import 'package:easel_flutter/utils/route_util.dart';
 import 'package:easel_flutter/widgets/cid_or_ipfs.dart';
 import 'package:easel_flutter/widgets/clipped_button.dart';
@@ -60,7 +61,7 @@ class _DraftDetailDialogState extends State<_DraftDetailDialog> {
     EaselProvider easelProvider = context.read<EaselProvider>();
     if (easelProvider.nft.assetType == k3dText) {
       previewWidget = ModelViewer(
-        src: easelProvider.nft.url,
+        src: easelProvider.nft.url.changeDomain(),
         ar: false,
         autoRotate: false,
         cameraControls: false,
@@ -218,14 +219,14 @@ class _DraftDetailDialogState extends State<_DraftDetailDialog> {
   }
 
   void onViewOnIPFSPressed({required EaselProvider provider}) async {
-    await provider.repository.launchMyUrl(url: provider.nft.url);
+    await provider.repository.launchMyUrl(url: provider.nft.url.changeDomain());
   }
 
   String getImageUrl(EaselProvider easelProvider) {
     if (easelProvider.nft.assetType == kImageText) {
-      return easelProvider.nft.url;
+      return easelProvider.nft.url.changeDomain();
     } else {
-      return easelProvider.nft.thumbnailUrl;
+      return easelProvider.nft.thumbnailUrl.changeDomain();
     }
   }
 

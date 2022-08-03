@@ -10,6 +10,7 @@ import 'package:easel_flutter/screens/clippers/right_triangle_clipper.dart';
 import 'package:easel_flutter/utils/constants.dart';
 import 'package:easel_flutter/utils/easel_app_theme.dart';
 import 'package:easel_flutter/utils/enums.dart';
+import 'package:easel_flutter/utils/extension_util.dart';
 import 'package:easel_flutter/utils/progress_bar_builder.dart';
 import 'package:easel_flutter/utils/read_more.dart';
 import 'package:easel_flutter/utils/route_util.dart';
@@ -91,12 +92,12 @@ class _PublishScreenState extends State<PublishScreen> {
   Widget buildPreviewWidget(EaselProvider provider) {
     switch (provider.nft.assetType) {
       case kImageText:
-        return ImageWidget(filePath: provider.nft.url);
+        return ImageWidget(filePath: provider.nft.url.changeDomain());
       case kVideoText:
         return Center(
           child: VideoWidget(
-            key: ValueKey(provider.nft.url),
-            filePath: provider.nft.url,
+            key: ValueKey(provider.nft.url.changeDomain()),
+            filePath: provider.nft.url.changeDomain(),
             previewFlag: true,
             isForFile: false,
             isDarkMode: true,
@@ -107,12 +108,11 @@ class _PublishScreenState extends State<PublishScreen> {
             height: double.infinity,
             width: 1.sw,
             child: Model3dViewer(
-              path: provider.nft.url,
+              path: provider.nft.url.changeDomain(),
               isFile: false,
             ));
       case kAudioText:
-        return AudioWidget(filePath: provider.nft.url, previewFlag: false);
-
+        return AudioWidget(filePath: provider.nft.url.changeDomain(), previewFlag: false);
       case kPdfText:
         return PdfViewer(
           fileUrl: provider.nft.url,
@@ -588,7 +588,7 @@ class _OwnerBottomDrawerState extends State<OwnerBottomDrawer> {
   }
 
   void onViewOnIPFSPressed({required EaselProvider provider}) async {
-    await provider.repository.launchMyUrl(url: provider.nft.url);
+    await provider.repository.launchMyUrl(url: provider.nft.url.changeDomain());
   }
 
   Widget buildRow({required String title, required String subtitle}) {

@@ -5,6 +5,7 @@ import 'package:easel_flutter/screens/creator_hub/creator_hub_view_model.dart';
 import 'package:easel_flutter/screens/creator_hub/widgets/drafts_more_bottomsheet.dart';
 import 'package:easel_flutter/utils/constants.dart';
 import 'package:easel_flutter/utils/easel_app_theme.dart';
+import 'package:easel_flutter/utils/extension_util.dart';
 import 'package:easel_flutter/utils/route_util.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
@@ -64,7 +65,7 @@ class DraftListTile extends StatelessWidget {
                   width: 45.h,
                   child: CachedNetworkImage(
                     fit: BoxFit.cover,
-                    imageUrl: nft.assetType == kImageText ? nft.url : nft.thumbnailUrl,
+                    imageUrl: nft.assetType == kImageText ? nft.url.changeDomain() : nft.thumbnailUrl.changeDomain(),
                     errorWidget: (a, b, c) => const Center(child: Icon(Icons.error_outline)),
                     placeholder: (context, url) => Shimmer(color: EaselAppTheme.cardBackground, child: const SizedBox.expand()),
                   ),
