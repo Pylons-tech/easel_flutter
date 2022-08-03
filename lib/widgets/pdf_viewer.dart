@@ -58,14 +58,17 @@ class _PdfViewerState extends State<PdfViewer> {
       child: Center(
         child: PdfViewerFullOrHalf(
             pdfViewerFullScreen: (context) {
-              return PDFViewer(
-                document: doc,
-                showNavigation: false,
-                showPicker: false,
-                progressIndicator: SizedBox(
-                  height: 50.0.h,
-                  child: Image.asset(
-                    kLoadingGif,
+              return Padding(
+                padding:  EdgeInsets.only(top: 100.h, bottom: 145.h),
+                child: PDFViewer(
+                  document: doc,
+                  showNavigation: false,
+                  showPicker: false,
+                  progressIndicator: SizedBox(
+                    height: 50.0.h,
+                    child: Image.asset(
+                      kLoadingGif,
+                    ),
                   ),
                 ),
               );
@@ -110,7 +113,7 @@ class _PdfViewerState extends State<PdfViewer> {
 
   Widget _buildPdfFullScreenIcon() {
     return Positioned(
-      right: -1,
+      left: 5,
       bottom: 0,
       child: ClipPath(
         clipper: CustomTriangleClipper(),
@@ -121,16 +124,19 @@ class _PdfViewerState extends State<PdfViewer> {
           child: Container(
             width: 30.w,
             height: 30.w,
-            alignment: Alignment.bottomRight,
+            alignment: Alignment.bottomLeft,
             color: EaselAppTheme.kLightRed,
             child: Padding(
               padding: EdgeInsets.all(5.w),
-              child: SvgPicture.asset(
-                kFullScreenIcon,
-                fit: BoxFit.fill,
-                width: 8.w,
-                height: 8.w,
-                alignment: Alignment.bottomRight,
+              child:RotationTransition(
+                turns:  const AlwaysStoppedAnimation(90 / 360),
+                child:  SvgPicture.asset(
+                  kFullScreenIcon,
+                  fit: BoxFit.fill,
+                  width: 8.w,
+                  height: 8.w,
+                  alignment: Alignment.bottomLeft,
+                ),
               ),
             ),
           ),
