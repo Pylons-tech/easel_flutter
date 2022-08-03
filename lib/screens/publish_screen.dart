@@ -74,9 +74,9 @@ class _PublishScreenState extends State<PublishScreen> {
                     easelProvider.isVideoLoading = true;
                     homeViewModel.previousPage();
                   },
-                  icon: Icon(
+                  icon: const Icon(
                     Icons.arrow_back_ios,
-                    color: easelProvider.nft.assetType == kPdfText ? EaselAppTheme.kGrey : EaselAppTheme.kWhite,
+                    color: EaselAppTheme.kWhite,
                   ),
                 )),
             Align(
