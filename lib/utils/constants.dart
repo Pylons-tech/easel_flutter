@@ -52,7 +52,6 @@ const kDummyImg = 'assets/images/svg/dummy_img.png';
 const kVideoIcon = 'assets/images/video_icon.png';
 const kViewIpfs = 'assets/images/view_ipfs.png';
 
-
 const kSvgPylonsLogo = 'assets/images/svg/pylons_logo.svg';
 const kSvgIpfsLogo = 'assets/images/ipfs_logo.png';
 const kSvgViewIcon = 'assets/images/svg/view_icon.svg';
@@ -81,7 +80,7 @@ const kMinEditionValue = 1;
 const kMaxDescription = 256;
 const kMaxEdition = 10000;
 const kMinRoyalty = 0;
-const kMaxRoyalty = 99.99;
+const kMaxRoyalty = 1;
 const kFileSizeLimitInGB = 32;
 const kFileSizeLimitForAudiVideoInGB = 0.2;
 const kMaxPriceLength = 14;
@@ -91,7 +90,7 @@ const int kNumberOfSeconds = 1000;
 const int kSixtySeconds = 60;
 const int kFileCompressQuality = 50;
 
-const double kPrecision = 100000000000000000;
+const double kPrecision = 10000000000000000;
 
 const int kBigIntBase = 1000000;
 const int kEthIntBase = 1000000000000000000;
@@ -275,7 +274,6 @@ const String kWidthKey = "Width";
 const String kHeightKey = "Height";
 const String kQuantityKey = "Quantity";
 const String kHashtagKey = "Hashtags";
-
 
 const String kDescriptionTutorial = "description";
 const String kHeaderTutorial = "header";

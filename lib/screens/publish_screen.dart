@@ -196,7 +196,7 @@ class _OwnerBottomDrawerState extends State<OwnerBottomDrawer> {
                         return SizedBox(
                             width: 330.0.w,
                             child: Row(
-                              crossAxisAlignment: CrossAxisAlignment.end,
+                              crossAxisAlignment: CrossAxisAlignment.center,
                               children: [
                                 Padding(
                                   padding: EdgeInsets.only(
@@ -216,7 +216,7 @@ class _OwnerBottomDrawerState extends State<OwnerBottomDrawer> {
                                             child: Icon(
                                               Icons.play_arrow_outlined,
                                               color: EaselAppTheme.kWhite,
-                                              size: 30.h,
+                                              size: 35.h,
                                             ),
                                           );
 
@@ -228,7 +228,7 @@ class _OwnerBottomDrawerState extends State<OwnerBottomDrawer> {
                                             child: Icon(
                                               Icons.pause,
                                               color: EaselAppTheme.kWhite,
-                                              size: 30.h,
+                                              size: 35.h,
                                             ),
                                           );
                                       }
@@ -240,7 +240,7 @@ class _OwnerBottomDrawerState extends State<OwnerBottomDrawer> {
                                     valueListenable: viewModel.audioProgressNotifier,
                                     builder: (_, value, __) {
                                       return Padding(
-                                        padding: EdgeInsets.only(bottom: 3.h, right: 20.w),
+                                        padding: EdgeInsets.only(right: 20.w),
                                         child: ProgressBar(
                                           progressBarColor: EaselAppTheme.kWhite,
                                           thumbColor: EaselAppTheme.kWhite,
@@ -255,6 +255,7 @@ class _OwnerBottomDrawerState extends State<OwnerBottomDrawer> {
                                           onSeek: (position) {
                                             viewModel.seekAudio(position, false);
                                           },
+                                          timeLabelLocation: TimeLabelLocation.none,
                                         ),
                                       );
                                     },
@@ -393,7 +394,7 @@ class _OwnerBottomDrawerState extends State<OwnerBottomDrawer> {
                                       valueListenable: viewModel.audioProgressNotifier,
                                       builder: (_, value, __) {
                                         return Padding(
-                                          padding: EdgeInsets.only(bottom: 5.h, right: 20.w),
+                                          padding: EdgeInsets.only(bottom: 6.h, right: 20.w),
                                           child: ProgressBar(
                                             progressBarColor: EaselAppTheme.kWhite,
                                             thumbColor: EaselAppTheme.kWhite,

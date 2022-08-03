@@ -96,7 +96,7 @@ class _AudioWidgetState extends State<AudioWidget> with WidgetsBindingObserver {
                                           child: Icon(
                                             Icons.play_arrow,
                                             color: EaselAppTheme.kDarkBlue,
-                                            size: 35.h,
+                                            size: 40.h,
                                           ),
                                         );
 
@@ -108,7 +108,7 @@ class _AudioWidgetState extends State<AudioWidget> with WidgetsBindingObserver {
                                           child: Icon(
                                             Icons.pause,
                                             color: EaselAppTheme.kDarkBlue,
-                                            size: 35.h,
+                                            size: 40.h,
                                           ),
                                         );
                                     }
@@ -120,7 +120,7 @@ class _AudioWidgetState extends State<AudioWidget> with WidgetsBindingObserver {
                                   valueListenable: viewModel.audioProgressNotifier,
                                   builder: (_, value, __) {
                                     return Padding(
-                                      padding: EdgeInsets.only(bottom: 3.h, right: 20.w),
+                                      padding: EdgeInsets.only(bottom: 6.h, right: 20.w),
                                       child: ProgressBar(
                                         progressBarColor: EaselAppTheme.kDarkBlue,
                                         thumbColor: EaselAppTheme.kDarkBlue,
