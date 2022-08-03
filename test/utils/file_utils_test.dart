@@ -1,3 +1,4 @@
+import 'package:easel_flutter/utils/constants.dart';
 import 'package:easel_flutter/utils/file_utils_helper.dart';
 import 'package:flutter_test/flutter_test.dart';
 
