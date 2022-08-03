@@ -202,7 +202,7 @@ class _CreatorHubContentState extends State<CreatorHubContent> {
                     padding: EdgeInsets.symmetric(horizontal: 20.w),
                     child: FocusDetector(
                       onFocusGained: () {
-                        GetIt.I.get<CreatorHubViewModel>().refreshDraftsList();
+                        viewModel.refreshDraftsList();
                       },
                       child: NFTsViewBuilder(
                           onGridSelected: (context) => BuildNFTsContent(

@@ -199,8 +199,4 @@ class CreatorHubViewModel extends ChangeNotifier {
     viewType = selectedViewType;
     notifyListeners();
   }
-
-  void refreshScreen() {
-    notifyListeners();
-  }
 }

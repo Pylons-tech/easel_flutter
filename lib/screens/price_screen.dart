@@ -132,39 +132,50 @@ class _PriceScreenState extends State<PriceScreen> {
                         height: 10.h,
                       ),
                       Row(children: [
-                        Expanded(
-                          child: ClippedButton(
-                            title: "yes".tr(),
-                            bgColor: provider.isFreeDrop ? EaselAppTheme.kpurpleButtonColor : EaselAppTheme.kLightGreyColor,
-                            textColor: provider.isFreeDrop ? EaselAppTheme.kWhite : EaselAppTheme.kLightBlackText,
-                            onPressed: () async {
-                              provider.updateIsFreeDropStatus(true);
-                            },
-                            cuttingHeight: 12.h,
-                            isShadow: false,
-                            clipperType: ClipperType.bottomLeftTopRight,
-                            fontWeight: FontWeight.w500,
+                        InkWell(
+                          onTap: () {
+                            provider.updateIsFreeDropStatus(true);
+                          },
+                          child: Container(
+                            width: 140.w,
+                            height: 30.h,
+                            decoration: BoxDecoration(
+                              color: provider.isFreeDrop == true ? EaselAppTheme.kBlue : EaselAppTheme.kTransparent,
+                              border: Border.all(color: provider.isFreeDrop == true ? EaselAppTheme.kBlue : EaselAppTheme.kBlack, width: 3.w),
+                            ),
+                            child: Center(
+                              child: Text(
+                                "yes".tr(),
+                                style: TextStyle(
+                                  color: provider.isFreeDrop == true ? EaselAppTheme.kWhite : EaselAppTheme.kBlack,
+                                ),
+                              ),
+                            ),
                           ),
                         ),
                         SizedBox(
                           width: 30.w,
                         ),
-                        Expanded(
-                          child: ClippedButton(
-                            title: "no".tr(),
-                            bgColor: provider.isFreeDrop ? EaselAppTheme.kLightGreyColor : EaselAppTheme.kpurpleButtonColor,
-                            textColor: provider.isFreeDrop ? EaselAppTheme.kLightBlackText : EaselAppTheme.kWhite,
-                            onPressed: () async {
-                              provider.updateIsFreeDropStatus(false);
-                            },
-                            cuttingHeight: 12.h,
-                            isShadow: false,
-                            clipperType: ClipperType.bottomLeftTopRight,
-                            fontWeight: FontWeight.w500,
+                        InkWell(
+                          onTap: () {
+                            provider.updateIsFreeDropStatus(false);
+                          },
+                          child: Container(
+                            width: 140.w,
+                            height: 30.h,
+                            decoration: BoxDecoration(
+                              color: provider.isFreeDrop == false ? EaselAppTheme.kBlue : EaselAppTheme.kTransparent,
+                              border: Border.all(color: provider.isFreeDrop == false ? EaselAppTheme.kBlue : EaselAppTheme.kBlack, width: 3.w),
+                            ),
+                            child: Center(
+                              child: Text(
+                                "no".tr(),
+                                style: TextStyle(
+                                  color: provider.isFreeDrop == false ? EaselAppTheme.kWhite : EaselAppTheme.kBlack,
+                                ),
+                              ),
+                            ),
                           ),
-                        ),
-                        SizedBox(
-                          width: 60.w,
                         ),
                       ]),
                       if (!provider.isFreeDrop)

@@ -47,11 +47,12 @@ const kSvgMoreOption = 'assets/images/svg/more_options.svg';
 const kSvgPublish = 'assets/images/svg/publish.svg';
 const kSvgDelete = 'assets/images/svg/delete.svg';
 const kSvgView = 'assets/images/svg/view.svg';
+const kAddIcon = 'assets/images/svg/add.svg';
+const kSearchIcon = 'assets/images/svg/search.svg';
 
 const kDummyImg = 'assets/images/svg/dummy_img.png';
 const kVideoIcon = 'assets/images/video_icon.png';
 const kViewIpfs = 'assets/images/view_ipfs.png';
-
 
 const kSvgPylonsLogo = 'assets/images/svg/pylons_logo.svg';
 const kSvgIpfsLogo = 'assets/images/ipfs_logo.png';
@@ -275,7 +276,6 @@ const String kWidthKey = "Width";
 const String kHeightKey = "Height";
 const String kQuantityKey = "Quantity";
 const String kHashtagKey = "Hashtags";
-
 
 const String kDescriptionTutorial = "description";
 const String kHeaderTutorial = "header";
