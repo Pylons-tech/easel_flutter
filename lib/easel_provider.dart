@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:convert';
 import 'dart:developer';
 import 'dart:io';
 
@@ -612,7 +613,7 @@ class EaselProvider extends ChangeNotifier {
     String residual = nft.tradePercentage.trim();
 
     String price = isFreeDrop ? "0" : _selectedDenom.formatAmount(price: priceController.text);
-    String tradePercentage = (double.parse(nft.tradePercentage.trim()) * kPrecision).toString();
+    String tradePercentage = (double.parse(nft.tradePercentage.trim()) / 1000000000000000000).toString();
 
     var recipe = Recipe(
         cookbookId: _cookbookId,
@@ -673,7 +674,7 @@ class EaselProvider extends ChangeNotifier {
         enabled: true,
         extraInfo: kExtraInfo);
 
-    log("MY JSON: ${recipe.toProto3Json().toString()}");
+    log("MY JSON: ${json.encode(recipe.toProto3Json())}");
 
     var response = await PylonsWallet.instance.txCreateRecipe(recipe, requestResponse: false);
 

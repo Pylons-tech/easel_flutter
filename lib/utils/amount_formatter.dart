@@ -25,22 +25,22 @@ class AmountFormatter extends TextInputFormatter {
 }
 
 class RoyaltiesFormatter extends TextInputFormatter {
-  RoyaltiesFormatter({required this.maxDigits, this.isDecimal = false});
+  RoyaltiesFormatter({required this.maxDigits});
 
   int maxDigits;
-  bool isDecimal;
 
   @override
   TextEditingValue formatEditUpdate(TextEditingValue oldValue, TextEditingValue newValue) {
-    maxDigits = 20;
-    if (newValue.selection.baseOffset == 0) {
-      return newValue;
-    }
+    maxDigits = 3;
+
     if (newValue.selection.baseOffset > maxDigits) {
       return oldValue;
     }
+    if (newValue.selection.baseOffset == 0) {
+      return newValue;
+    }
     double value = double.parse(newValue.text);
-    final formatter = NumberFormat("#.#", "en_US");
+    final formatter = NumberFormat("#.0##", "en_US");
     String newText = formatter.format(value);
 
     return newValue.copyWith(text: newText, selection: TextSelection.collapsed(offset: newText.length));
