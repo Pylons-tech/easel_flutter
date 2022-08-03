@@ -1,7 +1,6 @@
 import 'package:easel_flutter/easel_provider.dart';
 import 'package:easel_flutter/models/nft_format.dart';
 import 'package:easel_flutter/repository/repository.dart';
-import 'package:easel_flutter/screens/custom_widgets/initial_draft_detail_dialog.dart';
 import 'package:easel_flutter/utils/constants.dart';
 import 'package:easel_flutter/utils/enums.dart';
 import 'package:easel_flutter/utils/extension_util.dart';
@@ -79,12 +78,8 @@ class _PreviewScreenState extends State<PreviewScreen> {
                     onPressed: () async {
                       final result = await onUploadPressed();
                       if (result) {
-                        DraftDetailDialog(
-                            context: context,
-                            easelProvider: provider,
-                            onClose: () {
-                              widget.onMoveToNextScreen();
-                            }).show();
+                        Navigator.pop(context);
+                        widget.onMoveToNextScreen();
                       }
                     },
                     btnText: "upload".tr(),
