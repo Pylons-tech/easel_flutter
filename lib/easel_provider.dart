@@ -630,7 +630,10 @@ class EaselProvider extends ChangeNotifier {
 
     disposePlayers(assetType: nft.assetType);
 
-    String residual = nft.tradePercentage.trim();
+
+
+    String tradePercentage = BigInt.from(int.parse(nft.tradePercentage.trim()) * kRoyaltyPrecision).toString();
+
 
     String price = isFreeDrop ? "0" : _selectedDenom.formatAmount(price: priceController.text);
     var recipe = Recipe(
@@ -651,8 +654,8 @@ class EaselProvider extends ChangeNotifier {
               doubles: [
                 DoubleParam(key: kResidual, weightRanges: [
                   DoubleWeightRange(
-                    lower: residual,
-                    upper: residual,
+                    lower: tradePercentage,
+                    upper: tradePercentage,
                     weight: Int64(1),
                   )
                 ])
@@ -680,7 +683,7 @@ class EaselProvider extends ChangeNotifier {
               ],
               mutableStrings: [],
               transferFee: [Coin(denom: kPylonSymbol, amount: transferFeeAmount)],
-              tradePercentage: nft.tradePercentage.trim(),
+              tradePercentage: tradePercentage,
               tradeable: true,
               amountMinted: Int64(0),
               quantity: Int64(int.parse(nft.quantity.toString().replaceAll(",", "").trim()))),
