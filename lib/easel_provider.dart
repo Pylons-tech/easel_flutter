@@ -10,6 +10,7 @@ import 'package:easel_flutter/models/picked_file_model.dart';
 import 'package:easel_flutter/models/save_nft.dart';
 import 'package:easel_flutter/models/upload_progress.dart';
 import 'package:easel_flutter/repository/repository.dart';
+import 'package:easel_flutter/screens/creator_hub/creator_hub_view_model.dart';
 import 'package:easel_flutter/screens/welcome_screen/widgets/show_wallet_install_dialog.dart';
 import 'package:easel_flutter/services/third_party_services/audio_player_helper.dart';
 import 'package:easel_flutter/services/third_party_services/video_player_helper.dart';
@@ -23,6 +24,7 @@ import 'package:easy_localization/easy_localization.dart';
 import 'package:fixnum/fixnum.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:get_it/get_it.dart';
 import 'package:just_audio/just_audio.dart';
 import 'package:media_info/media_info.dart';
 import 'package:pylons_sdk/pylons_sdk.dart';
@@ -32,9 +34,7 @@ import 'package:video_player/video_player.dart';
 
 import '../utils/enums.dart';
 
-
 typedef OnUploadProgressCallback = void Function(UploadProgress uploadProgress);
-
 
 class EaselProvider extends ChangeNotifier {
   final VideoPlayerHelper videoPlayerHelper;
@@ -74,7 +74,6 @@ class EaselProvider extends ChangeNotifier {
   bool willLoadFirstTime = true;
 
   bool collapsed = false;
-
 
   final StreamController<UploadProgress> _uploadProgressController = StreamController.broadcast();
 
@@ -849,6 +848,7 @@ class EaselProvider extends ChangeNotifier {
   }
 
   late NFT nft;
+
   File getThumbnailType(NFTTypes format) {
     switch (format) {
       case NFTTypes.audio:
@@ -862,9 +862,10 @@ class EaselProvider extends ChangeNotifier {
     }
   }
 
-  bool isThumbnailPresent(){
+  bool isThumbnailPresent() {
     return nftFormat.format == NFTTypes.audio || nftFormat.format == NFTTypes.video || nftFormat.format == NFTTypes.pdf;
   }
+
   Future<bool> saveNftLocally(UploadStep step) async {
     if (nftFormat.format == NFTTypes.audio) {
       audioPlayerHelperForFile.pauseAudio();
@@ -886,8 +887,7 @@ class EaselProvider extends ChangeNotifier {
 
     initializeTextEditingControllerWithEmptyValues();
     if (isThumbnailPresent()) {
-      final uploadResponse = await repository.uploadFile(file: getThumbnailType(nftFormat.format), onUploadProgressCallback: (value){
-      });
+      final uploadResponse = await repository.uploadFile(file: getThumbnailType(nftFormat.format), onUploadProgressCallback: (value) {});
       if (uploadResponse.isLeft()) {
         loading.dismiss();
         "something_wrong_while_uploading".tr().show();
@@ -901,9 +901,11 @@ class EaselProvider extends ChangeNotifier {
       }
     }
 
-    final response = await repository.uploadFile(file: _file!, onUploadProgressCallback: (value){
-      _uploadProgressController.sink.add(value);
-    });
+    final response = await repository.uploadFile(
+        file: _file!,
+        onUploadProgressCallback: (value) {
+          _uploadProgressController.sink.add(value);
+        });
     if (response.isLeft()) {
       loading.dismiss();
       "something_wrong_while_uploading".tr().show();
@@ -979,6 +981,8 @@ class EaselProvider extends ChangeNotifier {
     }
     repository.setCacheDynamicType(key: nftKey, value: _nft);
     setAudioThumbnail(null);
+
+    GetIt.I.get<CreatorHubViewModel>().refreshDraftsList();
 
     setVideoThumbnail(null);
 
@@ -1059,6 +1063,5 @@ class EaselProvider extends ChangeNotifier {
     }
   }
 }
-
 
 enum ButtonState { paused, playing, loading }
