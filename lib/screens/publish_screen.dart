@@ -113,8 +113,6 @@ class _PublishScreenState extends State<PublishScreen> {
             ));
       case kAudioText:
         return AudioWidget(filePath: provider.nft.url.changeDomain(), previewFlag: false);
-        return AudioWidget(filePath: provider.nft.url, previewFlag: false);
-
       case kPdfText:
         return PdfViewer(
           fileUrl: provider.nft.url,
