@@ -53,7 +53,7 @@ class _AudioWidgetState extends State<AudioWidget> with WidgetsBindingObserver {
     if (widget.previewFlag && viewModel.audioThumbnail != null) {
       return BoxDecoration(image: DecorationImage(image: FileImage(viewModel.audioThumbnail!), fit: BoxFit.fitHeight));
     }
-    return BoxDecoration(image: viewModel.nft.thumbnailUrl.changeDomain().isNotEmpty ? DecorationImage(image: CachedNetworkImageProvider(viewModel.nft.thumbnailUrl), fit: BoxFit.fitHeight) : null);
+    return BoxDecoration(image: viewModel.nft.thumbnailUrl.isNotEmpty ? DecorationImage(image: CachedNetworkImageProvider(viewModel.nft.thumbnailUrl.changeDomain()), fit: BoxFit.fitHeight) : null);
   }
 
   @override

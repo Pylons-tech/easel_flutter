@@ -162,5 +162,10 @@ extension IsSvgExtension on String {
 }
 
 extension ChangeDomain on String {
-  String changeDomain() => replaceAll(ipfsDomain, proxyIpfsDomain);
+  String changeDomain() {
+    if (!contains(ipfsDomain)) {
+      return this;
+    }
+    return replaceAll(ipfsDomain, proxyIpfsDomain);
+  }
 }
