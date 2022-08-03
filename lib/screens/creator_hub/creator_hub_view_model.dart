@@ -165,6 +165,20 @@ class CreatorHubViewModel extends ChangeNotifier {
     notifyListeners();
   }
 
+  Future<void> refreshDraftsList() async {
+    final getNftResponse = await repository.getNfts();
+
+    if (getNftResponse.isLeft()) {
+      "something_wrong".tr().show();
+
+      return;
+    }
+
+    nftDraftList = getNftResponse.getOrElse(() => []);
+
+    notifyListeners();
+  }
+
   Future<void> deleteNft(int? id) async {
     final deleteNftResponse = await repository.deleteNft(id!);
 
@@ -183,6 +197,10 @@ class CreatorHubViewModel extends ChangeNotifier {
 
   void updateViewType(ViewType selectedViewType) {
     viewType = selectedViewType;
+    notifyListeners();
+  }
+
+  void refreshScreen() {
     notifyListeners();
   }
 }

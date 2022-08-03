@@ -32,9 +32,7 @@ import 'package:video_player/video_player.dart';
 
 import '../utils/enums.dart';
 
-
 typedef OnUploadProgressCallback = void Function(UploadProgress uploadProgress);
-
 
 class EaselProvider extends ChangeNotifier {
   final VideoPlayerHelper videoPlayerHelper;
@@ -74,7 +72,6 @@ class EaselProvider extends ChangeNotifier {
   bool willLoadFirstTime = true;
 
   bool collapsed = false;
-
 
   final StreamController<UploadProgress> _uploadProgressController = StreamController.broadcast();
 
@@ -849,6 +846,7 @@ class EaselProvider extends ChangeNotifier {
   }
 
   late NFT nft;
+
   File getThumbnailType(NFTTypes format) {
     switch (format) {
       case NFTTypes.audio:
@@ -862,9 +860,10 @@ class EaselProvider extends ChangeNotifier {
     }
   }
 
-  bool isThumbnailPresent(){
+  bool isThumbnailPresent() {
     return nftFormat.format == NFTTypes.audio || nftFormat.format == NFTTypes.video || nftFormat.format == NFTTypes.pdf;
   }
+
   Future<bool> saveNftLocally(UploadStep step) async {
     if (nftFormat.format == NFTTypes.audio) {
       audioPlayerHelperForFile.pauseAudio();
@@ -886,8 +885,7 @@ class EaselProvider extends ChangeNotifier {
 
     initializeTextEditingControllerWithEmptyValues();
     if (isThumbnailPresent()) {
-      final uploadResponse = await repository.uploadFile(file: getThumbnailType(nftFormat.format), onUploadProgressCallback: (value){
-      });
+      final uploadResponse = await repository.uploadFile(file: getThumbnailType(nftFormat.format), onUploadProgressCallback: (value) {});
       if (uploadResponse.isLeft()) {
         loading.dismiss();
         "something_wrong_while_uploading".tr().show();
@@ -901,9 +899,11 @@ class EaselProvider extends ChangeNotifier {
       }
     }
 
-    final response = await repository.uploadFile(file: _file!, onUploadProgressCallback: (value){
-      _uploadProgressController.sink.add(value);
-    });
+    final response = await repository.uploadFile(
+        file: _file!,
+        onUploadProgressCallback: (value) {
+          _uploadProgressController.sink.add(value);
+        });
     if (response.isLeft()) {
       loading.dismiss();
       "something_wrong_while_uploading".tr().show();
@@ -1059,6 +1059,5 @@ class EaselProvider extends ChangeNotifier {
     }
   }
 }
-
 
 enum ButtonState { paused, playing, loading }

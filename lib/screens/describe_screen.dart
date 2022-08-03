@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:easel_flutter/easel_provider.dart';
 import 'package:easel_flutter/repository/repository.dart';
+import 'package:easel_flutter/screens/custom_widgets/initial_draft_detail_dialog.dart';
 import 'package:easel_flutter/screens/custom_widgets/step_labels.dart';
 import 'package:easel_flutter/screens/custom_widgets/steps_indicator.dart';
 import 'package:easel_flutter/utils/constants.dart';
@@ -46,8 +47,19 @@ class _DescribeScreenState extends State<DescribeScreen> {
     super.initState();
 
     provider.nft = repository.getCacheDynamicType(key: nftKey);
+    String from ="";
+    from = context.read<HomeViewModel>().from!;
+
     scheduleMicrotask(() {
       provider.toCheckSavedArtistName();
+      if(from != kDraft){
+        DraftDetailDialog(
+            context: context,
+            easelProvider: provider,
+            onClose: () {
+            }).show();
+      }
+
     });
   }
 
