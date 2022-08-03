@@ -611,7 +611,7 @@ class EaselProvider extends ChangeNotifier {
 
 
 
-    String tradePercentage = BigInt.from(int.parse(nft.tradePercentage.trim()) * kRoyalityPrecision).toString();
+    String tradePercentage = BigInt.from(int.parse(nft.tradePercentage.trim()) * kRoyaltyPrecision).toString();
 
 
     String price = isFreeDrop ? "0" : _selectedDenom.formatAmount(price: priceController.text);
