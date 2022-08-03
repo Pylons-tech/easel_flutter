@@ -8,6 +8,7 @@ import 'package:easel_flutter/models/nft.dart';
 import 'package:easel_flutter/models/nft_format.dart';
 import 'package:easel_flutter/models/picked_file_model.dart';
 import 'package:easel_flutter/models/save_nft.dart';
+import 'package:easel_flutter/models/upload_progress.dart';
 import 'package:easel_flutter/repository/repository.dart';
 import 'package:easel_flutter/screens/welcome_screen/widgets/show_wallet_install_dialog.dart';
 import 'package:easel_flutter/services/third_party_services/audio_player_helper.dart';
@@ -16,7 +17,8 @@ import 'package:easel_flutter/utils/constants.dart';
 import 'package:easel_flutter/utils/enums.dart';
 import 'package:easel_flutter/utils/extension_util.dart';
 import 'package:easel_flutter/utils/file_utils_helper.dart';
-import 'package:easel_flutter/widgets/loading.dart';
+import 'package:easel_flutter/widgets/audio_widget.dart';
+import 'package:easel_flutter/widgets/loading_with_progress.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:fixnum/fixnum.dart';
 import 'package:flutter/material.dart';
@@ -29,6 +31,10 @@ import 'package:share_plus/share_plus.dart';
 import 'package:video_player/video_player.dart';
 
 import '../utils/enums.dart';
+
+
+typedef OnUploadProgressCallback = void Function(UploadProgress uploadProgress);
+
 
 class EaselProvider extends ChangeNotifier {
   final VideoPlayerHelper videoPlayerHelper;
@@ -69,6 +75,11 @@ class EaselProvider extends ChangeNotifier {
 
   bool collapsed = false;
 
+
+  final StreamController<UploadProgress> _uploadProgressController = StreamController.broadcast();
+
+  Stream<UploadProgress> get uploadProgressStream => _uploadProgressController.stream;
+
   void setPublishedNFTClicked(NFT nft) {
     _publishedNFTClicked = nft;
     notifyListeners();
@@ -89,6 +100,15 @@ class EaselProvider extends ChangeNotifier {
 
   void setVideoThumbnail(File? file) {
     _videoThumbnail = file;
+    notifyListeners();
+  }
+
+  File? _pdfThumbnail;
+
+  File? get pdfThumbnail => _pdfThumbnail;
+
+  void setPdfThumbnail(File? file) {
+    _pdfThumbnail = file;
     notifyListeners();
   }
 
@@ -481,6 +501,8 @@ class EaselProvider extends ChangeNotifier {
         break;
       case NFTTypes.threeD:
         break;
+      case NFTTypes.pdf:
+        break;
     }
   }
 
@@ -705,6 +727,19 @@ class EaselProvider extends ChangeNotifier {
     setVideoThumbnail(File(result.path));
   }
 
+  void onPdfThumbnailPicked() async {
+    final pickedFile = await repository.pickFile(NftFormat.supportedFormats[0]);
+
+    final result = pickedFile.getOrElse(() => PickedFileModel(
+          path: "",
+          fileName: "",
+          extension: "",
+        ));
+
+    if (result.path.isEmpty) return;
+    setPdfThumbnail(File(result.path));
+  }
+
   void populateCoinsIfPylonsNotExists() {
     supportedDenomList = Denom.availableDenoms;
 
@@ -741,7 +776,6 @@ class EaselProvider extends ChangeNotifier {
 
     return sdkResponse;
   }
-
 
   Future initializeAudioPlayerForFile({required File file}) async {
     audioProgressNotifier = ValueNotifier<ProgressBarState>(
@@ -815,7 +849,22 @@ class EaselProvider extends ChangeNotifier {
   }
 
   late NFT nft;
+  File getThumbnailType(NFTTypes format) {
+    switch (format) {
+      case NFTTypes.audio:
+        return audioThumbnail!;
+      case NFTTypes.video:
+        return videoThumbnail!;
+      case NFTTypes.pdf:
+        return pdfThumbnail!;
+      default:
+        return File("");
+    }
+  }
 
+  bool isThumbnailPresent(){
+    return nftFormat.format == NFTTypes.audio || nftFormat.format == NFTTypes.video || nftFormat.format == NFTTypes.pdf;
+  }
   Future<bool> saveNftLocally(UploadStep step) async {
     if (nftFormat.format == NFTTypes.audio) {
       audioPlayerHelperForFile.pauseAudio();
@@ -833,11 +882,12 @@ class EaselProvider extends ChangeNotifier {
       navigatorKey.currentState!.overlay!.context.show(message: kErrPickFileFetch);
       return false;
     }
-    final loading = Loading()..showLoading(message: kUploadingMessage);
+    final loading = LoadingProgress()..showLoadingWithProgress(message: kUploadingMessage);
 
     initializeTextEditingControllerWithEmptyValues();
-    if (nftFormat.format == NFTTypes.audio || nftFormat.format == NFTTypes.video) {
-      final uploadResponse = await repository.uploadFile(nftFormat.format == NFTTypes.audio ? audioThumbnail! : videoThumbnail!);
+    if (isThumbnailPresent()) {
+      final uploadResponse = await repository.uploadFile(file: getThumbnailType(nftFormat.format), onUploadProgressCallback: (value){
+      });
       if (uploadResponse.isLeft()) {
         loading.dismiss();
         "something_wrong_while_uploading".tr().show();
@@ -851,7 +901,9 @@ class EaselProvider extends ChangeNotifier {
       }
     }
 
-    final response = await repository.uploadFile(_file!);
+    final response = await repository.uploadFile(file: _file!, onUploadProgressCallback: (value){
+      _uploadProgressController.sink.add(value);
+    });
     if (response.isLeft()) {
       loading.dismiss();
       "something_wrong_while_uploading".tr().show();
@@ -882,7 +934,7 @@ class EaselProvider extends ChangeNotifier {
       fileName: _file!.path.split("/").last,
       cid: fileUploadResponse.data?.value?.cid,
       step: step.name,
-      thumbnailUrl: (nftFormat.format == NFTTypes.audio || nftFormat.format == NFTTypes.video) ? "$ipfsDomain/${uploadThumbnailResponse.data?.value?.cid}" : "",
+      thumbnailUrl: (isThumbnailPresent()) ? "$ipfsDomain/${uploadThumbnailResponse.data?.value?.cid}" : "",
       name: artistNameController.text,
       url: "$ipfsDomain/${fileUploadResponse.data?.value?.cid}",
       price: priceController.text,
@@ -915,7 +967,7 @@ class EaselProvider extends ChangeNotifier {
       step: step.name,
       fileName: _file!.path.split("/").last,
       cid: fileUploadResponse.data?.value?.cid,
-      thumbnailUrl: (nftFormat.format == NFTTypes.audio || nftFormat.format == NFTTypes.video) ? "$ipfsDomain/${uploadThumbnailResponse.data?.value?.cid}" : "",
+      thumbnailUrl: (isThumbnailPresent()) ? "$ipfsDomain/${uploadThumbnailResponse.data?.value?.cid}" : "",
       name: artistNameController.text,
       url: "$ipfsDomain/${fileUploadResponse.data?.value?.cid}",
       price: priceController.text,
@@ -1008,16 +1060,5 @@ class EaselProvider extends ChangeNotifier {
   }
 }
 
-class ProgressBarState {
-  ProgressBarState({
-    required this.current,
-    required this.buffered,
-    required this.total,
-  });
-
-  final Duration current;
-  final Duration buffered;
-  final Duration total;
-}
 
 enum ButtonState { paused, playing, loading }

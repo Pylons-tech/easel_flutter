@@ -7,6 +7,7 @@ import 'package:easel_flutter/utils/extension_util.dart';
 import 'package:easel_flutter/widgets/audio_widget.dart';
 import 'package:easel_flutter/widgets/image_widget.dart';
 import 'package:easel_flutter/widgets/model_viewer.dart';
+import 'package:easel_flutter/widgets/pdf_viewer.dart';
 import 'package:easel_flutter/widgets/pylons_button.dart';
 import 'package:easel_flutter/widgets/video_widget.dart';
 import 'package:easy_localization/easy_localization.dart';
@@ -110,6 +111,11 @@ class _PreviewScreenState extends State<PreviewScreen> {
         return AudioWidget(file: provider.file!, previewFlag: true);
       case NFTTypes.threeD:
         return Model3dViewer(path: provider.file!.path, isFile: true);
+      case NFTTypes.pdf:
+        return PdfViewer(
+          file: provider.file!,
+          previewFlag: true,
+        );
     }
   }
 
@@ -137,6 +143,13 @@ class _PreviewScreenState extends State<PreviewScreen> {
         result = await saveToUpload();
         break;
       case NFTTypes.threeD:
+        result = await saveToUpload();
+        break;
+      case NFTTypes.pdf:
+        if (provider.pdfThumbnail == null) {
+          context.show(message: uploadYourThumbnail);
+          return false;
+        }
         result = await saveToUpload();
         break;
     }
