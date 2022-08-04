@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:easel_flutter/easel_provider.dart';
 import 'package:easel_flutter/repository/repository.dart';
+import 'package:easel_flutter/screens/custom_widgets/initial_draft_detail_dialog.dart';
 import 'package:easel_flutter/screens/custom_widgets/step_labels.dart';
 import 'package:easel_flutter/screens/custom_widgets/steps_indicator.dart';
 import 'package:easel_flutter/utils/constants.dart';
@@ -46,8 +47,14 @@ class _DescribeScreenState extends State<DescribeScreen> {
     super.initState();
 
     provider.nft = repository.getCacheDynamicType(key: nftKey);
+    String from = "";
+    from = context.read<HomeViewModel>().from!;
+
     scheduleMicrotask(() {
       provider.toCheckSavedArtistName();
+      if (from != kDraft) {
+        DraftDetailDialog(context: context, easelProvider: provider, onClose: () {}).show();
+      }
     });
   }
 
@@ -234,9 +241,17 @@ class _DescribeScreenState extends State<DescribeScreen> {
                               ),
                             );
                           }),
-                      Text(
-                        "$kMaxDescription $kCharacterLimitText",
-                        style: TextStyle(color: EaselAppTheme.kLightPurple, fontSize: 14.sp, fontWeight: FontWeight.w800),
+                      Padding(
+                        padding: EdgeInsets.symmetric(horizontal: 10.0.w),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.end,
+                          children: [
+                            Text(
+                              "$kMaxDescription $kCharacterLimitText",
+                              style: TextStyle(color: EaselAppTheme.kLightPurple, fontSize: 14.sp, fontWeight: FontWeight.w800),
+                            ),
+                          ],
+                        ),
                       ),
                       VerticalSpace(20.h),
                       const EaselHashtagInputField(),

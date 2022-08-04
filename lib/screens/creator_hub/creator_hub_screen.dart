@@ -1,4 +1,5 @@
 import 'dart:async';
+
 import 'package:easel_flutter/easel_provider.dart';
 import 'package:easel_flutter/main.dart';
 import 'package:easel_flutter/models/nft.dart';
@@ -199,36 +200,41 @@ class _CreatorHubContentState extends State<CreatorHubContent> {
                 Expanded(
                   child: Padding(
                     padding: EdgeInsets.symmetric(horizontal: 20.w),
-                    child: NFTsViewBuilder(
-                        onGridSelected: (context) => BuildNFTsContent(
-                            onDraftList: (context) => BuildGridView(
-                                  nftsList: viewModel.nftDraftList,
-                                  onEmptyList: (context) => getEmptyListWidget(),
-                                ),
-                            onForSaleList: (context) => BuildGridView(
-                                  nftsList: viewModel.nftForSaleList,
-                                  onEmptyList: (context) => getEmptyListWidget(),
-                                ),
-                            onPublishedList: (context) => BuildGridView(
-                                  nftsList: viewModel.nftPublishedList,
-                                  onEmptyList: (context) => getEmptyListWidget(),
-                                ),
-                            collectionType: viewModel.selectedCollectionType),
-                        onListSelected: (context) => BuildNFTsContent(
-                            onDraftList: (context) => BuildListView(
-                                  nftsList: viewModel.nftDraftList,
-                                  onEmptyList: (context) => getEmptyListWidget(),
-                                ),
-                            onForSaleList: (context) => BuildListView(
-                                  nftsList: viewModel.nftForSaleList,
-                                  onEmptyList: (context) => getEmptyListWidget(),
-                                ),
-                            onPublishedList: (context) => BuildListView(
-                                  nftsList: viewModel.nftPublishedList,
-                                  onEmptyList: (context) => getEmptyListWidget(),
-                                ),
-                            collectionType: viewModel.selectedCollectionType),
-                        viewType: viewModel.viewType),
+                    child: FocusDetector(
+                      onFocusGained: () {
+                        viewModel.refreshDraftsList();
+                      },
+                      child: NFTsViewBuilder(
+                          onGridSelected: (context) => BuildNFTsContent(
+                              onDraftList: (context) => BuildGridView(
+                                    nftsList: viewModel.nftDraftList,
+                                    onEmptyList: (context) => getEmptyListWidget(),
+                                  ),
+                              onForSaleList: (context) => BuildGridView(
+                                    nftsList: viewModel.nftForSaleList,
+                                    onEmptyList: (context) => getEmptyListWidget(),
+                                  ),
+                              onPublishedList: (context) => BuildGridView(
+                                    nftsList: viewModel.nftPublishedList,
+                                    onEmptyList: (context) => getEmptyListWidget(),
+                                  ),
+                              collectionType: viewModel.selectedCollectionType),
+                          onListSelected: (context) => BuildNFTsContent(
+                              onDraftList: (context) => BuildListView(
+                                    nftsList: viewModel.nftDraftList,
+                                    onEmptyList: (context) => getEmptyListWidget(),
+                                  ),
+                              onForSaleList: (context) => BuildListView(
+                                    nftsList: viewModel.nftForSaleList,
+                                    onEmptyList: (context) => getEmptyListWidget(),
+                                  ),
+                              onPublishedList: (context) => BuildListView(
+                                    nftsList: viewModel.nftPublishedList,
+                                    onEmptyList: (context) => getEmptyListWidget(),
+                                  ),
+                              collectionType: viewModel.selectedCollectionType),
+                          viewType: viewModel.viewType),
+                    ),
                   ),
                 ),
               ],
