@@ -64,7 +64,7 @@ class _VideoWidgetState extends State<VideoWidget> {
             child: Padding(
               padding: EdgeInsets.all(5.w),
               child:  RotationTransition(
-                turns: const AlwaysStoppedAnimation(90 / 360),
+                turns: const AlwaysStoppedAnimation(0.25),
                 child: SvgPicture.asset(
                   kFullScreenIcon,
                   fit: BoxFit.fill,
