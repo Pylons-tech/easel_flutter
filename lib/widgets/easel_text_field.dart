@@ -36,7 +36,7 @@ class EaselTextField extends StatelessWidget {
         Text(
           label,
           textAlign: TextAlign.start,
-          style: TextStyle(fontSize: 18.sp, fontWeight: FontWeight.w500),
+          style: TextStyle(fontSize: 18.sp, fontWeight: FontWeight.w700),
         ),
         SizedBox(height: 4.h),
         Stack(

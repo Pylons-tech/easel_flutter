@@ -204,13 +204,13 @@ const kCloseText = 'Close';
 const kUploadHint2 = '• Image, Video, 3D or Audio';
 const kUploadHint3 = '• One file per upload';
 const kUploadHintAll = 'GB Limit.\nOne file per upload.';
-const kHintNftName = 'Bird on Shoulder';
-const kHintArtistName = 'Sarah Jackson';
-const kHintNftDesc = 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eimod tempor incididunt ut labore et dolore magna aliquaQ. Ut enim ad minim veniam, quis nostrud exercita.';
+const kHintNftName = 'Must be at least nine characters';
+const kHintArtistName = 'You can use an alias if you’d like';
+const kHintNftDesc = 'What is your NFT? What makes it unique? What inspired you to create it?';
 const kHintNoEdition = '100';
 const kHintPrice = '10.87';
-const kHintHashtag = 'Type in';
-const kHashtagsText = 'Hashtags (optional)';
+const kHintHashtag = 'Add any category #hashtags';
+const kHashtagsText = 'Hashtags';
 const kAddText = 'Add';
 const kNetworkFeeWarnText = 'A network fee of 10% of the listed price is required for all transactions that occur on-chain';
 
@@ -261,7 +261,7 @@ const kCompressingMessage = "Compressing Thumbnail";
 const kUploadingMessage = "Uploading";
 const kLoadingMessage = "Loading...";
 
-final List<String> stepLabels = ["upload", "draft", "publish"];
+final List<String> stepLabels = ["upload", "detail", "price"];
 
 final List<String> imageAllowedExts = ["png", "jpg", "jpeg", "svg", "heif"];
 final List<String> audioAllowedExts = ['mp3', 'ogg', 'wav', 'aac'];
@@ -333,3 +333,5 @@ const kApnKey = "apn";
 const kIbiKey = "ibi";
 const kImvKey = "imv";
 const kLinkKey = "link";
+
+const kTwelve=12;

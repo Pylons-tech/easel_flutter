@@ -97,7 +97,7 @@ class HomeScreenContent extends StatelessWidget {
       physics: const NeverScrollableScrollPhysics(),
       onPageChanged: (int page) {
         homeViewModel.currentPage.value = page;
-        final map = {0: 0, 1: 1, 2: 1, 3: 2};
+        final map = {0: 0, 1: 1, 2: 2, 3: 2};
         homeViewModel.currentStep.value = map[page]!;
 
       },

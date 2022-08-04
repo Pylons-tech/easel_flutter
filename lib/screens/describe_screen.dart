@@ -102,7 +102,7 @@ class _DescribeScreenState extends State<DescribeScreen> {
                       builder: (_, int currentPage, __) {
                         return Text(
                           homeViewModel.pageTitles[homeViewModel.currentPage.value],
-                          style: Theme.of(context).textTheme.bodyText1!.copyWith(fontSize: 18.sp, fontWeight: FontWeight.w400, color: EaselAppTheme.kDarkText),
+                          style: Theme.of(context).textTheme.bodyText1!.copyWith(fontSize: 18.sp, fontWeight: FontWeight.w700, color: EaselAppTheme.kDarkText),
                         );
                       },
                     ),
@@ -207,6 +207,7 @@ class _DescribeScreenState extends State<DescribeScreen> {
                       VerticalSpace(20.h),
                       EaselTextField(
                         label: kDescribeYourNftText,
+                        hint: kHintNftDesc,
                         noOfLines: 5,
                         controller: provider.descriptionController,
                         textCapitalization: TextCapitalization.sentences,

@@ -169,3 +169,12 @@ extension ChangeDomain on String {
     return replaceAll(ipfsDomain, proxyIpfsDomain);
   }
 }
+
+extension TrimString on String {
+  String trimString(int minThreshold) {
+    if (length > minThreshold) {
+      return "${substring(0, 8)}...${substring(length - 4, length)}";
+    }
+    return this;
+  }
+}

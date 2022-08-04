@@ -40,8 +40,8 @@ class HomeViewModel extends ChangeNotifier {
           return;
 
         case UploadStep.descriptionAdded:
-          currentPage = ValueNotifier(1);
-          currentStep = ValueNotifier(1);
+          currentPage = ValueNotifier(2);
+          currentStep = ValueNotifier(2);
           pageController = PageController(keepPage: true, initialPage: 2);
           break;
         case UploadStep.priceAdded:

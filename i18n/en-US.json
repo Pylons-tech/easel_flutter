@@ -87,5 +87,6 @@
   "once_you_press": "Once you press “Publish”, a NFT is created on the Pylons blockchain and available for purchase on the Pylons app.",
   "nft_name_hint": "Must be at least nine characters",
   "artist_hint": "You can use an alias if you'd like",
-  "desc_nft_hint": "What is your NFT? What makes it unique? What inspired you to create it?"
+  "desc_nft_hint": "What is your NFT? What makes it unique? What inspired you to create it?",
+  "detail": "Detail"
 }
