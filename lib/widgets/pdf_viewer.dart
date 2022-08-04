@@ -3,12 +3,15 @@ import 'dart:io';
 
 import 'package:advance_pdf_viewer/advance_pdf_viewer.dart';
 import 'package:easel_flutter/easel_provider.dart';
-import 'package:easel_flutter/screens/clippers/custom_triangle_clipper.dart';
+import 'package:easel_flutter/screens/clippers/right_triangle_clipper.dart' as clipper;
+import 'package:easel_flutter/screens/clippers/right_triangle_clipper.dart';
 import 'package:easel_flutter/screens/clippers/small_bottom_corner_clipper.dart';
 import 'package:easel_flutter/utils/constants.dart';
 import 'package:easel_flutter/utils/easel_app_theme.dart';
+import 'package:easel_flutter/utils/extension_util.dart';
 import 'package:easel_flutter/utils/route_util.dart';
 import 'package:easel_flutter/widgets/pdf_viewer_full_half_screen.dart';
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/svg.dart';
@@ -32,6 +35,7 @@ class _PdfViewerState extends State<PdfViewer> {
   late PDFDocument doc;
   bool _isLoading = true;
 
+  String errorMsg = "";
   @override
   void initState() {
     scheduleMicrotask(() {
@@ -42,6 +46,12 @@ class _PdfViewerState extends State<PdfViewer> {
   }
 
   Future initializeDoc() async {
+    if (widget.file == null && widget.fileUrl == null) {
+      errorMsg = "no_pdf_file".tr();
+      _isLoading = false;
+      setState(() {});
+      return;
+    }
     if (widget.file != null) {
       doc = await PDFDocument.fromFile(widget.file!);
     } else {
@@ -57,56 +67,68 @@ class _PdfViewerState extends State<PdfViewer> {
       value: easelProvider,
       child: Center(
         child: PdfViewerFullOrHalf(
-            pdfViewerFullScreen: (context) {
-              return Padding(
-                padding:  EdgeInsets.only(top: 100.h, bottom: 145.h),
-                child: PDFViewer(
-                  document: doc,
-                  showNavigation: false,
-                  showPicker: false,
-                  progressIndicator: SizedBox(
-                    height: 50.0.h,
-                    child: Image.asset(
-                      kLoadingGif,
+          pdfViewerFullScreen: (context) {
+            return errorMsg.isNotEmpty
+                ? Text(
+                    errorMsg.tr(),
+                    style: const TextStyle(color: EaselAppTheme.kWhite),
+                  )
+                : Padding(
+                    padding: EdgeInsets.only(top: 100.h, bottom: 145.h),
+                    child: PDFViewer(
+                      document: doc,
+                      showNavigation: false,
+                      showPicker: false,
+                      progressIndicator: SizedBox(
+                        height: 50.0.h,
+                        child: Image.asset(
+                          kLoadingGif,
+                        ),
+                      ),
                     ),
-                  ),
-                ),
-              );
-            },
-            pdfViewerHalfScreen: (context) {
-              return SingleChildScrollView(
-                  child: Column(
-                children: [
-                  Padding(
-                    padding: EdgeInsets.symmetric(horizontal: 4.w),
-                    child: SizedBox(
-                        height: 200.h,
-                        child: Stack(
-                          children: [
-                            PDFViewer(
-                              document: doc,
-                              showNavigation: false,
-                              showPicker: false,
-                              progressIndicator: SizedBox(
-                                height: 50.0.h,
-                                child: Image.asset(
-                                  kLoadingGif,
-                                ),
+                  );
+          },
+          pdfViewerHalfScreen: (context) {
+            return SingleChildScrollView(
+                child: Column(
+              children: [
+                Padding(
+                  padding: EdgeInsets.symmetric(horizontal: 4.w),
+                  child: SizedBox(
+                      height: 200.h,
+                      child: errorMsg.isNotEmpty
+                          ? Center(
+                              child: Text(
+                                errorMsg.tr(),
                               ),
-                            ),
-                            _buildPdfFullScreenIcon()
-                          ],
-                        )),
-                  ),
-                  SizedBox(
-                    height: 50.h,
-                  ),
-                  _buildThumbnailButton(),
-                ],
-              ));
-            },
-            previewFlag: widget.previewFlag,
-            isLoading: _isLoading),
+                            )
+                          : Stack(
+                              children: [
+                                PDFViewer(
+                                  document: doc,
+                                  showNavigation: false,
+                                  showPicker: false,
+                                  progressIndicator: SizedBox(
+                                    height: 50.0.h,
+                                    child: Image.asset(
+                                      kLoadingGif,
+                                    ),
+                                  ),
+                                ),
+                                _buildPdfFullScreenIcon()
+                              ],
+                            )),
+                ),
+                SizedBox(
+                  height: 50.h,
+                ),
+                _buildThumbnailButton(),
+              ],
+            ));
+          },
+          previewFlag: widget.previewFlag,
+          isLoading: _isLoading,
+        ),
       ),
     );
   }
@@ -116,7 +138,7 @@ class _PdfViewerState extends State<PdfViewer> {
       left: 5,
       bottom: 0,
       child: ClipPath(
-        clipper: CustomTriangleClipper(),
+        clipper: RightTriangleClipper(orientation: clipper.Orientation.orientationNE),
         child: InkWell(
           onTap: () {
             Navigator.pushNamed(context, RouteUtil.kPdfFullScreen, arguments: [doc]);
@@ -128,9 +150,9 @@ class _PdfViewerState extends State<PdfViewer> {
             color: EaselAppTheme.kLightRed,
             child: Padding(
               padding: EdgeInsets.all(5.w),
-              child:RotationTransition(
-                turns:  const AlwaysStoppedAnimation(90 / 360),
-                child:  SvgPicture.asset(
+              child: RotationTransition(
+                turns: const AlwaysStoppedAnimation(90 / 360),
+                child: SvgPicture.asset(
                   kFullScreenIcon,
                   fit: BoxFit.fill,
                   width: 8.w,
@@ -155,6 +177,10 @@ class _PdfViewerState extends State<PdfViewer> {
           width: 120.w,
           child: InkWell(
             onTap: () {
+              if(errorMsg.isNotEmpty){
+                'first_pick_pdf'.tr().show();
+                return;
+              }
               easelProvider.onPdfThumbnailPicked();
             },
             child: easelProvider.pdfThumbnail != null

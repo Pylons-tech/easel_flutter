@@ -2,7 +2,8 @@ import 'dart:async';
 import 'dart:io';
 
 import 'package:easel_flutter/easel_provider.dart';
-import 'package:easel_flutter/screens/clippers/custom_triangle_clipper.dart';
+import 'package:easel_flutter/screens/clippers/right_triangle_clipper.dart' as clipper;
+import 'package:easel_flutter/screens/clippers/right_triangle_clipper.dart';
 import 'package:easel_flutter/screens/clippers/small_bottom_corner_clipper.dart';
 import 'package:easel_flutter/utils/constants.dart';
 import 'package:easel_flutter/utils/easel_app_theme.dart';
@@ -47,10 +48,10 @@ class _VideoWidgetState extends State<VideoWidget> {
 
   Widget _buildVideoFullScreenIcon() {
     return Positioned(
-      right: -1,
+      left: -1,
       bottom: 0,
       child: ClipPath(
-        clipper: CustomTriangleClipper(),
+        clipper: RightTriangleClipper(orientation: clipper.Orientation.orientationNE),
         child: InkWell(
           onTap: () {
             Navigator.pushNamed(context, RouteUtil.kVideoFullScreen);
@@ -58,16 +59,19 @@ class _VideoWidgetState extends State<VideoWidget> {
           child: Container(
             width: 30.w,
             height: 30.w,
-            alignment: Alignment.bottomRight,
+            alignment: Alignment.bottomLeft,
             color: EaselAppTheme.kLightRed,
             child: Padding(
               padding: EdgeInsets.all(5.w),
-              child: SvgPicture.asset(
-                kFullScreenIcon,
-                fit: BoxFit.fill,
-                width: 8.w,
-                height: 8.w,
-                alignment: Alignment.bottomRight,
+              child:  RotationTransition(
+                turns: const AlwaysStoppedAnimation(90 / 360),
+                child: SvgPicture.asset(
+                  kFullScreenIcon,
+                  fit: BoxFit.fill,
+                  width: 8.w,
+                  height: 8.w,
+                  alignment: Alignment.bottomLeft,
+                ),
               ),
             ),
           ),
