@@ -60,9 +60,9 @@
   "download_pylons_description": "Please download the Pylons app and create a username to publish a NFT in Easel.",
   "create_username_description": "Please Open Pylons app and create a username to publish a NFT in Easel.",
   "create_stripe_description": "Please Register with stripe in the Pylons app to list your NFT for USD.",
-  "welcome_msg": "Welcome to Easel, where you can manage your NFT listings and drafts.",
+  "welcome_msg":"Welcome to Easel, where you can manage your NFT listings and drafts.",
   "hello": "Hello, ",
-  "no_nft_created": "There are no NFTs created.",
+  "no_nft_created":"There are no NFTs created.",
   "loading": "loading ...",
   "are_you_sure_you_want_to_delete": "Are you sure you want to delete this draft?",
   "something_wrong_while_uploading": "Something went wrong while uploading. Please try later.",
@@ -87,5 +87,7 @@
   "once_you_press": "Once you press “Publish”, a NFT is created on the Pylons blockchain and available for purchase on the Pylons app.",
   "nft_name_hint": "Must be at least nine characters",
   "artist_hint": "You can use an alias if you'd like",
-  "desc_nft_hint": "What is your NFT? What makes it unique? What inspired you to create it?"
+  "desc_nft_hint": "What is your NFT? What makes it unique? What inspired you to create it?",
+  "no_pdf_file": "PDF file not found",
+  "first_pick_pdf": "First select a pdf file"
 }
