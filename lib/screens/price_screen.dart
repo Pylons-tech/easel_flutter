@@ -337,6 +337,11 @@ class _PriceScreenState extends State<PriceScreen> {
                           mobileScreen: (_) => VerticalSpace(0.38.sh),
                           tabletScreen: (_) => VerticalSpace(0.2.sh),
                         ),
+                      if (provider.isFreeDrop!=null && provider.isFreeDrop! )
+                        ScreenResponsive(
+                          mobileScreen: (_) => VerticalSpace(0.1.sh),
+                          tabletScreen: (_) => VerticalSpace(0.05.sh),
+                        ),
                       VerticalSpace(20.h),
                       ClippedButton(
                         title: "save_as_draft".tr(),
