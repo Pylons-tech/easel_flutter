@@ -1,6 +1,7 @@
 import 'package:easel_flutter/main.dart';
 import 'package:easel_flutter/utils/constants.dart';
 import 'package:easel_flutter/utils/easel_app_theme.dart';
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -36,7 +37,7 @@ class _HashtagInputFieldState extends State<EaselHashtagInputField> {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text(
-            kHashtagsText,
+            "hashtags".tr(),
             textAlign: TextAlign.start,
             style: TextStyle(fontSize: 18.sp, fontWeight: FontWeight.w700),
           ),
@@ -68,7 +69,7 @@ class _HashtagInputFieldState extends State<EaselHashtagInputField> {
                               keyboardType: TextInputType.text,
                               textCapitalization: TextCapitalization.none,
                               decoration: InputDecoration(
-                                hintText: kHintHashtag,
+                                hintText: "hashtag_hint".tr(),
                                 hintStyle: TextStyle(fontSize: isTablet ? 16.sp : 15.sp, color: EaselAppTheme.kGrey),
                                 border: const OutlineInputBorder(borderSide: BorderSide.none),
                                 floatingLabelBehavior: FloatingLabelBehavior.always,
