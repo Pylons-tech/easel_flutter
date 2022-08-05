@@ -136,7 +136,7 @@ class _PriceScreenState extends State<PriceScreen> {
                       Row(children: [
                         InkWell(
                           onTap: () {
-                            provider.updateIsFreeDropStatus(true);
+                            provider.updateIsFreeDropStatus(FreeDrop.yes);
                           },
                           child: Container(
                             width: 140.w,
@@ -160,7 +160,7 @@ class _PriceScreenState extends State<PriceScreen> {
                         ),
                         InkWell(
                           onTap: () {
-                            provider.updateIsFreeDropStatus(false);
+                            provider.updateIsFreeDropStatus(FreeDrop.no);
                           },
                           child: Container(
                             width: 140.w,
@@ -180,11 +180,11 @@ class _PriceScreenState extends State<PriceScreen> {
                           ),
                         ),
                       ]),
-                      if (provider.isFreeDrop != null)
+                      if (provider.isFreeDrop != FreeDrop.unselected)
                         Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            if (!provider.isFreeDrop!)
+                            if (provider.isFreeDrop == FreeDrop.no)
                               Column(
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
@@ -337,7 +337,7 @@ class _PriceScreenState extends State<PriceScreen> {
                           mobileScreen: (_) => VerticalSpace(0.38.sh),
                           tabletScreen: (_) => VerticalSpace(0.2.sh),
                         ),
-                      if (provider.isFreeDrop!=null && provider.isFreeDrop! )
+                      if (provider.isFreeDrop==FreeDrop.yes )
                         ScreenResponsive(
                           mobileScreen: (_) => VerticalSpace(0.1.sh),
                           tabletScreen: (_) => VerticalSpace(0.05.sh),
@@ -388,7 +388,7 @@ class _PriceScreenState extends State<PriceScreen> {
     if (!_formKey.currentState!.validate()) {
       return;
     }
-    if (context.read<EaselProvider>().isFreeDrop!) {
+    if (context.read<EaselProvider>().isFreeDrop==FreeDrop.yes) {
       if (_royaltiesFieldError.value.isNotEmpty || _noOfEditionsFieldError.value.isNotEmpty) return;
       await context.read<EaselProvider>().updateNftFromPrice(nft!.id!);
       moveNextPage ? context.read<HomeViewModel>().nextPage() : Navigator.pop(context);
