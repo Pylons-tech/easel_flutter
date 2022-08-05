@@ -1,3 +1,5 @@
+import 'package:easel_flutter/models/nft.dart';
+
 class SaveNft {
   final int? id;
   final String? nftName;
@@ -7,7 +9,7 @@ class SaveNft {
   final String? price;
   final String? quantity;
   final String? denomSymbol;
-  final bool? isFreeDrop;
+  final FreeDrop? isFreeDrop;
   final String? step;
   final String? hashtags;
   final int? dateTime;
