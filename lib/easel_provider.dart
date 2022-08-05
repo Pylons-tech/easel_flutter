@@ -641,7 +641,7 @@ class EaselProvider extends ChangeNotifier {
         description: nft.description.trim(),
         version: kVersion,
         coinInputs: [
-          nft.isFreeDrop ? CoinInput() : CoinInput(coins: [Coin(amount: price, denom: _selectedDenom.symbol)])
+          nft.isFreeDrop! ? CoinInput() : CoinInput(coins: [Coin(amount: price, denom: _selectedDenom.symbol)])
         ],
         itemInputs: [],
         costPerBlock: Coin(denom: kUpylon, amount: costPerBlock),

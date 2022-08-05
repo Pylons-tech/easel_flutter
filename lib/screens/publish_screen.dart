@@ -410,12 +410,12 @@ class _OwnerBottomDrawerState extends State<OwnerBottomDrawer> {
                           children: [
                             buildRow(
                               title: "currency".tr(),
-                              subtitle: widget.nft.isFreeDrop ? kPylonText : getCurrency(),
+                              subtitle: widget.nft.isFreeDrop! ? kPylonText : getCurrency(),
                             ),
                             SizedBox(height: 5.h),
                             buildRow(
                               title: "price".tr(),
-                              subtitle: widget.nft.isFreeDrop
+                              subtitle: widget.nft.isFreeDrop!
                                   ? "0"
                                   : widget.nft.denom == kUsdSymbol
                                       ? "\$${widget.nft.price}"

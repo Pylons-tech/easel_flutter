@@ -34,7 +34,7 @@ class NFT extends Equatable {
   String ownerAddress = "";
   String step = "";
   String ibcCoins = IBCCoins.upylon.name;
-  bool isFreeDrop ;
+  bool? isFreeDrop ;
   String type = NftType.TYPE_ITEM.name;
   String assetType = AssetType.Image.name;
   String duration = "";
@@ -62,7 +62,7 @@ class NFT extends Equatable {
     this.recipeID = "",
     this.owner = "",
     this.width = "",
-    this.isFreeDrop = false,
+    this.isFreeDrop ,
     this.height = "",
     this.tradePercentage = "0",
     this.amountMinted = 0,

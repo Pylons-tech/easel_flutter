@@ -40,20 +40,6 @@ class _CreatorHubScreenState extends State<CreatorHubScreen> {
     super.initState();
   }
 
-  void onFocusGained(CollectionType collectionType) {
-    switch (collectionType) {
-      case CollectionType.draft:
-        GetIt.I.get<CreatorHubViewModel>().getDraftsList();
-        break;
-      case CollectionType.published:
-        GetIt.I.get<CreatorHubViewModel>().selectedCollectionType = CollectionType.draft;
-        GetIt.I.get<CreatorHubViewModel>().getRecipesList();
-        break;
-      case CollectionType.forSale:
-        GetIt.I.get<CreatorHubViewModel>().getTotalForSale();
-        break;
-    }
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -66,8 +52,8 @@ class _CreatorHubScreenState extends State<CreatorHubScreen> {
             value: creatorHubViewModel,
             child: FocusDetector(
                 onFocusGained: () {
-                  onFocusGained(GetIt.I.get<CreatorHubViewModel>().selectedCollectionType);
-                },
+                  GetIt.I.get<CreatorHubViewModel>().getDraftsList();
+                  },
                 child: const CreatorHubContent()),
           ),
         ),
