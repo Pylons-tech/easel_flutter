@@ -500,7 +500,7 @@ class _OwnerBottomDrawerState extends State<OwnerBottomDrawer> {
                         onPressed: () {
                           viewModel.toChangeCollapse();
                         },
-                        iconSize: 32.sp,
+                        iconSize: 32.h,
                         color: EaselAppTheme.kWhite,
                       ),
                     ),

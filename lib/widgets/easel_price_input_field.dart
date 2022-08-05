@@ -24,7 +24,7 @@ class EaselPriceInputField extends StatelessWidget {
         Text(
           kPriceText,
           textAlign: TextAlign.start,
-          style: TextStyle(fontSize: 18.sp, fontWeight: FontWeight.w500),
+          style: TextStyle(fontSize: 18.sp, fontWeight: FontWeight.w700),
         ),
         SizedBox(height: 4.h),
         Stack(
@@ -47,7 +47,7 @@ class EaselPriceInputField extends StatelessWidget {
                         inputFormatters: inputFormatters,
                         decoration: InputDecoration(
                             hintText: kHintPrice,
-                            hintStyle: TextStyle(fontSize: 18.sp, color: EaselAppTheme.kGrey),
+                            hintStyle: TextStyle(fontSize: 15.sp, fontWeight: FontWeight.w400,color: EaselAppTheme.kGrey),
                             border: const OutlineInputBorder(borderSide: BorderSide.none),
                             floatingLabelBehavior: FloatingLabelBehavior.always,
                             contentPadding: EdgeInsets.fromLTRB(10.w, 0.h, 10.w, 0.h)))),

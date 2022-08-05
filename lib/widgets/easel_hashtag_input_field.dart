@@ -69,7 +69,7 @@ class _HashtagInputFieldState extends State<EaselHashtagInputField> {
                               textCapitalization: TextCapitalization.none,
                               decoration: InputDecoration(
                                 hintText: kHintHashtag,
-                                hintStyle: TextStyle(fontSize: isTablet ? 16.sp : 18.sp, color: EaselAppTheme.kGrey),
+                                hintStyle: TextStyle(fontSize: isTablet ? 16.sp : 15.sp, color: EaselAppTheme.kGrey),
                                 border: const OutlineInputBorder(borderSide: BorderSide.none),
                                 floatingLabelBehavior: FloatingLabelBehavior.always,
                                 contentPadding: EdgeInsets.fromLTRB(10.w, 0.h, 10.w, 0.h),

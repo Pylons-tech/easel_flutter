@@ -60,7 +60,7 @@ class EaselProvider extends ChangeNotifier {
   String? _cookbookId;
   String _recipeId = "";
   var stripeAccountExists = false;
-  bool isFreeDrop = false;
+  bool? isFreeDrop;
 
   Denom _selectedDenom = Denom.availableDenoms.first;
   List<Denom> supportedDenomList = [];
@@ -204,7 +204,7 @@ class EaselProvider extends ChangeNotifier {
     royaltyController.clear();
     hashtagsList.clear();
     willLoadFirstTime = true;
-    isFreeDrop = false;
+    isFreeDrop = null;
     collapsed = false;
     notifyListeners();
   }
@@ -234,7 +234,7 @@ class EaselProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-  void setTextFieldValuesPrice({String? royalties, String? price, String? edition, String? denom, bool freeDrop = false}) {
+  void setTextFieldValuesPrice({String? royalties, String? price, String? edition, String? denom, bool? freeDrop}) {
     royaltyController.text = royalties ?? "";
     priceController.text = price ?? "";
     noOfEditionController.text = edition ?? "";
@@ -579,7 +579,7 @@ class EaselProvider extends ChangeNotifier {
       return false;
     }
 
-    if (!stripeAccountExists && _selectedDenom.symbol == kUsdSymbol && !isFreeDrop) {
+    if (!stripeAccountExists && _selectedDenom.symbol == kUsdSymbol && !isFreeDrop!) {
       ShowWalletInstallDialog showWalletInstallDialog = ShowWalletInstallDialog(
           context: navigatorKey.currentState!.overlay!.context,
           errorMessage: 'create_stripe_description'.tr(),
@@ -632,7 +632,7 @@ class EaselProvider extends ChangeNotifier {
     String tradePercentage = BigInt.from(int.parse(nft.tradePercentage.trim()) * kRoyaltyPrecision).toString();
 
 
-    String price = isFreeDrop ? "0" : _selectedDenom.formatAmount(price: priceController.text);
+    String price = isFreeDrop! ? "0" : _selectedDenom.formatAmount(price: priceController.text);
     var recipe = Recipe(
         cookbookId: _cookbookId,
         id: _recipeId,
@@ -1023,7 +1023,7 @@ class EaselProvider extends ChangeNotifier {
       price: priceController.text,
       quantity: noOfEditionController.text,
       step: UploadStep.priceAdded.name,
-      denomSymbol: isFreeDrop ? "" : selectedDenom.symbol,
+      denomSymbol: isFreeDrop! ? "" : selectedDenom.symbol,
       isFreeDrop: isFreeDrop,
       dateTime: DateTime.now().millisecondsSinceEpoch,
     );
