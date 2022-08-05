@@ -224,7 +224,7 @@ class _PriceScreenState extends State<PriceScreen> {
                                         );
                                       }),
                                   Text(
-                                    kNetworkFeeWarnText,
+                                    "network_fee_10".tr(),
                                     style: TextStyle(color: EaselAppTheme.kLightPurple, fontSize: 14.sp, fontWeight: FontWeight.w800),
                                   ),
                                 ],
@@ -281,7 +281,7 @@ class _PriceScreenState extends State<PriceScreen> {
                             EaselTextField(
                               key: ValueKey(provider.selectedDenom.name),
                               label: kNoOfEditionText,
-                              hint: kHintNoEdition,
+                              hint: "how_many_copies".tr(),
                               keyboardType: TextInputType.number,
                               inputFormatters: [
                                 FilteringTextInputFormatter.digitsOnly,

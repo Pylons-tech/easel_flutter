@@ -1,5 +1,6 @@
 import 'package:easel_flutter/utils/constants.dart';
 import 'package:easel_flutter/utils/easel_app_theme.dart';
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -46,7 +47,7 @@ class EaselPriceInputField extends StatelessWidget {
                         textCapitalization: TextCapitalization.none,
                         inputFormatters: inputFormatters,
                         decoration: InputDecoration(
-                            hintText: kHintPrice,
+                            hintText: "price_hint".tr(),
                             hintStyle: TextStyle(fontSize: 15.sp, fontWeight: FontWeight.w400,color: EaselAppTheme.kGrey),
                             border: const OutlineInputBorder(borderSide: BorderSide.none),
                             floatingLabelBehavior: FloatingLabelBehavior.always,

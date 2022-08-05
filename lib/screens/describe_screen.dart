@@ -137,7 +137,7 @@ class _DescribeScreenState extends State<DescribeScreen> {
                     children: [
                       EaselTextField(
                         label: kGiveNFTNameText,
-                        hint: kHintNftName,
+                        hint: "nft_name_hint".tr(),
                         controller: provider.artNameController,
                         textCapitalization: TextCapitalization.sentences,
                         validator: (value) {
@@ -174,7 +174,7 @@ class _DescribeScreenState extends State<DescribeScreen> {
                       VerticalSpace(20.h),
                       EaselTextField(
                         label: kNameAsArtistText,
-                        hint: kHintArtistName,
+                        hint: "artist_hint".tr(),
                         controller: provider.artistNameController,
                         textCapitalization: TextCapitalization.sentences,
                         validator: (value) {
@@ -207,7 +207,7 @@ class _DescribeScreenState extends State<DescribeScreen> {
                       VerticalSpace(20.h),
                       EaselTextField(
                         label: kDescribeYourNftText,
-                        hint: kHintNftDesc,
+                        hint: "desc_nft_hint".tr(),
                         noOfLines: 5,
                         controller: provider.descriptionController,
                         textCapitalization: TextCapitalization.sentences,

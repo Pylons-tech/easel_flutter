@@ -204,15 +204,6 @@ const kCloseText = 'Close';
 const kUploadHint2 = '• Image, Video, 3D or Audio';
 const kUploadHint3 = '• One file per upload';
 const kUploadHintAll = 'GB Limit.\nOne file per upload.';
-const kHintNftName = 'Must be at least nine characters';
-const kHintArtistName = 'You can use an alias if you’d like';
-const kHintNftDesc = 'What is your NFT? What makes it unique? What inspired you to create it?';
-const kHintNoEdition = 'How many unique copies?';
-const kHintPrice = 'Select a currency';
-const kHintHashtag = 'Add any category #hashtags';
-const kHashtagsText = 'Hashtags';
-const kAddText = 'Add';
-const kNetworkFeeWarnText = 'A network fee of 10% of the listed price is required for all transactions that occur on-chain';
 
 const kRecipeCreated = 'Recipe created';
 const kErrProfileNotExist = 'profileDoesNotExist';

@@ -88,5 +88,10 @@
   "nft_name_hint": "Must be at least nine characters",
   "artist_hint": "You can use an alias if you'd like",
   "desc_nft_hint": "What is your NFT? What makes it unique? What inspired you to create it?",
-  "detail": "Detail"
+  "detail": "Detail",
+  "how_many_copies": "How many unique copies?",
+  "price_hint": "Select a currency",
+  "hashtag_hint": "Add any category #hashtags",
+  "hashtags": "Hashtags",
+  "network_fee_10": "A network fee of 10% of the listed price is required for all transactions that occur on-chain"
 }
