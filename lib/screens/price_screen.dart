@@ -326,17 +326,17 @@ class _PriceScreenState extends State<PriceScreen> {
                                 );
                               },
                             ),
-                            Align(
-                              alignment: Alignment.centerRight,
-                              child: Text(
-                                "${NumberFormat.decimalPattern().format(kMaxEdition)} $kMaxText",
-                                style: TextStyle(color: EaselAppTheme.kLightPurple, fontSize: 14.sp, fontWeight: FontWeight.w800),
-                              ),
+                            Text(
+                              "${NumberFormat.decimalPattern().format(kMaxEdition)} $kMaxText",
+                              style: TextStyle(color: EaselAppTheme.kLightPurple, fontSize: 14.sp, fontWeight: FontWeight.w800),
                             ),
                           ],
                         ),
                       if (provider.isFreeDrop == null)
-                        ScreenResponsive(mobileScreen: (_)=> VerticalSpace(0.38.sh), tabletScreen:(_)=>VerticalSpace(0.2.sh),)  ,
+                        ScreenResponsive(
+                          mobileScreen: (_) => VerticalSpace(0.38.sh),
+                          tabletScreen: (_) => VerticalSpace(0.2.sh),
+                        ),
                       VerticalSpace(20.h),
                       ClippedButton(
                         title: "save_as_draft".tr(),
