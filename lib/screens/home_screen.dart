@@ -4,6 +4,7 @@ import 'package:easel_flutter/screens/describe_screen.dart';
 import 'package:easel_flutter/screens/price_screen.dart';
 import 'package:easel_flutter/screens/publish_screen.dart';
 import 'package:easel_flutter/utils/easel_app_theme.dart';
+import 'package:easel_flutter/utils/extension_util.dart';
 import 'package:easel_flutter/viewmodels/home_viewmodel.dart';
 import 'package:flutter/material.dart';
 import 'package:get_it/get_it.dart';
@@ -43,7 +44,7 @@ class _HomeScreenState extends State<HomeScreen> {
             price: homeViewModel.nft?.price,
             edition: homeViewModel.nft?.quantity.toString(),
             denom: homeViewModel.nft?.denom,
-            freeDrop: homeViewModel.nft!.isFreeDrop);
+            freeDrop: homeViewModel.nft!.isFreeDrop.toFreeDropEnum());
       },
     );
   }

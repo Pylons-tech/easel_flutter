@@ -102,14 +102,14 @@ class _PriceScreenState extends State<PriceScreen> {
                                 padding: EdgeInsets.only(right: 20.w),
                                 child: InkWell(
                                   onTap: () {
-                                    if (provider.isFreeDrop != null) {
+                                    if (provider.isFreeDrop !=FreeDrop.unselected) {
                                       FocusScope.of(context).unfocus();
                                       validateAndUpdatePrice(true);
                                     }
                                   },
                                   child: Text(
                                     "next".tr(),
-                                    style: TextStyle(fontSize: 18.sp, fontWeight: FontWeight.w700, color: provider.isFreeDrop != null ? EaselAppTheme.kBlue : EaselAppTheme.kPurple03),
+                                    style: TextStyle(fontSize: 18.sp, fontWeight: FontWeight.w700, color: provider.isFreeDrop != FreeDrop.unselected ? EaselAppTheme.kBlue : EaselAppTheme.kPurple03),
                                   ),
                                 ),
                               )),
@@ -142,14 +142,14 @@ class _PriceScreenState extends State<PriceScreen> {
                             width: 140.w,
                             height: 30.h,
                             decoration: BoxDecoration(
-                              color: provider.isFreeDrop == true ? EaselAppTheme.kBlue : EaselAppTheme.kTransparent,
-                              border: Border.all(color: provider.isFreeDrop == true ? EaselAppTheme.kBlue : EaselAppTheme.kBlack, width: 2.w),
+                              color: provider.isFreeDrop == FreeDrop.yes ? EaselAppTheme.kBlue : EaselAppTheme.kTransparent,
+                              border: Border.all(color: provider.isFreeDrop == FreeDrop.yes ? EaselAppTheme.kBlue : EaselAppTheme.kBlack, width: 2.w),
                             ),
                             child: Center(
                               child: Text(
                                 "yes".tr(),
                                 style: TextStyle(
-                                  color: provider.isFreeDrop == true ? EaselAppTheme.kWhite : EaselAppTheme.kBlack,
+                                  color: provider.isFreeDrop == FreeDrop.yes ? EaselAppTheme.kWhite : EaselAppTheme.kBlack,
                                 ),
                               ),
                             ),
@@ -166,14 +166,14 @@ class _PriceScreenState extends State<PriceScreen> {
                             width: 140.w,
                             height: 30.h,
                             decoration: BoxDecoration(
-                              color: provider.isFreeDrop == false ? EaselAppTheme.kBlue : EaselAppTheme.kTransparent,
-                              border: Border.all(color: provider.isFreeDrop == false ? EaselAppTheme.kBlue : EaselAppTheme.kBlack, width: 2.w),
+                              color: provider.isFreeDrop== FreeDrop.no ? EaselAppTheme.kBlue : EaselAppTheme.kTransparent,
+                              border: Border.all(color: provider.isFreeDrop== FreeDrop.no  ? EaselAppTheme.kBlue : EaselAppTheme.kBlack, width: 2.w),
                             ),
                             child: Center(
                               child: Text(
                                 "no".tr(),
                                 style: TextStyle(
-                                  color: provider.isFreeDrop == false ? EaselAppTheme.kWhite : EaselAppTheme.kBlack,
+                                  color: provider.isFreeDrop== FreeDrop.no ? EaselAppTheme.kWhite : EaselAppTheme.kBlack,
                                 ),
                               ),
                             ),
@@ -332,7 +332,7 @@ class _PriceScreenState extends State<PriceScreen> {
                             ),
                           ],
                         ),
-                      if (provider.isFreeDrop == null)
+                      if (provider.isFreeDrop == FreeDrop.unselected)
                         ScreenResponsive(
                           mobileScreen: (_) => VerticalSpace(0.38.sh),
                           tabletScreen: (_) => VerticalSpace(0.2.sh),
@@ -348,7 +348,7 @@ class _PriceScreenState extends State<PriceScreen> {
                         bgColor: EaselAppTheme.kBlue,
                         textColor: EaselAppTheme.kWhite,
                         onPressed: () async {
-                          if (provider.isFreeDrop == null) {
+                          if (provider.isFreeDrop == FreeDrop.unselected) {
                             Navigator.pop(context);
                             return;
                           }

@@ -81,6 +81,12 @@ extension AssetTypePar on String {
   }
 }
 
+extension FreeDropEnum on String {
+  FreeDrop toFreeDropEnum() {
+    return FreeDrop.values.firstWhere((e) => e.toString() == 'FreeDrop.$this', orElse: () => FreeDrop.unselected);
+  }
+}
+
 extension DurationConverter on int {
   String toSeconds() {
     final double seconds = this / kNumberOfSeconds;
