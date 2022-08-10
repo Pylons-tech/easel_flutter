@@ -45,8 +45,8 @@ class _PreviewScreenState extends State<PreviewScreen> {
           },
           child: Stack(
             children: [
-              if (provider.file != null) buildPreviewWidget(provider),
               Image.asset(kPreviewGradient, width: 1.sw, fit: BoxFit.fill),
+              if (provider.file != null) buildPreviewWidget(provider),
               Column(children: [
                 SizedBox(height: MediaQuery.of(context).viewPadding.top + 20.h),
                 Align(
