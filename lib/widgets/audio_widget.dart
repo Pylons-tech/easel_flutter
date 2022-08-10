@@ -57,14 +57,16 @@ class _AudioWidgetState extends State<AudioWidget> with WidgetsBindingObserver {
 
   @override
   Widget build(BuildContext context) {
+
+    final viewModel = context.watch<EaselProvider>();
+
     return WillPopScope(
       onWillPop: () {
         easelProvider.setAudioThumbnail(null);
         Navigator.pop(context);
         return Future.value(true);
       },
-      child: Consumer<EaselProvider>(builder: (context, viewModel, _) {
-        return Container(
+      child:Container(
           width: double.infinity,
           height: double.infinity,
           decoration: getAudioBackgroundDecoration(viewModel: viewModel),
@@ -73,87 +75,91 @@ class _AudioWidgetState extends State<AudioWidget> with WidgetsBindingObserver {
               child: Column(
                 children: [
                   SizedBox(
-                    height: 220.0.h,
+                    height: 0.4.sh,
                   ),
                   (shouldShowThumbnailButtonOrStepsOrNot())
-                      ? SizedBox(
-                          width: 330.0.w,
-                          child: Row(
-                            crossAxisAlignment: CrossAxisAlignment.end,
-                            children: [
-                              Padding(
-                                padding: EdgeInsets.only(right: 10.w, bottom: 10.h, top: 10.h, left: 5.w),
-                                child: ValueListenableBuilder<ButtonState>(
-                                  valueListenable: viewModel.buttonNotifier,
-                                  builder: (_, value, __) {
-                                    switch (value) {
-                                      case ButtonState.loading:
-                                        return SizedBox(height: 22.h, width: 22.h, child: CircularProgressIndicator(strokeWidth: 2.w, color: Colors.black));
-                                      case ButtonState.paused:
-                                        return InkWell(
-                                          onTap: () {
-                                            viewModel.playAudio(widget.file != null);
-                                          },
-                                          child: Icon(
-                                            Icons.play_arrow,
-                                            color: EaselAppTheme.kDarkBlue,
-                                            size: 35.h,
-                                          ),
-                                        );
+                      ?  SizedBox(
+                    height: 100.h,
+                    width: 330.0.w,
+                    child: Align(alignment: Alignment.topCenter,
+                            child: Row(
+                              crossAxisAlignment: CrossAxisAlignment.end,
+                              children: [
+                                Padding(
+                                  padding: EdgeInsets.only(right: 10.w, bottom: 10.h, top: 10.h, left: 5.w),
+                                  child: ValueListenableBuilder<ButtonState>(
+                                    valueListenable: viewModel.buttonNotifier,
+                                    builder: (_, value, __) {
 
-                                      case ButtonState.playing:
-                                        return InkWell(
-                                          onTap: () {
-                                            viewModel.pauseAudio(widget.file != null);
+                                      switch (value) {
+                                        case ButtonState.loading:
+                                          return SizedBox(height: 22.h, width: 22.h, child: CircularProgressIndicator(strokeWidth: 2.w, color: Colors.black));
+                                        case ButtonState.paused:
+                                          return InkWell(
+                                            onTap: () {
+                                              viewModel.playAudio(widget.file != null);
+                                            },
+                                            child: Icon(
+                                              Icons.play_arrow,
+                                              color: EaselAppTheme.kDarkBlue,
+                                              size: 35.h,
+                                            ),
+                                          );
+
+                                        case ButtonState.playing:
+                                          return InkWell(
+                                            onTap: () {
+                                              viewModel.pauseAudio(widget.file != null);
+                                            },
+                                            child: Icon(
+                                              Icons.pause,
+                                              color: EaselAppTheme.kDarkBlue,
+                                              size: 35.h,
+                                            ),
+                                          );
+                                      }
+                                    },
+                                  ),
+                                ),
+                                Expanded(
+                                  child: ValueListenableBuilder<ProgressBarState>(
+                                    valueListenable: viewModel.audioProgressNotifier,
+                                    builder: (_, value, __) {
+                                      return Padding(
+                                        padding: EdgeInsets.only(bottom: 3.h, right: 20.w),
+                                        child: ProgressBar(
+                                          progressBarColor: EaselAppTheme.kDarkBlue,
+                                          thumbColor: EaselAppTheme.kDarkBlue,
+                                          progress: value.current,
+                                          baseBarColor: EaselAppTheme.kBlack,
+                                          bufferedBarColor: EaselAppTheme.kLightGrey,
+                                          buffered: value.buffered,
+                                          total: value.total,
+                                          timeLabelTextStyle: TextStyle(color: EaselAppTheme.kDartGrey, fontWeight: FontWeight.w800, fontSize: 9.sp),
+                                          thumbRadius: 10.h,
+                                          timeLabelPadding: 3.h,
+                                          onSeek: (position) {
+                                            viewModel.seekAudio(position, widget.file != null);
                                           },
-                                          child: Icon(
-                                            Icons.pause,
-                                            color: EaselAppTheme.kDarkBlue,
-                                            size: 35.h,
-                                          ),
-                                        );
-                                    }
-                                  },
+                                        ),
+                                      );
+                                    },
+                                  ),
                                 ),
-                              ),
-                              Expanded(
-                                child: ValueListenableBuilder<ProgressBarState>(
-                                  valueListenable: viewModel.audioProgressNotifier,
-                                  builder: (_, value, __) {
-                                    return Padding(
-                                      padding: EdgeInsets.only(bottom: 3.h, right: 20.w),
-                                      child: ProgressBar(
-                                        progressBarColor: EaselAppTheme.kDarkBlue,
-                                        thumbColor: EaselAppTheme.kDarkBlue,
-                                        progress: value.current,
-                                        baseBarColor: EaselAppTheme.kBlack,
-                                        bufferedBarColor: EaselAppTheme.kLightGrey,
-                                        buffered: value.buffered,
-                                        total: value.total,
-                                        timeLabelTextStyle: TextStyle(color: EaselAppTheme.kDartGrey, fontWeight: FontWeight.w800, fontSize: 9.sp),
-                                        thumbRadius: 10.h,
-                                        timeLabelPadding: 3.h,
-                                        onSeek: (position) {
-                                          viewModel.seekAudio(position, widget.file != null);
-                                        },
-                                      ),
-                                    );
-                                  },
-                                ),
-                              ),
-                            ],
+                              ],
+                            ),
                           ))
                       : const SizedBox(),
                   SizedBox(
-                    height: 120.0.h,
+                    height: 40.0.h,
                   ),
                   shouldShowThumbnailButtonOrStepsOrNot() ? _buildThumbnailButton() : const SizedBox(),
                 ],
               ),
             ),
           ),
-        );
-      }),
+        )
+
     );
   }
 
