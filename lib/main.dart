@@ -12,11 +12,14 @@ import 'package:easel_flutter/utils/route_util.dart';
 import 'package:easel_flutter/widgets/pdf_viewer_full_screen.dart';
 import 'package:easel_flutter/widgets/video_widget_full_screen.dart';
 import 'package:easy_localization/easy_localization.dart';
+import 'package:floor/floor.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get_it/get_it.dart';
 import 'package:provider/provider.dart';
 import 'package:pylons_sdk/pylons_sdk.dart';
+
+import 'services/third_party_services/database.dart';
 
 bool isTablet = false;
 
@@ -27,6 +30,8 @@ Future<void> main() async {
 
   PylonsWallet.setup(mode: PylonsMode.prod, host: 'easel');
   di.init();
+
+  await GetIt.I.isReady<AppDatabase>();
 
   isTablet = MediaQueryData.fromWindow(WidgetsBinding.instance.window).size.shortestSide >= TABLET_MIN_WIDTH;
 
