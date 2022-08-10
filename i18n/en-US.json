@@ -82,7 +82,7 @@
   "discard": "Discard",
   "next": "Next",
   "welcome_to_easel": "Welcome to Easel,",
-  "easel_is_tool": "Easel is a tool that allows you to create NFTs from any mobile device",
+  "easel_is_tool": "Easel is a tool that allows you to create NFTs from any mobile device.",
   "after_you_successfully": "After you successfully upload an audio, video or image file to IPFS, you’ll then be able to enter information pertaining to your NFT.",
   "once_you_press": "Once you press “Publish”, a NFT is created on the Pylons blockchain and available for purchase on the Pylons app.",
   "nft_name_hint": "Must be at least nine characters",
