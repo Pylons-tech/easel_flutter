@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:developer';
 
 import 'package:easel_flutter/easel_provider.dart';
 import 'package:easel_flutter/repository/repository.dart';
@@ -212,6 +213,14 @@ class _DescribeScreenState extends State<DescribeScreen> {
                         controller: provider.descriptionController,
                         textCapitalization: TextCapitalization.sentences,
                         inputFormatters: [LengthLimitingTextInputFormatter(kMaxDescription)],
+                        onChanged: (value) {
+
+                          if (value == null) {
+                            return;
+                          }
+                          provider.setDescCharactersLeft(value.length);
+                          return;
+                        },
                         validator: (value) {
                           if (value!.isEmpty) {
                             _descriptionFieldError.value = kEnterNFTDescriptionText;
@@ -248,7 +257,7 @@ class _DescribeScreenState extends State<DescribeScreen> {
                           mainAxisAlignment: MainAxisAlignment.end,
                           children: [
                             Text(
-                              "$kMaxDescription $kCharacterLimitText",
+                              "${provider.descCharactersLeft} $kCharacterLimitText",
                               style: TextStyle(color: EaselAppTheme.kLightPurple, fontSize: 14.sp, fontWeight: FontWeight.w800),
                             ),
                           ],

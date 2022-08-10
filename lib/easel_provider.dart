@@ -32,7 +32,6 @@ import 'package:video_player/video_player.dart';
 
 import '../utils/enums.dart';
 
-
 typedef OnUploadProgressCallback = void Function(UploadProgress uploadProgress);
 
 class EaselProvider extends ChangeNotifier {
@@ -61,7 +60,7 @@ class EaselProvider extends ChangeNotifier {
   String? _cookbookId;
   String _recipeId = "";
   var stripeAccountExists = false;
-  FreeDrop isFreeDrop= FreeDrop.unselected ;
+  FreeDrop isFreeDrop = FreeDrop.unselected;
 
   Denom _selectedDenom = Denom.availableDenoms.first;
   List<Denom> supportedDenomList = [];
@@ -80,6 +79,15 @@ class EaselProvider extends ChangeNotifier {
 
   void setPublishedNFTClicked(NFT nft) {
     _publishedNFTClicked = nft;
+    notifyListeners();
+  }
+
+  int _descCharactersLeft = kMaxDescription;
+
+  int get descCharactersLeft => _descCharactersLeft;
+
+  void setDescCharactersLeft(int characters) {
+    _descCharactersLeft = kMaxDescription - characters;
     notifyListeners();
   }
 
@@ -244,7 +252,7 @@ class EaselProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-  void updateIsFreeDropStatus( FreeDrop val) {
+  void updateIsFreeDropStatus(FreeDrop val) {
     isFreeDrop = val;
     notifyListeners();
   }
@@ -580,7 +588,7 @@ class EaselProvider extends ChangeNotifier {
       return false;
     }
 
-    if (!stripeAccountExists && _selectedDenom.symbol == kUsdSymbol && isFreeDrop==FreeDrop.no) {
+    if (!stripeAccountExists && _selectedDenom.symbol == kUsdSymbol && isFreeDrop == FreeDrop.no) {
       ShowWalletInstallDialog showWalletInstallDialog = ShowWalletInstallDialog(
           context: navigatorKey.currentState!.overlay!.context,
           errorMessage: 'create_stripe_description'.tr(),
@@ -628,12 +636,9 @@ class EaselProvider extends ChangeNotifier {
 
     disposePlayers(assetType: nft.assetType);
 
-
-
     String tradePercentage = BigInt.from(int.parse(nft.tradePercentage.trim()) * kRoyaltyPrecision).toString();
 
-
-    String price = isFreeDrop==FreeDrop.yes ? "0" : _selectedDenom.formatAmount(price: priceController.text);
+    String price = isFreeDrop == FreeDrop.yes ? "0" : _selectedDenom.formatAmount(price: priceController.text);
     var recipe = Recipe(
         cookbookId: _cookbookId,
         id: _recipeId,
@@ -642,7 +647,7 @@ class EaselProvider extends ChangeNotifier {
         description: nft.description.trim(),
         version: kVersion,
         coinInputs: [
-          isFreeDrop==FreeDrop.yes ? CoinInput() : CoinInput(coins: [Coin(amount: price, denom: _selectedDenom.symbol)])
+          isFreeDrop == FreeDrop.yes ? CoinInput() : CoinInput(coins: [Coin(amount: price, denom: _selectedDenom.symbol)])
         ],
         itemInputs: [],
         costPerBlock: Coin(denom: kUpylon, amount: costPerBlock),
@@ -1024,7 +1029,7 @@ class EaselProvider extends ChangeNotifier {
       price: priceController.text,
       quantity: noOfEditionController.text,
       step: UploadStep.priceAdded.name,
-      denomSymbol: isFreeDrop==FreeDrop.yes ? "" : selectedDenom.symbol,
+      denomSymbol: isFreeDrop == FreeDrop.yes ? "" : selectedDenom.symbol,
       isFreeDrop: isFreeDrop,
       dateTime: DateTime.now().millisecondsSinceEpoch,
     );
