@@ -89,5 +89,6 @@
   "artist_hint": "You can use an alias if you'd like",
   "desc_nft_hint": "What is your NFT? What makes it unique? What inspired you to create it?",
   "no_pdf_file": "PDF file not found",
-  "first_pick_pdf": "First select a pdf file"
+  "first_pick_pdf": "First select a pdf file",
+  "nft_manager": "Your NFT Manager"
 }
