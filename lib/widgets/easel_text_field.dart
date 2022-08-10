@@ -13,7 +13,6 @@ class EaselTextField extends StatelessWidget {
       this.hint = "",
       this.controller,
       this.validator,
-      this.onChanged,
       this.noOfLines = 1, // default to single line
       this.inputFormatters = const [],
       this.keyboardType = TextInputType.text,
@@ -28,7 +27,6 @@ class EaselTextField extends StatelessWidget {
   final TextInputType keyboardType;
   final List<TextInputFormatter> inputFormatters;
   final TextCapitalization textCapitalization;
-  final String? Function(String?)? onChanged;
 
   @override
   Widget build(BuildContext context) {
@@ -78,7 +76,6 @@ class EaselTextField extends StatelessWidget {
           keyboardType: keyboardType,
           textCapitalization: textCapitalization,
           inputFormatters: inputFormatters,
-          onChanged: onChanged,
           decoration: InputDecoration(
             hintText: hint,
             hintStyle: TextStyle(fontSize: 15.sp, fontWeight: FontWeight.w400, color: EaselAppTheme.kGrey),
@@ -105,7 +102,6 @@ class EaselTextField extends StatelessWidget {
           keyboardType: keyboardType,
           textCapitalization: textCapitalization,
           inputFormatters: inputFormatters,
-          onChanged: onChanged,
           decoration: InputDecoration(
             hintText: hint,
             hintStyle: TextStyle(fontSize: noOfLines == 1 ? 16.sp : 14.sp, color: EaselAppTheme.kGrey),

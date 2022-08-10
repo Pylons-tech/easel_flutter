@@ -82,15 +82,6 @@ class EaselProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-  int _descCharactersLeft = kMaxDescription;
-
-  int get descCharactersLeft => _descCharactersLeft;
-
-  void setDescCharactersLeft(int characters) {
-    _descCharactersLeft = kMaxDescription - characters;
-    notifyListeners();
-  }
-
   String _publishedNFTDuration = "";
 
   String get publishedNFTDuration => _publishedNFTDuration;
@@ -588,7 +579,7 @@ class EaselProvider extends ChangeNotifier {
       return false;
     }
 
-    if (!stripeAccountExists && _selectedDenom.symbol == kUsdSymbol && isFreeDrop == FreeDrop.no) {
+    if (showStripeDialog()) {
       ShowWalletInstallDialog showWalletInstallDialog = ShowWalletInstallDialog(
           context: navigatorKey.currentState!.overlay!.context,
           errorMessage: 'create_stripe_description'.tr(),
@@ -611,6 +602,8 @@ class EaselProvider extends ChangeNotifier {
 
     return false;
   }
+
+  showStripeDialog() => !stripeAccountExists && _selectedDenom.symbol == kUsdSymbol && isFreeDrop == FreeDrop.no;
 
   /// sends a createRecipe Tx message to the wallet
   /// return true or false depending on the response from the wallet app

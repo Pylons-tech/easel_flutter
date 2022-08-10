@@ -102,7 +102,7 @@ class _PriceScreenState extends State<PriceScreen> {
                                 padding: EdgeInsets.only(right: 20.w),
                                 child: InkWell(
                                   onTap: () {
-                                    if (provider.isFreeDrop !=FreeDrop.unselected) {
+                                    if (provider.isFreeDrop != FreeDrop.unselected) {
                                       FocusScope.of(context).unfocus();
                                       validateAndUpdatePrice(true);
                                     }
@@ -166,14 +166,14 @@ class _PriceScreenState extends State<PriceScreen> {
                             width: 140.w,
                             height: 30.h,
                             decoration: BoxDecoration(
-                              color: provider.isFreeDrop== FreeDrop.no ? EaselAppTheme.kBlue : EaselAppTheme.kTransparent,
-                              border: Border.all(color: provider.isFreeDrop== FreeDrop.no  ? EaselAppTheme.kBlue : EaselAppTheme.kBlack, width: 2.w),
+                              color: provider.isFreeDrop == FreeDrop.no ? EaselAppTheme.kBlue : EaselAppTheme.kTransparent,
+                              border: Border.all(color: provider.isFreeDrop == FreeDrop.no ? EaselAppTheme.kBlue : EaselAppTheme.kBlack, width: 2.w),
                             ),
                             child: Center(
                               child: Text(
                                 "no".tr(),
                                 style: TextStyle(
-                                  color: provider.isFreeDrop== FreeDrop.no ? EaselAppTheme.kWhite : EaselAppTheme.kBlack,
+                                  color: provider.isFreeDrop == FreeDrop.no ? EaselAppTheme.kWhite : EaselAppTheme.kBlack,
                                 ),
                               ),
                             ),
@@ -337,7 +337,7 @@ class _PriceScreenState extends State<PriceScreen> {
                           mobileScreen: (_) => VerticalSpace(0.38.sh),
                           tabletScreen: (_) => VerticalSpace(0.2.sh),
                         ),
-                      if (provider.isFreeDrop==FreeDrop.yes )
+                      if (provider.isFreeDrop == FreeDrop.yes)
                         ScreenResponsive(
                           mobileScreen: (_) => VerticalSpace(0.1.sh),
                           tabletScreen: (_) => VerticalSpace(0.05.sh),
@@ -388,7 +388,7 @@ class _PriceScreenState extends State<PriceScreen> {
     if (!_formKey.currentState!.validate()) {
       return;
     }
-    if (context.read<EaselProvider>().isFreeDrop==FreeDrop.yes) {
+    if (context.read<EaselProvider>().isFreeDrop == FreeDrop.yes) {
       if (_royaltiesFieldError.value.isNotEmpty || _noOfEditionsFieldError.value.isNotEmpty) return;
       await context.read<EaselProvider>().updateNftFromPrice(nft!.id!);
       moveNextPage ? context.read<HomeViewModel>().nextPage() : Navigator.pop(context);

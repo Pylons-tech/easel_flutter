@@ -213,14 +213,6 @@ class _DescribeScreenState extends State<DescribeScreen> {
                         controller: provider.descriptionController,
                         textCapitalization: TextCapitalization.sentences,
                         inputFormatters: [LengthLimitingTextInputFormatter(kMaxDescription)],
-                        onChanged: (value) {
-
-                          if (value == null) {
-                            return;
-                          }
-                          provider.setDescCharactersLeft(value.length);
-                          return;
-                        },
                         validator: (value) {
                           if (value!.isEmpty) {
                             _descriptionFieldError.value = kEnterNFTDescriptionText;
@@ -251,18 +243,22 @@ class _DescribeScreenState extends State<DescribeScreen> {
                               ),
                             );
                           }),
-                      Padding(
-                        padding: EdgeInsets.symmetric(horizontal: 10.0.w),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.end,
-                          children: [
-                            Text(
-                              "${provider.descCharactersLeft} $kCharacterLimitText",
-                              style: TextStyle(color: EaselAppTheme.kLightPurple, fontSize: 14.sp, fontWeight: FontWeight.w800),
-                            ),
-                          ],
-                        ),
-                      ),
+                      ValueListenableBuilder(
+                          valueListenable: provider.descriptionController,
+                          builder: (_, TextEditingValue controller, __) {
+                            return Padding(
+                              padding: EdgeInsets.symmetric(horizontal: 10.0.w),
+                              child: Row(
+                                mainAxisAlignment: MainAxisAlignment.end,
+                                children: [
+                                  Text(
+                                    "${kMaxDescription - controller.text.length} $kCharacterLimitText",
+                                    style: TextStyle(color: EaselAppTheme.kLightPurple, fontSize: 14.sp, fontWeight: FontWeight.w800),
+                                  ),
+                                ],
+                              ),
+                            );
+                          }),
                       VerticalSpace(20.h),
                       const EaselHashtagInputField(),
                       VerticalSpace(20.h),
