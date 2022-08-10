@@ -92,7 +92,7 @@ const double TABLET_MIN_WIDTH = 600;
 const int kNumberOfSeconds = 1000;
 const int kSixtySeconds = 60;
 const int kFileCompressQuality = 50;
-
+const int kSplashScreenDuration = 3;
 const double kPrecision = 100000000000000000;
 const double kRoyaltyPrecision = 10000000000000000;
 
