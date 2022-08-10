@@ -36,7 +36,7 @@ class EaselTextField extends StatelessWidget {
         Text(
           label,
           textAlign: TextAlign.start,
-          style: TextStyle(fontSize: 18.sp, fontWeight: FontWeight.w500),
+          style: TextStyle(fontSize: 18.sp, fontWeight: FontWeight.w700),
         ),
         SizedBox(height: 4.h),
         Stack(
@@ -64,7 +64,7 @@ class EaselTextField extends StatelessWidget {
 
   SizedBox buildMobileTextField() {
     return SizedBox(
-      height: noOfLines == 1 ?  40.h :  120.h,
+      height: noOfLines == 1 ? 40.h : 120.h,
       child: Align(
         alignment: Alignment.center,
         child: TextFormField(
@@ -78,7 +78,7 @@ class EaselTextField extends StatelessWidget {
           inputFormatters: inputFormatters,
           decoration: InputDecoration(
             hintText: hint,
-            hintStyle: TextStyle(fontSize: noOfLines == 1 ? 18.sp : 15.sp, color: EaselAppTheme.kGrey),
+            hintStyle: TextStyle(fontSize: 15.sp, fontWeight: FontWeight.w400, color: EaselAppTheme.kGrey),
             border: const OutlineInputBorder(borderSide: BorderSide.none),
             floatingLabelBehavior: FloatingLabelBehavior.always,
             contentPadding: EdgeInsets.fromLTRB(10.w, 0.h, 10.w, 0.h),

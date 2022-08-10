@@ -66,7 +66,7 @@ class _$AppDatabase extends AppDatabase {
   Future<sqflite.Database> open(String path, List<Migration> migrations,
       [Callback? callback]) async {
     final databaseOptions = sqflite.OpenDatabaseOptions(
-      version: 5,
+      version: 6,
       onConfigure: (database) async {
         await database.execute('PRAGMA foreign_keys = ON');
         await callback?.onConfigure?.call(database);
@@ -82,7 +82,7 @@ class _$AppDatabase extends AppDatabase {
       },
       onCreate: (database, version) async {
         await database.execute(
-            'CREATE TABLE IF NOT EXISTS `NFT` (`id` INTEGER, `url` TEXT NOT NULL, `thumbnailUrl` TEXT NOT NULL, `name` TEXT NOT NULL, `description` TEXT NOT NULL, `denom` TEXT NOT NULL, `price` TEXT NOT NULL, `creator` TEXT NOT NULL, `owner` TEXT NOT NULL, `amountMinted` INTEGER NOT NULL, `quantity` TEXT NOT NULL, `tradePercentage` TEXT NOT NULL, `cookbookID` TEXT NOT NULL, `recipeID` TEXT NOT NULL, `itemID` TEXT NOT NULL, `width` TEXT NOT NULL, `height` TEXT NOT NULL, `appType` TEXT NOT NULL, `tradeID` TEXT NOT NULL, `ownerAddress` TEXT NOT NULL, `step` TEXT NOT NULL, `ibcCoins` TEXT NOT NULL, `isFreeDrop` INTEGER NOT NULL, `type` TEXT NOT NULL, `assetType` TEXT NOT NULL, `duration` TEXT NOT NULL, `hashtags` TEXT NOT NULL, `fileName` TEXT NOT NULL, `fileSize` TEXT NOT NULL, `cid` TEXT NOT NULL, `dateTime` INTEGER NOT NULL, `isDialogShown` INTEGER NOT NULL, `isEnabled` INTEGER NOT NULL, PRIMARY KEY (`id`))');
+            'CREATE TABLE IF NOT EXISTS `NFT` (`id` INTEGER, `url` TEXT NOT NULL, `thumbnailUrl` TEXT NOT NULL, `name` TEXT NOT NULL, `description` TEXT NOT NULL, `denom` TEXT NOT NULL, `price` TEXT NOT NULL, `creator` TEXT NOT NULL, `owner` TEXT NOT NULL, `amountMinted` INTEGER NOT NULL, `quantity` TEXT NOT NULL, `tradePercentage` TEXT NOT NULL, `cookbookID` TEXT NOT NULL, `recipeID` TEXT NOT NULL, `itemID` TEXT NOT NULL, `width` TEXT NOT NULL, `height` TEXT NOT NULL, `appType` TEXT NOT NULL, `tradeID` TEXT NOT NULL, `ownerAddress` TEXT NOT NULL, `step` TEXT NOT NULL, `ibcCoins` TEXT NOT NULL, `isFreeDrop` TEXT NOT NULL, `type` TEXT NOT NULL, `assetType` TEXT NOT NULL, `duration` TEXT NOT NULL, `hashtags` TEXT NOT NULL, `fileName` TEXT NOT NULL, `fileSize` TEXT NOT NULL, `cid` TEXT NOT NULL, `dateTime` INTEGER NOT NULL, `isDialogShown` INTEGER NOT NULL, `isEnabled` INTEGER NOT NULL, PRIMARY KEY (`id`))');
 
         await callback?.onCreate?.call(database, version);
       },
@@ -125,7 +125,7 @@ class _$NftDao extends NftDao {
                   'ownerAddress': item.ownerAddress,
                   'step': item.step,
                   'ibcCoins': item.ibcCoins,
-                  'isFreeDrop': item.isFreeDrop ? 1 : 0,
+                  'isFreeDrop': item.isFreeDrop,
                   'type': item.type,
                   'assetType': item.assetType,
                   'duration': item.duration,
@@ -164,7 +164,7 @@ class _$NftDao extends NftDao {
             recipeID: row['recipeID'] as String,
             owner: row['owner'] as String,
             width: row['width'] as String,
-            isFreeDrop: (row['isFreeDrop'] as int) != 0,
+            isFreeDrop: row['isFreeDrop'] as String,
             height: row['height'] as String,
             tradePercentage: row['tradePercentage'] as String,
             amountMinted: row['amountMinted'] as int,
@@ -202,7 +202,7 @@ class _$NftDao extends NftDao {
             recipeID: row['recipeID'] as String,
             owner: row['owner'] as String,
             width: row['width'] as String,
-            isFreeDrop: (row['isFreeDrop'] as int) != 0,
+            isFreeDrop: row['isFreeDrop'] as String,
             height: row['height'] as String,
             tradePercentage: row['tradePercentage'] as String,
             amountMinted: row['amountMinted'] as int,
@@ -266,7 +266,7 @@ class _$NftDao extends NftDao {
       String quantity,
       String step,
       String denom,
-      bool isFreeDrop,
+      String isFreeDrop,
       int dateTime) async {
     await _queryAdapter.queryNoReturn(
         'UPDATE nft SET tradePercentage = ?2, price= ?3, quantity = ?4, denom =?6, step = ?5, isFreeDrop = ?7, dateTime = ?8 WHERE id = ?1',
@@ -277,7 +277,7 @@ class _$NftDao extends NftDao {
           quantity,
           step,
           denom,
-          isFreeDrop ? 1 : 0,
+          isFreeDrop,
           dateTime
         ]);
   }

@@ -60,7 +60,7 @@ class EaselProvider extends ChangeNotifier {
   String? _cookbookId;
   String _recipeId = "";
   var stripeAccountExists = false;
-  bool isFreeDrop = false;
+  FreeDrop isFreeDrop = FreeDrop.unselected;
 
   Denom _selectedDenom = Denom.availableDenoms.first;
   List<Denom> supportedDenomList = [];
@@ -204,7 +204,7 @@ class EaselProvider extends ChangeNotifier {
     royaltyController.clear();
     hashtagsList.clear();
     willLoadFirstTime = true;
-    isFreeDrop = false;
+    isFreeDrop = FreeDrop.unselected;
     collapsed = false;
     notifyListeners();
   }
@@ -234,16 +234,16 @@ class EaselProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-  void setTextFieldValuesPrice({String? royalties, String? price, String? edition, String? denom, bool freeDrop = false}) {
+  void setTextFieldValuesPrice({String? royalties, String? price, String? edition, String? denom, FreeDrop? freeDrop}) {
     royaltyController.text = royalties ?? "";
     priceController.text = price ?? "";
     noOfEditionController.text = edition ?? "";
     _selectedDenom = denom != "" ? Denom.availableDenoms.firstWhere((element) => element.symbol == denom) : Denom.availableDenoms.first;
-    isFreeDrop = freeDrop;
+    isFreeDrop = freeDrop!;
     notifyListeners();
   }
 
-  void updateIsFreeDropStatus(bool val) {
+  void updateIsFreeDropStatus(FreeDrop val) {
     isFreeDrop = val;
     notifyListeners();
   }
@@ -579,7 +579,7 @@ class EaselProvider extends ChangeNotifier {
       return false;
     }
 
-    if (!stripeAccountExists && _selectedDenom.symbol == kUsdSymbol && !isFreeDrop) {
+    if (showStripeDialog()) {
       ShowWalletInstallDialog showWalletInstallDialog = ShowWalletInstallDialog(
           context: navigatorKey.currentState!.overlay!.context,
           errorMessage: 'create_stripe_description'.tr(),
@@ -602,6 +602,8 @@ class EaselProvider extends ChangeNotifier {
 
     return false;
   }
+
+  showStripeDialog() => !stripeAccountExists && _selectedDenom.symbol == kUsdSymbol && isFreeDrop == FreeDrop.no;
 
   /// sends a createRecipe Tx message to the wallet
   /// return true or false depending on the response from the wallet app
@@ -627,12 +629,9 @@ class EaselProvider extends ChangeNotifier {
 
     disposePlayers(assetType: nft.assetType);
 
-
-
     String tradePercentage = BigInt.from(int.parse(nft.tradePercentage.trim()) * kRoyaltyPrecision).toString();
 
-
-    String price = isFreeDrop ? "0" : _selectedDenom.formatAmount(price: priceController.text);
+    String price = isFreeDrop == FreeDrop.yes ? "0" : _selectedDenom.formatAmount(price: priceController.text);
     var recipe = Recipe(
         cookbookId: _cookbookId,
         id: _recipeId,
@@ -641,7 +640,7 @@ class EaselProvider extends ChangeNotifier {
         description: nft.description.trim(),
         version: kVersion,
         coinInputs: [
-          nft.isFreeDrop ? CoinInput() : CoinInput(coins: [Coin(amount: price, denom: _selectedDenom.symbol)])
+          isFreeDrop == FreeDrop.yes ? CoinInput() : CoinInput(coins: [Coin(amount: price, denom: _selectedDenom.symbol)])
         ],
         itemInputs: [],
         costPerBlock: Coin(denom: kUpylon, amount: costPerBlock),
@@ -1023,7 +1022,7 @@ class EaselProvider extends ChangeNotifier {
       price: priceController.text,
       quantity: noOfEditionController.text,
       step: UploadStep.priceAdded.name,
-      denomSymbol: isFreeDrop ? "" : selectedDenom.symbol,
+      denomSymbol: isFreeDrop == FreeDrop.yes ? "" : selectedDenom.symbol,
       isFreeDrop: isFreeDrop,
       dateTime: DateTime.now().millisecondsSinceEpoch,
     );

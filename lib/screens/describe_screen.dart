@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:developer';
 
 import 'package:easel_flutter/easel_provider.dart';
 import 'package:easel_flutter/repository/repository.dart';
@@ -102,7 +103,7 @@ class _DescribeScreenState extends State<DescribeScreen> {
                       builder: (_, int currentPage, __) {
                         return Text(
                           homeViewModel.pageTitles[homeViewModel.currentPage.value],
-                          style: Theme.of(context).textTheme.bodyText1!.copyWith(fontSize: 18.sp, fontWeight: FontWeight.w400, color: EaselAppTheme.kDarkText),
+                          style: Theme.of(context).textTheme.bodyText1!.copyWith(fontSize: 18.sp, fontWeight: FontWeight.w700, color: EaselAppTheme.kDarkText),
                         );
                       },
                     ),
@@ -137,7 +138,7 @@ class _DescribeScreenState extends State<DescribeScreen> {
                     children: [
                       EaselTextField(
                         label: kGiveNFTNameText,
-                        hint: kHintNftName,
+                        hint: "nft_name_hint".tr(),
                         controller: provider.artNameController,
                         textCapitalization: TextCapitalization.sentences,
                         validator: (value) {
@@ -174,7 +175,7 @@ class _DescribeScreenState extends State<DescribeScreen> {
                       VerticalSpace(20.h),
                       EaselTextField(
                         label: kNameAsArtistText,
-                        hint: kHintArtistName,
+                        hint: "artist_hint".tr(),
                         controller: provider.artistNameController,
                         textCapitalization: TextCapitalization.sentences,
                         validator: (value) {
@@ -207,6 +208,7 @@ class _DescribeScreenState extends State<DescribeScreen> {
                       VerticalSpace(20.h),
                       EaselTextField(
                         label: kDescribeYourNftText,
+                        hint: "desc_nft_hint".tr(),
                         noOfLines: 5,
                         controller: provider.descriptionController,
                         textCapitalization: TextCapitalization.sentences,
@@ -241,18 +243,22 @@ class _DescribeScreenState extends State<DescribeScreen> {
                               ),
                             );
                           }),
-                      Padding(
-                        padding: EdgeInsets.symmetric(horizontal: 10.0.w),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.end,
-                          children: [
-                            Text(
-                              "$kMaxDescription $kCharacterLimitText",
-                              style: TextStyle(color: EaselAppTheme.kLightPurple, fontSize: 14.sp, fontWeight: FontWeight.w800),
-                            ),
-                          ],
-                        ),
-                      ),
+                      ValueListenableBuilder(
+                          valueListenable: provider.descriptionController,
+                          builder: (_, TextEditingValue controller, __) {
+                            return Padding(
+                              padding: EdgeInsets.symmetric(horizontal: 10.0.w),
+                              child: Row(
+                                mainAxisAlignment: MainAxisAlignment.end,
+                                children: [
+                                  Text(
+                                    "${kMaxDescription - controller.text.length} $kCharacterLimitText",
+                                    style: TextStyle(color: EaselAppTheme.kLightPurple, fontSize: 14.sp, fontWeight: FontWeight.w800),
+                                  ),
+                                ],
+                              ),
+                            );
+                          }),
                       VerticalSpace(20.h),
                       const EaselHashtagInputField(),
                       VerticalSpace(20.h),

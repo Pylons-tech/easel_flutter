@@ -204,15 +204,6 @@ const kCloseText = 'Close';
 const kUploadHint2 = '• Image, Video, 3D or Audio';
 const kUploadHint3 = '• One file per upload';
 const kUploadHintAll = 'GB Limit.\nOne file per upload.';
-const kHintNftName = 'Bird on Shoulder';
-const kHintArtistName = 'Sarah Jackson';
-const kHintNftDesc = 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eimod tempor incididunt ut labore et dolore magna aliquaQ. Ut enim ad minim veniam, quis nostrud exercita.';
-const kHintNoEdition = '100';
-const kHintPrice = '10.87';
-const kHintHashtag = 'Type in';
-const kHashtagsText = 'Hashtags (optional)';
-const kAddText = 'Add';
-const kNetworkFeeWarnText = 'A network fee of 10% of the listed price is required for all transactions that occur on-chain';
 
 const kRecipeCreated = 'Recipe created';
 const kErrProfileNotExist = 'profileDoesNotExist';
@@ -261,7 +252,7 @@ const kCompressingMessage = "Compressing Thumbnail";
 const kUploadingMessage = "Uploading";
 const kLoadingMessage = "Loading...";
 
-final List<String> stepLabels = ["upload", "draft", "publish"];
+final List<String> stepLabels = ["upload", "detail", "price   "];
 
 final List<String> imageAllowedExts = ["png", "jpg", "jpeg", "svg", "heif"];
 final List<String> audioAllowedExts = ['mp3', 'ogg', 'wav', 'aac'];
@@ -333,3 +324,5 @@ const kApnKey = "apn";
 const kIbiKey = "ibi";
 const kImvKey = "imv";
 const kLinkKey = "link";
+
+const kTwelve=12;

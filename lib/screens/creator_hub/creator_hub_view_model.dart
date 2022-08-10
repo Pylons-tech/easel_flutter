@@ -20,7 +20,7 @@ class CreatorHubViewModel extends ChangeNotifier {
 
   CollectionType selectedCollectionType = CollectionType.draft;
 
-  ViewType viewType = ViewType.viewList;
+  ViewType viewType = ViewType.viewGrid;
 
   int _publishedRecipesLength = 0;
   int forSaleCount = 0;
