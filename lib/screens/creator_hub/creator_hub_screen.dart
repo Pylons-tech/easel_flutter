@@ -40,7 +40,6 @@ class _CreatorHubScreenState extends State<CreatorHubScreen> {
     super.initState();
   }
 
-
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -54,7 +53,7 @@ class _CreatorHubScreenState extends State<CreatorHubScreen> {
                 onFocusGained: () {
                   GetIt.I.get<CreatorHubViewModel>().getDraftsList();
                   GetIt.I.get<CreatorHubViewModel>().getTotalForSale();
-                  },
+                },
                 child: const CreatorHubContent()),
           ),
         ),

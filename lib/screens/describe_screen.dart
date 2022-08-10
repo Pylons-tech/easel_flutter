@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:developer';
 
 import 'package:easel_flutter/easel_provider.dart';
 import 'package:easel_flutter/repository/repository.dart';
@@ -242,18 +243,22 @@ class _DescribeScreenState extends State<DescribeScreen> {
                               ),
                             );
                           }),
-                      Padding(
-                        padding: EdgeInsets.symmetric(horizontal: 10.0.w),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.end,
-                          children: [
-                            Text(
-                              "$kMaxDescription $kCharacterLimitText",
-                              style: TextStyle(color: EaselAppTheme.kLightPurple, fontSize: 14.sp, fontWeight: FontWeight.w800),
-                            ),
-                          ],
-                        ),
-                      ),
+                      ValueListenableBuilder(
+                          valueListenable: provider.descriptionController,
+                          builder: (_, TextEditingValue controller, __) {
+                            return Padding(
+                              padding: EdgeInsets.symmetric(horizontal: 10.0.w),
+                              child: Row(
+                                mainAxisAlignment: MainAxisAlignment.end,
+                                children: [
+                                  Text(
+                                    "${kMaxDescription - controller.text.length} $kCharacterLimitText",
+                                    style: TextStyle(color: EaselAppTheme.kLightPurple, fontSize: 14.sp, fontWeight: FontWeight.w800),
+                                  ),
+                                ],
+                              ),
+                            );
+                          }),
                       VerticalSpace(20.h),
                       const EaselHashtagInputField(),
                       VerticalSpace(20.h),

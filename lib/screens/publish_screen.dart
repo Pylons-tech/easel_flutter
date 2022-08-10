@@ -149,6 +149,14 @@ class _OwnerBottomDrawerState extends State<OwnerBottomDrawer> {
     return viewModel.supportedDenomList.firstWhere((denom) => denom.symbol == widget.nft.denom).name;
   }
 
+  String getPriceSubtitle() {
+    return widget.nft.isFreeDrop == FreeDrop.yes.name
+        ? "0"
+        : widget.nft.denom == kUsdSymbol
+            ? "\$${widget.nft.price}"
+            : widget.nft.price;
+  }
+
   @override
   Widget build(BuildContext context) {
     final viewModel = context.watch<EaselProvider>();
@@ -318,24 +326,16 @@ class _OwnerBottomDrawerState extends State<OwnerBottomDrawer> {
                         height: 30.h,
                       ),
                       getProgressBarBuilder(viewModel),
-
                       SizedBox(
                         width: double.infinity,
                         child: Column(
                           children: [
                             buildRow(
                               title: "currency".tr(),
-                              subtitle: widget.nft.isFreeDrop== FreeDrop.yes.name ? kPylonText : getCurrency(),
+                              subtitle: widget.nft.isFreeDrop == FreeDrop.yes.name ? kPylonText : getCurrency(),
                             ),
                             SizedBox(height: 5.h),
-                            buildRow(
-                              title: "price".tr(),
-                              subtitle: widget.nft.isFreeDrop ==FreeDrop.yes.name
-                                  ? "0"
-                                  : widget.nft.denom == kUsdSymbol
-                                      ? "\$${widget.nft.price}"
-                                      : widget.nft.price,
-                            ),
+                            buildRow(title: "price".tr(), subtitle: getPriceSubtitle()),
                             SizedBox(height: 5.h),
                             buildRow(
                               title: "editions".tr(),
@@ -384,9 +384,6 @@ class _OwnerBottomDrawerState extends State<OwnerBottomDrawer> {
                               bgColor: Colors.white.withOpacity(0.2),
                               textColor: EaselAppTheme.kWhite,
                               onPressed: () async {
-                                viewModel.videoLoadingError = '';
-                                viewModel.isVideoLoading = true;
-
                                 Navigator.of(context).popUntil(ModalRoute.withName(RouteUtil.kRouteCreatorHub));
                               },
                               cuttingHeight: 15.h,
@@ -473,7 +470,7 @@ class _OwnerBottomDrawerState extends State<OwnerBottomDrawer> {
     );
   }
 
-  Widget getProgressBarBuilder(EaselProvider viewModel){
+  Widget getProgressBarBuilder(EaselProvider viewModel) {
     return ProgressBarBuilder(
       audioProgressBar: (context) {
         return Container(

@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:easel_flutter/easel_provider.dart';
 import 'package:easel_flutter/repository/repository.dart';
 import 'package:easel_flutter/screens/describe_screen.dart';
@@ -60,7 +62,7 @@ class _HomeScreenState extends State<HomeScreen> {
     easelProvider.isVideoLoading = true;
     ScaffoldMessenger.of(context).hideCurrentSnackBar();
     homeViewModel.previousPage();
-    if (homeViewModel.currentPage.value == 1) {
+    if (homeViewModel.currentPage.value == 0 || homeViewModel.currentPage.value == 1) {
       Navigator.of(context).pop();
     }
   }
@@ -100,7 +102,6 @@ class HomeScreenContent extends StatelessWidget {
         homeViewModel.currentPage.value = page;
         final map = {0: 0, 1: 1, 2: 2, 3: 2};
         homeViewModel.currentStep.value = map[page]!;
-
       },
       itemBuilder: (BuildContext context, int index) {
         final map = {0: chooseFormatScreen, 1: describeScreen, 2: priceScreen, 3: publishScreen};

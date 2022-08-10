@@ -76,7 +76,7 @@ class _HashtagInputFieldState extends State<EaselHashtagInputField> {
                                 contentPadding: EdgeInsets.fromLTRB(10.w, 0.h, 10.w, 0.h),
                               ),
                               inputFormatters: [
-                                FilteringTextInputFormatter.deny(RegExp(r'\s')),
+                                FilteringTextInputFormatter.allow(RegExp(r'[a-zA-Z0-9]')),
                               ],
                             )))),
                 Padding(
