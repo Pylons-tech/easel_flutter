@@ -126,7 +126,7 @@ class _TutorialScreenState extends State<TutorialScreen> {
           Align(
               alignment: Alignment.bottomCenter,
               child: Container(
-                margin: EdgeInsets.only(bottom: isTablet ? 85.h : 120.h),
+                margin: EdgeInsets.only(bottom: isTablet ? 85.h : 80.h),
                 padding: EdgeInsets.symmetric(vertical: 10.h),
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.center,

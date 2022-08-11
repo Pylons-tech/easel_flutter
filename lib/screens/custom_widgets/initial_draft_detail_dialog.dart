@@ -5,6 +5,7 @@ import 'package:easel_flutter/screens/clippers/right_triangle_clipper.dart' as c
 import 'package:easel_flutter/screens/clippers/right_triangle_clipper.dart';
 import 'package:easel_flutter/utils/constants.dart';
 import 'package:easel_flutter/utils/easel_app_theme.dart';
+import 'package:easel_flutter/utils/extension_util.dart';
 import 'package:easel_flutter/utils/route_util.dart';
 import 'package:easel_flutter/widgets/cid_or_ipfs.dart';
 import 'package:easel_flutter/widgets/clipped_button.dart';
@@ -60,7 +61,7 @@ class _DraftDetailDialogState extends State<_DraftDetailDialog> {
     EaselProvider easelProvider = context.read<EaselProvider>();
     if (easelProvider.nft.assetType == k3dText) {
       previewWidget = ModelViewer(
-        src: easelProvider.nft.url,
+        src: easelProvider.nft.url.changeDomain(),
         ar: false,
         autoRotate: false,
         cameraControls: false,
@@ -179,10 +180,10 @@ class _DraftDetailDialogState extends State<_DraftDetailDialog> {
                         );
                       },
                       viewIpfs: (context) {
-                        return buildRowIpfs(
+                        return buildViewOnIPFS(
                             title: "asset_uri".tr(),
                             subtitle: "view".tr(),
-                            onTapViewOnIpfs: () {
+                            onPressed: () {
                               onViewOnIPFSPressed(provider: easelProvider);
                             });
                       },
@@ -218,115 +219,85 @@ class _DraftDetailDialogState extends State<_DraftDetailDialog> {
   }
 
   void onViewOnIPFSPressed({required EaselProvider provider}) async {
-    await provider.repository.launchMyUrl(url: provider.nft.url);
+    await provider.repository.launchMyUrl(url: provider.nft.url.changeDomain());
   }
 
   String getImageUrl(EaselProvider easelProvider) {
     if (easelProvider.nft.assetType == kImageText) {
-      return easelProvider.nft.url;
+      return easelProvider.nft.url.changeDomain();
     } else {
-      return easelProvider.nft.thumbnailUrl;
+      return easelProvider.nft.thumbnailUrl.changeDomain();
     }
   }
 
-  Widget buildRowIpfs({required String title, required String subtitle, required final VoidCallback onTapViewOnIpfs, final bool canCopy = false, final subTitleColor = Colors.white}) {
-    return Row(
-      children: [
-        Expanded(
-            child: Padding(
-          padding: EdgeInsets.only(left: isTablet ? 20.w : 40.w, right: 5.w),
-          child: Text(
+  Widget buildViewOnIPFS({required String title, required String subtitle, required Function onPressed}) {
+    return Padding(
+      padding: EdgeInsets.symmetric(
+        horizontal: isTablet ? 20.w : 40.w,
+      ),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          Text(
             title,
             style: TextStyle(color: EaselAppTheme.kWhite, fontWeight: FontWeight.w700, fontSize: isTablet ? 11.sp : 10.sp),
           ),
-        )),
-        Expanded(
-          child: Padding(
-            padding: EdgeInsets.only(
-              right: 20.w,
+          InkWell(
+            onTap: () {
+              onPressed();
+            },
+            child: Text(
+              subtitle,
+              style: _rowTitleTextStyle(EaselAppTheme.kLightPurple),
             ),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.end,
-              children: [
-                InkWell(
-                  onTap: onTapViewOnIpfs,
-                  child: Text(
-                    subtitle,
-                    style: _rowTitleTextStyle(EaselAppTheme.kLightPurple),
-                  ),
-                ),
-              ],
-            ),
-          ),
-        )
-      ],
+          )
+        ],
+      ),
     );
   }
 
-  Widget buildRow({required String title, required String subtitle, final Color color = Colors.white, final bool canCopy = false}) {
-    return Row(
-      children: [
-        Expanded(
-            child: Padding(
-          padding: EdgeInsets.only(left: isTablet ? 20.w : 40.w, right: 5.w),
-          child: Text(
+  Widget buildRow({required String title, required String subtitle, final color = Colors.white, final bool canCopy = false}) {
+    return Padding(
+      padding: EdgeInsets.symmetric(
+        horizontal: isTablet ? 20.w : 40.w,
+      ),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          Text(
             title,
             style: TextStyle(color: EaselAppTheme.kWhite, fontWeight: FontWeight.w700, fontSize: isTablet ? 11.sp : 10.sp),
           ),
-        )),
-        Expanded(
-          child: Padding(
-            padding: EdgeInsets.only(
-              right: 20.w,
-            ),
-            child: subtitle.length > 14
-                ? Row(
-                    mainAxisAlignment: MainAxisAlignment.end,
-                    children: [
-                      Text(
-                        subtitle.substring(0, 8),
-                        style: _rowTitleTextStyle(color),
-                      ),
-                      Text(
-                        "...",
-                        style: TextStyle(
-                          color: color,
-                        ),
-                      ),
-                      Text(
-                        subtitle.substring(subtitle.length - 5, subtitle.length),
-                        style: _rowTitleTextStyle(color),
-                      ),
-                      canCopy
-                          ? InkWell(
-                              onTap: () async {
-                                await Clipboard.setData(ClipboardData(text: subtitle));
-                                if (!mounted) return;
-                                ScaffoldMessenger.of(context).showSnackBar(
-                                  SnackBar(content: Text("copied_to_clipboard".tr())),
-                                );
-                              },
-                              child: Icon(
-                                Icons.copy,
-                                size: 12.h,
-                                color: EaselAppTheme.kWhite,
-                              ),
-                            )
-                          : const SizedBox()
-                    ],
-                  )
-                : Row(
-                    mainAxisAlignment: MainAxisAlignment.end,
-                    children: [
-                      Text(
-                        subtitle,
-                        style: _rowTitleTextStyle(color),
-                      ),
-                    ],
+          Row(
+            mainAxisAlignment: MainAxisAlignment.end,
+            children: [
+              Text(
+                subtitle.trimString(kTwelve),
+                style: _rowTitleTextStyle(color),
+              ),
+              if (canCopy) ...[
+                SizedBox(
+                  width: 2.w,
+                ),
+                InkWell(
+                  onTap: () async {
+                    await Clipboard.setData(ClipboardData(text: subtitle));
+                    if (!mounted) return;
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      SnackBar(content: Text("copied_to_clipboard".tr())),
+                    );
+                  },
+                  child: Icon(
+                    Icons.copy,
+                    size: 12.h,
+                    color: EaselAppTheme.kWhite,
                   ),
-          ),
-        )
-      ],
+                )
+              ]
+            ],
+          )
+        ],
+      ),
     );
   }
 }

@@ -3,14 +3,17 @@ import 'package:easel_flutter/main.dart';
 import 'package:easel_flutter/models/nft.dart';
 import 'package:easel_flutter/screens/creator_hub/creator_hub_view_model.dart';
 import 'package:easel_flutter/screens/creator_hub/widgets/drafts_more_bottomsheet.dart';
+import 'package:easel_flutter/screens/creator_hub/widgets/nfts_list_tile.dart';
 import 'package:easel_flutter/utils/constants.dart';
 import 'package:easel_flutter/utils/easel_app_theme.dart';
+import 'package:easel_flutter/utils/extension_util.dart';
 import 'package:easel_flutter/utils/route_util.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:model_viewer_plus/model_viewer_plus.dart';
 import 'package:shimmer_animation/shimmer_animation.dart';
 
 class DraftListTile extends StatelessWidget {
@@ -62,12 +65,46 @@ class DraftListTile extends StatelessWidget {
                 SizedBox(
                   height: 45.h,
                   width: 45.h,
-                  child: CachedNetworkImage(
-                    fit: BoxFit.cover,
-                    imageUrl: nft.assetType == kImageText ? nft.url : nft.thumbnailUrl,
-                    errorWidget: (a, b, c) => const Center(child: Icon(Icons.error_outline)),
-                    placeholder: (context, url) => Shimmer(color: EaselAppTheme.cardBackground, child: const SizedBox.expand()),
-                  ),
+                  child:
+                  NftTypeBuilder(
+                    onImage: (context) => CachedNetworkImage(
+                      errorWidget: (context, url, error) => Align(
+                        child: SvgPicture.asset(
+                          kSvgNftFormatImage,
+                          color: EaselAppTheme.kBlack,
+                        ),
+                      ),
+                      placeholder: (context, url) => Shimmer(color: EaselAppTheme.cardBackground, child: const SizedBox.expand()),
+                      imageUrl:  nft.url.changeDomain(),
+                      fit: BoxFit.cover,
+                    ),
+                    onVideo: (context) => CachedNetworkImage(
+                      fit: BoxFit.fill,
+                      imageUrl: nft.thumbnailUrl.changeDomain(),
+                      errorWidget: (a, b, c) => const Center(child: Icon(Icons.error_outline)),
+                      placeholder: (context, url) => Shimmer(color: EaselAppTheme.cardBackground, child: const SizedBox.expand()),
+                    ),
+                    onPdf: (context) => CachedNetworkImage(
+                      fit: BoxFit.fill,
+                      imageUrl: nft.thumbnailUrl,
+                      errorWidget: (a, b, c) => const Center(child: Icon(Icons.error_outline)),
+                      placeholder: (context, url) => Shimmer(color: EaselAppTheme.cardBackground, child: const SizedBox.expand()),
+                    ),
+                    onAudio: (context) => CachedNetworkImage(
+                      fit: BoxFit.fill,
+                      imageUrl: nft.thumbnailUrl.changeDomain(),
+                      errorWidget: (a, b, c) => const Center(child: Icon(Icons.error_outline)),
+                      placeholder: (context, url) => Shimmer(color: EaselAppTheme.cardBackground, child: const SizedBox.expand()),
+                    ),
+                    on3D: (context) => ModelViewer(
+                      src: nft.url.changeDomain(),
+                      backgroundColor: EaselAppTheme.kWhite,
+                      ar: false,
+                      autoRotate: false,
+                      cameraControls: false,
+                    ),
+                    assetType: nft.assetType.toAssetTypeEnum(),
+                  )
                 ),
                 SizedBox(
                   width: 10.w,

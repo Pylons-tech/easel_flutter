@@ -10,6 +10,7 @@ import 'package:easel_flutter/models/nft.dart';
 import 'package:easel_flutter/models/nft_format.dart';
 import 'package:easel_flutter/models/picked_file_model.dart';
 import 'package:easel_flutter/models/save_nft.dart';
+import 'package:easel_flutter/models/upload_progress.dart';
 import 'package:easel_flutter/repository/repository.dart';
 import 'package:easel_flutter/screens/welcome_screen/widgets/show_wallet_install_dialog.dart';
 import 'package:easel_flutter/services/third_party_services/audio_player_helper.dart';
@@ -18,7 +19,8 @@ import 'package:easel_flutter/utils/constants.dart';
 import 'package:easel_flutter/utils/enums.dart';
 import 'package:easel_flutter/utils/extension_util.dart';
 import 'package:easel_flutter/utils/file_utils_helper.dart';
-import 'package:easel_flutter/widgets/loading.dart';
+import 'package:easel_flutter/widgets/audio_widget.dart';
+import 'package:easel_flutter/widgets/loading_with_progress.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:fixnum/fixnum.dart';
 import 'package:flutter/material.dart';
@@ -31,6 +33,8 @@ import 'package:share_plus/share_plus.dart';
 import 'package:video_player/video_player.dart';
 
 import '../utils/enums.dart';
+
+typedef OnUploadProgressCallback = void Function(UploadProgress uploadProgress);
 
 class EaselProvider extends ChangeNotifier {
   final VideoPlayerHelper videoPlayerHelper;
@@ -58,7 +62,7 @@ class EaselProvider extends ChangeNotifier {
   String? _cookbookId;
   String _recipeId = "";
   var stripeAccountExists = false;
-  bool isFreeDrop = false;
+  FreeDrop isFreeDrop = FreeDrop.unselected;
 
   Denom _selectedDenom = Denom.availableDenoms.first;
   List<Denom> supportedDenomList = [];
@@ -70,6 +74,10 @@ class EaselProvider extends ChangeNotifier {
   bool willLoadFirstTime = true;
 
   bool collapsed = false;
+
+  final StreamController<UploadProgress> _uploadProgressController = StreamController.broadcast();
+
+  Stream<UploadProgress> get uploadProgressStream => _uploadProgressController.stream;
 
   void setPublishedNFTClicked(NFT nft) {
     _publishedNFTClicked = nft;
@@ -91,6 +99,15 @@ class EaselProvider extends ChangeNotifier {
 
   void setVideoThumbnail(File? file) {
     _videoThumbnail = file;
+    notifyListeners();
+  }
+
+  File? _pdfThumbnail;
+
+  File? get pdfThumbnail => _pdfThumbnail;
+
+  void setPdfThumbnail(File? file) {
+    _pdfThumbnail = file;
     notifyListeners();
   }
 
@@ -189,7 +206,7 @@ class EaselProvider extends ChangeNotifier {
     royaltyController.clear();
     hashtagsList.clear();
     willLoadFirstTime = true;
-    isFreeDrop = false;
+    isFreeDrop = FreeDrop.unselected;
     collapsed = false;
     notifyListeners();
   }
@@ -219,16 +236,16 @@ class EaselProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-  void setTextFieldValuesPrice({String? royalties, String? price, String? edition, String? denom, bool freeDrop = false}) {
+  void setTextFieldValuesPrice({String? royalties, String? price, String? edition, String? denom, FreeDrop? freeDrop}) {
     royaltyController.text = royalties ?? "";
     priceController.text = price ?? "";
     noOfEditionController.text = edition ?? "";
     _selectedDenom = denom != "" ? Denom.availableDenoms.firstWhere((element) => element.symbol == denom) : Denom.availableDenoms.first;
-    isFreeDrop = freeDrop;
+    isFreeDrop = freeDrop!;
     notifyListeners();
   }
 
-  void updateIsFreeDropStatus(bool val) {
+  void updateIsFreeDropStatus(FreeDrop val) {
     isFreeDrop = val;
     notifyListeners();
   }
@@ -427,12 +444,12 @@ class EaselProvider extends ChangeNotifier {
   void initializePlayers({required NFT publishedNFT}) {
     switch (publishedNFT.assetType.toAssetTypeEnum()) {
       case AssetType.Audio:
-        initializeAudioPlayer(publishedNFTUrl: publishedNFT.url);
+        initializeAudioPlayer(publishedNFTUrl: publishedNFT.url.changeDomain());
         break;
       case AssetType.Image:
         break;
       case AssetType.Video:
-        initializeVideoPlayerWithUrl(publishedNftUrl: publishedNFT.url);
+        initializeVideoPlayerWithUrl(publishedNftUrl: publishedNFT.url.changeDomain());
         break;
 
       default:
@@ -482,6 +499,8 @@ class EaselProvider extends ChangeNotifier {
         _fileDuration = info['durationMs'];
         break;
       case NFTTypes.threeD:
+        break;
+      case NFTTypes.pdf:
         break;
     }
   }
@@ -562,7 +581,7 @@ class EaselProvider extends ChangeNotifier {
       return false;
     }
 
-    if (!stripeAccountExists && _selectedDenom.symbol == kUsdSymbol && !isFreeDrop) {
+    if (showStripeDialog()) {
       ShowWalletInstallDialog showWalletInstallDialog = ShowWalletInstallDialog(
           context: navigatorKey.currentState!.overlay!.context,
           errorMessage: 'create_stripe_description'.tr(),
@@ -585,6 +604,8 @@ class EaselProvider extends ChangeNotifier {
 
     return false;
   }
+
+  showStripeDialog() => !stripeAccountExists && _selectedDenom.symbol == kUsdSymbol && isFreeDrop == FreeDrop.no;
 
   /// sends a createRecipe Tx message to the wallet
   /// return true or false depending on the response from the wallet app
@@ -610,11 +631,9 @@ class EaselProvider extends ChangeNotifier {
 
     disposePlayers(assetType: nft.assetType);
 
-    String residual = nft.tradePercentage.trim();
+    String tradePercentage = BigInt.from(int.parse(nft.tradePercentage.trim()) * kRoyaltyPrecision).toString();
 
-    String price = isFreeDrop ? "0" : _selectedDenom.formatAmount(price: priceController.text);
-    String tradePercentage = (double.parse(nft.tradePercentage.trim()) * 10000000000000000).toInt().toString();
-
+    String price = isFreeDrop == FreeDrop.yes ? "0" : _selectedDenom.formatAmount(price: priceController.text);
     var recipe = Recipe(
         cookbookId: _cookbookId,
         id: _recipeId,
@@ -623,7 +642,7 @@ class EaselProvider extends ChangeNotifier {
         description: nft.description.trim(),
         version: kVersion,
         coinInputs: [
-          nft.isFreeDrop ? CoinInput() : CoinInput(coins: [Coin(amount: price, denom: _selectedDenom.symbol)])
+          isFreeDrop == FreeDrop.yes ? CoinInput() : CoinInput(coins: [Coin(amount: price, denom: _selectedDenom.symbol)])
         ],
         itemInputs: [],
         costPerBlock: Coin(denom: kUpylon, amount: costPerBlock),
@@ -633,8 +652,8 @@ class EaselProvider extends ChangeNotifier {
               doubles: [
                 DoubleParam(key: kResidual, weightRanges: [
                   DoubleWeightRange(
-                    lower: residual,
-                    upper: residual,
+                    lower: tradePercentage,
+                    upper: tradePercentage,
                     weight: Int64(1),
                   )
                 ])
@@ -709,6 +728,19 @@ class EaselProvider extends ChangeNotifier {
 
     if (result.path.isEmpty) return;
     setVideoThumbnail(File(result.path));
+  }
+
+  void onPdfThumbnailPicked() async {
+    final pickedFile = await repository.pickFile(NftFormat.supportedFormats[0]);
+
+    final result = pickedFile.getOrElse(() => PickedFileModel(
+          path: "",
+          fileName: "",
+          extension: "",
+        ));
+
+    if (result.path.isEmpty) return;
+    setPdfThumbnail(File(result.path));
   }
 
   void populateCoinsIfPylonsNotExists() {
@@ -821,6 +853,23 @@ class EaselProvider extends ChangeNotifier {
 
   late NFT nft;
 
+  File getThumbnailType(NFTTypes format) {
+    switch (format) {
+      case NFTTypes.audio:
+        return audioThumbnail!;
+      case NFTTypes.video:
+        return videoThumbnail!;
+      case NFTTypes.pdf:
+        return pdfThumbnail!;
+      default:
+        return File("");
+    }
+  }
+
+  bool isThumbnailPresent() {
+    return nftFormat.format == NFTTypes.audio || nftFormat.format == NFTTypes.video || nftFormat.format == NFTTypes.pdf;
+  }
+
   Future<bool> saveNftLocally(UploadStep step) async {
     if (nftFormat.format == NFTTypes.audio) {
       audioPlayerHelperForFile.pauseAudio();
@@ -838,11 +887,11 @@ class EaselProvider extends ChangeNotifier {
       navigatorKey.currentState!.overlay!.context.show(message: kErrPickFileFetch);
       return false;
     }
-    final loading = Loading()..showLoading(message: kUploadingMessage);
+    final loading = LoadingProgress()..showLoadingWithProgress(message: kUploadingMessage);
 
     initializeTextEditingControllerWithEmptyValues();
-    if (nftFormat.format == NFTTypes.audio || nftFormat.format == NFTTypes.video) {
-      final uploadResponse = await repository.uploadFile(nftFormat.format == NFTTypes.audio ? audioThumbnail! : videoThumbnail!);
+    if (isThumbnailPresent()) {
+      final uploadResponse = await repository.uploadFile(file: getThumbnailType(nftFormat.format), onUploadProgressCallback: (value) {});
       if (uploadResponse.isLeft()) {
         loading.dismiss();
         "something_wrong_while_uploading".tr().show();
@@ -856,7 +905,11 @@ class EaselProvider extends ChangeNotifier {
       }
     }
 
-    final response = await repository.uploadFile(_file!);
+    final response = await repository.uploadFile(
+        file: _file!,
+        onUploadProgressCallback: (value) {
+          _uploadProgressController.sink.add(value);
+        });
     if (response.isLeft()) {
       loading.dismiss();
       "something_wrong_while_uploading".tr().show();
@@ -887,7 +940,7 @@ class EaselProvider extends ChangeNotifier {
       fileName: _file!.path.split("/").last,
       cid: fileUploadResponse.data?.value?.cid,
       step: step.name,
-      thumbnailUrl: (nftFormat.format == NFTTypes.audio || nftFormat.format == NFTTypes.video) ? "$ipfsDomain/${uploadThumbnailResponse.data?.value?.cid}" : "",
+      thumbnailUrl: (isThumbnailPresent()) ? "$ipfsDomain/${uploadThumbnailResponse.data?.value?.cid}" : "",
       name: artistNameController.text,
       url: "$ipfsDomain/${fileUploadResponse.data?.value?.cid}",
       price: priceController.text,
@@ -920,7 +973,7 @@ class EaselProvider extends ChangeNotifier {
       step: step.name,
       fileName: _file!.path.split("/").last,
       cid: fileUploadResponse.data?.value?.cid,
-      thumbnailUrl: (nftFormat.format == NFTTypes.audio || nftFormat.format == NFTTypes.video) ? "$ipfsDomain/${uploadThumbnailResponse.data?.value?.cid}" : "",
+      thumbnailUrl: (isThumbnailPresent()) ? "$ipfsDomain/${uploadThumbnailResponse.data?.value?.cid}" : "",
       name: artistNameController.text,
       url: "$ipfsDomain/${fileUploadResponse.data?.value?.cid}",
       price: priceController.text,
@@ -973,7 +1026,7 @@ class EaselProvider extends ChangeNotifier {
       price: priceController.text,
       quantity: noOfEditionController.text,
       step: UploadStep.priceAdded.name,
-      denomSymbol: isFreeDrop ? "" : selectedDenom.symbol,
+      denomSymbol: isFreeDrop == FreeDrop.yes ? "" : selectedDenom.symbol,
       isFreeDrop: isFreeDrop,
       dateTime: DateTime.now().millisecondsSinceEpoch,
     );
@@ -1011,18 +1064,6 @@ class EaselProvider extends ChangeNotifier {
       return;
     }
   }
-}
-
-class ProgressBarState {
-  ProgressBarState({
-    required this.current,
-    required this.buffered,
-    required this.total,
-  });
-
-  final Duration current;
-  final Duration buffered;
-  final Duration total;
 }
 
 enum ButtonState { paused, playing, loading }

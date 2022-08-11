@@ -81,6 +81,12 @@ extension AssetTypePar on String {
   }
 }
 
+extension FreeDropEnum on String {
+  FreeDrop toFreeDropEnum() {
+    return FreeDrop.values.firstWhere((e) => e.toString() == 'FreeDrop.$this', orElse: () => FreeDrop.unselected);
+  }
+}
+
 extension DurationConverter on int {
   String toSeconds() {
     final double seconds = this / kNumberOfSeconds;
@@ -167,5 +173,23 @@ extension ValueConverterToBigInt on String {
       return 0;
     }
     return BigInt.parse(this).toDouble() * kPrecision;
+  }
+}
+
+extension ChangeDomain on String {
+  String changeDomain() {
+    if (!contains(ipfsDomain)) {
+      return this;
+    }
+    return replaceAll(ipfsDomain, proxyIpfsDomain);
+  }
+}
+
+extension TrimString on String {
+  String trimString(int minThreshold) {
+    if (length > minThreshold) {
+      return "${substring(0, 8)}...${substring(length - 4, length)}";
+    }
+    return this;
   }
 }

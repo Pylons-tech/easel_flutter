@@ -40,8 +40,8 @@ class HomeViewModel extends ChangeNotifier {
           return;
 
         case UploadStep.descriptionAdded:
-          currentPage = ValueNotifier(1);
-          currentStep = ValueNotifier(1);
+          currentPage = ValueNotifier(2);
+          currentStep = ValueNotifier(2);
           pageController = PageController(keepPage: true, initialPage: 2);
           break;
         case UploadStep.priceAdded:
@@ -69,6 +69,7 @@ class HomeViewModel extends ChangeNotifier {
 
   void previousPage() async {
 
+    from=kDraft;
     await pageController.previousPage(duration: const Duration(milliseconds: kPageAnimationTimeInMillis), curve: Curves.easeIn);
 
     notifyListeners();

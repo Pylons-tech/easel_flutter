@@ -55,10 +55,16 @@ class NFTsListTile extends StatelessWidget {
                         ),
                       ),
                       placeholder: (context, url) => Shimmer(color: EaselAppTheme.cardBackground, child: const SizedBox.expand()),
-                      imageUrl: publishedNFT.url,
+                      imageUrl: publishedNFT.url.changeDomain(),
                       fit: BoxFit.cover,
                     ),
                     onVideo: (context) => CachedNetworkImage(
+                      fit: BoxFit.fill,
+                      imageUrl: publishedNFT.thumbnailUrl.changeDomain(),
+                      errorWidget: (a, b, c) => const Center(child: Icon(Icons.error_outline)),
+                      placeholder: (context, url) => Shimmer(color: EaselAppTheme.cardBackground, child: const SizedBox.expand()),
+                    ),
+                    onPdf: (context) => CachedNetworkImage(
                       fit: BoxFit.fill,
                       imageUrl: publishedNFT.thumbnailUrl,
                       errorWidget: (a, b, c) => const Center(child: Icon(Icons.error_outline)),
@@ -66,12 +72,12 @@ class NFTsListTile extends StatelessWidget {
                     ),
                     onAudio: (context) => CachedNetworkImage(
                       fit: BoxFit.fill,
-                      imageUrl: publishedNFT.thumbnailUrl,
+                      imageUrl: publishedNFT.thumbnailUrl.changeDomain(),
                       errorWidget: (a, b, c) => const Center(child: Icon(Icons.error_outline)),
                       placeholder: (context, url) => Shimmer(color: EaselAppTheme.cardBackground, child: const SizedBox.expand()),
                     ),
                     on3D: (context) => ModelViewer(
-                      src: publishedNFT.url,
+                      src: publishedNFT.url.changeDomain(),
                       backgroundColor: EaselAppTheme.kWhite,
                       ar: false,
                       autoRotate: false,
@@ -146,6 +152,7 @@ class NftTypeBuilder extends StatelessWidget {
   final WidgetBuilder onVideo;
   final WidgetBuilder onAudio;
   final WidgetBuilder on3D;
+  final WidgetBuilder onPdf;
   final AssetType assetType;
 
   const NftTypeBuilder({
@@ -154,6 +161,7 @@ class NftTypeBuilder extends StatelessWidget {
     required this.onVideo,
     required this.onAudio,
     required this.on3D,
+    required this.onPdf,
     required this.assetType,
   }) : super(key: key);
 
@@ -166,6 +174,8 @@ class NftTypeBuilder extends StatelessWidget {
         return onImage(context);
       case AssetType.Video:
         return onVideo(context);
+      case AssetType.Pdf:
+        return onPdf(context);
       case AssetType.ThreeD:
         return on3D(context);
     }

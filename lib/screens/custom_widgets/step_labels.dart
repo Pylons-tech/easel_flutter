@@ -30,10 +30,10 @@ class StepLabels extends StatelessWidget {
                   Text(
                     stepLabels[index].toString().tr(),
                     style: Theme.of(context).textTheme.bodyText2!.copyWith(
-                          fontSize: 12.sp,
+                          fontSize: 8.sp,
                           fontFamily: 'Inter',
-                          fontWeight: FontWeight.w400,
-                          color: currentStep.value >= index ? EaselAppTheme.kDarkGreen : EaselAppTheme.kGrey,
+                          fontWeight: FontWeight.w700,
+                          color: currentStep.value >= index ? EaselAppTheme.kBlue : EaselAppTheme.kGrey,
                         ),
                   ),
                 ],

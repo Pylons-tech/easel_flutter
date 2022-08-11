@@ -211,7 +211,7 @@ class LocalDataSourceImpl implements LocalDataSource {
   Future<bool> updateNftFromPrice(SaveNft saveNft) async {
     try {
       if (!checkValuesForPrice(saveNft: saveNft)) return false;
-      await database.nftDao.updateNFTFromPrice(saveNft.id!, saveNft.tradePercentage!, saveNft.price!, saveNft.quantity!, saveNft.step!, saveNft.denomSymbol!, saveNft.isFreeDrop!, saveNft.dateTime!);
+      await database.nftDao.updateNFTFromPrice(saveNft.id!, saveNft.tradePercentage!, saveNft.price!, saveNft.quantity!, saveNft.step!, saveNft.denomSymbol!, saveNft.isFreeDrop!.name, saveNft.dateTime!);
       return true;
     } catch (e) {
       throw CacheFailure("upload_error".tr());

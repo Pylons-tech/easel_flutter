@@ -20,7 +20,7 @@ class CreatorHubViewModel extends ChangeNotifier {
 
   CollectionType selectedCollectionType = CollectionType.draft;
 
-  ViewType viewType = ViewType.viewList;
+  ViewType viewType = ViewType.viewGrid;
 
   int _publishedRecipesLength = 0;
   int forSaleCount = 0;
@@ -161,6 +161,20 @@ class CreatorHubViewModel extends ChangeNotifier {
     nftDraftList = getNftResponse.getOrElse(() => []);
 
     loading.dismiss();
+
+    notifyListeners();
+  }
+
+  Future<void> refreshDraftsList() async {
+    final getNftResponse = await repository.getNfts();
+
+    if (getNftResponse.isLeft()) {
+      "something_wrong".tr().show();
+
+      return;
+    }
+
+    nftDraftList = getNftResponse.getOrElse(() => []);
 
     notifyListeners();
   }

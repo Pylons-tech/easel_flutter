@@ -7,4 +7,5 @@ class RouteUtil {
   static String kRouteWelcomeEasel = "/welcomeEasel";
   static String kRoutePreviewNFTFullScreen = "/preview_nft_full_screen";
   static String kVideoFullScreen = "/video_full_screen";
+  static String kPdfFullScreen = "/pdf_full_screen";
 }

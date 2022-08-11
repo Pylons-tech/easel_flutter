@@ -47,6 +47,8 @@ const kSvgMoreOption = 'assets/images/svg/more_options.svg';
 const kSvgPublish = 'assets/images/svg/publish.svg';
 const kSvgDelete = 'assets/images/svg/delete.svg';
 const kSvgView = 'assets/images/svg/view.svg';
+const kAddIcon = 'assets/images/svg/add.svg';
+const kSearchIcon = 'assets/images/svg/search.svg';
 
 const kDummyImg = 'assets/images/svg/dummy_img.png';
 const kVideoIcon = 'assets/images/video_icon.png';
@@ -63,6 +65,7 @@ const String kLoadingGif = 'assets/images/gifs/loading.gif';
 
 /// ```URL constants
 const ipfsDomain = 'https://ipfs.io/ipfs';
+const proxyIpfsDomain = 'https://proxy.pylons.tech/ipfs';
 const kPlayStoreUrl = 'https://play.google.com/store/apps/details?id=tech.pylons.wallet';
 const kWalletIOSId = 'xyz.pylons.wallet';
 const kWalletAndroidId = 'tech.pylons.wallet';
@@ -89,6 +92,9 @@ const double TABLET_MIN_WIDTH = 600;
 const int kNumberOfSeconds = 1000;
 const int kSixtySeconds = 60;
 const int kFileCompressQuality = 50;
+const int kSplashScreenDuration = 3;
+const double kPrecision = 100000000000000000;
+const double kRoyaltyPrecision = 10000000000000000;
 
 const double kPrecision = 10000000000000000;
 
@@ -183,6 +189,7 @@ const kImageText = 'Image';
 const kVideoText = 'Video';
 const kAudioText = 'Audio';
 const k3dText = '3D';
+const kPdfText = 'Pdf';
 const String kThreeDText = "ThreeD";
 const kGetStarted = 'Get Started';
 const kContinue = 'Continue';
@@ -199,15 +206,6 @@ const kCloseText = 'Close';
 const kUploadHint2 = '• Image, Video, 3D or Audio';
 const kUploadHint3 = '• One file per upload';
 const kUploadHintAll = 'GB Limit.\nOne file per upload.';
-const kHintNftName = 'Bird on Shoulder';
-const kHintArtistName = 'Sarah Jackson';
-const kHintNftDesc = 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eimod tempor incididunt ut labore et dolore magna aliquaQ. Ut enim ad minim veniam, quis nostrud exercita.';
-const kHintNoEdition = '100';
-const kHintPrice = '10.87';
-const kHintHashtag = 'Type in';
-const kHashtagsText = 'Hashtags (optional)';
-const kAddText = 'Add';
-const kNetworkFeeWarnText = 'A network fee of 10% of the listed price is required for all transactions that occur on-chain';
 
 const kRecipeCreated = 'Recipe created';
 const kErrProfileNotExist = 'profileDoesNotExist';
@@ -256,7 +254,7 @@ const kCompressingMessage = "Compressing Thumbnail";
 const kUploadingMessage = "Uploading";
 const kLoadingMessage = "Loading...";
 
-final List<String> stepLabels = ["upload", "draft", "publish"];
+final List<String> stepLabels = ["upload", "detail", "price   "];
 
 final List<String> imageAllowedExts = ["png", "jpg", "jpeg", "svg", "heif"];
 final List<String> audioAllowedExts = ['mp3', 'ogg', 'wav', 'aac'];
@@ -328,3 +326,5 @@ const kApnKey = "apn";
 const kIbiKey = "ibi";
 const kImvKey = "imv";
 const kLinkKey = "link";
+
+const kTwelve=12;
