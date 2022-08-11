@@ -237,9 +237,7 @@ class _PriceScreenState extends State<PriceScreen> {
                               inputFormatters: [
                                 FilteringTextInputFormatter.digitsOnly,
                                 LengthLimitingTextInputFormatter(2),
-                                AmountFormatter(
-                                  maxDigits: 2,
-                                )
+                                AmountFormatter(maxDigits: 2),
                               ],
                               controller: provider.royaltyController,
                               validator: (value) {

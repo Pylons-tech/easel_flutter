@@ -83,7 +83,7 @@ const kMinEditionValue = 1;
 const kMaxDescription = 256;
 const kMaxEdition = 10000;
 const kMinRoyalty = 0;
-const kMaxRoyalty = 1;
+const kMaxRoyalty = 100;
 const kFileSizeLimitInGB = 32;
 const kFileSizeLimitForAudiVideoInGB = 0.2;
 const kMaxPriceLength = 14;
@@ -95,8 +95,6 @@ const int kFileCompressQuality = 50;
 const int kSplashScreenDuration = 3;
 const double kPrecision = 100000000000000000;
 const double kRoyaltyPrecision = 10000000000000000;
-
-const double kPrecision = 10000000000000000;
 
 const int kBigIntBase = 1000000;
 const int kEthIntBase = 1000000000000000000;
