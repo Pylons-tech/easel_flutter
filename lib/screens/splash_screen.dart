@@ -82,7 +82,7 @@ class _SplashScreenState extends State<SplashScreen> {
   void onGetStarted() {
     var onBoardingComplete = GetIt.I.get<Repository>().getOnBoardingComplete();
     if (!onBoardingComplete) {
-      Navigator.of(context).pushNamed(RouteUtil.kRouteTutorial);
+      Navigator.of(context).pushReplacementNamed(RouteUtil.kRouteTutorial);
       return;
     }
 
