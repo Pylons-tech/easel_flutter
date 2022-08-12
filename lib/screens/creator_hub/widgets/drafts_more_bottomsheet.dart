@@ -87,34 +87,33 @@ class DraftsMoreBottomSheet extends StatelessWidget {
 
                   deleteDialog.show();
                 }),
-            const Divider(color: EaselAppTheme.kGrey),
-            moreOptionTile(
-              onPressed: () async {
-                Navigator.of(context).pop();
-                await Clipboard.setData(ClipboardData(text: nft.cid));
-                ScaffoldMessenger.of(context).showSnackBar(
-                  SnackBar(content: Text("copied_to_clipboard".tr())),
-                );
-              },
-              title: "copy_cid".tr(),
-              image: kSvgIpfsLogo,
-              isSvg: false,
+            const Divider(
+              color: EaselAppTheme.kGrey,
             ),
-            const Divider(color: EaselAppTheme.kGrey),
-
-            ShouldShowIPFS(
-                onOther: (context)=>
-                  const SizedBox.shrink(),
-
-                onIPFS: (context) {
+            CidOrIpfs(
+                viewCid: (context) {
+                  return moreOptionTile(
+                    onPressed: () async {
+                      Navigator.of(context).pop();
+                      await Clipboard.setData(ClipboardData(text: nft.cid));
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        SnackBar(content: Text("copied_to_clipboard".tr())),
+                      );
+                    },
+                    title: "copy_cid".tr(),
+                    image: kSvgIpfsLogo,
+                    isSvg: false,
+                  );
+                },
+                viewIpfs: (context) {
                   return moreOptionTile(
                     onPressed: () async {
                       Navigator.of(context).pop();
                       onViewOnIPFSPressed(nft: nft, context: context);
                     },
                     title: "view".tr(),
-                    image: kSvgView,
-                    isSvg: true,
+                    image: kSvgIpfsLogo,
+                    isSvg: false,
                   );
                 },
                 type: nft.assetType)

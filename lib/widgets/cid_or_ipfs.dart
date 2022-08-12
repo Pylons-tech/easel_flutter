@@ -1,21 +1,21 @@
 import 'package:easel_flutter/utils/constants.dart';
 import 'package:flutter/material.dart';
 
-class ShouldShowIPFS extends StatelessWidget {
-  final WidgetBuilder onOther;
-  final WidgetBuilder onIPFS;
+class CidOrIpfs extends StatelessWidget {
+  final WidgetBuilder viewCid;
+  final WidgetBuilder viewIpfs;
   final String type;
 
-  const ShouldShowIPFS({Key? key, required this.onOther, required this.onIPFS, required this.type}) : super(key: key);
+  const CidOrIpfs({Key? key, required this.viewCid, required this.viewIpfs, required this.type}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     switch (type) {
       case k3dText:
       case kPdfText:
-        return onOther(context);
+        return viewCid(context);
       default:
-        return onIPFS(context);
+        return viewIpfs(context);
     }
   }
 }

@@ -69,29 +69,31 @@ class BuildPublishedNFTsBottomSheet {
                       title: "view_on_pylons".tr(),
                       image: kSvgPylonsLogo),
                   Divider(thickness: 1.h),
-                  moreOptionTile(
-                    onPressed: () async {
-                      Navigator.of(context).pop();
-                      await Clipboard.setData(ClipboardData(text: nft.cid));
-                      ScaffoldMessenger.of(context).showSnackBar(
-                        SnackBar(content: Text("copied_to_clipboard".tr())),
+                  CidOrIpfs(
+                    viewCid: (context) {
+                      return moreOptionTile(
+                        onPressed: () async {
+                          Navigator.of(context).pop();
+                          await Clipboard.setData(ClipboardData(text: nft.cid));
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            SnackBar(content: Text("copied_to_clipboard".tr())),
+                          );
+                        },
+                        title: "copy_cid".tr(),
+                        image: kSvgIpfsLogo,
+                        isSvg: false,
                       );
                     },
-                    title: "copy_cid".tr(),
-                    image: kSvgIpfsLogo,
-                    isSvg: false,
-                  ),
-                  Divider(thickness: 1.h),
-                  ShouldShowIPFS(
-                    onOther: (context) => const SizedBox.shrink(),
-                    onIPFS: (context) => moreOptionTile(
-                        onPressed: () {
-                          Navigator.of(context).pop();
-                          onViewOnIPFSPressed(nft: nft);
-                        },
-                        title: "view".tr(),
-                        image: kSvgViewIcon,
-                        isSvg: true),
+                    viewIpfs: (context) {
+                      return moreOptionTile(
+                          onPressed: () async {
+                            Navigator.of(context).pop();
+                            onViewOnIPFSPressed(nft: nft);
+                          },
+                          title: "view".tr(),
+                          image: kSvgIpfsLogo,
+                          isSvg: false);
+                    },
                     type: nft.assetType,
                   )
                 ],
