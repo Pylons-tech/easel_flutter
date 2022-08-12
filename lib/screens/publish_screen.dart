@@ -347,13 +347,11 @@ class _OwnerBottomDrawerState extends State<OwnerBottomDrawer> {
                               subtitle: "${widget.nft.tradePercentage}%",
                             ),
                             SizedBox(height: 5.h),
-                            CidOrIpfs(
-                              viewCid: (context) {
-                                return buildRow(title: "content_identifier".tr(), subtitle: widget.nft.cid, canCopy: true);
-                              },
-                              viewIpfs: (context) {
-                                return buildRow(title: "asset_uri".tr(), subtitle: "view".tr(), viewIPFS: true);
-                              },
+                            buildRow(title: "content_identifier".tr(), subtitle: widget.nft.cid, canCopy: true),
+                            SizedBox(height: 5.h),
+                            ShouldShowIPFS(
+                              onOther: (context) => const SizedBox.shrink(),
+                              onIPFS: (context) => buildRow(title: "asset_uri".tr(), subtitle: "view".tr(), viewIPFS: true),
                               type: widget.nft.assetType,
                             ),
                             SizedBox(height: 40.h),

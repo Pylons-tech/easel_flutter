@@ -153,39 +153,21 @@ class _DraftDetailDialogState extends State<_DraftDetailDialog> {
                       width: 80.h,
                       child: previewWidget,
                     ),
-                    SizedBox(
-                      height: 30.h,
-                    ),
-                    buildRow(
-                      title: "path_address".tr(),
-                      subtitle: easelProvider.nft.fileName,
-                    ),
-                    SizedBox(
-                      height: 5.h,
-                    ),
-                    buildRow(
-                      title: "status".tr(),
-                      subtitle: "status_value".tr(args: ["Success"]),
-                      color: EaselAppTheme.kDarkGreen,
-                    ),
-                    SizedBox(
-                      height: 5.h,
-                    ),
-                    CidOrIpfs(
-                      viewCid: (context) {
-                        return buildRow(
-                          title: "content_id".tr(),
-                          subtitle: easelProvider.nft.cid,
-                          canCopy: true,
-                        );
-                      },
-                      viewIpfs: (context) {
+                    SizedBox(height: 30.h),
+                    buildRow(title: "path_address".tr(), subtitle: easelProvider.nft.fileName),
+                    SizedBox(height: 5.h),
+                    buildRow(title: "status".tr(), subtitle: "status_value".tr(args: ["Success"]), color: EaselAppTheme.kDarkGreen),
+                    SizedBox(height: 5.h),
+                    buildRow(title: "content_id".tr(), subtitle: easelProvider.nft.cid, canCopy: true),
+                    SizedBox(height: 5.h),
+                    ShouldShowIPFS(
+                      onOther: (context) => const SizedBox.shrink(),
+                      onIPFS: (context) {
                         return buildViewOnIPFS(
-                            title: "asset_uri".tr(),
-                            subtitle: "view".tr(),
-                            onPressed: () {
-                              onViewOnIPFSPressed(provider: easelProvider);
-                            });
+                          title: "asset_uri".tr(),
+                          subtitle: "view".tr(),
+                          onPressed: () => onViewOnIPFSPressed(provider: easelProvider),
+                        );
                       },
                       type: easelProvider.nft.assetType,
                     ),

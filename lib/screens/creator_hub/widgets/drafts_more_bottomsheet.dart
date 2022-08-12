@@ -87,25 +87,26 @@ class DraftsMoreBottomSheet extends StatelessWidget {
 
                   deleteDialog.show();
                 }),
-            const Divider(
-              color: EaselAppTheme.kGrey,
+            const Divider(color: EaselAppTheme.kGrey),
+            moreOptionTile(
+              onPressed: () async {
+                Navigator.of(context).pop();
+                await Clipboard.setData(ClipboardData(text: nft.cid));
+                ScaffoldMessenger.of(context).showSnackBar(
+                  SnackBar(content: Text("copied_to_clipboard".tr())),
+                );
+              },
+              title: "copy_cid".tr(),
+              image: kSvgIpfsLogo,
+              isSvg: false,
             ),
-            CidOrIpfs(
-                viewCid: (context) {
-                  return moreOptionTile(
-                    onPressed: () async {
-                      Navigator.of(context).pop();
-                      await Clipboard.setData(ClipboardData(text: nft.cid));
-                      ScaffoldMessenger.of(context).showSnackBar(
-                        SnackBar(content: Text("copied_to_clipboard".tr())),
-                      );
-                    },
-                    title: "copy_cid".tr(),
-                    image: kSvgIpfsLogo,
-                    isSvg: false,
-                  );
-                },
-                viewIpfs: (context) {
+            const Divider(color: EaselAppTheme.kGrey),
+
+            ShouldShowIPFS(
+                onOther: (context)=>
+                  const SizedBox.shrink(),
+
+                onIPFS: (context) {
                   return moreOptionTile(
                     onPressed: () async {
                       Navigator.of(context).pop();

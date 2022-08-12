@@ -86,7 +86,7 @@ class DraftListTile extends StatelessWidget {
                     ),
                     onPdf: (context) => CachedNetworkImage(
                       fit: BoxFit.fill,
-                      imageUrl: nft.thumbnailUrl,
+                      imageUrl: nft.thumbnailUrl.changeDomain(),
                       errorWidget: (a, b, c) => const Center(child: Icon(Icons.error_outline)),
                       placeholder: (context, url) => Shimmer(color: EaselAppTheme.cardBackground, child: const SizedBox.expand()),
                     ),
@@ -114,7 +114,7 @@ class DraftListTile extends StatelessWidget {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
-                        "nft_name".tr(args: [nft.name.isNotEmpty ? nft.name : 'Nft Name']),
+                        "nft_name".tr(args: [nft.name.isNotEmpty ? nft.name : kNFTName]),
                         style: titleStyle.copyWith(fontSize: isTablet ? 13.sp : 18.sp),
                         maxLines: 1,
                         overflow: TextOverflow.ellipsis,

@@ -74,6 +74,7 @@ const kWalletDynamicLink = 'pylons.page.link';
 
 const kEaselEmail = "easel@pylons.tech";
 const kPylons = "Pylons";
+const kNFTName = "Nft Name";
 
 /// ```Number constants
 const kMinNFTName = 9;
