@@ -18,16 +18,20 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:model_viewer_plus/model_viewer_plus.dart';
 import 'package:provider/provider.dart';
 import 'package:shimmer_animation/shimmer_animation.dart';
-
-class DraftListTile extends StatelessWidget {
+class DraftListTile extends StatefulWidget {
   final NFT nft;
   final CreatorHubViewModel viewModel;
   const DraftListTile({Key? key, required this.nft, required this.viewModel}) : super(key: key);
 
   @override
+  State<DraftListTile> createState() => _DraftListTileState();
+}
+
+class _DraftListTileState extends State<DraftListTile> {
+  @override
   Widget build(BuildContext context) {
     return Slidable(
-      key: ValueKey(nft.id),
+      key: ValueKey(widget.nft.id),
       closeOnScroll: false,
       endActionPane: ActionPane(
         extentRatio: 0.3,
@@ -36,7 +40,7 @@ class DraftListTile extends StatelessWidget {
           Expanded(
             child: InkWell(
               onTap: () {
-                final DeleteDialog deleteDialog = DeleteDialog(contextt: context, nft: nft);
+                final DeleteDialog deleteDialog = DeleteDialog(contextt: context, nft: widget.nft);
                 deleteDialog.show();
               },
               child: SvgPicture.asset(kSvgDelete),
@@ -45,7 +49,7 @@ class DraftListTile extends StatelessWidget {
           Expanded(
             child: InkWell(
               onTap: () async {
-                onViewOnIPFSPressed(nft: nft, context: context);
+                onViewOnIPFSPressed(nft: widget.nft, context: context);
               },
               child: Image.asset(kSvgIpfsLogo),
             ),
@@ -77,35 +81,35 @@ class DraftListTile extends StatelessWidget {
                           ),
                         ),
                         placeholder: (context, url) => Shimmer(color: EaselAppTheme.cardBackground, child: const SizedBox.expand()),
-                        imageUrl: nft.url.changeDomain(),
+                        imageUrl: widget.nft.url.changeDomain(),
                         fit: BoxFit.cover,
                       ),
                       onVideo: (context) => CachedNetworkImage(
                         fit: BoxFit.fill,
-                        imageUrl: nft.thumbnailUrl.changeDomain(),
+                        imageUrl: widget.nft.thumbnailUrl.changeDomain(),
                         errorWidget: (a, b, c) => const Center(child: Icon(Icons.error_outline)),
                         placeholder: (context, url) => Shimmer(color: EaselAppTheme.cardBackground, child: const SizedBox.expand()),
                       ),
                       onPdf: (context) => CachedNetworkImage(
                         fit: BoxFit.fill,
-                        imageUrl: nft.thumbnailUrl,
+                        imageUrl: widget.nft.thumbnailUrl,
                         errorWidget: (a, b, c) => const Center(child: Icon(Icons.error_outline)),
                         placeholder: (context, url) => Shimmer(color: EaselAppTheme.cardBackground, child: const SizedBox.expand()),
                       ),
                       onAudio: (context) => CachedNetworkImage(
                         fit: BoxFit.fill,
-                        imageUrl: nft.thumbnailUrl.changeDomain(),
+                        imageUrl: widget.nft.thumbnailUrl.changeDomain(),
                         errorWidget: (a, b, c) => const Center(child: Icon(Icons.error_outline)),
                         placeholder: (context, url) => Shimmer(color: EaselAppTheme.cardBackground, child: const SizedBox.expand()),
                       ),
                       on3D: (context) => ModelViewer(
-                        src: nft.url.changeDomain(),
+                        src: widget.nft.url.changeDomain(),
                         backgroundColor: EaselAppTheme.kWhite,
                         ar: false,
                         autoRotate: false,
                         cameraControls: false,
                       ),
-                      assetType: nft.assetType.toAssetTypeEnum(),
+                      assetType: widget.nft.assetType.toAssetTypeEnum(),
                     )),
                 SizedBox(
                   width: 10.w,
@@ -115,7 +119,7 @@ class DraftListTile extends StatelessWidget {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
-                        "nft_name".tr(args: [nft.name.isNotEmpty ? nft.name : 'Nft Name']),
+                        "nft_name".tr(args: [widget.nft.name.isNotEmpty ? widget.nft.name : 'Nft Name']),
                         style: titleStyle.copyWith(fontSize: isTablet ? 13.sp : 18.sp),
                         maxLines: 1,
                         overflow: TextOverflow.ellipsis,
@@ -144,7 +148,7 @@ class DraftListTile extends StatelessWidget {
                     onTap: () {
                       final DraftsBottomSheet draftsBottomSheet = DraftsBottomSheet(
                         buildContext: context,
-                        nft: nft,
+                        nft: widget.nft,
                       );
                       draftsBottomSheet.show();
                     },
@@ -163,8 +167,9 @@ class DraftListTile extends StatelessWidget {
       case k3dText:
       case kPdfText:
         await Clipboard.setData(ClipboardData(text: nft.cid));
-        ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text("copied_to_clipboard".tr())));
-
+        if(mounted){
+          ScaffoldMessenger.of(context)..hideCurrentSnackBar()..showSnackBar(SnackBar(content: Text("copied_to_clipboard".tr())));
+        }
         break;
       default:
         final easelProvider = Provider.of<EaselProvider>(context, listen: false);
