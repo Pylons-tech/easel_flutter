@@ -19,6 +19,7 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:focus_detector/focus_detector.dart';
 import 'package:get_it/get_it.dart';
 import 'package:provider/provider.dart';
+import 'package:pylons_sdk/pylons_sdk.dart';
 
 class CreatorHubScreen extends StatefulWidget {
   const CreatorHubScreen({Key? key}) : super(key: key);
@@ -93,10 +94,20 @@ class _CreatorHubContentState extends State<CreatorHubContent> {
 
   EaselProvider get easelProvider => sl();
 
-  void onRefreshPressed() {
+  void onRefreshPressed() async {
     GetIt.I.get<CreatorHubViewModel>().getDraftsList();
     GetIt.I.get<CreatorHubViewModel>().getRecipesList();
     GetIt.I.get<CreatorHubViewModel>().getTotalForSale();
+  }
+
+  Widget getRefreshButton() {
+    if (easelProvider.isPylonsInstalled) {
+      return Padding(
+        padding: EdgeInsets.symmetric(horizontal: 8.w),
+        child: IconButton(onPressed: () => scheduleMicrotask(() => onRefreshPressed()), icon: Icon(Icons.refresh, color: EaselAppTheme.kBlack, size: 20.h)),
+      );
+    }
+    return const SizedBox.shrink();
   }
 
   @override
@@ -118,10 +129,7 @@ class _CreatorHubContentState extends State<CreatorHubContent> {
                     mainAxisAlignment: MainAxisAlignment.end,
                     crossAxisAlignment: CrossAxisAlignment.center,
                     children: [
-                      Padding(
-                        padding: EdgeInsets.symmetric(horizontal: 8.w),
-                        child: IconButton(onPressed: () => scheduleMicrotask(() => onRefreshPressed()), icon: Icon(Icons.refresh, color: EaselAppTheme.kBlack, size: 20.h)),
-                      ),
+                      getRefreshButton(),
                       InkWell(
                         onTap: () => Navigator.of(context).pushNamed(RouteUtil.kRouteHome),
                         child: Container(
@@ -138,12 +146,11 @@ class _CreatorHubContentState extends State<CreatorHubContent> {
                 ),
                 Padding(
                   padding: EdgeInsets.symmetric(horizontal: 20.w),
-                  child:  Align(
-                    alignment:Alignment.center,
+                  child: Align(
+                    alignment: Alignment.center,
                     child: Text(
-                           "creator_hub".tr(),
-                          style: headingStyle,
-
+                      "creator_hub".tr(),
+                      style: headingStyle,
                     ),
                   ),
                 ),
@@ -225,18 +232,20 @@ class _CreatorHubContentState extends State<CreatorHubContent> {
         )));
   }
 
-  Widget getEmptyWidgetForSale(){
-    return  Text(
+  Widget getEmptyWidgetForSale() {
+    return Text(
       "no_for_sale_nft".tr(),
       style: TextStyle(fontWeight: FontWeight.w700, color: EaselAppTheme.kLightGrey, fontSize: isTablet ? 12.sp : 15.sp),
     );
   }
-  Widget getEmptyPublishedWidget(){
-    return  Text(
+
+  Widget getEmptyPublishedWidget() {
+    return Text(
       "no_published_nft".tr(),
       style: TextStyle(fontWeight: FontWeight.w700, color: EaselAppTheme.kLightGrey, fontSize: isTablet ? 12.sp : 15.sp),
     );
   }
+
   Widget getEmptyDraftListWidget() {
     return Column(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -247,7 +256,7 @@ class _CreatorHubContentState extends State<CreatorHubContent> {
           style: TextStyle(fontWeight: FontWeight.w700, color: EaselAppTheme.kLightGrey, fontSize: isTablet ? 12.sp : 15.sp),
         ),
         Padding(
-          padding:  EdgeInsets.only(bottom: 20.h),
+          padding: EdgeInsets.only(bottom: 20.h),
           child: ClippedButton(
             title: "create_draft".tr(),
             bgColor: EaselAppTheme.kBlue,

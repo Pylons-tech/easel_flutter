@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:developer';
 import 'dart:io';
 
 import 'package:easel_flutter/main.dart';
@@ -455,13 +456,16 @@ class EaselProvider extends ChangeNotifier {
     }
   }
 
-  void populateUserName() {
+  bool isPylonsInstalled = false;
+
+  Future<void> populateUserName() async {
+    isPylonsInstalled = await PylonsWallet.instance.exists();
     if (currentUsername.isEmpty) {
       String savedArtistName = repository.getArtistName();
 
       currentUsername = savedArtistName;
-      notifyListeners();
     }
+    notifyListeners();
   }
 
   Future<void> setFile({required String filePath, required String fileName}) async {
