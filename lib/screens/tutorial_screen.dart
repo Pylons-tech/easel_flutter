@@ -1,7 +1,5 @@
 import 'package:bottom_drawer/bottom_drawer.dart';
-import 'package:easel_flutter/easel_provider.dart';
 import 'package:easel_flutter/main.dart';
-import 'package:easel_flutter/repository/repository.dart';
 import 'package:easel_flutter/utils/easel_app_theme.dart';
 import 'package:easel_flutter/utils/extension_util.dart';
 import 'package:easel_flutter/utils/route_util.dart';
@@ -12,7 +10,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get_it/get_it.dart';
-import 'package:provider/provider.dart';
 import 'package:pylons_sdk/pylons_sdk.dart';
 
 import '../utils/constants.dart';

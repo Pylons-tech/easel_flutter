@@ -12,7 +12,6 @@ import 'package:easel_flutter/utils/route_util.dart';
 import 'package:easel_flutter/widgets/pdf_viewer_full_screen.dart';
 import 'package:easel_flutter/widgets/video_widget_full_screen.dart';
 import 'package:easy_localization/easy_localization.dart';
-import 'package:floor/floor.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get_it/get_it.dart';

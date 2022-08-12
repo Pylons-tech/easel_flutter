@@ -11,6 +11,7 @@ import 'package:easel_flutter/utils/constants.dart';
 import 'package:easel_flutter/utils/dependency_injection/dependency_injection_container.dart';
 import 'package:easel_flutter/utils/easel_app_theme.dart';
 import 'package:easel_flutter/utils/route_util.dart';
+import 'package:easel_flutter/widgets/clipped_button.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -73,7 +74,7 @@ class _CreatorHubContentState extends State<CreatorHubContent> {
   TextStyle headingStyle = TextStyle(
     fontSize: isTablet ? 20.sp : 25.sp,
     fontWeight: FontWeight.w800,
-    color: EaselAppTheme.kBlack,
+    color: EaselAppTheme.kDarkText,
     fontFamily: kUniversalFontFamily,
   );
   TextStyle titleStyle = TextStyle(
@@ -133,20 +134,20 @@ class _CreatorHubContentState extends State<CreatorHubContent> {
                   ),
                 ),
                 SizedBox(
-                  height: 25.h,
+                  height: 15.h,
                 ),
                 Padding(
                   padding: EdgeInsets.symmetric(horizontal: 20.w),
-                  child: RichText(
-                    text: TextSpan(
-                        text: "hello".tr(),
-                        style: headingStyle.copyWith(
-                          color: EaselAppTheme.kTextGrey,
-                        ),
-                        children: [TextSpan(text: "${easelProvider.currentUsername}!", style: headingStyle)]),
+                  child:  Align(
+                    alignment:Alignment.center,
+                    child: Text(
+                           "creator_hub".tr(),
+                          style: headingStyle,
+
+                    ),
                   ),
                 ),
-                SizedBox(height: 5.h),
+                SizedBox(height: 15.h),
                 Padding(
                   padding: EdgeInsets.symmetric(horizontal: 20.w),
                   child: Text(
@@ -154,7 +155,7 @@ class _CreatorHubContentState extends State<CreatorHubContent> {
                     style: titleStyle.copyWith(color: EaselAppTheme.kTextGrey, fontSize: isTablet ? 12.sp : 15.sp),
                   ),
                 ),
-                SizedBox(height: 50.h),
+                SizedBox(height: 25.h),
                 Padding(
                   padding: EdgeInsets.symmetric(horizontal: 20.w),
                   child: Row(
@@ -190,29 +191,29 @@ class _CreatorHubContentState extends State<CreatorHubContent> {
                         onGridSelected: (context) => BuildNFTsContent(
                             onDraftList: (context) => BuildGridView(
                                   nftsList: viewModel.nftDraftList,
-                                  onEmptyList: (context) => getEmptyListWidget(),
+                                  onEmptyList: (context) => getEmptyDraftListWidget(),
                                 ),
                             onForSaleList: (context) => BuildGridView(
                                   nftsList: viewModel.nftForSaleList,
-                                  onEmptyList: (context) => getEmptyListWidget(),
+                                  onEmptyList: (context) => getEmptyWidgetForSale(),
                                 ),
                             onPublishedList: (context) => BuildGridView(
                                   nftsList: viewModel.nftPublishedList,
-                                  onEmptyList: (context) => getEmptyListWidget(),
+                                  onEmptyList: (context) => getEmptyPublishedWidget(),
                                 ),
                             collectionType: viewModel.selectedCollectionType),
                         onListSelected: (context) => BuildNFTsContent(
                             onDraftList: (context) => BuildListView(
                                   nftsList: viewModel.nftDraftList,
-                                  onEmptyList: (context) => getEmptyListWidget(),
+                                  onEmptyList: (context) => getEmptyDraftListWidget(),
                                 ),
                             onForSaleList: (context) => BuildListView(
                                   nftsList: viewModel.nftForSaleList,
-                                  onEmptyList: (context) => getEmptyListWidget(),
+                                  onEmptyList: (context) => getEmptyWidgetForSale(),
                                 ),
                             onPublishedList: (context) => BuildListView(
                                   nftsList: viewModel.nftPublishedList,
-                                  onEmptyList: (context) => getEmptyListWidget(),
+                                  onEmptyList: (context) => getEmptyPublishedWidget(),
                                 ),
                             collectionType: viewModel.selectedCollectionType),
                         viewType: viewModel.viewType),
@@ -224,13 +225,43 @@ class _CreatorHubContentState extends State<CreatorHubContent> {
         )));
   }
 
-  Widget getEmptyListWidget() {
-    return Padding(
-      padding: EdgeInsets.symmetric(horizontal: 20.w),
-      child: Text(
-        "no_nft_created".tr(),
-        style: TextStyle(fontWeight: FontWeight.w700, color: EaselAppTheme.kLightGrey, fontSize: isTablet ? 12.sp : 15.sp),
-      ),
+  Widget getEmptyWidgetForSale(){
+    return  Text(
+      "no_for_sale_nft".tr(),
+      style: TextStyle(fontWeight: FontWeight.w700, color: EaselAppTheme.kLightGrey, fontSize: isTablet ? 12.sp : 15.sp),
+    );
+  }
+  Widget getEmptyPublishedWidget(){
+    return  Text(
+      "no_published_nft".tr(),
+      style: TextStyle(fontWeight: FontWeight.w700, color: EaselAppTheme.kLightGrey, fontSize: isTablet ? 12.sp : 15.sp),
+    );
+  }
+  Widget getEmptyDraftListWidget() {
+    return Column(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(
+          "no_nft_created".tr(),
+          style: TextStyle(fontWeight: FontWeight.w700, color: EaselAppTheme.kLightGrey, fontSize: isTablet ? 12.sp : 15.sp),
+        ),
+        Padding(
+          padding:  EdgeInsets.only(bottom: 20.h),
+          child: ClippedButton(
+            title: "create_draft".tr(),
+            bgColor: EaselAppTheme.kBlue,
+            textColor: EaselAppTheme.kWhite,
+            onPressed: () {
+              Navigator.of(context).pushNamed(RouteUtil.kRouteHome);
+            },
+            cuttingHeight: 15.h,
+            clipperType: ClipperType.bottomLeftTopRight,
+            isShadow: false,
+            fontWeight: FontWeight.w700,
+          ),
+        ),
+      ],
     );
   }
 
