@@ -73,7 +73,6 @@ dependencies:
 
   share_plus: ^4.0.4  # Used for sharing the NFT link.
 
-  media_info: 0.10.0
   video_player: 2.4.5
   just_audio: 0.9.24
   audio_video_progress_bar: ^0.10.0
@@ -115,6 +114,12 @@ dependencies:
   image_cropper: 2.0.3
 
   percent_indicator: ^4.2.2
+
+  media_info:
+    git:
+      url: https://github.com/ened/flutter_plugin_media_info.git
+      ref: update-dependencies
+
   advance_pdf_viewer:
     git:
       url: https://github.com/lohanidamodar/pdf_viewer.git
@@ -197,9 +202,3 @@ flutter:
   # For details regarding fonts from package dependencies,
   # see https://flutter.dev/custom-fonts/#from-packages
 
-
-dependency_overrides:
-  media_info:
-    git:
-      url: https://github.com/ened/flutter_plugin_media_info.git
-      ref: update-dependencies
