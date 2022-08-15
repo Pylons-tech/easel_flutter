@@ -34,6 +34,7 @@ Future<void> main() async {
 
   await GetIt.I.isReady<AppDatabase>();
   final firebaseCrashlytics = GetIt.I.get<FirebaseCrashlytics>();
+  firebaseCrashlytics.crash();
 
   runZonedGuarded(() async {
     await EasyLocalization.ensureInitialized();
