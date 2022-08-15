@@ -62,4 +62,4 @@ lib/env.dart
 ios/Podfile.lock
 
 android/app/google-services.json
-ios/GoogleService-Info.plist
+ios/Runner/GoogleService-Info.plist

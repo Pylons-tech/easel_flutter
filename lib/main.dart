@@ -29,13 +29,11 @@ bool isTablet = false;
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();
-
   di.init();
-
-  await GetIt.I.isReady<AppDatabase>();
   final firebaseCrashlytics = GetIt.I.get<FirebaseCrashlytics>();
 
   runZonedGuarded(() async {
+    await GetIt.I.isReady<AppDatabase>();
     await EasyLocalization.ensureInitialized();
 
     PylonsWallet.setup(mode: PylonsMode.prod, host: 'easel');
