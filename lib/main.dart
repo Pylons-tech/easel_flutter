@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:easel_flutter/easel_provider.dart';
 import 'package:easel_flutter/screens/creator_hub/creator_hub_screen.dart';
 import 'package:easel_flutter/screens/home_screen.dart';
@@ -12,7 +14,8 @@ import 'package:easel_flutter/utils/route_util.dart';
 import 'package:easel_flutter/widgets/pdf_viewer_full_screen.dart';
 import 'package:easel_flutter/widgets/video_widget_full_screen.dart';
 import 'package:easy_localization/easy_localization.dart';
-import 'package:floor/floor.dart';
+import 'package:firebase_core/firebase_core.dart';
+import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get_it/get_it.dart';
@@ -25,25 +28,34 @@ bool isTablet = false;
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp();
 
-  await EasyLocalization.ensureInitialized();
-
-  PylonsWallet.setup(mode: PylonsMode.prod, host: 'easel');
   di.init();
 
   await GetIt.I.isReady<AppDatabase>();
+  final firebaseCrashlytics = GetIt.I.get<FirebaseCrashlytics>();
 
-  isTablet = MediaQueryData.fromWindow(WidgetsBinding.instance.window).size.shortestSide >= TABLET_MIN_WIDTH;
+  runZonedGuarded(() async {
+    await EasyLocalization.ensureInitialized();
 
-  runApp(
-    EasyLocalization(
-      supportedLocales: const [Locale('en', 'US'), Locale('ru', 'RU')],
-      path: 'i18n',
-      fallbackLocale: const Locale('en', 'US'),
-      saveLocale: false,
-      child: const MyApp(),
-    ),
-  );
+    PylonsWallet.setup(mode: PylonsMode.prod, host: 'easel');
+
+    isTablet = MediaQueryData.fromWindow(WidgetsBinding.instance.window).size.shortestSide >= TABLET_MIN_WIDTH;
+
+    FlutterError.onError = firebaseCrashlytics.recordFlutterError;
+
+    runApp(
+      EasyLocalization(
+        supportedLocales: const [Locale('en', 'US'), Locale('ru', 'RU')],
+        path: 'i18n',
+        fallbackLocale: const Locale('en', 'US'),
+        saveLocale: false,
+        child: const MyApp(),
+      ),
+    );
+  }, (exception, stack) {
+    firebaseCrashlytics.recordError(exception, stack);
+  });
 }
 
 final navigatorKey = GlobalKey<NavigatorState>();

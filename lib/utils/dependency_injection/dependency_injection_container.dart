@@ -16,6 +16,7 @@ import 'package:easel_flutter/services/third_party_services/video_player_helper.
 import 'package:easel_flutter/utils/file_utils_helper.dart';
 import 'package:easel_flutter/viewmodels/home_viewmodel.dart';
 import 'package:file_picker/file_picker.dart';
+import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:get_it/get_it.dart';
 import 'package:image_cropper/image_cropper.dart';
 import 'package:internet_connection_checker/internet_connection_checker.dart';
@@ -40,6 +41,7 @@ void _registerExternalDependencies() {
   sl.registerSingletonAsync<SharedPreferences>(() => SharedPreferences.getInstance());
   sl.registerLazySingleton<FilePicker>(() => FilePicker.platform);
   sl.registerLazySingleton<ImageCropper>(() => ImageCropper());
+  sl.registerLazySingleton<FirebaseCrashlytics>(() => FirebaseCrashlytics.instance);
   sl.registerLazySingleton<Dio>(
     () => Dio(
       BaseOptions(
@@ -67,13 +69,7 @@ void _registerLocalDataSources() {
 }
 
 void _registerProviders() {
-  sl.registerLazySingleton<EaselProvider>(() => EaselProvider(
-        videoPlayerHelper: sl(),
-        audioPlayerHelperForFile: sl(),
-        fileUtilsHelper: sl(),
-        repository: sl(),
-        audioPlayerHelperForUrl: sl()
-      ));
+  sl.registerLazySingleton<EaselProvider>(() => EaselProvider(videoPlayerHelper: sl(), audioPlayerHelperForFile: sl(), fileUtilsHelper: sl(), repository: sl(), audioPlayerHelperForUrl: sl()));
 
   sl.registerLazySingleton<CreatorHubViewModel>(() => CreatorHubViewModel(sl()));
   sl.registerLazySingleton<HomeViewModel>(() => HomeViewModel(sl()));

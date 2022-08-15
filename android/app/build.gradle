@@ -23,6 +23,8 @@ if (flutterVersionName == null) {
 
 apply plugin: 'com.android.application'
 apply plugin: 'kotlin-android'
+apply plugin: 'com.google.gms.google-services'
+apply plugin: 'com.google.firebase.crashlytics'
 apply from: "$flutterRoot/packages/flutter_tools/gradle/flutter.gradle"
 
 android {
@@ -53,12 +55,12 @@ android {
     }
 
     signingConfigs {
-        debug  {
-            storeFile file('keystore.jks')
-            storePassword 'tech.pylons'
-            keyAlias 'key_tech_pylon'
-            keyPassword 'tech.pylons'
-        }
+//        debug  {
+//            storeFile file('keystore.jks')
+//            storePassword 'tech.pylons'
+//            keyAlias 'key_tech_pylon'
+//            keyPassword 'tech.pylons'
+//        }
     }
 
     buildTypes {
