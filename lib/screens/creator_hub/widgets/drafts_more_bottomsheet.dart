@@ -112,8 +112,8 @@ class DraftsMoreBottomSheet extends StatelessWidget {
                       onViewOnIPFSPressed(nft: nft, context: context);
                     },
                     title: "view".tr(),
-                    image: kSvgView,
-                    isSvg: true,
+                    image: kSvgIpfsLogo,
+                    isSvg: false,
                   );
                 },
                 type: nft.assetType)

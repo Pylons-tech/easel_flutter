@@ -91,8 +91,8 @@ class BuildPublishedNFTsBottomSheet {
                             onViewOnIPFSPressed(nft: nft);
                           },
                           title: "view".tr(),
-                          image: kSvgViewIcon,
-                          isSvg: true);
+                          image: kSvgIpfsLogo,
+                          isSvg: false);
                     },
                     type: nft.assetType,
                   )

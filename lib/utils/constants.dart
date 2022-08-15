@@ -56,7 +56,6 @@ const kViewIpfs = 'assets/images/view_ipfs.png';
 
 const kSvgPylonsLogo = 'assets/images/svg/pylons_logo.svg';
 const kSvgIpfsLogo = 'assets/images/ipfs_logo.png';
-const kSvgViewIcon = 'assets/images/svg/view_icon.svg';
 const kGridIcon = 'assets/images/svg/grid.svg';
 const kListIcon = 'assets/images/svg/list.svg';
 const kOwnerVerifiedIcon = 'assets/images/svg/verified.svg';
@@ -74,6 +73,7 @@ const kWalletDynamicLink = 'pylons.page.link';
 
 const kEaselEmail = "easel@pylons.tech";
 const kPylons = "Pylons";
+const kNFTName = "Nft Name";
 
 /// ```Number constants
 const kMinNFTName = 9;
