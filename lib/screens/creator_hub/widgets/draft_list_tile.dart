@@ -18,6 +18,7 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:model_viewer_plus/model_viewer_plus.dart';
 import 'package:provider/provider.dart';
 import 'package:shimmer_animation/shimmer_animation.dart';
+
 class DraftListTile extends StatefulWidget {
   final NFT nft;
   final CreatorHubViewModel viewModel;
@@ -84,24 +85,9 @@ class _DraftListTileState extends State<DraftListTile> {
                         imageUrl: widget.nft.url.changeDomain(),
                         fit: BoxFit.cover,
                       ),
-                      onVideo: (context) => CachedNetworkImage(
-                        fit: BoxFit.fill,
-                        imageUrl: widget.nft.thumbnailUrl.changeDomain(),
-                        errorWidget: (a, b, c) => const Center(child: Icon(Icons.error_outline)),
-                        placeholder: (context, url) => Shimmer(color: EaselAppTheme.cardBackground, child: const SizedBox.expand()),
-                      ),
-                      onPdf: (context) => CachedNetworkImage(
-                        fit: BoxFit.fill,
-                        imageUrl: widget.nft.thumbnailUrl,
-                        errorWidget: (a, b, c) => const Center(child: Icon(Icons.error_outline)),
-                        placeholder: (context, url) => Shimmer(color: EaselAppTheme.cardBackground, child: const SizedBox.expand()),
-                      ),
-                      onAudio: (context) => CachedNetworkImage(
-                        fit: BoxFit.fill,
-                        imageUrl: widget.nft.thumbnailUrl.changeDomain(),
-                        errorWidget: (a, b, c) => const Center(child: Icon(Icons.error_outline)),
-                        placeholder: (context, url) => Shimmer(color: EaselAppTheme.cardBackground, child: const SizedBox.expand()),
-                      ),
+                      onVideo: (context) => buildCacheNetworkImage(),
+                      onPdf: (context) => buildCacheNetworkImage(),
+                      onAudio: (context) => buildCacheNetworkImage(),
                       on3D: (context) => ModelViewer(
                         src: widget.nft.url.changeDomain(),
                         backgroundColor: EaselAppTheme.kWhite,
@@ -162,13 +148,24 @@ class _DraftListTileState extends State<DraftListTile> {
     );
   }
 
+  CachedNetworkImage buildCacheNetworkImage() {
+    return CachedNetworkImage(
+      fit: BoxFit.fill,
+      imageUrl: widget.nft.thumbnailUrl.changeDomain(),
+      errorWidget: (a, b, c) => const Center(child: Icon(Icons.error_outline)),
+      placeholder: (context, url) => Shimmer(color: EaselAppTheme.cardBackground, child: const SizedBox.expand()),
+    );
+  }
+
   void onViewOnIPFSPressed({required BuildContext context, required NFT nft}) async {
     switch (nft.assetType) {
       case k3dText:
       case kPdfText:
         await Clipboard.setData(ClipboardData(text: nft.cid));
-        if(mounted){
-          ScaffoldMessenger.of(context)..hideCurrentSnackBar()..showSnackBar(SnackBar(content: Text("copied_to_clipboard".tr())));
+        if (mounted) {
+          ScaffoldMessenger.of(context)
+            ..hideCurrentSnackBar()
+            ..showSnackBar(SnackBar(content: Text("copied_to_clipboard".tr())));
         }
         break;
       default:
