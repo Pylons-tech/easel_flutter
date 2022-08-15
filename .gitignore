@@ -60,3 +60,6 @@ doc/api/
 lib/env.dart
 
 ios/Podfile.lock
+
+android/app/google-services.json
+ios/Runner/GoogleService-Info.plist

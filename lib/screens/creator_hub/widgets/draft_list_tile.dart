@@ -19,6 +19,7 @@ import 'package:shimmer_animation/shimmer_animation.dart';
 class DraftListTile extends StatelessWidget {
   final NFT nft;
   final CreatorHubViewModel viewModel;
+
   const DraftListTile({Key? key, required this.nft, required this.viewModel}) : super(key: key);
 
   @override
@@ -62,50 +63,7 @@ class DraftListTile extends StatelessWidget {
             padding: EdgeInsets.symmetric(horizontal: 15.w, vertical: 15.h),
             child: Row(
               children: [
-                SizedBox(
-                  height: 45.h,
-                  width: 45.h,
-                  child:
-                  NftTypeBuilder(
-                    onImage: (context) => CachedNetworkImage(
-                      errorWidget: (context, url, error) => Align(
-                        child: SvgPicture.asset(
-                          kSvgNftFormatImage,
-                          color: EaselAppTheme.kBlack,
-                        ),
-                      ),
-                      placeholder: (context, url) => Shimmer(color: EaselAppTheme.cardBackground, child: const SizedBox.expand()),
-                      imageUrl:  nft.url.changeDomain(),
-                      fit: BoxFit.cover,
-                    ),
-                    onVideo: (context) => CachedNetworkImage(
-                      fit: BoxFit.fill,
-                      imageUrl: nft.thumbnailUrl.changeDomain(),
-                      errorWidget: (a, b, c) => const Center(child: Icon(Icons.error_outline)),
-                      placeholder: (context, url) => Shimmer(color: EaselAppTheme.cardBackground, child: const SizedBox.expand()),
-                    ),
-                    onPdf: (context) => CachedNetworkImage(
-                      fit: BoxFit.fill,
-                      imageUrl: nft.thumbnailUrl,
-                      errorWidget: (a, b, c) => const Center(child: Icon(Icons.error_outline)),
-                      placeholder: (context, url) => Shimmer(color: EaselAppTheme.cardBackground, child: const SizedBox.expand()),
-                    ),
-                    onAudio: (context) => CachedNetworkImage(
-                      fit: BoxFit.fill,
-                      imageUrl: nft.thumbnailUrl.changeDomain(),
-                      errorWidget: (a, b, c) => const Center(child: Icon(Icons.error_outline)),
-                      placeholder: (context, url) => Shimmer(color: EaselAppTheme.cardBackground, child: const SizedBox.expand()),
-                    ),
-                    on3D: (context) => ModelViewer(
-                      src: nft.url.changeDomain(),
-                      backgroundColor: EaselAppTheme.kWhite,
-                      ar: false,
-                      autoRotate: false,
-                      cameraControls: false,
-                    ),
-                    assetType: nft.assetType.toAssetTypeEnum(),
-                  )
-                ),
+                buildAssetView(),
                 SizedBox(
                   width: 10.w,
                 ),
@@ -154,6 +112,35 @@ class DraftListTile extends StatelessWidget {
               ],
             ),
           )),
+    );
+  }
+
+  SizedBox buildAssetView() {
+    return SizedBox(
+        height: 45.h,
+        width: 45.h,
+        child: NftTypeBuilder(
+          onImage: (context) => buildCachedNetworkImage(nft.url.changeDomain()),
+          onVideo: (context) => buildCachedNetworkImage(nft.thumbnailUrl.changeDomain()),
+          onPdf: (context) => buildCachedNetworkImage(nft.thumbnailUrl.changeDomain()),
+          onAudio: (context) => buildCachedNetworkImage(nft.thumbnailUrl.changeDomain()),
+          on3D: (context) => ModelViewer(
+            src: nft.url.changeDomain(),
+            backgroundColor: EaselAppTheme.kWhite,
+            ar: false,
+            autoRotate: false,
+            cameraControls: false,
+          ),
+          assetType: nft.assetType.toAssetTypeEnum(),
+        ));
+  }
+
+  CachedNetworkImage buildCachedNetworkImage(String url) {
+    return CachedNetworkImage(
+      fit: BoxFit.fill,
+      imageUrl: url,
+      errorWidget: (a, b, c) => const Center(child: Icon(Icons.error_outline)),
+      placeholder: (context, url) => Shimmer(color: EaselAppTheme.cardBackground, child: const SizedBox.expand()),
     );
   }
 }
