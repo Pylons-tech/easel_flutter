@@ -130,24 +130,9 @@ class DraftListTile extends StatelessWidget {
             imageUrl: nft.url.changeDomain(),
             fit: BoxFit.cover,
           ),
-          onVideo: (context) => CachedNetworkImage(
-            fit: BoxFit.fill,
-            imageUrl: nft.thumbnailUrl.changeDomain(),
-            errorWidget: (a, b, c) => const Center(child: Icon(Icons.error_outline)),
-            placeholder: (context, url) => Shimmer(color: EaselAppTheme.cardBackground, child: const SizedBox.expand()),
-          ),
-          onPdf: (context) => CachedNetworkImage(
-            fit: BoxFit.fill,
-            imageUrl: nft.thumbnailUrl,
-            errorWidget: (a, b, c) => const Center(child: Icon(Icons.error_outline)),
-            placeholder: (context, url) => Shimmer(color: EaselAppTheme.cardBackground, child: const SizedBox.expand()),
-          ),
-          onAudio: (context) => CachedNetworkImage(
-            fit: BoxFit.fill,
-            imageUrl: nft.thumbnailUrl.changeDomain(),
-            errorWidget: (a, b, c) => const Center(child: Icon(Icons.error_outline)),
-            placeholder: (context, url) => Shimmer(color: EaselAppTheme.cardBackground, child: const SizedBox.expand()),
-          ),
+          onVideo: (context) => buildCachedNetworkImage(),
+          onPdf: (context) => buildCachedNetworkImage(),
+          onAudio: (context) => buildCachedNetworkImage(),
           on3D: (context) => ModelViewer(
             src: nft.url.changeDomain(),
             backgroundColor: EaselAppTheme.kWhite,
@@ -157,5 +142,14 @@ class DraftListTile extends StatelessWidget {
           ),
           assetType: nft.assetType.toAssetTypeEnum(),
         ));
+  }
+
+  CachedNetworkImage buildCachedNetworkImage() {
+    return CachedNetworkImage(
+      fit: BoxFit.fill,
+      imageUrl: nft.thumbnailUrl.changeDomain(),
+      errorWidget: (a, b, c) => const Center(child: Icon(Icons.error_outline)),
+      placeholder: (context, url) => Shimmer(color: EaselAppTheme.cardBackground, child: const SizedBox.expand()),
+    );
   }
 }
