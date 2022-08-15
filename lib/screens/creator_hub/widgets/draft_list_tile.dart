@@ -22,6 +22,7 @@ import 'package:shimmer_animation/shimmer_animation.dart';
 class DraftListTile extends StatefulWidget {
   final NFT nft;
   final CreatorHubViewModel viewModel;
+
   const DraftListTile({Key? key, required this.nft, required this.viewModel}) : super(key: key);
 
   @override
@@ -70,23 +71,7 @@ class _DraftListTileState extends State<DraftListTile> {
             padding: EdgeInsets.symmetric(horizontal: 15.w, vertical: 15.h),
             child: Row(
               children: [
-                SizedBox(
-                    height: 45.h,
-                    width: 45.h,
-                    child: NftTypeBuilder(
-                      onImage: (context) => buildCacheNetworkImage(widget.nft.url.changeDomain()),
-                      onVideo: (context) => buildCacheNetworkImage(widget.nft.thumbnailUrl.changeDomain()),
-                      onPdf: (context) => buildCacheNetworkImage(widget.nft.thumbnailUrl.changeDomain()),
-                      onAudio: (context) => buildCacheNetworkImage(widget.nft.thumbnailUrl.changeDomain()),
-                      on3D: (context) => ModelViewer(
-                        src: widget.nft.url.changeDomain(),
-                        backgroundColor: EaselAppTheme.kWhite,
-                        ar: false,
-                        autoRotate: false,
-                        cameraControls: false,
-                      ),
-                      assetType: widget.nft.assetType.toAssetTypeEnum(),
-                    )),
+                buildAssetView(),
                 SizedBox(
                   width: 10.w,
                 ),
@@ -95,7 +80,7 @@ class _DraftListTileState extends State<DraftListTile> {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
-                        "nft_name".tr(args: [widget.nft.name.isNotEmpty ? widget.nft.name : 'Nft Name']),
+                        "nft_name".tr(args: [nft.name.isNotEmpty ? nft.name : 'Nft Name']),
                         style: titleStyle.copyWith(fontSize: isTablet ? 13.sp : 18.sp),
                         maxLines: 1,
                         overflow: TextOverflow.ellipsis,
@@ -138,29 +123,32 @@ class _DraftListTileState extends State<DraftListTile> {
     );
   }
 
-  CachedNetworkImage buildCacheNetworkImage(String url) {
+  SizedBox buildAssetView() {
+    return SizedBox(
+        height: 45.h,
+        width: 45.h,
+        child: NftTypeBuilder(
+          onImage: (context) => buildCachedNetworkImage(nft.url.changeDomain()),
+          onVideo: (context) => buildCachedNetworkImage(nft.thumbnailUrl.changeDomain()),
+          onPdf: (context) => buildCachedNetworkImage(nft.thumbnailUrl.changeDomain()),
+          onAudio: (context) => buildCachedNetworkImage(nft.thumbnailUrl.changeDomain()),
+          on3D: (context) => ModelViewer(
+            src: nft.url.changeDomain(),
+            backgroundColor: EaselAppTheme.kWhite,
+            ar: false,
+            autoRotate: false,
+            cameraControls: false,
+          ),
+          assetType: nft.assetType.toAssetTypeEnum(),
+        ));
+  }
+
+  CachedNetworkImage buildCachedNetworkImage(String url) {
     return CachedNetworkImage(
       fit: BoxFit.fill,
       imageUrl: url,
       errorWidget: (a, b, c) => const Center(child: Icon(Icons.error_outline)),
       placeholder: (context, url) => Shimmer(color: EaselAppTheme.cardBackground, child: const SizedBox.expand()),
     );
-  }
-
-  void onViewOnIPFSPressed({required BuildContext context, required NFT nft}) async {
-    switch (nft.assetType) {
-      case k3dText:
-      case kPdfText:
-        await Clipboard.setData(ClipboardData(text: nft.cid));
-        if (mounted) {
-          ScaffoldMessenger.of(context)
-            ..hideCurrentSnackBar()
-            ..showSnackBar(SnackBar(content: Text("copied_to_clipboard".tr())));
-        }
-        break;
-      default:
-        final easelProvider = Provider.of<EaselProvider>(context, listen: false);
-        await easelProvider.repository.launchMyUrl(url: nft.url.changeDomain());
-    }
   }
 }
