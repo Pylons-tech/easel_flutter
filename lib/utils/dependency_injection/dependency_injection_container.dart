@@ -10,6 +10,7 @@ import 'package:easel_flutter/services/datasources/cache_manager.dart';
 import 'package:easel_flutter/services/datasources/local_datasource.dart';
 import 'package:easel_flutter/services/datasources/remote_datasource.dart';
 import 'package:easel_flutter/services/third_party_services/audio_player_helper.dart';
+import 'package:easel_flutter/services/third_party_services/crashlytics_helper.dart';
 import 'package:easel_flutter/services/third_party_services/database.dart';
 import 'package:easel_flutter/services/third_party_services/network_info.dart';
 import 'package:easel_flutter/services/third_party_services/video_player_helper.dart';
@@ -82,5 +83,6 @@ void _registerServices() {
   sl.registerFactory<VideoPlayerHelper>(() => VideoPlayerHelperImp(sl()));
   sl.registerFactory<AudioPlayerHelper>(() => AudioPlayerHelperImpl(sl()));
   sl.registerLazySingleton<NetworkInfo>(() => NetworkInfoImpl(sl()));
-  sl.registerLazySingleton<Repository>(() => RepositoryImp(networkInfo: sl(), localDataSource: sl(), remoteDataSource: sl(), fileUtilsHelper: sl()));
+  sl.registerLazySingleton<CrashlyticsHelper>(() => CrashlyticsHelperImp(crashlytics: sl()));
+  sl.registerLazySingleton<Repository>(() => RepositoryImp(networkInfo: sl(), localDataSource: sl(), remoteDataSource: sl(), fileUtilsHelper: sl(), crashlyticsHelper: sl()));
 }
