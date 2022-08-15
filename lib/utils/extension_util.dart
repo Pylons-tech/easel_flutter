@@ -167,6 +167,15 @@ extension IsSvgExtension on String {
   }
 }
 
+extension ValueConverterToBigInt on String {
+  double toBigInt() {
+    if (this == "") {
+      return 0;
+    }
+    return BigInt.parse(this).toDouble() * kPrecision;
+  }
+}
+
 extension ChangeDomain on String {
   String changeDomain() {
     if (!contains(ipfsDomain)) {

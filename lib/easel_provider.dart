@@ -1,4 +1,6 @@
 import 'dart:async';
+import 'dart:convert';
+import 'dart:developer';
 import 'dart:io';
 
 import 'package:easel_flutter/main.dart';
@@ -690,6 +692,8 @@ class EaselProvider extends ChangeNotifier {
         blockInterval: Int64(0),
         enabled: true,
         extraInfo: kExtraInfo);
+
+    log("MY JSON: ${json.encode(recipe.toProto3Json())}");
 
     var response = await PylonsWallet.instance.txCreateRecipe(recipe, requestResponse: false);
 

@@ -146,10 +146,6 @@ class _DescribeScreenState extends State<DescribeScreen> {
                             _artNameFieldError.value = kEnterNFTNameText;
                             return;
                           }
-                          if (value.length <= kMinNFTName) {
-                            _artNameFieldError.value = "$kNameShouldHaveText $kMinNFTName $kCharactersOrMoreText";
-                            return;
-                          }
                           _artNameFieldError.value = '';
                           return null;
                         },
@@ -213,18 +209,6 @@ class _DescribeScreenState extends State<DescribeScreen> {
                         controller: provider.descriptionController,
                         textCapitalization: TextCapitalization.sentences,
                         inputFormatters: [LengthLimitingTextInputFormatter(kMaxDescription)],
-                        validator: (value) {
-                          if (value!.isEmpty) {
-                            _descriptionFieldError.value = kEnterNFTDescriptionText;
-                            return;
-                          }
-                          if (value.length <= kMinDescription) {
-                            _descriptionFieldError.value = "$kEnterMoreThanText $kMinDescription $kCharactersText";
-                            return;
-                          }
-                          _descriptionFieldError.value = '';
-                          return null;
-                        },
                       ),
                       ValueListenableBuilder<String>(
                           valueListenable: _descriptionFieldError,
