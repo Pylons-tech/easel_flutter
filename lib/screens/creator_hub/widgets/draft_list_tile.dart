@@ -19,6 +19,7 @@ import 'package:shimmer_animation/shimmer_animation.dart';
 class DraftListTile extends StatelessWidget {
   final NFT nft;
   final CreatorHubViewModel viewModel;
+
   const DraftListTile({Key? key, required this.nft, required this.viewModel}) : super(key: key);
 
   @override
@@ -119,20 +120,10 @@ class DraftListTile extends StatelessWidget {
         height: 45.h,
         width: 45.h,
         child: NftTypeBuilder(
-          onImage: (context) => CachedNetworkImage(
-            errorWidget: (context, url, error) => Align(
-              child: SvgPicture.asset(
-                kSvgNftFormatImage,
-                color: EaselAppTheme.kBlack,
-              ),
-            ),
-            placeholder: (context, url) => Shimmer(color: EaselAppTheme.cardBackground, child: const SizedBox.expand()),
-            imageUrl: nft.url.changeDomain(),
-            fit: BoxFit.cover,
-          ),
-          onVideo: (context) => buildCachedNetworkImage(),
-          onPdf: (context) => buildCachedNetworkImage(),
-          onAudio: (context) => buildCachedNetworkImage(),
+          onImage: (context) => buildCachedNetworkImage(nft.url.changeDomain()),
+          onVideo: (context) => buildCachedNetworkImage(nft.thumbnailUrl.changeDomain()),
+          onPdf: (context) => buildCachedNetworkImage(nft.thumbnailUrl.changeDomain()),
+          onAudio: (context) => buildCachedNetworkImage(nft.thumbnailUrl.changeDomain()),
           on3D: (context) => ModelViewer(
             src: nft.url.changeDomain(),
             backgroundColor: EaselAppTheme.kWhite,
@@ -144,10 +135,10 @@ class DraftListTile extends StatelessWidget {
         ));
   }
 
-  CachedNetworkImage buildCachedNetworkImage() {
+  CachedNetworkImage buildCachedNetworkImage(String url) {
     return CachedNetworkImage(
       fit: BoxFit.fill,
-      imageUrl: nft.thumbnailUrl.changeDomain(),
+      imageUrl: url,
       errorWidget: (a, b, c) => const Center(child: Icon(Icons.error_outline)),
       placeholder: (context, url) => Shimmer(color: EaselAppTheme.cardBackground, child: const SizedBox.expand()),
     );
