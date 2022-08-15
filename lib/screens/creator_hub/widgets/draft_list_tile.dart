@@ -74,20 +74,10 @@ class _DraftListTileState extends State<DraftListTile> {
                     height: 45.h,
                     width: 45.h,
                     child: NftTypeBuilder(
-                      onImage: (context) => CachedNetworkImage(
-                        errorWidget: (context, url, error) => Align(
-                          child: SvgPicture.asset(
-                            kSvgNftFormatImage,
-                            color: EaselAppTheme.kBlack,
-                          ),
-                        ),
-                        placeholder: (context, url) => Shimmer(color: EaselAppTheme.cardBackground, child: const SizedBox.expand()),
-                        imageUrl: widget.nft.url.changeDomain(),
-                        fit: BoxFit.cover,
-                      ),
-                      onVideo: (context) => buildCacheNetworkImage(),
-                      onPdf: (context) => buildCacheNetworkImage(),
-                      onAudio: (context) => buildCacheNetworkImage(),
+                      onImage: (context) => buildCacheNetworkImage(widget.nft.url.changeDomain()),
+                      onVideo: (context) => buildCacheNetworkImage(widget.nft.thumbnailUrl.changeDomain()),
+                      onPdf: (context) => buildCacheNetworkImage(widget.nft.thumbnailUrl.changeDomain()),
+                      onAudio: (context) => buildCacheNetworkImage(widget.nft.thumbnailUrl.changeDomain()),
                       on3D: (context) => ModelViewer(
                         src: widget.nft.url.changeDomain(),
                         backgroundColor: EaselAppTheme.kWhite,
@@ -148,10 +138,10 @@ class _DraftListTileState extends State<DraftListTile> {
     );
   }
 
-  CachedNetworkImage buildCacheNetworkImage() {
+  CachedNetworkImage buildCacheNetworkImage(String url) {
     return CachedNetworkImage(
       fit: BoxFit.fill,
-      imageUrl: widget.nft.thumbnailUrl.changeDomain(),
+      imageUrl: url,
       errorWidget: (a, b, c) => const Center(child: Icon(Icons.error_outline)),
       placeholder: (context, url) => Shimmer(color: EaselAppTheme.cardBackground, child: const SizedBox.expand()),
     );
