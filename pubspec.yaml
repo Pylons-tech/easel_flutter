@@ -73,7 +73,6 @@ dependencies:
 
   share_plus: ^4.0.4  # Used for sharing the NFT link.
 
-  media_info: 0.10.0
 
   video_player: 2.4.5
   just_audio: 0.9.24
@@ -209,8 +208,3 @@ flutter:
   # For details regarding fonts from package dependencies,
   # see https://flutter.dev/custom-fonts/#from-packages
 
-dependency_overrides:
-  media_info:
-    git:
-      url: https://github.com/ened/flutter_plugin_media_info.git
-      ref: update-dependencies
