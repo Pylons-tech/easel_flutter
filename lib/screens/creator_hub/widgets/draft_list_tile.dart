@@ -130,7 +130,6 @@ class _DraftListTileState extends State<DraftListTile> {
     );
   }
 
-  CachedNetworkImage buildCacheNetworkImage(String url) {
   SizedBox buildAssetView() {
     return SizedBox(
         height: 45.h,
