@@ -22,7 +22,6 @@ import 'package:shimmer_animation/shimmer_animation.dart';
 class DraftListTile extends StatefulWidget {
   final NFT nft;
   final CreatorHubViewModel viewModel;
-
   const DraftListTile({Key? key, required this.nft, required this.viewModel}) : super(key: key);
 
   @override
@@ -70,23 +69,7 @@ class _DraftListTileState extends State<DraftListTile> {
             padding: EdgeInsets.symmetric(horizontal: 15.w, vertical: 15.h),
             child: Row(
               children: [
-                SizedBox(
-                    height: 45.h,
-                    width: 45.h,
-                    child: NftTypeBuilder(
-                      onImage: (context) => buildCacheNetworkImage(widget.nft.url.changeDomain()),
-                      onVideo: (context) => buildCacheNetworkImage(widget.nft.thumbnailUrl.changeDomain()),
-                      onPdf: (context) => buildCacheNetworkImage(widget.nft.thumbnailUrl.changeDomain()),
-                      onAudio: (context) => buildCacheNetworkImage(widget.nft.thumbnailUrl.changeDomain()),
-                      on3D: (context) => ModelViewer(
-                        src: widget.nft.url.changeDomain(),
-                        backgroundColor: EaselAppTheme.kWhite,
-                        ar: false,
-                        autoRotate: false,
-                        cameraControls: false,
-                      ),
-                      assetType: widget.nft.assetType.toAssetTypeEnum(),
-                    )),
+                buildAssetView(),
                 SizedBox(
                   width: 10.w,
                 ),
@@ -148,6 +131,27 @@ class _DraftListTileState extends State<DraftListTile> {
   }
 
   CachedNetworkImage buildCacheNetworkImage(String url) {
+  SizedBox buildAssetView() {
+    return SizedBox(
+        height: 45.h,
+        width: 45.h,
+        child: NftTypeBuilder(
+          onImage: (context) => buildCachedNetworkImage(widget.nft.url.changeDomain()),
+          onVideo: (context) => buildCachedNetworkImage(widget.nft.thumbnailUrl.changeDomain()),
+          onPdf: (context) => buildCachedNetworkImage(widget.nft.thumbnailUrl.changeDomain()),
+          onAudio: (context) => buildCachedNetworkImage(widget.nft.thumbnailUrl.changeDomain()),
+          on3D: (context) => ModelViewer(
+            src: widget.nft.url.changeDomain(),
+            backgroundColor: EaselAppTheme.kWhite,
+            ar: false,
+            autoRotate: false,
+            cameraControls: false,
+          ),
+          assetType: widget.nft.assetType.toAssetTypeEnum(),
+        ));
+  }
+
+  CachedNetworkImage buildCachedNetworkImage(String url) {
     return CachedNetworkImage(
       fit: BoxFit.fill,
       imageUrl: url,

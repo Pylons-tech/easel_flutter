@@ -10,6 +10,7 @@ import 'package:easel_flutter/models/picked_file_model.dart';
 import 'package:easel_flutter/models/save_nft.dart';
 import 'package:easel_flutter/services/datasources/local_datasource.dart';
 import 'package:easel_flutter/services/datasources/remote_datasource.dart';
+import 'package:easel_flutter/services/third_party_services/crashlytics_helper.dart';
 import 'package:easel_flutter/services/third_party_services/network_info.dart';
 import 'package:easel_flutter/utils/constants.dart';
 import 'package:easel_flutter/utils/extension_util.dart';
@@ -165,8 +166,9 @@ class RepositoryImp implements Repository {
   final RemoteDataSource remoteDataSource;
   final LocalDataSource localDataSource;
   final FileUtilsHelper fileUtilsHelper;
+  final CrashlyticsHelper crashlyticsHelper;
 
-  RepositoryImp({required this.networkInfo, required this.remoteDataSource, required this.localDataSource, required this.fileUtilsHelper});
+  RepositoryImp({required this.networkInfo, required this.remoteDataSource, required this.localDataSource, required this.fileUtilsHelper, required this.crashlyticsHelper});
 
   @override
   Future<Either<Failure, List<Recipe>>> getRecipesBasedOnCookBookId({required String cookBookId}) async {
@@ -180,6 +182,7 @@ class RepositoryImp implements Repository {
 
       return Right(sdkResponse);
     } on Exception catch (_) {
+      crashlyticsHelper.recordFatalError(error: _.toString());
       return const Left(CookBookNotFoundFailure(kCookBookNotFound));
     }
   }
@@ -255,6 +258,7 @@ class RepositoryImp implements Repository {
       int id = await localDataSource.saveNft(nft);
       return Right(id);
     } on Exception catch (_) {
+      crashlyticsHelper.recordFatalError(error: _.toString());
       return Left(CacheFailure("save_error".tr()));
     }
   }
@@ -269,6 +273,7 @@ class RepositoryImp implements Repository {
       }
       return Right(result);
     } on Exception catch (_) {
+      crashlyticsHelper.recordFatalError(error: _.toString());
       return Left(CacheFailure("upload_error".tr()));
     }
   }
@@ -283,6 +288,7 @@ class RepositoryImp implements Repository {
       }
       return Right(result);
     } on Exception catch (_) {
+      crashlyticsHelper.recordFatalError(error: _.toString());
       return Left(CacheFailure("upload_error".tr()));
     }
   }
@@ -294,6 +300,7 @@ class RepositoryImp implements Repository {
 
       return Right(result);
     } on Exception catch (_) {
+      crashlyticsHelper.recordFatalError(error: _.toString());
       return Left(CacheFailure("upload_error".tr()));
     }
   }
@@ -305,6 +312,7 @@ class RepositoryImp implements Repository {
 
       return Right(apiResponse);
     } on Exception catch (_) {
+      crashlyticsHelper.recordFatalError(error: _.toString());
       return Left(CacheFailure("update_failed".tr()));
     }
   }
@@ -316,6 +324,7 @@ class RepositoryImp implements Repository {
 
       return Right(response);
     } on Exception catch (_) {
+      crashlyticsHelper.recordFatalError(error: _.toString());
       return Left(CacheFailure("something_wrong".tr()));
     }
   }
@@ -326,6 +335,7 @@ class RepositoryImp implements Repository {
       bool result = await localDataSource.deleteNft(id);
       return Right(result);
     } on Exception catch (_) {
+      crashlyticsHelper.recordFatalError(error: _.toString());
       return Left(CacheFailure("something_wrong".tr()));
     }
   }
@@ -339,6 +349,7 @@ class RepositoryImp implements Repository {
       }
       return Right(data);
     } on Exception catch (_) {
+      crashlyticsHelper.recordFatalError(error: _.toString());
       return Left(CacheFailure("something_wrong".tr()));
     }
   }
@@ -350,6 +361,7 @@ class RepositoryImp implements Repository {
 
       return Right(pickedFileModel);
     } on Exception catch (_) {
+      crashlyticsHelper.recordFatalError(error: _.toString());
       return Left(PickingFileFailure(message: "picking_file_error".tr()));
     }
   }
@@ -379,7 +391,8 @@ class RepositoryImp implements Repository {
     try {
       final file = await fileUtilsHelper.launchMyUrl(url: url);
       return Right(file);
-    } catch (e) {
+    } catch (_) {
+      crashlyticsHelper.recordFatalError(error: _.toString());
       return Left(UrlLaunchingFileFailure(message: "url_launching_error".tr()));
     }
   }
