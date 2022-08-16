@@ -20,7 +20,6 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:focus_detector/focus_detector.dart';
 import 'package:get_it/get_it.dart';
 import 'package:provider/provider.dart';
-import 'package:pylons_sdk/pylons_sdk.dart';
 
 class CreatorHubScreen extends StatefulWidget {
   const CreatorHubScreen({Key? key}) : super(key: key);
@@ -107,8 +106,14 @@ class _CreatorHubContentState extends State<CreatorHubContent> {
         case CollectionType.forSale:
         case CollectionType.published:
           return Padding(
-            padding: EdgeInsets.symmetric(horizontal: 8.w),
-            child: IconButton(onPressed: () => scheduleMicrotask(() => onRefreshPressed()), icon: Icon(Icons.refresh, color: EaselAppTheme.kBlack, size: 20.h)),
+            padding: EdgeInsets.only(right: 15.w),
+            child: InkWell(
+                onTap: () => scheduleMicrotask(() => onRefreshPressed()),
+                child: Icon(
+                  Icons.refresh,
+                  color: EaselAppTheme.kBlack,
+                  size: 22.sp,
+                )),
           );
 
         case CollectionType.draft:
@@ -141,7 +146,8 @@ class _CreatorHubContentState extends State<CreatorHubContent> {
                       InkWell(
                         onTap: () => Navigator.of(context).pushNamed(RouteUtil.kRouteHome),
                         child: Container(
-                          decoration: BoxDecoration(color: EaselAppTheme.kpurpleDark, boxShadow: [BoxShadow(color: EaselAppTheme.kpurpleDark.withOpacity(0.6), offset: const Offset(0, 0), blurRadius: 8.0)]),
+                          decoration:
+                              BoxDecoration(color: EaselAppTheme.kpurpleDark, boxShadow: [BoxShadow(color: EaselAppTheme.kpurpleDark.withOpacity(0.6), offset: const Offset(0, 0), blurRadius: 8.0)]),
                           child: Icon(Icons.add, size: 27.h, color: EaselAppTheme.kWhite),
                         ),
                       ),
@@ -188,7 +194,9 @@ class _CreatorHubContentState extends State<CreatorHubContent> {
                           ? buildSelectedBox(title: "for_sale".tr(), viewModel: viewModel, color: EaselAppTheme.kBlue, collectionType: CollectionType.forSale)
                           : buildOutlinedBox(title: "for_sale".tr(), viewModel: viewModel, collectionType: CollectionType.forSale),
                       SizedBox(width: 16.w),
-                      InkWell(onTap: () => viewModel.updateViewType(ViewType.viewGrid), child: SvgPicture.asset(kGridIcon, height: 15.h, color: viewModel.viewType == ViewType.viewGrid ? EaselAppTheme.kBlack : EaselAppTheme.kGreyIcon)),
+                      InkWell(
+                          onTap: () => viewModel.updateViewType(ViewType.viewGrid),
+                          child: SvgPicture.asset(kGridIcon, height: 15.h, color: viewModel.viewType == ViewType.viewGrid ? EaselAppTheme.kBlack : EaselAppTheme.kGreyIcon)),
                       SizedBox(width: 14.w),
                       InkWell(
                         onTap: () => viewModel.updateViewType(ViewType.viewList),

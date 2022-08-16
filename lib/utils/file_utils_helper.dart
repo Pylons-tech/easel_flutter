@@ -1,10 +1,8 @@
 import 'dart:io';
 import 'dart:math';
-import 'dart:developer' as dev;
 import 'package:easel_flutter/models/nft_format.dart';
 import 'package:easel_flutter/models/picked_file_model.dart';
 import 'package:easel_flutter/utils/easel_app_theme.dart';
-import 'package:easel_flutter/utils/extension_util.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
