@@ -72,6 +72,7 @@ const kWalletDynamicLink = 'pylons.page.link';
 const kEaselEmail = "easel@pylons.tech";
 const kPylons = "Pylons";
 const kNFTName = "Nft Name";
+const k3dFileName = "temp_three_d";
 
 /// ```Number constants
 const kMinNFTName = 9;
@@ -254,6 +255,7 @@ final List<String> stepLabels = ["upload", "detail", "price   "];
 
 final List<String> imageAllowedExts = ["png", "jpg", "jpeg", "svg", "heif"];
 final List<String> audioAllowedExts = ['mp3', 'ogg', 'wav', 'aac'];
+final List<String> threedAllowedExts = ['gltf', 'glb'];
 
 /// Nft viewmodel key values
 const String kNameKey = "Name";

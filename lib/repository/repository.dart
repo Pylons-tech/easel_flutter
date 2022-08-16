@@ -357,6 +357,7 @@ class RepositoryImp implements Repository {
   @override
   Future<Either<Failure, PickedFileModel>> pickFile(NftFormat format) async {
     try {
+
       PickedFileModel pickedFileModel = await fileUtilsHelper.pickFile(format);
 
       return Right(pickedFileModel);

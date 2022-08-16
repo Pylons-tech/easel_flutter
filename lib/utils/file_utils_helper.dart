@@ -1,13 +1,15 @@
 import 'dart:io';
 import 'dart:math';
-
+import 'dart:developer' as dev;
 import 'package:easel_flutter/models/nft_format.dart';
 import 'package:easel_flutter/models/picked_file_model.dart';
 import 'package:easel_flutter/utils/easel_app_theme.dart';
+import 'package:easel_flutter/utils/extension_util.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:image_cropper/image_cropper.dart';
+import 'package:path_provider/path_provider.dart';
 import 'package:url_launcher/url_launcher_string.dart';
 
 import 'constants.dart';
@@ -36,6 +38,11 @@ abstract class FileUtilsHelper {
   /// This function is used to launch the link generated and open the link in external source platform
   /// Input: [url] is the link to be launched by the launcher
   Future<void> launchMyUrl({required String url});
+
+  /// This function will copy the file to internal memory returns the updated path
+  /// Input: [filePickerResult] is the filePickerResult instance of the file to be copied
+  /// Output: [String] This will return the updated filePath
+  Future<File> copyFileToInternal({required FilePickerResult filePickerResult});
 }
 
 class FileUtilsHelperImpl implements FileUtilsHelper {
@@ -82,6 +89,15 @@ class FileUtilsHelperImpl implements FileUtilsHelper {
         path: '',
         fileName: '',
         extension: '',
+      );
+    }
+
+    if (format.format == NFTTypes.threeD && result.files.single.path != null) {
+      final newFile = await copyFileToInternal(filePickerResult: result);
+      return PickedFileModel(
+        path: newFile.path,
+        fileName: newFile.path.split('/').last,
+        extension: result.files.single.extension ?? "",
       );
     }
 
@@ -149,5 +165,26 @@ class FileUtilsHelperImpl implements FileUtilsHelper {
       kImvKey: "1",
       kLinkKey: "https://wallet.pylons.tech/?action=purchase_nft&recipe_id=$recipeId&cookbook_id=$cookbookId&nft_amount=1"
     }).toString();
+  }
+
+  @override
+  Future<File> copyFileToInternal({required FilePickerResult filePickerResult}) async {
+    await deleteFilesIfAlreadyPresent();
+    final tempDirectory = await getTemporaryDirectory();
+    return File(filePickerResult.files.single.path.toString()).copySync('${tempDirectory.path}/$k3dFileName.${filePickerResult.files.single.extension}');
+  }
+
+  Future<void> deleteFilesIfAlreadyPresent() async {
+    final tempDirectory = await getTemporaryDirectory();
+
+    final fileRef1 = File('${tempDirectory.path}/$k3dFileName.${threedAllowedExts[0]}');
+    final fileRef2 = File('${tempDirectory.path}/$k3dFileName.${threedAllowedExts[1]}');
+
+    if (fileRef1.existsSync()) {
+      fileRef1.deleteSync();
+    }
+    if (fileRef2.existsSync()) {
+      fileRef2.deleteSync();
+    }
   }
 }

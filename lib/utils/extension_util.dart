@@ -87,6 +87,13 @@ extension FreeDropEnum on String {
   }
 }
 
+extension RemoveSpacesFileName on String {
+  String removeSpacesFileName() {
+    final name = split('/').last;
+    return replaceAll(name, name.replaceAll(" ", "_"));
+  }
+}
+
 extension DurationConverter on int {
   String toSeconds() {
     final double seconds = this / kNumberOfSeconds;
