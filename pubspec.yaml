@@ -208,3 +208,8 @@ flutter:
   # For details regarding fonts from package dependencies,
   # see https://flutter.dev/custom-fonts/#from-packages
 
+
+dependency_overrides:
+  flutter_slidable:
+    git:
+      url: https://github.com/sumitsharansatsangi/flutter_slidable.git
