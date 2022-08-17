@@ -16,6 +16,7 @@ import 'package:easel_flutter/widgets/video_widget_full_screen.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_crashlytics/firebase_crashlytics.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get_it/get_it.dart';
@@ -40,7 +41,15 @@ Future<void> main() async {
 
     isTablet = MediaQueryData.fromWindow(WidgetsBinding.instance.window).size.shortestSide >= TABLET_MIN_WIDTH;
 
-    FlutterError.onError = firebaseCrashlytics.recordFlutterError;
+    firebaseCrashlytics.crash();
+
+    FlutterError.onError = (FlutterErrorDetails details) {
+      if (kDebugMode) {
+        FlutterError.dumpErrorToConsole(details);
+      } else {
+        firebaseCrashlytics.recordFlutterError(details);
+      }
+    };
 
     runApp(
       EasyLocalization(
