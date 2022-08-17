@@ -22,6 +22,7 @@ import 'package:shimmer_animation/shimmer_animation.dart';
 class DraftListTile extends StatefulWidget {
   final NFT nft;
   final CreatorHubViewModel viewModel;
+
   const DraftListTile({Key? key, required this.nft, required this.viewModel}) : super(key: key);
 
   @override
@@ -40,7 +41,7 @@ class _DraftListTileState extends State<DraftListTile> {
         children: [
           buildSlidableAction(
             context,
-            callback: () {
+            callback: (ctx) {
               final DeleteDialog deleteDialog = DeleteDialog(contextt: context, nft: widget.nft);
               deleteDialog.show();
             },
@@ -48,7 +49,7 @@ class _DraftListTileState extends State<DraftListTile> {
           ),
           buildSlidableAction(
             context,
-            callback: () {
+            callback: (context) {
               onViewOnIPFSPressed(nft: widget.nft, context: context);
             },
             icon: kSvgIpfsLogo,
@@ -121,12 +122,11 @@ class _DraftListTileState extends State<DraftListTile> {
     );
   }
 
-  Widget buildSlidableAction(BuildContext context, {required VoidCallback callback, required String icon, bool isSvg = true}) {
-    return Expanded(
-      child: InkWell(
-        onTap: callback,
-        child: isSvg ? SvgPicture.asset(icon) : Image.asset(icon),
-      ),
+  Widget buildSlidableAction(BuildContext context, {required Function(BuildContext) callback, required String icon, bool isSvg = true}) {
+    return SlidableAction(
+      onPressed: callback,
+      label: isSvg ? SvgPicture.asset(icon) : Image.asset(icon),
+      backgroundColor: EaselAppTheme.kTransparent,
     );
   }
 

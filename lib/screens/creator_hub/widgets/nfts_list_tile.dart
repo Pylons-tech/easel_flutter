@@ -47,14 +47,14 @@ class _NFTsListTileState extends State<NFTsListTile> {
         children: [
           buildSlidableAction(
             context,
-            callback: () {
+            callback: (context) {
               onViewOnPylonsPressed(nft: widget.publishedNFT);
             },
             icon: kSvgPylonsLogo,
           ),
           buildSlidableAction(
             context,
-            callback: () {
+            callback: (context) {
               onViewOnIPFSPressed(nft: widget.publishedNFT, context: context);
             },
             icon: kSvgIpfsLogo,
@@ -79,35 +79,10 @@ class _NFTsListTileState extends State<NFTsListTile> {
                     height: 45.h,
                     width: 45.h,
                     child: NftTypeBuilder(
-                      onImage: (context) => CachedNetworkImage(
-                        errorWidget: (context, url, error) => Align(
-                          child: SvgPicture.asset(
-                            kSvgNftFormatImage,
-                            color: EaselAppTheme.kBlack,
-                          ),
-                        ),
-                        placeholder: (context, url) => Shimmer(color: EaselAppTheme.cardBackground, child: const SizedBox.expand()),
-                        imageUrl: widget.publishedNFT.url.changeDomain(),
-                        fit: BoxFit.cover,
-                      ),
-                      onVideo: (context) => CachedNetworkImage(
-                        fit: BoxFit.fill,
-                        imageUrl: widget.publishedNFT.thumbnailUrl.changeDomain(),
-                        errorWidget: (a, b, c) => const Center(child: Icon(Icons.error_outline)),
-                        placeholder: (context, url) => Shimmer(color: EaselAppTheme.cardBackground, child: const SizedBox.expand()),
-                      ),
-                      onPdf: (context) => CachedNetworkImage(
-                        fit: BoxFit.fill,
-                        imageUrl: widget.publishedNFT.thumbnailUrl,
-                        errorWidget: (a, b, c) => const Center(child: Icon(Icons.error_outline)),
-                        placeholder: (context, url) => Shimmer(color: EaselAppTheme.cardBackground, child: const SizedBox.expand()),
-                      ),
-                      onAudio: (context) => CachedNetworkImage(
-                        fit: BoxFit.fill,
-                        imageUrl: widget.publishedNFT.thumbnailUrl.changeDomain(),
-                        errorWidget: (a, b, c) => const Center(child: Icon(Icons.error_outline)),
-                        placeholder: (context, url) => Shimmer(color: EaselAppTheme.cardBackground, child: const SizedBox.expand()),
-                      ),
+                      onImage: (context) => buildCachedNetworkImage(widget.publishedNFT.url.changeDomain()),
+                      onVideo: (context) => buildCachedNetworkImage(widget.publishedNFT.thumbnailUrl.changeDomain()),
+                      onPdf: (context) => buildCachedNetworkImage(widget.publishedNFT.thumbnailUrl.changeDomain()),
+                      onAudio: (context) => buildCachedNetworkImage(widget.publishedNFT.thumbnailUrl.changeDomain()),
                       on3D: (context) => ModelViewer(
                         src: widget.publishedNFT.url.changeDomain(),
                         backgroundColor: EaselAppTheme.kWhite,
@@ -179,12 +154,20 @@ class _NFTsListTileState extends State<NFTsListTile> {
     );
   }
 
-  Widget buildSlidableAction(BuildContext context, {required VoidCallback callback, required String icon, bool isSvg = true}) {
-    return Expanded(
-      child: InkWell(
-        onTap: callback,
-        child: isSvg ? SvgPicture.asset(icon) : Image.asset(icon),
-      ),
+  CachedNetworkImage buildCachedNetworkImage(String url) {
+    return CachedNetworkImage(
+      fit: BoxFit.fill,
+      imageUrl: url,
+      errorWidget: (a, b, c) => const Center(child: Icon(Icons.error_outline)),
+      placeholder: (context, url) => Shimmer(color: EaselAppTheme.cardBackground, child: const SizedBox.expand()),
+    );
+  }
+
+  Widget buildSlidableAction(BuildContext context, {required Function(BuildContext) callback, required String icon, bool isSvg = true}) {
+    return SlidableAction(
+      onPressed: callback,
+      label: isSvg ? SvgPicture.asset(icon) : Image.asset(icon),
+      backgroundColor: EaselAppTheme.kTransparent,
     );
   }
 
