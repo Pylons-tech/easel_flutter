@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:developer';
 import 'dart:io';
 
 import 'package:easel_flutter/main.dart';
@@ -455,13 +456,16 @@ class EaselProvider extends ChangeNotifier {
     }
   }
 
-  void populateUserName() {
+  bool isPylonsInstalled = false;
+
+  Future<void> populateUserName() async {
+    isPylonsInstalled = await PylonsWallet.instance.exists();
     if (currentUsername.isEmpty) {
       String savedArtistName = repository.getArtistName();
 
       currentUsername = savedArtistName;
-      notifyListeners();
     }
+    notifyListeners();
   }
 
   Future<void> setFile({required String filePath, required String fileName}) async {
@@ -476,8 +480,12 @@ class EaselProvider extends ChangeNotifier {
   /// get media attributes (width/height/duration) of the file
   /// input [file] and sets [_fileHeight], [_fileWidth], and [_fileDuration]
   Future<void> _getMetadata(File file) async {
+    if (_nftFormat.format == NFTTypes.pdf || _nftFormat.format == NFTTypes.threeD) {
+      return;
+    }
     final MediaInfo _mediaInfo = MediaInfo();
     final Map<String, dynamic> info;
+
     try {
       info = await _mediaInfo.getMediaInfo(file.path);
     } on PlatformException {

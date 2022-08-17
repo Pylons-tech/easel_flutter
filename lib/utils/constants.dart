@@ -46,13 +46,11 @@ const kSvgNftFormatAudio = 'assets/images/svg/nft_format_audio.svg';
 const kSvgMoreOption = 'assets/images/svg/more_options.svg';
 const kSvgPublish = 'assets/images/svg/publish.svg';
 const kSvgDelete = 'assets/images/svg/delete.svg';
-const kSvgView = 'assets/images/svg/view.svg';
 const kAddIcon = 'assets/images/svg/add.svg';
 const kSearchIcon = 'assets/images/svg/search.svg';
 
 const kDummyImg = 'assets/images/svg/dummy_img.png';
 const kVideoIcon = 'assets/images/video_icon.png';
-const kViewIpfs = 'assets/images/view_ipfs.png';
 
 const kSvgPylonsLogo = 'assets/images/svg/pylons_logo.svg';
 const kSvgIpfsLogo = 'assets/images/ipfs_logo.png';
@@ -74,6 +72,7 @@ const kWalletDynamicLink = 'pylons.page.link';
 const kEaselEmail = "easel@pylons.tech";
 const kPylons = "Pylons";
 const kNFTName = "Nft Name";
+const k3dFileName = "temp_three_d";
 
 /// ```Number constants
 const kMinNFTName = 9;
@@ -256,6 +255,7 @@ final List<String> stepLabels = ["upload", "detail", "price   "];
 
 final List<String> imageAllowedExts = ["png", "jpg", "jpeg", "svg", "heif"];
 final List<String> audioAllowedExts = ['mp3', 'ogg', 'wav', 'aac'];
+final List<String> threedAllowedExts = ['gltf', 'glb'];
 
 /// Nft viewmodel key values
 const String kNameKey = "Name";
